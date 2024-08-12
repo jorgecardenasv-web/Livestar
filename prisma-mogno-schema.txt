@@ -1,0 +1,118 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  uuid      String     @unique @default(uuid())
+  name      String
+  email     String     @unique
+  password  String
+  role      Role
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  prospects Prospect[]
+}
+
+enum Role {
+  ADMIN
+  ADVISOR
+}
+
+model InsuranceCompany {
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
+  uuid        String          @unique @default(uuid())
+  name        String
+  logo        String?
+  description String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  plans       InsurancePlan[]
+}
+
+model InsurancePlan {
+  id                  String           @id @default(auto()) @map("_id") @db.ObjectId
+  uuid                String           @unique @default(uuid())
+  name                String
+  company             InsuranceCompany @relation(fields: [companyId], references: [id])
+  companyId           String           @db.ObjectId
+  description         String?
+  sumInsured          Float?
+  deductible          Float?
+  coInsurance         Float?
+  coInsuranceCap      Float?
+  benefits            Json
+  customizableOptions Json
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  quotes              Quote[]
+}
+
+model Prospect {
+  id              String           @id @default(auto()) @map("_id") @db.ObjectId
+  uuid            String           @unique @default(uuid())
+  name            String
+  email           String
+  dateOfBirth     DateTime?
+  postalCode      String?
+  assignedAdvisor User?            @relation(fields: [advisorId], references: [id])
+  advisorId       String?          @db.ObjectId
+  status          ProspectStatus
+  additionalInfo  Json?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  quotes          Quote[]
+  trackingNumbers TrackingNumber[]
+}
+
+enum ProspectStatus {
+  NEW
+  CONTACTED
+  QUOTED
+  CLOSED
+}
+
+model Quote {
+  id             String          @id @default(auto()) @map("_id") @db.ObjectId
+  uuid           String          @unique @default(uuid())
+  prospect       Prospect        @relation(fields: [prospectId], references: [id])
+  prospectId     String          @db.ObjectId
+  plan           InsurancePlan   @relation(fields: [planId], references: [id])
+  planId         String          @db.ObjectId
+  customizations Json?
+  totalPrice     Float?
+  status         QuoteStatus
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  trackingNumber TrackingNumber?
+}
+
+enum QuoteStatus {
+  DRAFT
+  SENT
+  ACCEPTED
+  REJECTED
+}
+
+model TrackingNumber {
+  id         String               @id @default(auto()) @map("_id") @db.ObjectId
+  uuid       String               @unique @default(uuid())
+  number     String               @unique
+  prospect   Prospect             @relation(fields: [prospectId], references: [id])
+  prospectId String               @db.ObjectId
+  quote      Quote?               @relation(fields: [quoteId], references: [id])
+  quoteId    String?              @unique @db.ObjectId
+  status     TrackingNumberStatus
+  createdAt  DateTime             @default(now())
+  updatedAt  DateTime             @updatedAt
+}
+
+enum TrackingNumberStatus {
+  ACTIVE
+  CLOSED
+}
