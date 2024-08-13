@@ -1,5 +1,6 @@
 "use client";
 
+import { NotificationProvider } from "@/shared/hooks/notification-provider";
 import { SessionProvider } from "next-auth/react";
 
 export function Providers({
@@ -13,7 +14,7 @@ export function Providers({
 }) {
   return (
     <SessionProvider session={session} basePath={basePath}>
-      {children}
+      <NotificationProvider>{children}</NotificationProvider>
     </SessionProvider>
   );
 }

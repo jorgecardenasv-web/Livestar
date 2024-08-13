@@ -3,6 +3,8 @@ import { Language } from "./utils/types";
 import { createAuthCookie, createEncodedToken, getNestedTranslation, loadTranslations } from "./utils";
 import { testUser } from "./fixtures/auth";
 
+// TODO: Agregar una base de datos en docker o en memoria para evitar que se conecte a la real
+
 const languages: Language[] = ["en", "es"];
 
 test.describe("Authentication Tests - Language Dependent", () => {
@@ -59,7 +61,7 @@ test.describe("Authentication Tests - Language Dependent", () => {
   }
 
   test.describe("Authentication Tests - Language Independent", () => {
-    test("should set authentication cookie", async ({ context }) => {
+   test("should set authentication cookie", async ({ context }) => {
       const encodedToken = await createEncodedToken(testUser);
       const authCookie = createAuthCookie(encodedToken);
 
@@ -74,7 +76,7 @@ test.describe("Authentication Tests - Language Dependent", () => {
       expect(sessionCookie?.value).toBe(encodedToken);
     });
 
-    test("should navigate to dashboard on successful login", async ({
+    test("should navigate to dashboard with pre-existing account", async ({
       page,
       context,
     }) => {
@@ -86,6 +88,35 @@ test.describe("Authentication Tests - Language Dependent", () => {
       await page.goto(`${process.env.APP_URL}/dashboard`);
 
       expect(page.url()).toContain("/dashboard");
+    });
+
+    test("should redirect to dashboard after successful login", async ({ page }) => {
+      // Navigate to signin page
+      await page.goto(`${process.env.APP_URL}/auth/signin`);
+  
+      // Fill in the login form
+      await page.fill('input[name="email"]', "admin@example.com");
+      await page.fill('input[name="password"]', "AdminPass123!");
+  
+      // Intercept the login API call and mock a successful response
+      await page.route("**/api/auth/callback/credentials", (route) =>
+        route.fulfill({
+          status: 200,
+          body: JSON.stringify({ ok: true }),
+        })
+      );
+  
+      // Submit the form and wait for navigation
+      await Promise.all([
+        page.waitForURL('**/dashboard'),
+        page.click('button[type="submit"]')
+      ]);
+  
+      // Check if redirected to dashboard
+      expect(page.url()).toContain("/dashboard");
+  
+      // Optional: Verify some dashboard content
+      await expect(page.locator("h1")).toContainText("Dashboard");
     });
   });
 
