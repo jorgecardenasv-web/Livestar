@@ -1,6 +1,6 @@
 'use client';
 
-import { HomeIcon, UsersIcon } from 'lucide-react'
+import { ContactIcon, HomeIcon, UsersIcon } from 'lucide-react'
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
@@ -8,6 +8,7 @@ import clsx from 'clsx';
 const links = [
   { name: 'Inicio', href: '/dashboard', icon: HomeIcon },
   { name: 'Cuentas', href: '/dashboard/accounts', icon: UsersIcon },
+  { name: 'Asesores', href: '/asesores', icon: ContactIcon },
 ];
 
 export default function NavLinks() {
