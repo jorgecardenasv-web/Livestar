@@ -7,21 +7,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
 model User {
-  id        Int        @id @default(autoincrement())
-  uuid      String     @unique @default(uuid())
-  name      String
-  email     String     @unique
-  password  String
-  role      Role
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  prospects Prospect[]
+  id         Int        @id @default(autoincrement())
+  uuid       String     @unique @default(uuid())
+  name       String
+  email      String     @unique
+  password   String
+  role       Role
+  status     UserStatus @default(ACTIVE)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  prospects  Prospect[]
 }
 
 enum Role {
   ADMIN
   ADVISOR
+}
+
+enum CompanyStatus {
+  ACTIVE
+  INACTIVE
+  PENDING_REVIEW
+  BLACKLISTED
 }
 
 model InsuranceCompany {
@@ -30,9 +44,17 @@ model InsuranceCompany {
   name        String
   logo        String?
   description String?
+  status      CompanyStatus   @default(ACTIVE)
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
   plans       InsurancePlan[]
+}
+
+enum PlanStatus {
+  ACTIVE
+  INACTIVE
+  DRAFT
+  DISCONTINUED
 }
 
 model InsurancePlan {
@@ -48,9 +70,20 @@ model InsurancePlan {
   coInsuranceCap      Float?
   benefits            Json
   customizableOptions Json
+  status              PlanStatus       @default(ACTIVE)
   createdAt           DateTime         @default(now())
   updatedAt           DateTime         @updatedAt
   quotes              Quote[]
+}
+
+enum ProspectStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  QUOTED
+  CONVERTED
+  LOST
+  INACTIVE
 }
 
 model Prospect {
@@ -62,7 +95,7 @@ model Prospect {
   postalCode      String?
   assignedAdvisor User?            @relation(fields: [advisorId], references: [id])
   advisorId       Int?
-  status          ProspectStatus
+  status          ProspectStatus   @default(NEW)
   additionalInfo  Json?
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
@@ -70,11 +103,13 @@ model Prospect {
   trackingNumbers TrackingNumber[]
 }
 
-enum ProspectStatus {
-  NEW
-  CONTACTED
-  QUOTED
-  CLOSED
+enum QuoteStatus {
+  DRAFT
+  SENT
+  ACCEPTED
+  REJECTED
+  EXPIRED
+  REVISED
 }
 
 model Quote {
@@ -86,17 +121,17 @@ model Quote {
   planId         Int
   customizations Json?
   totalPrice     Float?
-  status         QuoteStatus
+  status         QuoteStatus     @default(DRAFT)
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   trackingNumber TrackingNumber?
 }
 
-enum QuoteStatus {
-  DRAFT
-  SENT
-  ACCEPTED
-  REJECTED
+enum TrackingNumberStatus {
+  ACTIVE
+  CLOSED
+  EXPIRED
+  CANCELLED
 }
 
 model TrackingNumber {
@@ -107,12 +142,7 @@ model TrackingNumber {
   prospectId Int
   quote      Quote?               @relation(fields: [quoteId], references: [id])
   quoteId    Int?                 @unique
-  status     TrackingNumberStatus
+  status     TrackingNumberStatus @default(ACTIVE)
   createdAt  DateTime             @default(now())
   updatedAt  DateTime             @updatedAt
-}
-
-enum TrackingNumberStatus {
-  ACTIVE
-  CLOSED
 }
