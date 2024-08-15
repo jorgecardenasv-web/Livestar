@@ -1,5 +1,6 @@
-import { useTranslations } from 'next-intl';
 import {
+  Badge,
+  Card,
   Table,
   TableBody,
   TableCell,
@@ -8,25 +9,21 @@ import {
   TableRow,
 } from "@tremor/react";
 import { User } from "../types/user";
+import { UserStatus } from "@prisma/client";
 
-export const UsersList = ({
-  users,
-}: {
-  users: User[];
-}) => {
-  const t = useTranslations('usersList');
-
+export const UsersList = ({ users }: { users: User[] }) => {
   return (
     <div className="w-full">
       {users && users.length > 0 ? (
-        <div className="mx-auto max-w-2xl">
+        <Card className="dark:bg-zinc-800 dark:text-zinc-100 dark:ring-0">
           <Table>
-            <TableHead className="dark:text-white">
+            <TableHead>
               <TableRow>
-                <TableHeaderCell>{t('name')}</TableHeaderCell>
-                <TableHeaderCell>{t('email')}</TableHeaderCell>
-                <TableHeaderCell>{t('role')}</TableHeaderCell>
-                <TableHeaderCell>{t('createdAt')}</TableHeaderCell>
+                <TableHeaderCell>Nombre</TableHeaderCell>
+                <TableHeaderCell>Correo electrónico</TableHeaderCell>
+                <TableHeaderCell>Rol</TableHeaderCell>
+                <TableHeaderCell>Estado</TableHeaderCell>
+                <TableHeaderCell>Fecha de creación</TableHeaderCell>
               </TableRow>
             </TableHead>
 
@@ -35,15 +32,18 @@ export const UsersList = ({
                 <TableRow key={user.id}>
                   <TableCell>{user.name}</TableCell>
                   <TableCell>{user.email}</TableCell>
-                  <TableCell>{t(`roles.${user.role}`)}</TableCell>
-                  <TableCell>{new Date(user.createdAt).toLocaleString(t('locale'))}</TableCell>
+                  <TableCell>{`${user.role.charAt(0).toUpperCase()}${user.role
+                    .slice(1)
+                    .toLowerCase()}`}</TableCell>
+                  <TableCell>{user.status === UserStatus.ACTIVE ? <Badge color="green">Activo</Badge> : <Badge color="red">Inactivo</Badge>}</TableCell>
+                  <TableCell>{user.createdAt.toLocaleString()}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-        </div>
+        </Card>
       ) : (
-        <p>{t('noUsers')}</p>
+        <p className="text-center">No hay usuarios</p>
       )}
     </div>
   );
