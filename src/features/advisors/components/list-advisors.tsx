@@ -7,11 +7,11 @@ import {
     TableHead,
     TableHeaderCell,
     TableRow,
-    Button,
 } from '@tremor/react';
 import { Advisor } from "../types/advisor";
 import { UserStatus } from "@prisma/client";
 import { PaginationListAdvisors } from './pagination-list-advisors';
+import { ListButtonsAdvisors } from './list-buttons-advisors';
 
 export const ListAdvisors = ({ advisors }: { advisors: Advisor[] }): JSX.Element => {
 
@@ -36,6 +36,9 @@ export const ListAdvisors = ({ advisors }: { advisors: Advisor[] }): JSX.Element
                             <TableHeaderCell className="text-tremor-content-strong dark:text-dark-tremor-content-strong">
                                 Fecha de creación
                             </TableHeaderCell>
+                            <TableHeaderCell className="text-tremor-content-strong dark:text-dark-tremor-content-strong">
+                                Acciones
+                            </TableHeaderCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -46,12 +49,15 @@ export const ListAdvisors = ({ advisors }: { advisors: Advisor[] }): JSX.Element
                                 <TableCell>{`${advisor.role.charAt(0).toUpperCase()}${advisor.role.slice(1).toLowerCase()}`}</TableCell>
                                 <TableCell>{advisor.status === UserStatus.ACTIVE ? <Badge color="green">Activo</Badge> : <Badge color="red">Inactivo</Badge>}</TableCell>
                                 <TableCell>{advisor.createdAt.toLocaleString()}</TableCell>
+                                <TableCell className="flex gap-1">
+                                    <ListButtonsAdvisors advisor={advisor} />
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </Card>
-            <PaginationListAdvisors />
+            <PaginationListAdvisors totalCount={advisors.length} />
         </>
     );
 }
