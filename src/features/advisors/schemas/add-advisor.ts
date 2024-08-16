@@ -19,7 +19,13 @@ export const addAdvisorSchema = z.object({
       required_error: "El nombre es requerido",
     })
     .trim()
+    .min(1, {
+      message: "El nombre debe tener al menos un caracter",
+    })
     .max(32, {
       message: "El nombre debe tener como maximo 32 caracteres",
+    })
+    .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, {
+      message: "El nombre solo puede contener letras y espacios",
     }),
 });
