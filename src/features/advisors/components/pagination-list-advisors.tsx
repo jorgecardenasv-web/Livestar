@@ -1,14 +1,14 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-export const PaginationListAdvisors = (): JSX.Element => {
+export const PaginationListAdvisors = ({ totalCount = 0 }: { totalCount: number }): JSX.Element => {
     return (
         <div className="flex items-center justify-between mx-3">
             <p className="text-tremor-default tabular-nums text-tremor-content dark:text-dark-tremor-content">
                 Mostrando {''}
-                <span className="font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">2</span>
+                <span className="font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">w</span>
                 {' '}
                 de
-                <span className="font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">{' '}10</span>
+                <span className="font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">{' '}{totalCount}</span>
             </p>
             <div className="flex items-center gap-x-1" aria-label="Pagination">
                 <button type="button" className="min-h-[38px] min-w-[38px] py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg border border-transparent text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:border-transparent dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10" aria-label="Previous">
