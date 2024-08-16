@@ -3,13 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "npm run dev:db:up && next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "seed": "ts-node --project tsconfig-seed.json src/lib/prisma/seed.ts",
     "dev:db:up": "docker-compose -f docker-compose.dev.yaml up -d",
-    "dev:db:migrate": "docker-compose -f docker-compose.dev.yaml run --rm prisma-migrate",
     "dev:db:down": "docker-compose -f docker-compose.dev.yaml down",
     "test:e2e:dev": "npm run dev:db:up && npx prisma db push && npx prisma generate && dotenv -e .env.local -- playwright test && npm run dev:db:down"
   },
