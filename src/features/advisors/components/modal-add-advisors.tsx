@@ -2,21 +2,41 @@
 
 import { Button, Dialog, DialogPanel, TextInput } from '@tremor/react';
 import { UserRoundPlus } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormState } from 'react-dom';
 import { addAdvisor } from '../actions/add-advisor';
 import { SubmitButton } from '@/shared/components/submit-button';
+import { useNotification } from "@/shared/hooks/notification-provider";
 
 export const ModalAddAdvisors = (): JSX.Element => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
+    const { showNotification } = useNotification();
     const [state, formAction] = useFormState(addAdvisor, {
         errors: {
             name: "",
             email: "",
             password: "",
             passwordConfirmation: "",
+            general: "",
         },
     });
+
+    useEffect(() => {
+        if (state.errors === null) {
+            setIsOpen(false);
+            showNotification("¡Asesor creado exitosamente!", "success");
+        }
+
+        if (Boolean(state?.errors?.general?.length)) {
+            if (state?.errors?.general) {
+                setIsOpen(false);
+                showNotification(state.errors.general ?? "Error desconocido", "error");
+            }
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [state.errors]);
+
 
     return (
         <>
