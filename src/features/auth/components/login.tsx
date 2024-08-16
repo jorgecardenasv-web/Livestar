@@ -1,11 +1,11 @@
 "use client";
 
-import { Button, TextInput } from "@tremor/react";
-import { useFormState, useFormStatus } from "react-dom";
+import { TextInput } from "@tremor/react";
+import { useFormState } from "react-dom";
 import { authenticate } from "../actions/auth";
+import { SubmitButton } from "@/shared/components/submit-button";
 
 export const SigninForm = () => {
-  const { pending } = useFormStatus();
   const [state, formAction] = useFormState(authenticate, {
     errors: {
       email: "",
@@ -58,14 +58,10 @@ export const SigninForm = () => {
               </span>
             </div>
             {state?.error && <p className="text-red-500">{state.error}</p>}
-            <Button
-              type="submit"
-              disabled={pending}
-              className="w-full"
-              color="sky"
-            >
-              {pending ? "Procesando..." : "Iniciar sesión"}
-            </Button>
+            <SubmitButton
+              textStatic="Iniciar sesión"
+              textPending="Iniciando sesión..."
+            />
           </form>
         </div>
       </div>

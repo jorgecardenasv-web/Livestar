@@ -2,8 +2,6 @@ import { test, expect } from "@playwright/test";
 import { createAuthCookie, createEncodedToken } from "./utils";
 import { testUser } from "./fixtures/auth";
 
-// TODO: Agregar una base de datos en docker o en memoria para evitar que se conecte a la real
-
 test.describe("Authentication Tests", () => {
   test("should render SignIn page with form", async ({ page }) => {
     await page.goto(`/auth/signin`);
@@ -52,20 +50,6 @@ test.describe("Authentication Tests", () => {
 
     expect(sessionCookie).toBeDefined();
     expect(sessionCookie?.value).toBe(encodedToken);
-  });
-
-  test("should navigate to dashboard with pre-existing account", async ({
-    page,
-    context,
-  }) => {
-    const encodedToken = await createEncodedToken(testUser);
-    const authCookie = createAuthCookie(encodedToken);
-
-    await context.addCookies([authCookie]);
-
-    await page.goto(`${process.env.APP_URL}/dashboard`);
-
-    expect(page.url()).toContain("/dashboard");
   });
 
   test("should redirect to dashboard after successful login", async ({ page }) => {

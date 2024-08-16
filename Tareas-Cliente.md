@@ -11,9 +11,9 @@ Este Epic se centra en la configuración inicial del entorno de desarrollo para 
 5. Crear maquetas iniciales para guiar el desarrollo.
 
 ## Historias de Usuario Incluidas
-1. Inicialización del proyecto con NextJS 14
-2. Configuración de TailwindCSS y Tremor
-3. Implementación de pruebas E2E con Playwright
+- 1. Inicialización del proyecto con NextJS 14
+- 2. Configuración de TailwindCSS y Tremor
+- 3. Implementación de pruebas E2E con Playwright
 4. Configuración del pipeline de CI/CD
 5. Creación de maquetas iniciales
 6. Documentación del entorno de desarrollo
