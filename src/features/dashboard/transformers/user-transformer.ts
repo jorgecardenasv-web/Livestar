@@ -7,6 +7,7 @@ export const userTransformer = (user: PrismaUser): User => {
     name: user.name,
     email: user.email,
     role: user.role,
+    status: user.status,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt
   }

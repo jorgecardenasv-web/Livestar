@@ -2,14 +2,15 @@
   "name": "livestar_insurance",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} src/lib/prisma/seed.ts",
-    "test:e2e": "playwright test"
+    "seed": "ts-node --project tsconfig-seed.json src/lib/prisma/seed.ts",
+    "dev:db:up": "docker-compose -f docker-compose.dev.yaml up -d",
+    "dev:db:down": "docker-compose -f docker-compose.dev.yaml down",
+    "test:e2e:dev": "npm run dev:db:up && npx prisma db push && npx prisma generate && dotenv -e .env.local -- playwright test && npm run dev:db:down"
   },
   "dependencies": {
     "@headlessui/react": "^2.1.2",
@@ -26,9 +27,10 @@
     "@trpc/server": "11.0.0-rc.477",
     "bcrypt": "^5.1.1",
     "clsx": "^2.1.1",
+    "lucide-react": "^0.427.0",
     "next": "14.2.5",
     "next-auth": "^4.24.7",
-    "next-intl": "^3.17.2",
+    "next-themes": "^0.3.0",
     "react": "^18",
     "react-content-loader": "^7.0.2",
     "react-dom": "^18",
@@ -43,6 +45,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "dotenv": "^16.4.5",
+    "dotenv-cli": "^7.4.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "postcss": "^8",
@@ -50,8 +53,5 @@
     "tailwindcss": "^3.4.9",
     "ts-node": "^10.9.2",
     "typescript": "^5"
-  },
-  "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} src/lib/prisma/seed.ts"
   }
 }

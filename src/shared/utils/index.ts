@@ -6,13 +6,13 @@ const ERROR_TYPES = {
   too_big: "tooBig",
   invalid_string: "invalidString",
   invalid_type: "invalidType",
-  custom: "custom"
+  custom: "custom",
 } as const;
 
 export function simplifyZodErrors<T>(errors: ZodError<T>): FormError {
-  return errors.issues.reduce((simplifiedErrors, key) => {
-    const errorType = ERROR_TYPES[key.code as keyof typeof ERROR_TYPES] || "default";
-    simplifiedErrors[key.path[0]] = `errors.${key.path[0]}.${errorType}`;
-    return simplifiedErrors;
-  }, {} as FormError);
+  const simplifiedErrors: FormError = {};
+  errors.issues.forEach((key) => {
+    simplifiedErrors[key.path[0]] = key.message;
+  });
+  return simplifiedErrors;
 }

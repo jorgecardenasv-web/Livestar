@@ -1,38 +1,39 @@
-'use server'
+"use server";
 
 import { simplifyZodErrors } from "@/shared/utils";
-import { signinSchema } from "../schemas/login.schema";
+import { signinSchema } from "../schemas/signin";
 import { signIn } from "../services/auth";
-import { getTranslations } from 'next-intl/server';
+import { cookies } from "next/headers";
+import { redirect, RedirectType } from "next/navigation";
 
 export async function authenticate(prevState: any, formData: FormData) {
-  const t = await getTranslations('signin');
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
 
-  try {
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
+  const zodResult = signinSchema.safeParse({
+    email,
+    password,
+  });
 
-    const zodResult = signinSchema.safeParse({
-      email,
-      password,
-    });
-  
-    if (!zodResult.success) {
-      const simplifiedErrors = simplifyZodErrors(zodResult.error);
-      
-      return {
-        errors: simplifiedErrors,
-      };
-    }
+  if (!zodResult.success) {
+    const simplifiedErrors = simplifyZodErrors(zodResult.error);
 
-    const result = await signIn(email, password);
-
-    if (result.error) {
-      return { error: 'errors.auth.invalidCredentials' };
-    }
-    return { success: true };
-  } catch (error) {
-    console.error(error);
-    return { error: 'errors.auth.unexpected' };
+    return {
+      errors: simplifiedErrors,
+    };
   }
+
+  const result = await signIn(email, password);
+
+  if (result.error) {
+    return { error: "El email o la contraseña son incorrectos" };
+  }
+
+  redirect("/dashboard", RedirectType.replace);
+}
+
+export async function logout() {
+  cookies().delete("next-auth.session-token");
+
+  redirect("/auth/signin");
 }

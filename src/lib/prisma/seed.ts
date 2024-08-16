@@ -18,7 +18,7 @@ async function main() {
     },
   });
 
-  console.log(`Usuario administrador creado o actualizado: ${adminUser.email}`);
+  console.log(`Usuario administrador creado: ${adminUser.email}`);
 }
 
 main()
