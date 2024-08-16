@@ -4,6 +4,7 @@ import { addAdvisorSchema } from "../schemas/add-advisor";
 import prisma from "@/lib/prisma";
 import { User } from "@prisma/client";
 import bcrypt from "bcrypt";
+import { revalidatePath } from "next/cache";
 
 export const addAdvisor = async (prevState: any, formData: FormData) => {
     const email: string = formData.get("email") as string;
@@ -44,6 +45,7 @@ export const addAdvisor = async (prevState: any, formData: FormData) => {
         };
     }
 
+    revalidatePath('/asesores')
     return {
         errors: null,
     }
