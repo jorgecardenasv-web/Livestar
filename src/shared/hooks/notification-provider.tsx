@@ -1,14 +1,20 @@
 'use client'
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { Notification } from '../components/notification';
 import { Portal } from '../components/portal';
 
 type NotificationType = 'info' | 'success' | 'warning' | 'error';
 
+interface NotificationItem {
+  id: number;
+  message: string;
+  type: NotificationType;
+}
+
 interface NotificationContextType {
   showNotification: (message: string, type?: NotificationType) => void;
-  hideNotification: () => void;
+  hideNotification: (id: number) => void;
 }
 
 const NotificationContext = createContext<NotificationContextType | undefined>(undefined);
@@ -26,7 +32,7 @@ interface NotificationProviderProps {
 }
 
 export const NotificationProvider: React.FC<NotificationProviderProps> = ({ children }) => {
-  const [notification, setNotification] = useState<{ message: string; type: NotificationType } | null>(null);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [headerHeight, setHeaderHeight] = useState(0);
 
   useEffect(() => {
@@ -44,38 +50,35 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
   }, []);
 
   useEffect(() => {
-    if (notification) {
-      document.body.style.setProperty('--notification-height', '64px');
-    } else {
-      document.body.style.setProperty('--notification-height', '0px');
-    }
-  }, [notification]);
+    document.body.style.setProperty('--notification-height', notifications.length ? '64px' : '0px');
+  }, [notifications]);
 
-  const showNotification = (message: string, type: NotificationType = 'info') => {
-    setNotification({ message, type });
-  };
+  const showNotification = useCallback((message: string, type: NotificationType = 'info') => {
+    setNotifications(prev => [...prev, { id: Date.now(), message, type }]);
+  }, []);
 
-  const hideNotification = () => {
-    setNotification(null);
-  };
+  const hideNotification = useCallback((id: number) => {
+    setNotifications(prev => prev.filter(notification => notification.id !== id));
+  }, []);
 
   return (
     <NotificationContext.Provider value={{ showNotification, hideNotification }}>
       {children}
-      {notification && (
-        <Portal>
-          <div 
-            className="fixed left-0 right-0 z-50 transition-all duration-300 ease-in-out"
-            style={{ top: `${headerHeight}px` }}
-          >
+      <Portal>
+        <div 
+          className="fixed left-0 right-0 z-50 transition-all duration-300 ease-in-out"
+          style={{ top: `${headerHeight}px` }}
+        >
+          {notifications.map(notification => (
             <Notification
+              key={notification.id}
               message={notification.message}
               type={notification.type}
-              onClose={hideNotification}
+              onClose={() => hideNotification(notification.id)}
             />
-          </div>
-        </Portal>
-      )}
+          ))}
+        </div>
+      </Portal>
     </NotificationContext.Provider>
   );
 };

@@ -41,6 +41,8 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       if (session.user) {
         session.user.id = token.sub!;
+        session.user.email = token.email!;
+        session.user.name = token.name!;
       }
       return session;
     },
@@ -76,7 +78,9 @@ export async function signIn(email: string, password: string) {
 
     const encodedToken = await encode({
       token: {
-        sub: user.id
+        sub: user.id,
+        email: user.email,
+        name: user.name,
       },
       secret: process.env.NEXTAUTH_SECRET!,
     });
