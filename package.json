@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "npm run dev:db:up && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "seed": "ts-node --project tsconfig-seed.json src/lib/prisma/seed.ts",
-    "test:e2e": "playwright test"
+    "dev:db:up": "docker-compose -f docker-compose.dev.yaml up -d",
+    "dev:db:down": "docker-compose -f docker-compose.dev.yaml down",
+    "test:e2e:dev": "npm run dev:db:up && npx prisma db push && npx prisma generate && dotenv -e .env.local -- playwright test && npm run dev:db:down"
   },
   "dependencies": {
     "@headlessui/react": "^2.1.2",
@@ -43,6 +45,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "dotenv": "^16.4.5",
+    "dotenv-cli": "^7.4.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
     "postcss": "^8",

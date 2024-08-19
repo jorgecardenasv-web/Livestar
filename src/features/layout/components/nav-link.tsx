@@ -1,22 +1,16 @@
 'use client';
 
-import { ContactIcon, HomeIcon, UsersIcon } from 'lucide-react'
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
-
-const links = [
-  { name: 'Inicio', href: '/dashboard', icon: HomeIcon },
-  { name: 'Cuentas', href: '/dashboard/accounts', icon: UsersIcon },
-  { name: 'Asesores', href: '/asesores', icon: ContactIcon },
-];
+import { navLinks } from '../data/nav-links';
 
 export default function NavLinks() {
   const pathname = usePathname();
   
   return (
     <>
-      {links.map((link) => {
+      {navLinks.map((link) => {
         const LinkIcon = link.icon;
         const isActive = pathname === link.href;
         return (
