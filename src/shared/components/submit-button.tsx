@@ -3,21 +3,20 @@
 import { Button, ButtonProps } from "@tremor/react";
 import { useFormStatus } from "react-dom";
 
+interface Props extends ButtonProps {
+  textStatic: string;
+  textPending: string;
+}
+
 export const SubmitButton = ({
   textStatic,
   textPending,
-  className,
-  color,
-}: {
-  textStatic: string;
-  textPending: string;
-  className?: string;
-  color?: ButtonProps["color"];
-}) => {
+  ...props
+}: Props) => {
   const { pending } = useFormStatus();
 
   return (
-    <Button type="submit" className={className} disabled={pending} color={color ?? "sky"}>
+    <Button type="submit" disabled={pending} {...props}>
       {pending ? textPending : textStatic}
     </Button>
   );
