@@ -6,9 +6,20 @@ import { Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Advisor } from "../types/advisor";
 import { UserStatus } from "@prisma/client";
+import { deleteAdvisor } from "../actions/delete-advisor";
+import { useNotification } from "@/shared/hooks/notification-provider";
 
 export const ListButtonsAdvisors = ({ advisor }: { advisor: Advisor }): JSX.Element => {
     const [isOpenModalDelete, setIsOpenModalDelete] = useState<boolean>(false);
+    const { showNotification } = useNotification();
+
+    const handleDeleteAdvisor = async (): Promise<void> => {
+        const isOperationConfirmed: boolean = await deleteAdvisor(advisor.id);
+        setIsOpenModalDelete(false);
+
+        if (isOperationConfirmed) return showNotification("¡Asesor creado exitosamente!", "success");
+        showNotification("Error desconocido", "error");
+    }
 
     return (
         <>
@@ -46,12 +57,10 @@ export const ListButtonsAdvisors = ({ advisor }: { advisor: Advisor }): JSX.Elem
                     </Callout>
 
                     <div className="mt-8 w-full flex flex-row gap-2">
-                        <form action="">
-                            <SubmitButton textStatic="Eliminar" color="red" className='flex-1' textPending="Eliminando..." />
-                            <Button variant="secondary" color="red" type='button' className='flex-1' onClick={() => setIsOpenModalDelete(false)}>
-                                Cancelar
-                            </Button>
-                        </form>
+                        <SubmitButton textStatic="Eliminar" color="red" className='flex-1' textPending="Eliminando..." onClick={handleDeleteAdvisor} />
+                        <Button variant="secondary" color="red" type='button' className='flex-1' onClick={() => setIsOpenModalDelete(false)}>
+                            Cancelar
+                        </Button>
                     </div>
                 </DialogPanel>
             </Dialog>
