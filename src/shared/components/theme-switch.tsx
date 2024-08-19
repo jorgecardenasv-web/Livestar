@@ -92,8 +92,8 @@ export const ThemeSelect: React.FC = () => {
       </button>
       {isOpen && (
         <div
-          className="absolute w-full mt-2 md:mt-0 md:mb-2 z-50
-                     top-full md:top-auto md:bottom-full left-0
+          className="absolute w-[150px] sm:w-full mt-2 md:mt-0 md:mb-2 z-50
+                     top-full md:top-auto md:bottom-full right-0 sm:right-auto sm:left-0
                      bg-tremor-background-muted ring-1 ring-tremor-ring dark:ring-0 dark:bg-dark-tremor-background
                      border-tremor-border dark:border-dark-tremor-border
                      rounded-tremor-default shadow-tremor-dropdown dark:shadow-dark-tremor-dropdown"
@@ -102,13 +102,13 @@ export const ThemeSelect: React.FC = () => {
             <button
               key={option.value}
               onClick={() => handleSelectChange(option.value)}
-              className="w-full flex items-center justify-center md:justify-start space-x-2 p-2
+              className="w-full flex items-center space-x-2 p-2 text-left
                          text-tremor-content dark:bg-dark-tremor-background dark:text-dark-tremor-brand-emphasis 
                          hover:bg-tremor-brand-muted hover:text-tremor-brand-emphasis 
                          dark:hover:bg-dark-tremor-brand-subtle dark:hover:text-dark-tremor-brand-emphasis"
             >
               <option.icon size={20} className={getIconColor(option.value)} />
-              <span className="hidden sm:inline">{option.label}</span>
+              <span className="whitespace-nowrap overflow-hidden text-ellipsis">{option.label}</span>
             </button>
           ))}
         </div>

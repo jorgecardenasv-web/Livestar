@@ -1,34 +1,55 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  schemas  = ["public", "auth"]
 }
 
 enum UserStatus {
   ACTIVE
   INACTIVE
   SUSPENDED
+  
+  @@schema("auth")
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  expires      DateTime
+  sessionToken String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@schema("auth")
 }
 
 model User {
-  id         Int        @id @default(autoincrement())
-  uuid       String     @unique @default(uuid())
-  name       String
-  email      String     @unique
-  password   String
-  role       Role
-  status     UserStatus @default(ACTIVE)
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
-  prospects  Prospect[]
+  id        Int        @id @default(autoincrement())
+  uuid      String     @unique @default(uuid())
+  name      String
+  email     String     @unique
+  password  String
+  role      Role
+  status    UserStatus @default(ACTIVE)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  prospects Prospect[]
+  sessions  Session[]
+
+  @@schema("auth")
 }
 
 enum Role {
   ADMIN
   ADVISOR
+
+  @@schema("auth")
 }
 
 enum CompanyStatus {
@@ -36,6 +57,8 @@ enum CompanyStatus {
   INACTIVE
   PENDING_REVIEW
   BLACKLISTED
+
+  @@schema("public")
 }
 
 model InsuranceCompany {
@@ -48,6 +71,8 @@ model InsuranceCompany {
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
   plans       InsurancePlan[]
+
+  @@schema("public")
 }
 
 enum PlanStatus {
@@ -55,6 +80,8 @@ enum PlanStatus {
   INACTIVE
   DRAFT
   DISCONTINUED
+
+  @@schema("public")
 }
 
 model InsurancePlan {
@@ -74,6 +101,8 @@ model InsurancePlan {
   createdAt           DateTime         @default(now())
   updatedAt           DateTime         @updatedAt
   quotes              Quote[]
+
+  @@schema("public")
 }
 
 enum ProspectStatus {
@@ -84,6 +113,8 @@ enum ProspectStatus {
   CONVERTED
   LOST
   INACTIVE
+
+  @@schema("public")
 }
 
 model Prospect {
@@ -101,6 +132,8 @@ model Prospect {
   updatedAt       DateTime         @updatedAt
   quotes          Quote[]
   trackingNumbers TrackingNumber[]
+
+  @@schema("public")
 }
 
 enum QuoteStatus {
@@ -110,6 +143,8 @@ enum QuoteStatus {
   REJECTED
   EXPIRED
   REVISED
+
+  @@schema("public")
 }
 
 model Quote {
@@ -125,6 +160,8 @@ model Quote {
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   trackingNumber TrackingNumber?
+
+  @@schema("public")
 }
 
 enum TrackingNumberStatus {
@@ -132,6 +169,8 @@ enum TrackingNumberStatus {
   CLOSED
   EXPIRED
   CANCELLED
+
+  @@schema("public")
 }
 
 model TrackingNumber {
@@ -145,4 +184,6 @@ model TrackingNumber {
   status     TrackingNumberStatus @default(ACTIVE)
   createdAt  DateTime             @default(now())
   updatedAt  DateTime             @updatedAt
+
+  @@schema("public")
 }
