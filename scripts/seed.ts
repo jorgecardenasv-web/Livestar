@@ -1,11 +1,19 @@
 import { Role } from "@prisma/client";
-import bcrypt from "bcrypt";
-import prisma from ".";
+import { hash } from "bcrypt";
+
+const dotenv = require('dotenv');
+const path = require('path');
+const { PrismaClient } = require('@prisma/client');
+
+const env = process.env.NODE_ENV || 'development';
+dotenv.config({ path: path.resolve(process.cwd(), `.env.${env}`) });
+
+const prisma = new PrismaClient();
 
 async function main() {
   const adminEmail = "admin@example.com";
   const adminPassword = "AdminPass123";
-  const hashedPassword = await bcrypt.hash(adminPassword, 10);
+  const hashedPassword = await hash(adminPassword, 10);
 
   await prisma.user.deleteMany();
 

@@ -1,8 +1,10 @@
+"use client";
+
 import Link from "next/link";
-import NavLinks from "@/features/dashboard/components/nav-link";
-import { logout } from "@/features/auth/actions/auth";
+import NavLinks from "@/features/layout/components/nav-link";
 import { ThemeSelect } from "@/shared/components/theme-switch";
-import { PowerIcon } from "lucide-react";
+import { Dropdown } from "./dropdown";
+import { UserCircleIcon } from "lucide-react";
 
 export default function SideNav() {
   return (
@@ -18,14 +20,11 @@ export default function SideNav() {
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
         <NavLinks />
         <div className="hidden h-auto w-full grow rounded-md bg-tremor-background dark:bg-dark-tremor-background-subtle ring-1 ring-tremor-ring dark:ring-0 md:block"></div>
-        <div className="flex gap-2 md:flex-col">
+        <div className="flex flex-row items-center space-x-2">
           <ThemeSelect />
-          <form action={logout}>
-            <button className="flex h-[48px] w-full grow items-center bg-tremor-background dark:bg-dark-tremor-background-subtle dark:hover:bg-dark-tremor-brand-subtle justify-center gap-2 rounded-md ring-1 ring-tremor-ring dark:ring-0 p-3 text-sm font-medium hover:bg-tremor-brand-muted hover:text-tremor-brand-emphasis dark:hover:text-dark-tremor-brand-emphasis md:flex-none md:justify-start md:p-2 md:px-3">
-              <PowerIcon size={24} />
-              <div className="hidden md:block">Cerrar sesión</div>
-            </button>
-          </form>
+          <div className="lg:hidden">
+            <Dropdown icon={UserCircleIcon} />
+          </div>
         </div>
       </div>
     </div>
