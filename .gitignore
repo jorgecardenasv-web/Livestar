@@ -6,7 +6,6 @@
 .pnp.js
 .yarn/install-state.gz
 package-lock.json
-pnpm-lock.yaml
 yarn.lock
 
 # testing
@@ -29,8 +28,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env*.local
 .env
+.env.production
 
 # vercel
 .vercel

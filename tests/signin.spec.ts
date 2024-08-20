@@ -1,8 +1,28 @@
 import { test, expect } from "@playwright/test";
 import { createAuthCookie, createEncodedToken } from "./utils";
 import { testUser } from "./fixtures/auth";
+import { hash } from "bcrypt";
+import prisma from "@/lib/prisma";
 
 test.describe("Authentication Tests", () => {
+  test.beforeAll(async () => {
+    const hashedPassword = await hash(testUser.password, 10);
+    await prisma.user.upsert({
+      where: { email: testUser.email },
+      update: {
+        name: testUser.name,
+        password: hashedPassword,
+        role: testUser.role,
+      },
+      create: {
+        email: testUser.email,
+        name: testUser.name,
+        password: hashedPassword,
+        role: testUser.role,
+      },
+    });
+  });
+
   test("should render SignIn page with form", async ({ page }) => {
     await page.goto(`/auth/signin`);
 
@@ -15,8 +35,12 @@ test.describe("Authentication Tests", () => {
 
     await page.click('button[type="submit"]');
 
-    await expect(page.locator("text=Ingresa un correo electrónico valido")).toBeVisible();
-    await expect(page.locator("text=La contraseña debe tener al menos 6 caracteres")).toBeVisible();
+    await expect(
+      page.locator("text=Ingresa un correo electrónico valido")
+    ).toBeVisible();
+    await expect(
+      page.locator("text=La contraseña debe tener al menos 6 caracteres")
+    ).toBeVisible();
   });
 
   test("should show error message on failed login", async ({ page }) => {
@@ -34,7 +58,9 @@ test.describe("Authentication Tests", () => {
 
     await page.click('button[type="submit"]');
 
-    await expect(page.locator("text=El email o la contraseña son incorrectos")).toBeVisible();
+    await expect(
+      page.locator("text=El email o la contraseña son incorrectos")
+    ).toBeVisible();
   });
 
   test("should set authentication cookie", async ({ context }) => {
@@ -52,11 +78,13 @@ test.describe("Authentication Tests", () => {
     expect(sessionCookie?.value).toBe(encodedToken);
   });
 
-  test("should redirect to dashboard after successful login", async ({ page }) => {
+  test("should redirect to dashboard after successful login", async ({
+    page,
+  }) => {
     await page.goto(`${process.env.APP_URL}/auth/signin`);
 
-    await page.fill('input[name="email"]', "admin@example.com");
-    await page.fill('input[name="password"]', "AdminPass123!");
+    await page.fill('input[name="email"]', `${testUser.email}`);
+    await page.fill('input[name="password"]', `${testUser.password}`);
 
     await page.route("**/api/auth/callback/credentials", (route) =>
       route.fulfill({
@@ -66,8 +94,8 @@ test.describe("Authentication Tests", () => {
     );
 
     await Promise.all([
-      page.waitForURL('**/dashboard'),
-      page.click('button[type="submit"]')
+      page.waitForURL("**/dashboard"),
+      page.click('button[type="submit"]'),
     ]);
 
     expect(page.url()).toContain("/dashboard");

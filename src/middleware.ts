@@ -9,17 +9,17 @@ export async function middleware(request: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  console.log({ token });
+  // console.log({ token });
 
-  const user = await prisma.session.findFirst({
-    where: {
-      user: {
-        uuid: token?.sub,
-      }
-    },
-  });
+  // const user = await prisma.session.findFirst({
+  //   where: {
+  //     user: {
+  //       uuid: token?.sub,
+  //     }
+  //   },
+  // });
   
-  console.log({ user });
+  // console.log({ user });
   
 
   const publicPaths = ["/", "/auth/signin", "/auth/signup"];
