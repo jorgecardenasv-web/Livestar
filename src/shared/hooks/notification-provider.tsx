@@ -1,8 +1,5 @@
-'use client'
-
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
 import { Notification } from '../components/notification';
-import { Portal } from '../components/portal';
 
 type NotificationType = 'info' | 'success' | 'warning' | 'error';
 
@@ -10,10 +7,11 @@ interface NotificationItem {
   id: number;
   message: string;
   type: NotificationType;
+  timeout: number;
 }
 
 interface NotificationContextType {
-  showNotification: (message: string, type?: NotificationType) => void;
+  showNotification: (message: string, type?: NotificationType, timeout?: number) => void;
   hideNotification: (id: number) => void;
 }
 
@@ -29,56 +27,57 @@ export const useNotification = () => {
 
 interface NotificationProviderProps {
   children: ReactNode;
+  defaultTimeout?: number;
 }
 
-export const NotificationProvider: React.FC<NotificationProviderProps> = ({ children }) => {
+export const NotificationProvider: React.FC<NotificationProviderProps> = ({ 
+  children, 
+  defaultTimeout = 5000
+}) => {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
-  const [headerHeight, setHeaderHeight] = useState(0);
 
-  useEffect(() => {
-    const updateHeaderHeight = () => {
-      const header = document.querySelector('header');
-      if (header) {
-        setHeaderHeight(header.getBoundingClientRect().height);
-      }
-    };
+  const showNotification = useCallback((
+    message: string, 
+    type: NotificationType = 'info',
+    timeout: number = defaultTimeout
+  ) => {
+    const id = Date.now();
+    setNotifications(prev => [...prev, { id, message, type, timeout }]);
 
-    updateHeaderHeight();
-    window.addEventListener('resize', updateHeaderHeight);
-
-    return () => window.removeEventListener('resize', updateHeaderHeight);
-  }, []);
-
-  useEffect(() => {
-    document.body.style.setProperty('--notification-height', notifications.length ? '64px' : '0px');
-  }, [notifications]);
-
-  const showNotification = useCallback((message: string, type: NotificationType = 'info') => {
-    setNotifications(prev => [...prev, { id: Date.now(), message, type }]);
-  }, []);
+    setTimeout(() => {
+      hideNotification(id);
+    }, timeout);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [defaultTimeout]);
 
   const hideNotification = useCallback((id: number) => {
     setNotifications(prev => prev.filter(notification => notification.id !== id));
   }, []);
 
+  useEffect(() => {
+    const notificationHeight = notifications.length * 64;
+    document.body.style.paddingTop = `${notificationHeight}px`;
+    document.body.style.transition = 'padding-top 0.3s ease-in-out';
+
+    return () => {
+      document.body.style.paddingTop = '';
+      document.body.style.transition = '';
+    };
+  }, [notifications.length]);
+
   return (
     <NotificationContext.Provider value={{ showNotification, hideNotification }}>
+      <div className="fixed top-0 left-0 right-0">
+        {notifications.map(notification => (
+          <Notification
+            key={notification.id}
+            message={notification.message}
+            type={notification.type}
+            onClose={() => hideNotification(notification.id)}
+          />
+        ))}
+      </div>
       {children}
-      <Portal>
-        <div 
-          className="fixed left-0 right-0 z-50 transition-all duration-300 ease-in-out"
-          style={{ top: `${headerHeight}px` }}
-        >
-          {notifications.map(notification => (
-            <Notification
-              key={notification.id}
-              message={notification.message}
-              type={notification.type}
-              onClose={() => hideNotification(notification.id)}
-            />
-          ))}
-        </div>
-      </Portal>
     </NotificationContext.Provider>
   );
 };

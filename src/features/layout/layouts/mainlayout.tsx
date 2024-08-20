@@ -7,7 +7,7 @@ export const MainLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="lg:w-64 flex-shrink-0">
         <SideNav />
       </div>
-      <div className="grow flex flex-col overflow-hidden gap-8 py-4 px-4">
+      <div className="grow flex flex-col overflow-hidden gap-y-10 py-4 px-4">
         <Header />
         <main className="flex-1 overflow-y-auto">{children}</main>
       </div>

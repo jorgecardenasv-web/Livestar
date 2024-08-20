@@ -1,6 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import NavLinks from "@/features/layout/components/nav-link";
 import { ThemeSelect } from "@/shared/components/theme-switch";
+import { Dropdown } from "./dropdown";
+import { UserCircleIcon } from "lucide-react";
 
 export default function SideNav() {
   return (
@@ -16,7 +20,12 @@ export default function SideNav() {
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
         <NavLinks />
         <div className="hidden h-auto w-full grow rounded-md bg-tremor-background dark:bg-dark-tremor-background-subtle ring-1 ring-tremor-ring dark:ring-0 md:block"></div>
-        <ThemeSelect />
+        <div className="flex flex-row items-center space-x-2">
+          <ThemeSelect />
+          <div className="lg:hidden">
+            <Dropdown icon={UserCircleIcon} />
+          </div>
+        </div>
       </div>
     </div>
   );
