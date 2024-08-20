@@ -1,26 +1,17 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
-import prisma from "@/lib/prisma";
+
+const routeRoles: { [key: string]: string[] } = {
+  "/dashboard": ["ADMIN", "ADVISOR"],
+  "/asesores": ["ADMIN"],
+};
 
 export async function middleware(request: NextRequest) {
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
   });
-
-  // console.log({ token });
-
-  // const user = await prisma.session.findFirst({
-  //   where: {
-  //     user: {
-  //       uuid: token?.sub,
-  //     }
-  //   },
-  // });
-  
-  // console.log({ user });
-  
 
   const publicPaths = ["/", "/auth/signin", "/auth/signup"];
   const path = request.nextUrl.pathname;
@@ -31,6 +22,15 @@ export async function middleware(request: NextRequest) {
 
   if (!token && !publicPaths.includes(path)) {
     return NextResponse.redirect(new URL("/auth/signin", request.url));
+  }
+
+  if (token && token.role) {
+    const userRole = token.role as string;
+    const allowedRoles = routeRoles[path];
+
+    if (allowedRoles && !allowedRoles.includes(userRole)) {
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
   }
 
   return NextResponse.next();

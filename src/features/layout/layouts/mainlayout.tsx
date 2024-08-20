@@ -1,11 +1,11 @@
 import { Header } from "../components/header";
-import SideNav from "../components/sidebar";
+import { Sidebar } from "../components/sidebar";
 
 export const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="md:flex block h-screen">
       <div className="lg:w-64 flex-shrink-0">
-        <SideNav />
+        <Sidebar />
       </div>
       <div className="grow flex flex-col overflow-hidden gap-y-10 py-4 px-4">
         <Header />
