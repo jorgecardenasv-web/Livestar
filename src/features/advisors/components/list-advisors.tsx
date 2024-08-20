@@ -17,7 +17,7 @@ export const ListAdvisors = ({ advisors }: { advisors: Advisor[] }): JSX.Element
 
     return (
         <>
-            <Card>
+            <Card className="dark:bg-zinc-800 dark:text-zinc-100 dark:ring-0">
                 <Table>
                     <TableHead>
                         <TableRow className="border-b border-tremor-border dark:border-dark-tremor-border">
