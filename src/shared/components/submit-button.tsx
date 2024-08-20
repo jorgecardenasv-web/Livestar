@@ -1,19 +1,22 @@
 'use client'
 
-import { Button } from "@tremor/react";
+import { Button, ButtonProps } from "@tremor/react";
 import { useFormStatus } from "react-dom";
+
+interface Props extends ButtonProps {
+  textStatic: string;
+  textPending: string;
+}
 
 export const SubmitButton = ({
   textStatic,
   textPending,
-}: {
-  textStatic: string;
-  textPending: string;
-}) => {
+  ...props
+}: Props) => {
   const { pending } = useFormStatus();
 
   return (
-    <Button type="submit" disabled={pending} className="w-full" color="sky">
+    <Button type="submit" disabled={pending} {...props}>
       {pending ? textPending : textStatic}
     </Button>
   );
