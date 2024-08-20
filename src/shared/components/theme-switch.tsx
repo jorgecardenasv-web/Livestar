@@ -84,9 +84,9 @@ export const ThemeSelect: React.FC = () => {
             size={20}
             className={getIconColor(selectedOption.value)}
           />
-          <span className="hidden sm:inline">{selectedOption.label}</span>
+          <span className="hidden md:inline">{selectedOption.label}</span>
         </div>
-        <span className="text-xs hidden sm:inline">
+        <span className="text-xs hidden md:inline">
           {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
         </span>
       </button>

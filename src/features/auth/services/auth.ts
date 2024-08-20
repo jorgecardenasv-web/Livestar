@@ -89,12 +89,12 @@ export async function signIn(email: string, password: string) {
   if (!user) return { error: "Invalid credentials" };
 
   const session = {
-    user: { id: user.uuid, email: user.email, name: user.name },
+    user: { id: user.uuid, email: user.email, name: user.name, role: user.role },
     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
   };
 
   const encodedToken = await encode({
-    token: { sub: user.uuid, email: user.email, name: user.name },
+    token: { sub: user.uuid, email: user.email, name: user.name, role: user.role },
     secret: process.env.NEXTAUTH_SECRET!,
   });
 

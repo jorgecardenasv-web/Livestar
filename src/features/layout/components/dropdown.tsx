@@ -46,9 +46,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
           {Icon && (
             <Icon size={20} className="text-sky-600 dark:text-tremor-brand" />
           )}
-          <span className="hidden sm:inline">{label}</span>
+          <span className="hidden md:inline">{label}</span>
         </div>
-        <span className="text-xs hidden sm:inline">
+        <span className="text-xs hidden md:inline">
           {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
         </span>
       </button>

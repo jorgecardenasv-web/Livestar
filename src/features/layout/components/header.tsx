@@ -1,7 +1,7 @@
 import { getServerSession } from "@/features/auth/services/auth";
-import { HeaderClient } from "./header-client";
+import { HeaderClient } from "./header.client";
 
-export const Header = async() => {
+export const Header = async () => {
   const session = await getServerSession();
 
   return (
