@@ -1,6 +1,20 @@
 # Livestar Insurance
 ## Descripción de como ejecutar el proyecto y sus comandos
 
+## Tecnologías utilizadas
+- **[Next.js](https://nextjs.org/)**
+- **[Prisma](https://www.prisma.io/)**
+- **[Docker](https://www.docker.com/)**
+- **[Playwright](https://playwright.dev/)**
+- **[TailwindCSS](https://tailwindcss.com/)**
+- **[Tremor](https://tremor.rs/)**
+- **[NextAuth.js](https://next-auth.js.org/)**
+- **[Bcrypt](https://www.npmjs.com/package/bcrypt)**
+- **[Zod](https://zod.dev/)**
+- **[Lucide Icons](https://lucide.dev/guide/packages/lucide-react)**
+- **[React](https://react.dev)**
+- **[Typescript](https://www.typescriptlang.org)**             
+
 ## Requisitos
 
 Para ejecutar este proyecto, necesitarás tener instalados los siguientes programas:
