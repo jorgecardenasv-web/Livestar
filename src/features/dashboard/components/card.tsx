@@ -4,7 +4,7 @@ import { Card, ProgressBar } from '@tremor/react';
 
 export const CardExample = () => {
   return (
-    <Card className="mx-auto dark:bg-zinc-800 dark:text-zinc-100 dark:ring-0">
+    <Card className="dark:bg-dark-tremor-background-subtle">
       <h4 className="text-tremor-default text-zinc-600 dark:text-zinc-400">
         Sales
       </h4>

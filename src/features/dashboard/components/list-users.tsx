@@ -15,7 +15,7 @@ export const UsersList = ({ users }: { users: User[] }) => {
   return (
     <div className="w-full">
       {users && users.length > 0 ? (
-        <Card className="dark:bg-zinc-800 dark:text-zinc-100 dark:ring-0">
+        <Card className="dark:bg-dark-tremor-background-subtle">
           <Table>
             <TableHead>
               <TableRow>
