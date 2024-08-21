@@ -1,19 +1,15 @@
-'use client';
+"use client";
 
 import React, { useState, useRef, useEffect } from "react";
-import { ChevronDown, ChevronUp, PowerIcon, UserPen } from "lucide-react";
+import { ChevronDown, ChevronUp, PowerIcon, UserCircle, UserPen } from "lucide-react";
 import { logout } from "@/features/auth/actions/auth";
 import Link from "next/link";
 
 interface DropdownProps {
   label?: string;
-  icon?: React.ElementType;
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({
-  label,
-  icon: Icon,
-}) => {
+export const Dropdown: React.FC<DropdownProps> = ({ label }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -37,15 +33,13 @@ export const Dropdown: React.FC<DropdownProps> = ({
     <div className="relative w-full" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="dark:ring-1 ring-tremor-brand h-[48px] w-full flex items-center justify-between px-3.5 border rounded-tremor-default
+        className="dark:ring-1 ring-tremor-brand h-[48px] w-full flex items-center justify-between px-3.5 ring-1 rounded-tremor-default
                    bg-tremor-background dark:bg-dark-tremor-background-subtle
                    text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis
                    border-tremor-border dark:border-dark-tremor-border"
       >
         <div className="flex items-center space-x-2">
-          {Icon && (
-            <Icon size={20} className="text-sky-600 dark:text-tremor-brand" />
-          )}
+          <UserCircle size={20} className="text-sky-600 dark:text-tremor-brand" />
           <span className="hidden md:inline">{label}</span>
         </div>
         <span className="text-xs hidden md:inline">
@@ -54,9 +48,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
       </button>
       {isOpen && (
         <div
-          className="absolute w-[150px] mt-2 md:mb-0 md:mt-2 z-50
+          className="absolute w-[150px] md:w-full mt-2 md:mb-0 md:mt-2 z-50
                      top-full md:bottom-auto md:top-full right-0
-                     bg-tremor-background-muted ring-1 ring-tremor-ring dark:ring-0 dark:bg-dark-tremor-background
+                     bg-tremor-background-muted ring-0 dark:bg-dark-tremor-background
                      border-tremor-border dark:border-dark-tremor-border
                      rounded-tremor-default shadow-tremor-dropdown dark:shadow-dark-tremor-dropdown"
         >

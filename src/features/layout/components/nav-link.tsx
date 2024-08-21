@@ -24,7 +24,7 @@ export default function NavLinks({ userRole }: { userRole?: string }) {
                 {
                   "bg-tremor-brand-muted text-tremor-brand-emphasis dark:bg-dark-tremor-brand-subtle dark:text-dark-tremor-brand-emphasis":
                     isActive,
-                  "bg-tremor-background-default dark:bg-dark-tremor-background-subtle ring-1 dark:ring-0 ring-tremor-ring hover:bg-tremor-brand-muted hover:text-tremor-brand-emphasis dark:hover:bg-dark-tremor-brand-subtle dark:hover:text-dark-tremor-brand-emphasis":
+                  "bg-tremor-background-default dark:bg-dark-tremor-background-subtle ring-1 ring-tremor-border dark:ring-dark-tremor-border hover:bg-tremor-brand-muted hover:text-tremor-brand-emphasis dark:hover:bg-dark-tremor-brand-subtle dark:hover:text-dark-tremor-brand-emphasis":
                     !isActive,
                 }
               )}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import { XSquare } from 'lucide-react'
 
 type NotificationType = 'info' | 'success' | 'warning' | 'error';
 
@@ -32,7 +32,7 @@ export const Notification: React.FC<NotificationProps> = ({
           className="text-current hover:opacity-75 transition-opacity duration-200"
           aria-label="Close notification"
         >
-          <XMarkIcon className="h-5 w-5" />
+          <XSquare className="h-5 w-5" />
         </button>
       </div>
     </div>
