@@ -38,7 +38,7 @@ async function main() {
     },
   })
 
-  for (let i = 1; i <= 104; i++) {
+  for (let i = 1; i <= 54; i++) {
     await prisma.user.create({
       data: {
         name: `Asesor ${i}`,
@@ -46,6 +46,18 @@ async function main() {
         password: hashedAdvisorPassword,
         role: Role.ADVISOR,
         status: UserStatus.ACTIVE,
+      },
+    })
+  }
+
+  for (let i = 55; i <= 104; i++) {
+    await prisma.user.create({
+      data: {
+        name: `Asesor ${i}`,
+        email: `advisor${i}@example.com`,
+        password: hashedAdvisorPassword,
+        role: Role.ADVISOR,
+        status: UserStatus.INACTIVE,
       },
     })
   }

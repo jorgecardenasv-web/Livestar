@@ -1,6 +1,5 @@
 import { HeaderAdvisors } from "@/features/advisors/components/header-advisors";
 import { getAdvisors } from "@/features/advisors/actions/get-advisors";
-import { Advisor } from "@/features/advisors/types/advisor";
 import { ListAdvisors } from "@/features/advisors/components/list-advisors";
 import { Pagination } from "@/shared/components/pagination";
 
@@ -9,15 +8,18 @@ export default async function Advisors({
 }: {
   searchParams?: {
     page?: string;
+    status?: string;
   };
 }) {
-  const { advisors, totalPages } = await getAdvisors(
-    Number(searchParams?.page || 1)
-  );
+  const { advisors, totalPages } = await getAdvisors({
+    page: Number(searchParams?.page || 1),
+    status: searchParams?.status,
+  });
 
   return (
     <>
       <HeaderAdvisors />
+      {/* Filtros */}
       <ListAdvisors advisors={advisors} />
       <Pagination totalPages={totalPages} />
     </>
