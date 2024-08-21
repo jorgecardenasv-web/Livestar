@@ -1,19 +1,25 @@
 import { UsersList } from "@/features/dashboard/components/list-users";
 import { getUsers } from "@/features/dashboard/actions/get-users";
-import { Card, ProgressBar } from "@tremor/react";
 import { CardExample } from "@/features/dashboard/components/card";
+import { Pagination } from "@/shared/components/pagination";
 
-export default async function Dashboard() {
-  const users = await getUsers();
+export default async function Dashboard({
+  searchParams,
+}: {
+  searchParams?: {
+    page?: string;
+  };
+}) {
+  const { users, totalPages } = await getUsers(Number(searchParams?.page || 1));
   return (
-    <div className="flex h-full flex-col gap-y-10 items-center">
+    <>
       <div className="flex gap-5 w-full flex-col lg:flex-row">
         <CardExample />
         <CardExample />
         <CardExample />
       </div>
       <UsersList users={users} />
-      <UsersList users={users} />
-    </div>
+      <Pagination totalPages={totalPages} />
+    </>
   );
 }

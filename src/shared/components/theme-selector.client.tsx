@@ -10,7 +10,7 @@ interface ThemeOption {
   icon: React.ElementType;
 }
 
-export const ThemeSelect: React.FC = () => {
+export const ThemeSelectClient: React.FC = () => {
   const [mounted, setMounted] = useState<boolean>(false);
   const { theme, setTheme } = useTheme();
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -60,30 +60,17 @@ export const ThemeSelect: React.FC = () => {
     setIsOpen(false);
   };
 
-  const getIconColor = (optionValue: string): string => {
-    if (theme === "dark") {
-      return optionValue === "dark"
-        ? "text-tremor-brand-emphasis"
-        : "text-tremor-brand";
-    } else {
-      return "text-sky-600";
-    }
-  };
-
   return (
-    <div className="relative w-full" ref={selectRef}>
+    <div ref={selectRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="h-[48px] w-full flex items-center justify-between px-3.5 border rounded-tremor-default
+        className="ring-tremor-brand h-[48px] w-full flex items-center justify-between px-3.5 border rounded-tremor-default
                    bg-tremor-background dark:bg-dark-tremor-background-subtle
                    text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis
-                   border-tremor-border dark:border-dark-tremor-border"
+                   ring-1 dark:border-dark-tremor-border"
       >
         <div className="flex items-center space-x-2">
-          <selectedOption.icon
-            size={20}
-            className={getIconColor(selectedOption.value)}
-          />
+          <selectedOption.icon size={20} className="text-tremor-brand" />
           <span className="hidden md:inline">{selectedOption.label}</span>
         </div>
         <span className="text-xs hidden md:inline">
@@ -107,8 +94,10 @@ export const ThemeSelect: React.FC = () => {
                          hover:bg-tremor-brand-muted hover:text-tremor-brand-emphasis 
                          dark:hover:bg-dark-tremor-brand-subtle dark:hover:text-dark-tremor-brand-emphasis"
             >
-              <option.icon size={20} className={getIconColor(option.value)} />
-              <span className="whitespace-nowrap overflow-hidden text-ellipsis">{option.label}</span>
+              <option.icon size={20} className="text-tremor-brand" />
+              <span className="whitespace-nowrap overflow-hidden text-ellipsis">
+                {option.label}
+              </span>
             </button>
           ))}
         </div>

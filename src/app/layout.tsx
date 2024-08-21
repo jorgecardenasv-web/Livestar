@@ -16,13 +16,17 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession()
-  const basePath = process.env.NEXTAUTH_BASE_PATH
+  const session = await getServerSession();
+  const basePath = process.env.NEXTAUTH_BASE_PATH;
 
   return (
     <html lang="es">
-      <body className={`${inter.className} bg-tremor-background-muted text-tremor-content-strong dark:bg-dark-tremor-background dark:text-dark-tremor-content-strong flex h-screen flex-col`}>
-        <Providers session={session} basePath={basePath}>{children}</Providers>
+      <body
+        className={`${inter.className} bg-tremor-background-muted dark:bg-dark-tremor-background flex h-screen flex-col`}
+      >
+        <Providers session={session} basePath={basePath}>
+          {children}
+        </Providers>
       </body>
     </html>
   );
