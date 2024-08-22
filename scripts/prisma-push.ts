@@ -5,6 +5,7 @@ import { execSync } from 'child_process';
 const env = process.env.NODE_ENV || 'development';
 dotenv.config({ path: path.resolve(process.cwd(), `.env.${env}`) });
 
+console.log('Utilizando variables de entorno NODE_ENV:', path.resolve(process.cwd(), `.env.${env}`));
 console.log(`Haciendo push de la base de datos para entorno ${env}`);
 
 try {

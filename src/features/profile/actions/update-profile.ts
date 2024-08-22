@@ -15,7 +15,6 @@ export const updateProfile = async (prevState: any, formData: FormData) => {
     name,
     email,
   });
-
   
   if (!zodResult.success) {
     const simplifiedErrors = simplifyZodErrors(zodResult.error);

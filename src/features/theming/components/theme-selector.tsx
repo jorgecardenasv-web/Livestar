@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useEffect, useState, useRef, FC } from "react";
-import { useTheme } from "next-themes";
+import React, { useRef, useEffect } from "react";
 import { Sun, Moon, Monitor, ChevronDown, ChevronUp } from "lucide-react";
+import { useThemeSelector } from "../hooks/use-theme-selector";
 
 interface ThemeOption {
   value: string;
@@ -10,15 +10,10 @@ interface ThemeOption {
   icon: React.ElementType;
 }
 
-export const ThemeSelectClient: React.FC = () => {
-  const [mounted, setMounted] = useState<boolean>(false);
-  const { theme, setTheme } = useTheme();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+export const ThemeSelector: React.FC = () => {
+  const { theme, isOpen, toggleDropdown, closeDropdown, handleThemeChange } =
+    useThemeSelector();
   const selectRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent): void => {
@@ -26,25 +21,15 @@ export const ThemeSelectClient: React.FC = () => {
         selectRef.current &&
         !selectRef.current.contains(event.target as Node)
       ) {
-        setIsOpen(false);
+        closeDropdown();
       }
     };
 
-    document.addEventListener(
-      "mousedown",
-      handleClickOutside as unknown as EventListener
-    );
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener(
-        "mousedown",
-        handleClickOutside as unknown as EventListener
-      );
+      document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
-
-  if (!mounted) {
-    return null;
-  }
+  }, [closeDropdown]);
 
   const options: ThemeOption[] = [
     { value: "light", label: "Claro", icon: Sun },
@@ -55,15 +40,10 @@ export const ThemeSelectClient: React.FC = () => {
   const selectedOption =
     options.find((option) => option.value === theme) || options[2];
 
-  const handleSelectChange = (value: string): void => {
-    setTheme(value);
-    setIsOpen(false);
-  };
-
   return (
-    <div ref={selectRef}>
+    <div className="relative w-full md:h-12" ref={selectRef}>
       <button
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={toggleDropdown}
         className="ring-tremor-brand h-[48px] w-full flex items-center justify-between px-3.5 border rounded-tremor-default
                    bg-tremor-background dark:bg-dark-tremor-background-subtle
                    text-tremor-content-emphasis dark:text-dark-tremor-content-emphasis
@@ -88,7 +68,7 @@ export const ThemeSelectClient: React.FC = () => {
           {options.map((option) => (
             <button
               key={option.value}
-              onClick={() => handleSelectChange(option.value)}
+              onClick={() => handleThemeChange(option.value)}
               className="w-full flex items-center space-x-2 p-2 text-left
                          text-tremor-content dark:bg-dark-tremor-background dark:text-dark-tremor-brand-emphasis 
                          hover:bg-tremor-brand-muted hover:text-tremor-brand-emphasis 

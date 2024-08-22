@@ -20,7 +20,7 @@ export default async function RootLayout({
   const basePath = process.env.NEXTAUTH_BASE_PATH;
 
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
       <body
         className={`${inter.className} bg-tremor-background-muted dark:bg-dark-tremor-background flex h-screen flex-col`}
       >

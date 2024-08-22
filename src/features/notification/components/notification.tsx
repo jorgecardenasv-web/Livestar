@@ -22,15 +22,16 @@ export const Notification: React.FC<NotificationProps> = ({
   onClose 
 }) => {
   return (
-    <div id='notification' className={`w-11/12 mx-auto rounded-md mt-5 ${alertStyles[type]} py-3 px-4 flex items-center`}>
+    <div data-testid="notification" className={`w-11/12 mx-auto rounded-md mt-5 ${alertStyles[type]} py-3 px-4 flex items-center`}>
       <div className="w-full flex items-center justify-between">
-        <p className="text-sm font-medium">
+        <p data-testid="notification-message" className="text-sm font-medium">
           {message}
         </p>
         <button
           onClick={onClose}
           className="text-current hover:opacity-75 transition-opacity duration-200"
           aria-label="Close notification"
+          data-testid="close-notification"
         >
           <XSquare className="h-5 w-5" />
         </button>

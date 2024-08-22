@@ -8,3 +8,5 @@ export function simplifyZodErrors<T>(errors: ZodError<T>): FormError {
   });
   return simplifiedErrors;
 }
+
+export const isServer = () => typeof window === "undefined"

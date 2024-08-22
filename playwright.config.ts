@@ -1,4 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
+import dotenv from "dotenv";
+import path from "path";
+
+dotenv.config({ path: path.resolve(__dirname, '.env.development') });
 
 export default defineConfig({
   timeout: 30000,
@@ -28,5 +32,8 @@ export default defineConfig({
     command: "npm run dev",
     port: 3000,
     reuseExistingServer: !process.env.CI,
+    env: {
+      NODE_ENV: "test",
+    }
   },
 });

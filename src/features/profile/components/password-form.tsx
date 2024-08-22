@@ -5,10 +5,11 @@ import { Card, TextInput } from "@tremor/react";
 import { useFormState } from "react-dom";
 import { updatePassword } from "../actions/update-password";
 import { useEffect, useRef } from "react";
-import { useNotification } from "@/shared/hooks/notification-provider";
+import { useNotificationStore } from "@/features/notification/store/notification-store";
 
 export const PasswordForm = () => {
-  const { showNotification } = useNotification();
+  const showNotification = useNotificationStore(state => state.showNotification);
+
   const [state, formAction] = useFormState(updatePassword, null);
 
   const formRef = useRef<any>(null);

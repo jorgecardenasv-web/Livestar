@@ -13,7 +13,7 @@ export async function middleware(request: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  const publicPaths = ["/", "/auth/signin"];
+  const publicPaths = ["/", "/auth/signin", "/test-notifications"];
   const path = request.nextUrl.pathname;
 
   if (token && publicPaths.includes(path)) {
