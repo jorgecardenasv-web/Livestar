@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "NODE_ENV=development next dev",
+    "dev": "cross-env NODE_ENV=development next dev",
     "dev:with-db": "npm-run-all -p db:up:dev prisma:push:dev dev",
-    "build": "NODE_ENV=production next build",
-    "start": "NODE_ENV=production next start",
+    "build": "cross-env NODE_ENV=production next build",
+    "start": "cross-env NODE_ENV=production next start",
     "lint": "next lint",
     "seed": "cross-env ts-node -r tsconfig-paths/register -P tsconfig.scripts.json scripts/seed.ts",
     "prisma:generate": "prisma generate",

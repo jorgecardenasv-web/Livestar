@@ -1,6 +1,5 @@
-'use client';
-
-import React, { FC } from 'react';
+"use client";
+import React, { FC } from "react";
 import {
   Card,
   Badge,
@@ -10,59 +9,32 @@ import {
   TableHead,
   TableHeaderCell,
   TableRow,
-  Select,
-  SelectItem
 } from "@tremor/react";
 import { Advisor } from "../types/advisor";
 import { UserStatus } from "@prisma/client";
 import { ListButtonsAdvisors } from "./list-buttons-advisors";
-import { format } from 'date-fns';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
+import { SelectFilter } from "@/shared/components/SelectFilter";
+import { formatDate } from "@/shared/utils";
 interface ListAdvisorsProps {
   advisors: Advisor[];
 }
 
+const statusOptions = [
+  { value: "", label: "Todos" },
+  { value: UserStatus.ACTIVE, label: "Activo" },
+  { value: UserStatus.INACTIVE, label: "Inactivo" },
+];
+
 export const ListAdvisors: FC<ListAdvisorsProps> = ({ advisors }) => {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
-
-  const statusOptions = [
-    { value: '', label: 'Todos' },
-    { value: UserStatus.ACTIVE, label: 'Activo' },
-    { value: UserStatus.INACTIVE, label: 'Inactivo' }
-  ];
-
-  const handleStatusChange = (value: string) => {
-    const params = new URLSearchParams(searchParams);    
-    if (value) {
-      params.set('status', value);
-    } else {
-      params.delete('status');
-    }
-    replace(`${pathname}?${params.toString()}`);
-  };
-
-  const formatDate = (date: Date) => {
-    return format(new Date(date), 'dd/MM/yyyy, HH:mm:ss');
-  };
-
   return (
     <>
       <div className="mb-4">
-        <Select
-          className="max-w-xs"
-          onValueChange={handleStatusChange}
+        <SelectFilter
+          statusOptions={statusOptions}
+          rowSearch={"status"}
           placeholder="Filtrar por estado"
-          defaultValue=""
-        >
-          {statusOptions.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </Select>
+        />
       </div>
       <Card className="dark:bg-dark-tremor-background-subtle">
         <Table>

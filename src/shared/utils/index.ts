@@ -1,5 +1,6 @@
 import { ZodError } from "zod";
 import { FormError } from "../types";
+export * from "./format-date";
 
 export function simplifyZodErrors<T>(errors: ZodError<T>): FormError {
   const simplifiedErrors: FormError = {};
@@ -9,4 +10,4 @@ export function simplifyZodErrors<T>(errors: ZodError<T>): FormError {
   return simplifiedErrors;
 }
 
-export const isServer = () => typeof window === "undefined"
+export const isServer = () => typeof window === "undefined";
