@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React, { FC } from 'react';
+import React, { FC } from "react";
 import {
   Card,
   Badge,
@@ -11,13 +11,15 @@ import {
   TableHeaderCell,
   TableRow,
   Select,
-  SelectItem
+  SelectItem,
+  Button,
 } from "@tremor/react";
 import { Advisor } from "../types/advisor";
 import { UserStatus } from "@prisma/client";
-import { ListButtonsAdvisors } from "./list-buttons-advisors";
-import { format } from 'date-fns';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { format } from "date-fns";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Pencil, Trash2 } from "lucide-react";
+import { useAdvisorActions } from "../hooks/use-advisor-actions";
 
 interface ListAdvisorsProps {
   advisors: Advisor[];
@@ -28,24 +30,26 @@ export const ListAdvisors: FC<ListAdvisorsProps> = ({ advisors }) => {
   const pathname = usePathname();
   const { replace } = useRouter();
 
+  const { openDeleteAdvisorModal, openEditAdvisorModal } = useAdvisorActions();
+
   const statusOptions = [
-    { value: '', label: 'Todos' },
-    { value: UserStatus.ACTIVE, label: 'Activo' },
-    { value: UserStatus.INACTIVE, label: 'Inactivo' }
+    { value: "", label: "Todos" },
+    { value: UserStatus.ACTIVE, label: "Activo" },
+    { value: UserStatus.INACTIVE, label: "Inactivo" },
   ];
 
   const handleStatusChange = (value: string) => {
-    const params = new URLSearchParams(searchParams);    
+    const params = new URLSearchParams(searchParams);
     if (value) {
-      params.set('status', value);
+      params.set("status", value);
     } else {
-      params.delete('status');
+      params.delete("status");
     }
     replace(`${pathname}?${params.toString()}`);
   };
 
   const formatDate = (date: Date) => {
-    return format(new Date(date), 'dd/MM/yyyy, HH:mm:ss');
+    return format(new Date(date), "dd/MM/yyyy, HH:mm:ss");
   };
 
   return (
@@ -97,7 +101,15 @@ export const ListAdvisors: FC<ListAdvisorsProps> = ({ advisors }) => {
                 </TableCell>
                 <TableCell>{formatDate(advisor.createdAt)}</TableCell>
                 <TableCell className="flex gap-1">
-                  <ListButtonsAdvisors advisor={advisor} />
+                  <Button
+                    color="red"
+                    onClick={() => openDeleteAdvisorModal(advisor)}
+                  >
+                    <Trash2 size={20} />
+                  </Button>
+                  <Button color="blue" onClick={() => openEditAdvisorModal(advisor)}>
+                    <Pencil size={20} />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}

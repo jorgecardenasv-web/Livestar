@@ -2,6 +2,7 @@ import { HeaderAdvisors } from "@/features/advisors/components/header-advisors";
 import { getAdvisors } from "@/features/advisors/actions/get-advisors";
 import { ListAdvisors } from "@/features/advisors/components/list-advisors";
 import { Pagination } from "@/shared/components/pagination";
+import { ModalAdvisorActions } from "@/features/advisors/components/modal-advisor-actions";
 
 export default async function Advisors({
   searchParams,
@@ -22,6 +23,7 @@ export default async function Advisors({
       {/* Filtros */}
       <ListAdvisors advisors={advisors} />
       <Pagination totalPages={totalPages} />
+      <ModalAdvisorActions />
     </>
   );
 }

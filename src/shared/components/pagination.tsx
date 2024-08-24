@@ -1,6 +1,6 @@
 "use client";
 
-import { generatePagination } from "../utils/generate-pagination";
+import { generatePagination } from "../utils";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { PaginationArrow } from "./pagination-arrow";
 import { PaginationNumber } from "./pagination-number";
