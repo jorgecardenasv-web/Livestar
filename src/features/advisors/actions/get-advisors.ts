@@ -39,5 +39,6 @@ export const getAdvisors = async ({
     advisors: advisors.map(advisorTransformer),
     totalPages,
     totalAdvisors,
+    advisorsPerPage: pageSize,
   };
 };

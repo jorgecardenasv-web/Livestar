@@ -1,12 +1,22 @@
 "use client";
 
-import { generatePagination } from "../utils";
+import React, { useEffect } from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { generatePagination, getCounterText } from "../utils";
 import { PaginationArrow } from "./pagination-arrow";
 import { PaginationNumber } from "./pagination-number";
-import { useEffect } from "react";
 
-export const Pagination = ({ totalPages }: { totalPages: number }) => {
+export const Pagination = ({
+  totalPages,
+  totalItems,
+  itemsPerPage,
+  itemName,
+}: {
+  totalPages: number;
+  totalItems: number;
+  itemsPerPage: number;
+  itemName: string;
+}) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -22,7 +32,7 @@ export const Pagination = ({ totalPages }: { totalPages: number }) => {
     }
   }, [pathname, searchParams, replace]);
 
-  const allPages = generatePagination(currentPage, totalPages);
+  const allPages = generatePagination({ currentPage, totalPages });
 
   const createPageURL = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams);
@@ -30,36 +40,49 @@ export const Pagination = ({ totalPages }: { totalPages: number }) => {
     return `${pathname}?${params.toString()}`;
   };
 
+  const startItem = (currentPage - 1) * itemsPerPage + 1;
+  const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+
+  const shouldShowPagination = totalItems > itemsPerPage;
+
   return (
-    <div className="flex items-center justify-center lg:justify-between mx-3">
-      <p className="hidden lg:block text-tremor-default tabular-nums text-tremor-content dark:text-dark-tremor-content">
-        Página {currentPage} de {totalPages}
+    <div className="flex items-center justify-between mx-3">
+      <p className="text-tremor-default tabular-nums text-tremor-content dark:text-dark-tremor-content">
+        {getCounterText({
+          totalItems,
+          itemsPerPage,
+          startItem,
+          endItem,
+          itemName,
+        })}
       </p>
-      <div className="inline-flex">
-        <PaginationArrow
-          direction="left"
-          href={createPageURL(currentPage - 1)}
-          isDisabled={currentPage <= 1}
-        />
+      {shouldShowPagination && (
+        <div className="inline-flex">
+          <PaginationArrow
+            direction="left"
+            href={createPageURL(currentPage - 1)}
+            isDisabled={currentPage <= 1}
+          />
 
-        <div className="flex gap-x-1">
-          {allPages.map((page, index) => (
-            <PaginationNumber
-              key={index}
-              href={typeof page === "number" ? createPageURL(page) : "#"}
-              page={page}
-              isActive={currentPage === page}
-              isDisabled={page === "..."}
-            />
-          ))}
+          <div className="flex gap-x-1">
+            {allPages.map((page, index) => (
+              <PaginationNumber
+                key={index}
+                href={typeof page === "number" ? createPageURL(page) : "#"}
+                page={page}
+                isActive={currentPage === page}
+                isDisabled={page === "..."}
+              />
+            ))}
+          </div>
+
+          <PaginationArrow
+            direction="right"
+            href={createPageURL(currentPage + 1)}
+            isDisabled={currentPage >= totalPages}
+          />
         </div>
-
-        <PaginationArrow
-          direction="right"
-          href={createPageURL(currentPage + 1)}
-          isDisabled={currentPage >= totalPages}
-        />
-      </div>
+      )}
     </div>
   );
 };

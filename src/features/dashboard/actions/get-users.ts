@@ -24,5 +24,7 @@ export const getUsers = async (page: number = 1) => {
   return {
     users: users.map(userTransformer),
     totalPages,
+    totalUsers,
+    usersPerPage: pageSize
   }
 }
