@@ -1,10 +1,12 @@
-'use client';
+"use client";
 
 import { Card } from "@tremor/react";
-import { ModalAddAdvisors } from "./modal-add-advisors";
+import { ModalAdvisorActions } from "./modal-advisor-actions";
+import { useAdvisorActions } from "../hooks/use-advisor-actions";
+import { UserRoundPlus } from "lucide-react";
 
 export const HeaderAdvisors = () => {
-  
+  const { openAddAdvisorModal } = useAdvisorActions();
   return (
     <Card className="flex flex-row items-center justify-between gap-2 dark:bg-dark-tremor-background-subtle dark:ring-0">
       <section>
@@ -15,7 +17,13 @@ export const HeaderAdvisors = () => {
           Visión general de todos los asesores registrados en tu organización.
         </p>
       </section>
-      <ModalAddAdvisors />
+      <button
+        className="flex items-center flex-row bg-primary p-3 gap-1 rounded-md text-white text-base"
+        onClick={openAddAdvisorModal}
+      >
+        <UserRoundPlus size={20} />
+        <span className="m-0 text-sm hidden lg:block">Crear asesor</span>
+      </button>
     </Card>
   );
 };
