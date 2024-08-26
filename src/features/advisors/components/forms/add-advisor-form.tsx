@@ -1,9 +1,10 @@
 import { SubmitButton } from "@/shared/components/submit-button";
 import { TextInput } from "@tremor/react";
-import { useAddAdvisor } from "../hooks/useAddAdvisor";
+import { useAdvisorActions } from "../../hooks/use-advisor-actions";
+import { addAdvisor } from "../../actions/add-advisor";
 
 export const AddAdvisorForm = () => {
-  const { formAction, formState } = useAddAdvisor();
+  const { formAction, state } = useAdvisorActions(addAdvisor);
 
   return (
     <form action={formAction} className="mt-5">
@@ -17,8 +18,8 @@ export const AddAdvisorForm = () => {
           id="name"
           name="name"
           required
-          error={Boolean(formState?.errors?.name?.length)}
-          errorMessage={formState?.errors?.name}
+          error={Boolean(state?.errors?.name?.length)}
+          errorMessage={state?.errors?.name}
         />
       </div>
       <div className="mb-4">
@@ -31,8 +32,8 @@ export const AddAdvisorForm = () => {
           id="email"
           name="email"
           required
-          error={Boolean(formState?.errors?.email?.length)}
-          errorMessage={formState?.errors?.email}
+          error={Boolean(state?.errors?.email?.length)}
+          errorMessage={state?.errors?.email}
         />
       </div>
       <div className="mb-4">
@@ -45,8 +46,8 @@ export const AddAdvisorForm = () => {
           id="password"
           name="password"
           required
-          error={Boolean(formState?.errors?.password?.length)}
-          errorMessage={formState?.errors?.password}
+          error={Boolean(state?.errors?.password?.length)}
+          errorMessage={state?.errors?.password}
         />
       </div>
       <div className="mb-4">
@@ -59,8 +60,8 @@ export const AddAdvisorForm = () => {
           id="password-confirmation"
           name="password-confirmation"
           required
-          error={Boolean(formState?.errors?.passwordConfirmation?.length)}
-          errorMessage={formState?.errors?.passwordConfirmation}
+          error={Boolean(state?.errors?.passwordConfirmation?.length)}
+          errorMessage={state?.errors?.passwordConfirmation}
         />
       </div>
       <div className="mt-8 w-full flex flex-row gap-2">

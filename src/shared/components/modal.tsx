@@ -1,45 +1,31 @@
 import React, { ReactNode } from "react";
 import { Dialog, DialogPanel, Button } from "@tremor/react";
+import { useModalStore } from "../store/modal-store";
 
 interface ModalProps {
-  isOpen: boolean;
-  setIsOpen: (value: boolean) => void;
   title: string;
   description?: string;
   children: ReactNode;
-  onClose?: () => void;
   size?: "sm" | "md" | "lg" | "xl";
-  showCloseButton?: boolean;
-  closeButtonText?: string;
-  customFooter?: ReactNode;
 }
 
+const sizeClasses = {
+  sm: "max-w-sm",
+  md: "max-w-md",
+  lg: "max-w-lg",
+  xl: "max-w-xl",
+};
+
 export const Modal: React.FC<ModalProps> = ({
-  isOpen,
-  setIsOpen,
   title,
   description,
   children,
-  onClose,
   size = "md",
-  showCloseButton = true,
-  closeButtonText = "Cerrar",
-  customFooter,
 }) => {
-  const handleClose = () => {
-    setIsOpen(false);
-    if (onClose) onClose();
-  };
-
-  const sizeClasses = {
-    sm: "max-w-sm",
-    md: "max-w-md",
-    lg: "max-w-lg",
-    xl: "max-w-xl",
-  };
+  const { isOpen, closeModal } = useModalStore();
 
   return (
-    <Dialog open={isOpen} onClose={handleClose} static={true}>
+    <Dialog open={isOpen} onClose={closeModal} static={true}>
       <DialogPanel className={`${sizeClasses[size]}`} color="red">
         <h3 className="text-lg font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
           {title}

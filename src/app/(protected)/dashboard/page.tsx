@@ -12,7 +12,7 @@ export default async function Dashboard({
     role?: string;
   };
 }) {
-  const { users, totalPages } = await getUsers({
+  const { users, totalPages, totalUsers, usersPerPage } = await getUsers({
     page: Number(searchParams?.page || 1),
     status: searchParams?.status,
     role: searchParams?.role,
@@ -25,7 +25,12 @@ export default async function Dashboard({
         <CardExample />
       </div>
       <UsersList users={users} />
-      <Pagination totalPages={totalPages} />
+      <Pagination
+        totalPages={totalPages}
+        totalItems={totalUsers}
+        itemsPerPage={usersPerPage}
+        itemName="Usuario"
+      />
     </>
   );
 }

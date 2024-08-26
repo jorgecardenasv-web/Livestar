@@ -9,10 +9,13 @@ import {
   TableHead,
   TableHeaderCell,
   TableRow,
+  Button,
 } from "@tremor/react";
+
 import { Advisor } from "../types/advisor";
 import { UserStatus } from "@prisma/client";
-import { ListButtonsAdvisors } from "./list-buttons-advisors";
+import { Pencil, Trash2 } from "lucide-react";
+import { useAdvisorActions } from "../hooks/use-advisor-actions";
 
 import { SelectFilter } from "@/shared/components/SelectFilter";
 import { formatDate } from "@/shared/utils";
@@ -27,6 +30,8 @@ const statusOptions = [
 ];
 
 export const ListAdvisors: FC<ListAdvisorsProps> = ({ advisors }) => {
+  const { openDeleteAdvisorModal, openEditAdvisorModal } = useAdvisorActions();
+
   return (
     <>
       <div className="mb-4">
@@ -69,7 +74,18 @@ export const ListAdvisors: FC<ListAdvisorsProps> = ({ advisors }) => {
                 </TableCell>
                 <TableCell>{formatDate(advisor.createdAt)}</TableCell>
                 <TableCell className="flex gap-1">
-                  <ListButtonsAdvisors advisor={advisor} />
+                  <Button
+                    color="red"
+                    onClick={() => openDeleteAdvisorModal(advisor)}
+                  >
+                    <Trash2 size={20} />
+                  </Button>
+                  <Button
+                    color="blue"
+                    onClick={() => openEditAdvisorModal(advisor)}
+                  >
+                    <Pencil size={20} />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}

@@ -37,5 +37,7 @@ export const getUsers = async ({
   return {
     users: users.map(userTransformer),
     totalPages,
+    totalUsers,
+    usersPerPage: pageSize,
   };
 };
