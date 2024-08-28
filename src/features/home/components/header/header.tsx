@@ -1,5 +1,5 @@
-import { CallToAction } from "../call-to-action";
-import { Navbar } from "../navbar";
+import { CallToAction } from "./call-to-action";
+import { Navbar } from "./navbar";
 import styles from "./header.module.css";
 
 export const Header = () => {

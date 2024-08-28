@@ -1,4 +1,4 @@
-import { Header } from "@/features/public/home/components/header/header";
+import { Header } from "@/features/home/components/header/header";
 
 export default function Home() {
   return (

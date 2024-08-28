@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "@/shared/assets/images/livestar_logo_horizontal_blanco.svg";
+import Logo from "@/assets/images/livestar_logo_horizontal_blanco.svg";
 
 export const Navbar = () => {
   return (
