@@ -29,7 +29,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  height: 220px; /* Ajusta la altura según lo que necesites */
+  height: 186px; /* Ajusta la altura según lo que necesites */
   z-index: 11; /* Envía la imagen detrás del contenido */
 }
 

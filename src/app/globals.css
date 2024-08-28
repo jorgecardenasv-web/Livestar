@@ -44,3 +44,7 @@ main {
   -webkit-background-clip: text;
   -moz-background-clip: text;
 }
+
+.texto-slate {
+  color: #757575;
+}

@@ -1,9 +1,17 @@
+import { Coverage } from "@/features/home/components/coverage/coverage";
 import { Header } from "@/features/home/components/header/header";
+import { MedicalExpenses } from "@/features/home/components/medical-expenses/medical-expenses";
+import { Quotes } from "@/features/home/components/quotes/quotes";
 
 export default function Home() {
   return (
     <>
-      <Header />
+      <div style={{ color: "white" }}>
+        <Header />
+        <Quotes />
+        <Coverage />
+        <MedicalExpenses />
+      </div>
     </>
   );
 }
