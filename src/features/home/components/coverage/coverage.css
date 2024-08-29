@@ -15,7 +15,7 @@
   left: 0;
   right: 0;
 
-  height: 280px; /* Ajusta la altura según lo que necesites */
+  height: 280px;
   z-index: 11;
 }
 
@@ -23,14 +23,14 @@
   content: "";
   position: absolute;
   background-image: url("../../../../assets/home/recurso2.svg");
-  background-size: cover; /* Ajuste para cubrir completamente */
+  background-size: cover;
   background-repeat: no-repeat;
 
   left: 0;
   right: 0;
   bottom: 0;
-  height: 186px; /* Ajusta la altura según lo que necesites */
-  z-index: 11; /* Envía la imagen detrás del contenido */
+  height: 186px;
+  z-index: 11;
 }
 
 .button-coverage {
@@ -47,6 +47,6 @@
 
 @media (min-width: 1600px) {
   .container-coverage::after {
-    background-size: cover; /* Ajuste para cubrir completamente */
+    background-size: cover;
   }
 }

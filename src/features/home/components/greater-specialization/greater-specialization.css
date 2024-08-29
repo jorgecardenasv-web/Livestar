@@ -1,0 +1,59 @@
+.specialization-container {
+  position: relative;
+}
+
+.specialization-container::after {
+  content: "";
+  position: absolute;
+
+  background-size: contain;
+  background-image: url("../../../../assets/home/recurso5.svg");
+  background-repeat: no-repeat;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 270px;
+  z-index: 11;
+}
+
+.specialization-container::before {
+  content: "";
+  position: absolute;
+  background-image: url("../../../../assets/home/recurso6.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 220px;
+  z-index: 11;
+}
+
+.button-custom {
+  background: #ffffff;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease;
+}
+
+.button-custom:hover {
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+}
+
+@media (min-width: 1400px) {
+  .specialization-container::after {
+    background-size: cover;
+  }
+}

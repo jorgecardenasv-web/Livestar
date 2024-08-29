@@ -13,8 +13,10 @@ const texts = {
 
 export const MedicalExpenses = () => {
   return (
-    <div className="flex flex-col items-center max-h-[800px] gap-7 h-auto w-full my-5">
-      <h2 className="text-gradiant text-6xl font-bold">Gastos Médicos</h2>
+    <div className="flex flex-col items-center max-h-[1600px] gap-7 h-auto w-full my-5">
+      <h2 className="text-gradiant text-6xl font-bold text-center">
+        Gastos Médicos
+      </h2>
 
       <p className=" text-lg text-center texto-slate md:w-[30%] sm:w-[80%]">
         Revisamos cada detalle de tu caso para garantizarte la máxima protección

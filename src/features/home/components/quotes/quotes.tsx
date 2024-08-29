@@ -5,7 +5,7 @@ import vehiculos from "../../../../assets/home/vehiculos.png";
 import { CardQuotes } from "./card-quotes";
 export const Quotes = () => {
   return (
-    <div className="w-full bg-white flex justify-center items-center flex-col h-auto mt-10">
+    <section className="w-full bg-white flex justify-center items-center flex-col h-auto mt-10">
       <h2 className="text-6xl my-5 font-bold text-gradiant">Cotizadores</h2>
       <p className="my-3 text-[#757575] font-bold text-lg">
         Soluciones personalizadas y eficientes
@@ -19,6 +19,6 @@ export const Quotes = () => {
         <CardQuotes image={Ahorro} textCard={"Ahorro"} />
         <CardQuotes image={vehiculos} textCard={"vehículos"} />
       </div>
-    </div>
+    </section>
   );
 };

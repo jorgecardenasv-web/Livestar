@@ -29,6 +29,9 @@ main {
 .background-gradient {
   background: linear-gradient(to top, #223e99, #008aed);
 }
+.background-gradient-primary {
+  background: linear-gradient(to bottom right, #6ec1e4, #008aed);
+}
 
 .gradiant-border {
   background-image: linear-gradient(#fff, #fff),
@@ -38,7 +41,7 @@ main {
 }
 
 .text-gradiant {
-  background-image: linear-gradient(to top, #223e99, #008aed);
+  background-image: linear-gradient(to top, #6ec1fe, #223e99);
   background-clip: text;
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
