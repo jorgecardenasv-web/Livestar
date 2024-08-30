@@ -6,61 +6,14 @@ export const FooterPage = () => {
   return (
     <footer className="w-full h-auto flex flex-col md:flex-row justify-evenly items-center md:items-start pt-10 mt-5 pb-10">
       <div className="icon-container mb-4 md:mb-0">
-        <Image src={logo} width={300} height={300} alt={"Logo empresa"} />
+        <Image src={logo} width={257} height={158} alt={"Logo empresa"} />
       </div>
-      <div className="mb-4 md:mb-0">
-        <ul className="leading-7 text-lg">
-          <li>
-            <a
-              href="https://www.google.com/maps/search/?api=1&query=Plaza+Concentro,+Zapopan,+Jalisco,+México"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#008AED]"
-            >
-              Plaza Concentro
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://www.google.com/maps/search/?api=1&query=Plaza+Concentro,+Zapopan,+Jalisco,+México"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#008AED]"
-            >
-              Av Vallarta Pte. No. 6503
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://www.google.com/maps/search/?api=1&query=Plaza+Concentro,+Zapopan,+Jalisco,+México"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#008AED]"
-            >
-              Local B5-5A
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://www.google.com/maps/search/?api=1&query=Plaza+Concentro,+Zapopan,+Jalisco,+México"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#008AED]"
-            >
-              Ciudad Granja, 45010
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://www.google.com/maps/search/?api=1&query=Plaza+Concentro,+Zapopan,+Jalisco,+México"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#008AED]"
-            >
-              Zapopan, Jal, México
-            </a>
-          </li>
-        </ul>
+      <div className="mb-4 md:mb-0 text-[#008AED] w-64 grid place-content-center font-normal">
+        <p>Plaza Concentro</p>
+        <p>Av Vallarta Pte. No. 6503</p>
+        <p>Local B5-5A</p>
+        <p>Ciudad Granja, 45010</p>
+        <p>Zapopan, Jal, México</p>
       </div>
       <div className="mb-4 md:mb-0">
         <ul className="list-disc leading-7 text-lg">

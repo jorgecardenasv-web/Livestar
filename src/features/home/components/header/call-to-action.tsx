@@ -2,9 +2,9 @@ import { TextInput } from "@tremor/react";
 
 export const CallToAction = () => {
   return (
-    <div className="backdrop-blur-sm bg-white/10 p-6 rounded-2xl shadow-lg w-full xl:w-auto">
-      <h2 className="text-3xl lg:text-5xl font-bold mb-4">Cotiza tu futuro</h2>
-      <p className="mb-4">¡Descubre el precio más conveniente al momento!</p>
+    <div className="backdrop-blur-sm bg-white/10 p-6 rounded-2xl shadow-lg w-full xl:w-auto text-left">
+      <h2 className="text-4xl lg:text-5xl font-bold mb-1">Cotiza tu futuro</h2>
+      <p className="mb-4 text-base">¡Descubre el precio más conveniente al momento!</p>
       <form className="flex flex-col gap-y-6">
         <div className="flex flex-col gap-y-2">
           <label htmlFor="name" className="text-xl font-bold">
