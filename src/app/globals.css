@@ -2,17 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-input[type='number'] {
+input[type="number"] {
   -moz-appearance: textfield;
   appearance: textfield;
 }
 
-input[type='number']::-webkit-inner-spin-button {
+input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-input[type='number']::-webkit-outer-spin-button {
+input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -24,4 +24,30 @@ body {
 main {
   padding-top: var(--notification-height);
   transition: padding-top 0.3s ease-in-out;
+}
+
+.background-gradient {
+  background: linear-gradient(to top, #223e99, #008aed);
+}
+.background-gradient-primary {
+  background: linear-gradient(to bottom right, #6ec1e4, #008aed);
+}
+
+.gradiant-border {
+  background-image: linear-gradient(#fff, #fff),
+    linear-gradient(to top, #223e99, #008aed);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+}
+
+.text-gradiant {
+  background-image: linear-gradient(to top, #004E87, #008AED);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  -moz-background-clip: text;
+}
+
+.texto-slate {
+  color: #757575;
 }
