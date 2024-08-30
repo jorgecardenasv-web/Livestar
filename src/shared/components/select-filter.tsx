@@ -1,3 +1,5 @@
+'use client'
+
 import { Select, SelectItem } from "@tremor/react";
 import React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -9,6 +11,7 @@ interface StatusOption {
 
 interface SelectFilterProps {
   statusOptions: StatusOption[];
+  filterName: string;
   rowSearch: string;
   placeholder?: string;
 }
@@ -16,7 +19,8 @@ interface SelectFilterProps {
 export const SelectFilter: React.FC<SelectFilterProps> = ({
   statusOptions,
   rowSearch,
-  placeholder = "Selecciona una opción",
+  placeholder = "Todos",
+  filterName,
 }) => {
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -33,23 +37,26 @@ export const SelectFilter: React.FC<SelectFilterProps> = ({
   };
 
   return (
-    <>
+    <div className="w-full space-y-2">
+      <label className="text-sm text-tremor-content-strong dark:text-dark-tremor-content-strong">
+        {filterName}:
+      </label>
       <Select
-        className="max-w-xs bg-tremor-background dark:bg-dark-tremor-background-subtle border-tremor-border dark:border-dark-tremor-border text-tremor-content dark:text-dark-tremor-content shadow-sm ring-1 ring-tremor-border dark:ring-dark-tremor-border rounded-md p-2"
+        className="max-w-xs"
         onValueChange={handleStatusChange}
         placeholder={placeholder}
-        defaultValue=""
+        defaultValue={searchParams.get(rowSearch) ?? ""}
       >
         {statusOptions.map((option) => (
           <SelectItem
             key={option.value}
             value={option.value}
-            className="hover:bg-tremor-background-subtle dark:hover:bg-dark-tremor-background focus:bg-tremor-background dark:focus:bg-dark-tremor-background text-tremor-content dark:text-dark-tremor-content"
+            className="hover:bg-tremor-background-subtle dark:hover:bg-dark-tremor-brand-subtle focus:bg-tremor-background dark:focus:bg-dark-tremor-background text-tremor-content dark:text-dark-tremor-content"
           >
             {option.label}
           </SelectItem>
         ))}
       </Select>
-    </>
+    </div>
   );
 };

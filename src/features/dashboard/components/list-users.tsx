@@ -11,7 +11,7 @@ import {
 } from "@tremor/react";
 import { User } from "../types/user";
 import { Role, UserStatus } from "@prisma/client";
-import { SelectFilter } from "@/shared/components/SelectFilter";
+import { SelectFilter } from "@/shared/components/select-filter";
 import { formatDate } from "@/shared/utils";
 
 const statusOptions = [
@@ -27,16 +27,18 @@ const rolOptions = [
 export const UsersList = ({ users }: { users: User[] }) => {
   return (
     <div className="w-full">
-      <div className="mb-4 w-full flex gap-4">
+      <div className="mb-4 w-[50%] flex gap-4">
         <SelectFilter
           statusOptions={statusOptions}
           rowSearch={"status"}
-          placeholder="Filtrar por estado"
+          placeholder="Todos"
+          filterName="Filtrar por Estado"
         />
         <SelectFilter
           statusOptions={rolOptions}
           rowSearch={"role"}
-          placeholder="Filtrar por rol"
+          placeholder="Todos"
+          filterName="Filtrar por  Rol"
         />
       </div>
 
