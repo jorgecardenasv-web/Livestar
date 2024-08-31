@@ -1,0 +1,22 @@
+.successStoryContainer {
+  position: relative;
+  margin-top: 100px;
+  overflow: hidden;
+  height: 870px;
+  width: 100%;
+  background-image:
+    url('../../../../assets/home/bg_success-story_mobile.svg'),
+    url('../../../../assets/home/success-story_mobile.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+@media (min-width: 1024px) {
+  .successStoryContainer {
+    height: 850px;
+    background-image:
+      url('../../../../assets/home/bg_success-story_desktop.svg'),
+      url('../../../../assets/home/success-story_desktop.png');
+  }
+}

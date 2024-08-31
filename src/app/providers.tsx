@@ -1,8 +1,8 @@
 "use client";
 
-import { NotificationProvider } from "@/shared/hooks/notification-provider";
+import { NotificationContainer } from "@/features/notification/components/notification.container";
+import { ThemeProvider } from "@/features/theming/components/theme-provider";
 import { SessionProvider } from "next-auth/react";
-import { ThemeProvider } from "next-themes";
 
 export function Providers({
   children,
@@ -14,9 +14,10 @@ export function Providers({
   basePath?: string;
 }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <ThemeProvider>
       <SessionProvider session={session} basePath={basePath}>
-        <NotificationProvider>{children}</NotificationProvider>
+        <NotificationContainer />
+        {children}
       </SessionProvider>
     </ThemeProvider>
   );

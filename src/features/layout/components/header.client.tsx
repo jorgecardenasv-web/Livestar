@@ -9,7 +9,7 @@ export const HeaderClient = ({ label }: { label: string }) => {
       <h1 className="text-xl font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
         Dashboard
       </h1>
-      <div className="w-48">
+      <div data-testid="user-options" className="w-48">
         <Dropdown label={label} />
       </div>
     </div>

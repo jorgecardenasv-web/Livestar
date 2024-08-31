@@ -1,6 +1,6 @@
 import Link from "next/link";
 import NavLinks from "@/features/layout/components/nav-link";
-import { ThemeSelect } from "@/shared/components/theme-selector";
+import { ThemeSelector } from "@/features/theming/components/theme-selector";
 import { Dropdown } from "./dropdown";
 import { User } from "next-auth";
 
@@ -19,7 +19,7 @@ export const SidebarClient = ({ user }: { user?: User }) => {
         <NavLinks userRole={user?.role} />
         <div className="hidden h-auto w-full grow rounded-md bg-tremor-background dark:bg-dark-tremor-background-subtle ring-1 ring-tremor-border dark:ring-dark-tremor-border md:block"></div>
         <div className="flex flex-row items-center space-x-2">
-          <ThemeSelect />
+          <ThemeSelector />
           <div className="md:hidden">
             <Dropdown />
           </div>

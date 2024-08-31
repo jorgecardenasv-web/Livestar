@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Open_Sans } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import { getServerSession } from "@/features/auth/services/auth";
 
-const inter = Inter({ subsets: ["latin"] });
+const openSans = Open_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,9 +20,9 @@ export default async function RootLayout({
   const basePath = process.env.NEXTAUTH_BASE_PATH;
 
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
       <body
-        className={`${inter.className} bg-tremor-background-muted dark:bg-dark-tremor-background flex h-screen flex-col`}
+        className={`${openSans.className} flex h-screen flex-col`}
       >
         <Providers session={session} basePath={basePath}>
           {children}

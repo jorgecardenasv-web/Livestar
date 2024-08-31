@@ -1,0 +1,31 @@
+.coverageContainer {
+  position: relative;
+  overflow: hidden;
+  height: 700px;
+  color: white;
+  background-image: url('../../../../assets/home/bg_coverage_mobile.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttonCoverage {
+  background: linear-gradient(#004E87, #004E87) padding-box,
+    linear-gradient(to right, #ffffff, #66a9ce) border-box;
+  border: 3px solid transparent;
+  border-radius: 10px;
+  display: inline-block;
+  font-size: 22px;
+  width: 15%;
+  min-width: 150px;
+  height: 40px;
+}
+
+@media (min-width: 1024px) {
+  .coverageContainer {
+    background-image: url('../../../../assets/home/bg_coverage_desktop.svg');
+  }
+}

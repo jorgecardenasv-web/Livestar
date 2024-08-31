@@ -1,0 +1,23 @@
+.header {
+  position: relative;
+  overflow: hidden;
+  min-height: 1108px;
+  color: white;
+  background-image:
+    url('../../../../assets/images/hero_decorator_mobile.svg'),
+    url('../../../../assets/images/hero_mobile.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  padding-bottom: 150px;
+}
+
+@media (min-width: 1024px) {
+  .header {
+    min-height: 777px;
+    padding-bottom: 80px;
+    background-image:
+      url('../../../../assets/images/hero_decorator_desktop.svg'),
+      url('../../../../assets/images/hero.png');
+  }
+}

@@ -5,11 +5,12 @@ import { Card, TextInput } from "@tremor/react";
 import { Session } from "next-auth";
 import { updateProfile } from "../actions/update-profile";
 import { useFormState } from "react-dom";
-import { useNotification } from "@/shared/hooks/notification-provider";
 import { useEffect } from "react";
+import { useNotificationStore } from "@/features/notification/store/notification-store";
 
 export const ProfileForm = ({ user }: { user?: Session["user"] }) => {
-  const { showNotification } = useNotification();
+  const showNotification = useNotificationStore(state => state.showNotification);
+
   const [state, formAction] = useFormState(updateProfile, null);
 
   useEffect(() => {

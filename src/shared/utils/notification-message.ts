@@ -1,0 +1,15 @@
+export interface NotificationMessage {
+  [key: string]: string
+}
+
+export const notificationMessages: NotificationMessage = {
+  addAdvisor: "¡Asesor creado exitosamente!",
+  editAdvisor: "¡Asesor editado exitosamente!",
+  deleteAdvisor: "¡Asesor borrado exitosamente!",
+  error: "Error desconocido",
+  general: "Error al editar al asesor"
+}
+
+export const getErrorMessage = (type: string) => {
+  return notificationMessages[type] ?? "Error desconocido"
+}

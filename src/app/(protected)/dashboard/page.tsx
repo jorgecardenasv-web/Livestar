@@ -8,9 +8,15 @@ export default async function Dashboard({
 }: {
   searchParams?: {
     page?: string;
+    status?: string;
+    role?: string;
   };
 }) {
-  const { users, totalPages } = await getUsers(Number(searchParams?.page || 1));
+  const { users, totalPages, totalUsers, usersPerPage } = await getUsers({
+    page: Number(searchParams?.page || 1),
+    status: searchParams?.status,
+    role: searchParams?.role,
+  });
   return (
     <>
       <div className="flex gap-5 w-full flex-col lg:flex-row">
@@ -19,7 +25,12 @@ export default async function Dashboard({
         <CardExample />
       </div>
       <UsersList users={users} />
-      <Pagination totalPages={totalPages} />
+      <Pagination
+        totalPages={totalPages}
+        totalItems={totalUsers}
+        itemsPerPage={usersPerPage}
+        itemName="Usuario"
+      />
     </>
   );
 }

@@ -1,31 +1,44 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { Advisor } from "../types/advisor";
 import { advisorTransformer } from "../transformers/advisor-transformer";
 import { revalidatePath } from "next/cache";
 
-export const getAdvisors = async (page: number = 1) => {
-  const pageSize = 6
-  const skip = (page - 1) * pageSize
+export const getAdvisors = async ({
+  page = 1,
+  status,
+}: {
+  page?: number;
+  status?: string;
+}) => {
+  const pageSize = 6;
+  const skip = (page - 1) * pageSize;
+
+  const whereClause: any = { role: "ADVISOR" };
+  if (status) {
+    whereClause.status = status;
+  }
 
   const [advisors, totalAdvisors] = await Promise.all([
     prisma.user.findMany({
       take: pageSize,
       skip: skip,
-      where: {
-        role: "ADVISOR",
+      where: whereClause,
+      orderBy: {
+        createdAt: "desc",
       },
     }),
-    prisma.user.count({ where: { role: "ADVISOR" } }),
+    prisma.user.count({ where: whereClause }),
   ]);
 
-  const totalPages = Math.ceil(totalAdvisors / pageSize)
+  const totalPages = Math.ceil(totalAdvisors / pageSize);
 
-  revalidatePath('/asesores')
+  revalidatePath("/asesores");
 
   return {
     advisors: advisors.map(advisorTransformer),
     totalPages,
-  }
+    totalAdvisors,
+    advisorsPerPage: pageSize,
+  };
 };

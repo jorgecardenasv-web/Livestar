@@ -11,6 +11,9 @@ const config: Config = {
     transparent: "transparent",
     current: "currentColor",
     extend: {
+      fontFamily: {
+        'source-serif': ['var(--font-source-serif-4)'],
+      },
       colors: {
         primary: colors.sky[600],
         // light mode
