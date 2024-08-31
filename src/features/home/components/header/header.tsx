@@ -20,7 +20,7 @@ export const Header = () => {
       <div className="flex flex-col mt-16 lg:items-center w-full h-full">
         <div className="smx-auto mt-24 lg:mt-32 flex flex-col lg:flex-row justify-center text-center lg:text-left gap-y-10 items-center lg:items-start px-4">
           <div className="xl:text-left max-w-2xl text-balance text-center">
-            <h1 className="text-6xl lg:text-6xl font-bold mb-4">
+            <h1 className="text-5xl font-bold mb-4">
               ¡Protege tu salud y la de tu familia hoy!
             </h1>
             <p className="text-xl mb-6">

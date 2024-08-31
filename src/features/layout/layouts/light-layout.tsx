@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import { useTheme } from "next-themes";
 
+import { sourceSerif4 } from "@/shared/utils/font";
+
 export const LightModeLayout = ({
   children,
 }: {
@@ -14,5 +16,5 @@ export const LightModeLayout = ({
     setTheme("light");
   }, [setTheme]);
 
-  return <div className="light bg-white text-black">{children}</div>;
+  return <div className={`light bg-white text-black ${sourceSerif4.variable}`}>{children}</div>;
 };

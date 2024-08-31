@@ -3,7 +3,7 @@ import styles from "./greater-specialization.module.css";
 export const GreaterSpecialization = () => {
   return (
     <section className={styles.specializationContainer}>
-      <h2 className="text-[40px] font-bold text-center md:text-lef text-wrap">
+      <h2 className="text-4xl font-bold text-center md:text-lef text-wrap">
         ¿NECESITAS MAYOR ESPECIALIZACIÓN?
       </h2>
       <p className="text-lg text-center md:text-left">

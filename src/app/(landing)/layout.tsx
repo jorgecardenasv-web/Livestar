@@ -7,7 +7,7 @@ export default function LandingLayout({
 }) {
   return (
     <LightModeLayout>
-      <main className="light bg-white text-black">{children}</main>;
+      <main className="light bg-white text-black">{children}</main>
     </LightModeLayout>
   );
 }
