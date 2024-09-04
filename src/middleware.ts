@@ -7,24 +7,39 @@ const routeRoles: { [key: string]: string[] } = {
   "/asesores": ["ADMIN"],
 };
 
+const publicPaths = ["/", "/auth/signin", "/test-notifications"];
+
 export async function middleware(request: NextRequest) {
+  const path = request.nextUrl.pathname;
+
+  if (publicPaths.includes(path)) {
+    return NextResponse.next();
+  }
+
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  const publicPaths = ["/", "/auth/signin", "/test-notifications"];
-  const path = request.nextUrl.pathname;
-
-  if (token && publicPaths.includes(path)) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
-
-  if (!token && !publicPaths.includes(path)) {
+  if (!token) {
     return NextResponse.redirect(new URL("/auth/signin", request.url));
   }
 
-  if (token && token.role) {
+  try {
+    const sessionResponse = await fetch(new URL('/api/verify-session', request.url), {
+      method: 'POST',
+      headers: request.headers
+    });
+
+    if (!sessionResponse.ok) {
+      return NextResponse.redirect(new URL("/auth/signin", request.url));
+    }
+  } catch (error) {
+    console.error("Error verifying session:", error);
+    return NextResponse.redirect(new URL("/auth/signin", request.url));
+  }
+
+  if (token.role) {
     const userRole = token.role as string;
     const allowedRoles = routeRoles[path];
 

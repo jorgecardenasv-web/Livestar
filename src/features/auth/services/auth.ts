@@ -93,14 +93,8 @@ export async function signIn(email: string, password: string) {
     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
   };
 
-  const encodedToken = await encode({
-    token: { sub: user.uuid, email: user.email, name: user.name, role: user.role },
-    secret: process.env.NEXTAUTH_SECRET!,
-  });
-
-  await prisma.session.create({
+  const sessionDB = await prisma.session.create({
     data: {
-      sessionToken: encodedToken,
       expires: session.expires,
       user: {
         connect: {
@@ -109,6 +103,11 @@ export async function signIn(email: string, password: string) {
       },
     },
   })
+
+  const encodedToken = await encode({
+    token: { sub: user.uuid, email: user.email, name: user.name, role: user.role, sessionId: sessionDB.id },
+    secret: process.env.NEXTAUTH_SECRET!,
+  });
 
   cookies().set("next-auth.session-token", encodedToken, {
     expires: new Date(session.expires),

@@ -4,11 +4,12 @@ import { hash } from "bcrypt";
 const dotenv = require('dotenv');
 const path = require('path');
 const { PrismaClient } = require('@prisma/client');
+import { faker } from '@faker-js/faker/locale/es_MX';
 
 const env = process.env.NODE_ENV || 'development';
 dotenv.config({ path: path.resolve(process.cwd(), `.env.${env}`) });
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient();;
 
 async function main() {
   const adminPassword = "AdminPass123";
@@ -38,29 +39,31 @@ async function main() {
     },
   })
 
-  for (let i = 1; i <= 54; i++) {
-    await prisma.user.create({
-      data: {
-        name: `Asesor ${i}`,
-        email: `advisor${i}@example.com`,
-        password: hashedAdvisorPassword,
-        role: Role.ADVISOR,
-        status: UserStatus.ACTIVE,
-      },
-    })
+  function getRandomStatus() {
+    return Math.random() < 0.5 ? UserStatus.ACTIVE : UserStatus.INACTIVE;
   }
 
-  for (let i = 55; i <= 104; i++) {
-    await prisma.user.create({
-      data: {
-        name: `Asesor ${i}`,
-        email: `advisor${i}@example.com`,
-        password: hashedAdvisorPassword,
-        role: Role.ADVISOR,
-        status: UserStatus.INACTIVE,
-      },
-    })
+  async function createRandomUsers(count: number) {
+    for (let i = 1; i <= count; i++) {
+      const firstName = faker.person.firstName();
+      const lastName = faker.person.lastName();
+      const fullName = `${firstName} ${lastName}`;
+
+      console.log(`Creando usuario ${i}: ${fullName}`);
+
+      await prisma.user.create({
+        data: {
+          name: fullName,
+          email: `${firstName.toLowerCase()}${[i]}@example.com`,
+          password: hashedAdvisorPassword,
+          role: Role.ADVISOR,
+          status: getRandomStatus(),
+        },
+      });
+    }
   }
+
+  await createRandomUsers(104);
 
   console.log('El seed se completó con éxito')
 }
