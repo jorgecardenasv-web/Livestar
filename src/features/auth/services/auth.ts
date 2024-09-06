@@ -66,6 +66,7 @@ export const authOptions: NextAuthOptions = {
         session.user.name = token.name!;
         session.user.role = token.role!;
       }
+      
       return session;
     },
     jwt: ({ token, user }) => {

@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronDown, ChevronUp, PowerIcon, UserCircle, UserPen } from "lucide-react";
-import { logout } from "@/features/auth/actions/auth";
+import { signOut } from "@/features/auth/actions/signout";
 import Link from "next/link";
 
 interface DropdownProps {
@@ -66,7 +66,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ label }) => {
               <span>Mi Perfil</span>
             </button>
           </Link>
-          <form action={logout}>
+          <form action={signOut}>
             <button
               className="w-full flex items-center justify-start space-x-2 p-2
                          text-tremor-content dark:bg-dark-tremor-background dark:text-dark-tremor-brand-emphasis 

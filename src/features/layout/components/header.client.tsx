@@ -1,6 +1,5 @@
 "use client";
 
-import { UserCircleIcon } from "lucide-react";
 import { Dropdown } from "./dropdown";
 
 export const HeaderClient = ({ label }: { label: string }) => {

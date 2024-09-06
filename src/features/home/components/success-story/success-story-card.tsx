@@ -12,7 +12,7 @@ export const SuccessStoryCard = ({
   caseName: string
 }) => {
   return (
-    <div className="w-72 h-[444px] bg-white flex flex-col justify-center items-center rounded-xl gap-y-4">
+    <div className="w-80 md:w-72 h-[444px] bg-white flex flex-col justify-center items-center rounded-xl gap-y-4 py-4 md:py-0">
       <Image
         src={image}
         alt="Caso 1"
@@ -29,7 +29,9 @@ export const SuccessStoryCard = ({
       <p className="uppercase text-balance text-center font-bold text-4xl bg-gradient-to-b from-[#008AED] to-[#004E87] inline-block text-transparent bg-clip-text">
         {text}
       </p>
-      <button className="bg-white text-[#008AED] w-32 h-9 rounded-xl font-bold text-lg border-2 border-[#008AED]">
+      <button
+      onClick={() => console.log("Hola")}
+      className="bg-white text-[#008AED] w-32 h-9 rounded-xl font-bold text-lg border-2 border-[#008AED]">
         Ver más
       </button>
     </div>

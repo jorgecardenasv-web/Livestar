@@ -12,14 +12,18 @@ const publicPaths = ["/", "/auth/signin", "/test-notifications"];
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
-  if (publicPaths.includes(path)) {
-    return NextResponse.next();
-  }
-
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
   });
+
+  if (publicPaths.includes(path)) {
+    return NextResponse.next();
+  }
+
+  if (token && publicPaths.includes(path)) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
 
   if (!token) {
     return NextResponse.redirect(new URL("/auth/signin", request.url));
