@@ -1,5 +1,5 @@
 import { SuccessStoryCard } from "./success-story-card";
-import Carousel from "./carousel";
+import { SuccessCardCarousel } from "./carousel";
 
 import styles from "./success-story.module.css";
 
@@ -7,7 +7,7 @@ import CaseOne from "@/assets/home/case_one_success_story.png";
 import CaseTwo from "@/assets/home/case_two_success_story.png";
 import CaseThree from "@/assets/home/case_three_success_story.png";
 
-const cases = [
+const SuccessStories = [
   {
     text: "Covid",
     image: CaseOne,
@@ -31,17 +31,17 @@ export const SuccessStory = () => {
       <div className="flex flex-col mt-36 lg:mt-24 items-center w-full gap-y-8 lg:gap-y-28 text-center h-full">
         <h2 className="text-4xl font-bold">Conoce algunos casos éxito</h2>
         <div className="hidden lg:flex flex-wrap gap-x-24">
-          {cases.map((caseCard) => (
+          {SuccessStories.map((story) => (
             <SuccessStoryCard
-              key={caseCard.caseName}
-              text={caseCard.text}
-              image={caseCard.image}
-              caseName={caseCard.caseName}
+              key={story.caseName}
+              text={story.text}
+              image={story.image}
+              caseName={story.caseName}
             />
           ))}
         </div>
         <div className="lg:hidden">
-          <Carousel items={cases} />
+          <SuccessCardCarousel items={SuccessStories} />
         </div>
       </div>
     </section>

@@ -1,10 +1,11 @@
-"use server";
+'use server'
+
 
 import { simplifyZodErrors } from "@/shared/utils";
 import { signinSchema } from "../schemas/signin";
 import { signIn } from "../services/auth";
-import { cookies } from "next/headers";
 import { redirect, RedirectType } from "next/navigation";
+
 
 export async function authenticate(prevState: any, formData: FormData) {
   const email = formData.get("email") as string;
@@ -30,10 +31,4 @@ export async function authenticate(prevState: any, formData: FormData) {
   }
 
   redirect("/dashboard", RedirectType.replace);
-}
-
-export async function logout() {
-  cookies().delete("next-auth.session-token");
-
-  redirect("/auth/signin");
 }

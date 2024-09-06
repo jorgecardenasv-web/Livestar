@@ -2,7 +2,7 @@
 
 import { TextInput } from "@tremor/react";
 import { useFormState } from "react-dom";
-import { authenticate } from "../actions/auth";
+import { authenticate } from "../actions/signin";
 import { SubmitButton } from "@/shared/components/submit-button";
 
 export const SigninForm = () => {
