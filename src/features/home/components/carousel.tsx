@@ -1,10 +1,8 @@
 'use client';
 
-import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import { SuccessStoryCard } from './success-story-card';
-import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { StaticImageData } from 'next/image';
 
 import 'swiper/css';
@@ -15,19 +13,18 @@ interface CarouselProps {
   items: Array<{
     text: string;
     image: StaticImageData;
-    caseName: string;
   }>;
 }
 
 export const SuccessCardCarousel = ({ items }: CarouselProps) => {
   return (
-    <div className="relative w-full max-w-80 mx-auto py-4">
+    <div className="relative w-full max-w-80 mx-auto">
       <Swiper
         modules={[Navigation, Pagination]}
         spaceBetween={50}
         slidesPerView={1}
         navigation={true}
-        pagination={true}
+        pagination={false}
       >
         {items.map((item, index) => (
           <SwiperSlide key={index}>

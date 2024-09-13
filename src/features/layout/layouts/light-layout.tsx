@@ -16,5 +16,5 @@ export const LightModeLayout = ({
     setTheme("light");
   }, [setTheme]);
 
-  return <div className={`light bg-white text-black ${sourceSerif4.variable}`}>{children}</div>;
+  return <div className={sourceSerif4.variable}>{children}</div>;
 };

@@ -1,12 +1,12 @@
 import Image from "next/image";
 import React from "react";
-import logo from "../../../../assets/home/Logo.svg";
+import Logo from "@/assets/shared/Logo.svg";
 
 export const FooterPage = () => {
   return (
     <footer className="w-full h-auto flex flex-col md:flex-row justify-evenly items-center md:items-start pt-10 mt-5 pb-10">
       <div className="icon-container mb-4 md:mb-0">
-        <Image src={logo} width={257} height={158} alt={"Logo empresa"} />
+        <Image src={Logo} width={257} height={158} alt={"Logo empresa"} />
       </div>
       <div className="mb-4 md:mb-0 text-[#008AED] w-64 grid place-content-center font-normal">
         <p>Plaza Concentro</p>
