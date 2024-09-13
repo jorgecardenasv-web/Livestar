@@ -1,7 +1,7 @@
 .circle {
   position: absolute;
   border-radius: 50%;
-  filter: blur(20px);
+  filter: blur(10px);
   z-index: 1;
 }
 
