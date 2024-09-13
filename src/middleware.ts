@@ -32,7 +32,7 @@ export async function middleware(request: NextRequest) {
   try {
     const sessionResponse = await fetch(new URL('/api/verify-session', request.url), {
       method: 'POST',
-      headers: request.headers
+      headers: request.headers,
     });
 
     if (!sessionResponse.ok) {

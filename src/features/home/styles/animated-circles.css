@@ -1,0 +1,116 @@
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(20px);
+  z-index: 1;
+}
+
+.circle1 {
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(
+    circle,
+    rgba(0, 138, 237, 0.3) 0%,
+    rgba(0, 78, 135, 0) 70%
+  );
+  animation: moveCircle1 15s infinite alternate ease-in-out; /* Reduced from 20s to 15s */
+}
+
+.circle2 {
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(
+    circle,
+    rgba(0, 138, 237, 0.2) 0%,
+    rgba(0, 78, 135, 0) 70%
+  );
+  animation: moveCircle2 18.75s infinite alternate-reverse ease-in-out; /* Reduced from 25s to 18.75s */
+}
+
+.circle3 {
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(
+    circle,
+    rgba(0, 78, 135, 0.3) 0%,
+    rgba(0, 138, 237, 0) 70%
+  );
+  animation: moveCircle3 16.5s infinite alternate ease-in-out; /* Reduced from 22s to 16.5s */
+}
+
+.circle4 {
+  width: 60px;
+  height: 60px;
+  background: radial-gradient(
+    circle,
+    rgba(0, 138, 237, 0.4) 0%,
+    rgba(0, 78, 135, 0) 70%
+  );
+  animation: moveCircle4 13.5s infinite alternate-reverse ease-in-out; /* Reduced from 18s to 13.5s */
+}
+
+.circle5 {
+  width: 90px;
+  height: 90px;
+  background: radial-gradient(
+    circle,
+    rgba(0, 78, 135, 0.2) 0%,
+    rgba(0, 138, 237, 0) 70%
+  );
+  animation: moveCircle5 17.25s infinite alternate ease-in-out; /* Reduced from 23s to 17.25s */
+}
+
+@keyframes moveCircle1 {
+  0% {
+    left: -50px;
+    top: 10%;
+  }
+  100% {
+    left: calc(100% - 50px);
+    top: 60%;
+  }
+}
+
+@keyframes moveCircle2 {
+  0% {
+    left: -40px;
+    top: 30%;
+  }
+  100% {
+    left: calc(100% - 40px);
+    top: 80%;
+  }
+}
+
+@keyframes moveCircle3 {
+  0% {
+    left: -60px;
+    top: 50%;
+  }
+  100% {
+    left: calc(100% - 60px);
+    top: 20%;
+  }
+}
+
+@keyframes moveCircle4 {
+  0% {
+    left: -30px;
+    top: 70%;
+  }
+  100% {
+    left: calc(100% - 30px);
+    top: 40%;
+  }
+}
+
+@keyframes moveCircle5 {
+  0% {
+    left: -45px;
+    top: 90%;
+  }
+  100% {
+    left: calc(100% - 45px);
+    top: 5%;
+  }
+}

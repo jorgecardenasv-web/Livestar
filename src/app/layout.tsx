@@ -20,7 +20,7 @@ export default async function RootLayout({
   const basePath = process.env.NEXTAUTH_BASE_PATH;
 
   return (
-    <html lang="es" suppressHydrationWarning>
+    <html lang="es">
       <body
         className={`${openSans.className} flex h-screen flex-col`}
       >
