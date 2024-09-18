@@ -4,7 +4,7 @@ import Logo from "@/assets/shared/livestar_logo_horizontal_blanco.svg";
 
 export const Header = () => {
   return (
-    <header className="absolute top-2 left-0 right-0 z-30 w-full">
+    <header className="absolute top-2 xl:top-8 left-0 right-0 z-30 w-full max-w-7xl mx-auto">
       <Navbar />
       <Image
         src={Logo}

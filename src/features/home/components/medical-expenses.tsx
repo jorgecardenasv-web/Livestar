@@ -13,7 +13,7 @@ export const MedicalExpenses = () => {
     <div className="relative overflow-hidden">
       <div className="absolute inset-0 backdrop-blur-sm bg-white/30 z-0"></div>
 
-      <div className="max-w-6xl mx-auto text-gray-600 flex flex-col gap-y-6 p-5 relative z-10">
+      <div className="max-w-7xl mx-auto text-gray-600 flex flex-col gap-y-6 px-4 py-5 relative z-10">
         <h2 className="text-4xl font-bold text-center bg-gradient-to-b from-[#008AED] to-[#004E87] text-transparent bg-clip-text">
           Gastos Médicos
         </h2>
