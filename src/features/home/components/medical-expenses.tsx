@@ -11,8 +11,6 @@ import { AnimatedCircles } from "./animated-cicle";
 export const MedicalExpenses = () => {
   return (
     <div className="relative overflow-hidden">
-      <div className="absolute inset-0 backdrop-blur-sm bg-white/30 z-0"></div>
-
       <div className="max-w-7xl mx-auto text-gray-600 flex flex-col gap-y-6 px-4 py-5 relative z-10">
         <h2 className="text-4xl font-bold text-center bg-gradient-to-b from-[#008AED] to-[#004E87] text-transparent bg-clip-text">
           Gastos Médicos
@@ -50,7 +48,7 @@ export const MedicalExpenses = () => {
                   width={50}
                   height={50}
                   className="object-cover"
-                  alt="Imagen de Stethoscope"
+                  alt="Imagen de Estetoscopio"
                 />
               </div>
               <h3 className="text-2xl font-semibold">Atención Especializada</h3>
@@ -74,10 +72,7 @@ export const MedicalExpenses = () => {
           </div>
         </div>
       </div>
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute inset-0 backdrop-blur-sm bg-white/30"></div>
-        <AnimatedCircles />
-      </div>
+      <AnimatedCircles />
     </div>
   );
 };
