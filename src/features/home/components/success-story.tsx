@@ -1,8 +1,10 @@
 import { SuccessStoryCard } from "./success-story-card";
 import { SuccessCardCarousel } from "./carousel";
 
-import SuccessImageDesktop from "@/assets/home/bg_success-story_desktop.svg";
-import SuccessImageMobile from "@/assets/home/bg_success-story_mobile.svg";
+import SuccessBgImageDesktop from "@/assets/home/bg_success-story_desktop.svg";
+import SuccessBgImageMobile from "@/assets/home/bg_success-story_mobile.svg";
+import SuccessImageDesktop from '@/assets/home/success-story_desktop.png'
+import SuccessImageMobile from '@/assets/home/success-story_mobile.png'
 
 import CaseOne from "@/assets/home/case_one_success_story.png";
 import CaseTwo from "@/assets/home/case_two_success_story.png";
@@ -29,7 +31,7 @@ export const SuccessStory = () => {
     <section className="relative w-full h-[750px] text-white my-24">
       <div className="absolute inset-0">
         <Image
-          src={SuccessImageMobile}
+          src={SuccessBgImageMobile}
           alt="Success Story Mobile"
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
@@ -37,7 +39,7 @@ export const SuccessStory = () => {
           priority
         />
         <Image
-          src={SuccessImageDesktop}
+          src={SuccessBgImageDesktop}
           alt="Success Story Desktop"
           fill
           sizes="100vw"
