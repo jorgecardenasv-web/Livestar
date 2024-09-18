@@ -6,18 +6,31 @@ import { Hero } from "@/features/home/components/hero";
 import { MedicalExpenses } from "@/features/home/components/medical-expenses";
 import { Quotes } from "@/features/home/components/quotes";
 import { SuccessStory } from "@/features/home/components/success-story";
+import { ScrollAnimatedComponent } from "@/shared/components/ScrollAnimatedComponent";
 
 export default function Home() {
   return (
     <>
-      <Header />
-      <Hero />
+      <ScrollAnimatedComponent>
+        <Header />
+        <Hero />
+      </ScrollAnimatedComponent>
       <main className="text-white">
-        <Quotes />
-        <Coverage />
-        <MedicalExpenses />
-        <SuccessStory />
-        <GreaterSpecialization />
+        <ScrollAnimatedComponent> 
+          <Quotes />
+        </ScrollAnimatedComponent>
+        <ScrollAnimatedComponent>
+          <Coverage />
+        </ScrollAnimatedComponent>
+        <ScrollAnimatedComponent>
+          <MedicalExpenses />
+        </ScrollAnimatedComponent>
+        <ScrollAnimatedComponent>
+          <SuccessStory />
+        </ScrollAnimatedComponent>
+        <ScrollAnimatedComponent>
+          <GreaterSpecialization />
+        </ScrollAnimatedComponent>
         <FooterPage />
       </main>
     </>

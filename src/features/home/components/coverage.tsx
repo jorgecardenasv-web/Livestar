@@ -24,7 +24,7 @@ export const Coverage = () => {
         />
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 absolute inset-0">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 absolute inset-0">
         <div className="flex flex-col justify-center h-full gap-y-6 text-container">
           <h2 className="text-5xl font-bold w-full sm:w-[100%] md:w-[65%]">
             Cobertura médica amplia a precios más bajos.

@@ -5,7 +5,7 @@ import { QuoteCard } from "./quote-card";
 
 export const Quotes = () => {
   return (
-    <section className="max-w-6xl mx-auto my-6 text-center flex justify-center items-center px-5 flex-col h-auto py-10 rounded-md text-[#757575]">
+    <section className="max-w-7xl mx-auto my-6 text-center flex justify-center items-center px-4 flex-col h-auto py-10 rounded-md text-[#757575]">
       <h2 className="text-5xl font-bold text-gradiant">Cotizadores</h2>
       <h3 className="my-3 font-bold text-lg">
         Soluciones personalizadas y eficientes

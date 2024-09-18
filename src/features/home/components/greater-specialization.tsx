@@ -24,7 +24,7 @@ export const GreaterSpecialization = () => {
         />
       </div>
 
-      <div className="max-w-6xl mx-auto grid place-content-center px-4 sm:px-6 lg:px-8 absolute inset-0 md:h-full">
+      <div className="max-w-7xl mx-auto grid place-content-center px-4 sm:px-6 lg:px-8 absolute inset-0 md:h-full">
         <h2 className="text-4xl font-bold text-center md:text-lef text-wrap">
           ¿NECESITAS MAYOR ESPECIALIZACIÓN?
         </h2>

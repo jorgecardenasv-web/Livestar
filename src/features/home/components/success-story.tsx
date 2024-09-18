@@ -46,12 +46,12 @@ export const SuccessStory = () => {
         />
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 absolute inset-0 h-screen md:h-full">
+      <div className="max-w-7xl mx-auto px-4 absolute inset-0 h-screen md:h-full">
         <h2 className="text-4xl font-bold mt-24 md:my-16 text-center">
           Conoce algunos casos éxito
         </h2>
-        <div className="grid text-container">
-          <div className="hidden lg:flex flex-wrap gap-x-24">
+        <div className="grid">
+          <div className="hidden lg:flex flex-wrap gap-x-24 justify-center">
             {SuccessStories.map((story) => (
               <SuccessStoryCard
                 key={story.text}
