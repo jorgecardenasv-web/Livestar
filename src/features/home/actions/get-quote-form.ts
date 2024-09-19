@@ -4,7 +4,7 @@ import { simplifyZodErrors } from "@/shared/utils";
 import { insuranceFormSchema } from "../schemas/get-quote-schema";
 import prisma from "@/lib/prisma";
 //TODO: pending model in prisma scheme :D left at bottom for now
-import { InsuranceForm } from "@prisma/client";
+// import { InsuranceForm } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 export const getQuoteForm = async (prevState: any, formData: FormData) => {
@@ -43,36 +43,36 @@ export const getQuoteForm = async (prevState: any, formData: FormData) => {
     };
   }
 
-  const insuranceForm: InsuranceForm | null = await createInsuranceForm(zodResult.data);
+  // const insuranceForm: InsuranceForm | null = await createInsuranceForm(zodResult.data);
 
-  if (!insuranceForm) {
-    return {
-      errors: {
-        general: "Error al enviar el formulario",
-      },
-    };
-  }
+  // if (!insuranceForm) {
+  //   return {
+  //     errors: {
+  //       general: "Error al enviar el formulario",
+  //     },
+  //   };
+  // }
 
-  revalidatePath("/");
-  return {
-    errors: null,
-  };
+  // revalidatePath("/");
+  // return {
+  //   errors: null,
+  // };
 };
 
-async function createInsuranceForm(data: InsuranceForm): Promise<InsuranceForm | null> {
-  try {
-    const formData = await prisma.insuranceForm.create({
-      data: {
-        ...data,
-        childrenAges: data.childrenAges ? data.childrenAges.join(',') : null,
-      },
-    });
-    return formData;
-  } catch (error) {
-    console.error("Error al crear el formulario:", error);
-    return null;
-  }
-}
+// async function createInsuranceForm(data: InsuranceForm): Promise<InsuranceForm | null> {
+//   try {
+//     const formData = await prisma.insuranceForm.create({
+//       data: {
+//         ...data,
+//         childrenAges: data.childrenAges ? data.childrenAges.join(',') : null,
+//       },
+//     });
+//     return formData;
+//   } catch (error) {
+//     console.error("Error al crear el formulario:", error);
+//     return null;
+//   }
+// }
 
 /* InsuranceForm
 model InsuranceForm {
