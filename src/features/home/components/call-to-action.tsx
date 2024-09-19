@@ -9,6 +9,7 @@ import {
   Text,
 } from "@tremor/react";
 import { FormCallToAction } from "./form-call-to-action";
+import { GetQuoteForm } from "./get-quote-form";
 
 export const CallToAction = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,32 +25,38 @@ export const CallToAction = () => {
         <p className="mb-4 text-base">
           ¡Descubre el precio más conveniente al momento!
         </p>
-        <form className="flex flex-col gap-y-6">
-          <div className="flex flex-col gap-y-2">
-            <label htmlFor="name" className="text-lg font-bold">
-              Mi nombre es
-            </label>
-            <TextInput
-              type="text"
-              id="name"
-              name="name"
-              autoComplete="off"
-              placeholder="Ingrese su nombre"
-              onClick={handleInputClick}
-            />
+        <div className="flex flex-col gap-y-6">
+          <div className="hover:cursor-pointer" onClick={handleInputClick}>
+            <div className="flex flex-col gap-y-2">
+              <label htmlFor="name" className="text-lg font-bold">
+                Mi nombre es
+              </label>
+              <TextInput
+                disabled
+                type="text"
+                id="name"
+                name="name"
+                autoComplete="off"
+                placeholder="Ingrese su nombre"
+                className="-z-10"
+              />
+            </div>
           </div>
-          <div className="flex flex-col gap-y-2">
-            <label htmlFor="cp" className="text-lg font-bold">
-              Mi código postal es
-            </label>
-            <TextInput
-              type="number"
-              id="cp"
-              name="cp"
-              autoComplete="off"
-              placeholder="Ingrese su código postal"
-              onClick={handleInputClick}
-            />
+          <div className="hover:cursor-pointer" onClick={handleInputClick}>
+            <div className="flex flex-col gap-y-2">
+              <label htmlFor="cp" className="text-lg font-bold">
+                Mi código postal es
+              </label>
+              <TextInput
+                disabled
+                type="number"
+                id="cp"
+                name="cp"
+                autoComplete="off"
+                placeholder="Ingrese su código postal"
+                className="-z-10"
+              />
+            </div>
           </div>
           <Button
             onClick={handleInputClick}
@@ -57,13 +64,13 @@ export const CallToAction = () => {
           >
             ¡Ver mi precio ahora!
           </Button>
-        </form>
+        </div>
       </div>
 
       <Dialog open={isOpen} onClose={() => setIsOpen(false)} static={true}>
         <DialogPanel className="max-w-3xl w-full p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2  className="text-5xl font-bold text-[#008AED] mx-auto">
+            <h2 className="text-5xl font-bold text-[#008AED] mx-auto">
               Cotiza tu futuro
             </h2>
             <button
@@ -86,8 +93,8 @@ export const CallToAction = () => {
               </svg>
             </button>
           </div>
-
-          <FormCallToAction />
+          <GetQuoteForm />
+          {/* <FormCallToAction /> */}
         </DialogPanel>
       </Dialog>
     </>
