@@ -5,7 +5,7 @@ import HeroDecorationDesktop from "@/assets/home/hero_decorator_desktop.svg";
 import HeroImageMobile from "@/assets/home/hero_mobile.png";
 import HeroDecorationMobile from "@/assets/home/hero_decorator_mobile.svg";
 
-import { CallToAction } from "./call-to-action";
+import { CallToAction } from "../call-to-action";
 
 export const Hero = () => {
   return (

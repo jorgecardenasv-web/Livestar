@@ -8,8 +8,7 @@ import {
   Title,
   Text,
 } from "@tremor/react";
-import { FormCallToAction } from "./form-call-to-action";
-import { GetQuoteForm } from "./get-quote-form";
+import { GetQuoteForm } from "@/features/insurance-quote/components/get-quote-form";
 
 export const CallToAction = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -94,7 +93,6 @@ export const CallToAction = () => {
             </button>
           </div>
           <GetQuoteForm />
-          {/* <FormCallToAction /> */}
         </DialogPanel>
       </Dialog>
     </>

@@ -5,8 +5,8 @@ import Stethoscope from "@/assets/home/Stethoscope.svg";
 import Experience from "@/assets/home/experience.svg";
 import Calculator from "@/assets/home/calculator.svg";
 import Wallet from "@/assets/home/Wallet.svg";
-import { MedicalExpenseCard } from "./medical-card";
-import { AnimatedCircles } from "./animated-cicle";
+import { MedicalExpenseCard } from "../cards/medical-card";
+import { AnimatedCircles } from "../animated-cicle";
 
 export const MedicalExpenses = () => {
   return (

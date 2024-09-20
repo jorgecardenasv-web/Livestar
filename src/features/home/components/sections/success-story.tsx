@@ -1,5 +1,5 @@
-import { SuccessStoryCard } from "./success-story-card";
-import { SuccessCardCarousel } from "./carousel";
+import { SuccessStoryCard } from "../cards/success-story-card";
+import { SuccessCardCarousel } from "../cards/carousel";
 
 import SuccessBgImageDesktop from "@/assets/home/bg_success-story_desktop.svg";
 import SuccessBgImageMobile from "@/assets/home/bg_success-story_mobile.svg";

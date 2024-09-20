@@ -1,7 +1,7 @@
 import corazon from "@/assets/home/heart-icon.png";
 import Ahorro from "@/assets/home/Ahorro.png";
 import vehiculos from "@/assets/home/vehiculos.png";
-import { QuoteCard } from "./quote-card";
+import { QuoteCard } from "../cards/quote-card";
 
 export const Quotes = () => {
   return (
