@@ -14,18 +14,18 @@ export const GreaterSpecialization = () => {
           className="object-cover lg:hidden"
           priority
         />
-        <Image
+        {/* <Image
           src={GreaterSpecializationDesktop}
           alt="Success Story Desktop"
           fill
           sizes="100vw"
           className="object-cover hidden lg:block"
           priority
-        />
+        /> */}
       </div>
 
-      <div className="max-w-7xl mx-auto grid place-content-center px-4 sm:px-6 lg:px-8 absolute inset-0 md:h-full">
-        <h2 className="text-4xl font-bold text-center md:text-lef text-wrap">
+      <div className="max-w-7xl mx-auto grid place-content-center px-4 sm:px-6 lg:px-8 absolute inset-0 md:h-full text-[#666]">
+        <h2 className="text-4xl font-bold text-center md:text-lef text-wrap text-gradiant">
           ¿NECESITAS MAYOR ESPECIALIZACIÓN?
         </h2>
         <p className="text-lg mt-3 text-center md:text-left">
@@ -33,8 +33,8 @@ export const GreaterSpecialization = () => {
           diferencia.
         </p>
         <div className="flex justify-center mt-8">
-        <button className="bg-white px-3 py-2 rounded font-bold text-lg">
-          <span className="text-gradiant font-bold">Quiero saber más</span>
+        <button className="px-4 py-3 rounded font-bold text-lg outline">
+          <span className="font-bold">Quiero saber más</span>
         </button>
         </div>
       </div>

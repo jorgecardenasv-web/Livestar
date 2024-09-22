@@ -7,6 +7,7 @@ import { MedicalExpenses } from "@/features/home/components/sections/medical-exp
 import { Quotes } from "@/features/home/components/sections/quotes";
 import { SuccessStory } from "@/features/home/components/sections/success-story";
 import { ScrollAnimatedComponent } from "@/shared/components/scroll-animated";
+import { FooterComponent } from "@/shared/components/layout/footer_secondary";
 
 export default function Home() {
   return (
@@ -31,7 +32,7 @@ export default function Home() {
         <ScrollAnimatedComponent>
           <GreaterSpecialization />
         </ScrollAnimatedComponent>
-        <FooterPage />
+        <FooterComponent />
       </main>
     </>
   );
