@@ -27,7 +27,7 @@ export const ModalAdvisorActions = (): JSX.Element => {
         <Modal
           title="Eliminar Asesor"
           description="¿Estás seguro de que deseas eliminar este registro?"
-          size="md"
+          size="lg"
         >
           <DeleteAdvisorForm />
         </Modal>
@@ -38,7 +38,7 @@ export const ModalAdvisorActions = (): JSX.Element => {
         <Modal
           title="Editar Asesor"
           description="Modifique la información necesaria para actualizar el perfil del asesor."
-          size="md"
+          size="lg"
         >
           <EditAdvisorForm />
         </Modal>

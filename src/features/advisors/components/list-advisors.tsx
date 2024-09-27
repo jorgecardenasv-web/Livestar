@@ -17,8 +17,6 @@ import { UserStatus } from "@prisma/client";
 import { Pencil, Trash2 } from "lucide-react";
 import { useAdvisorActions } from "../hooks/use-advisor-actions";
 
-import { SelectFilter } from "@/shared/components/select-filter";
-import { formatDate } from "@/shared/utils";
 interface ListAdvisorsProps {
   advisors: Advisor[];
 }
@@ -32,22 +30,15 @@ export const ListAdvisors: FC<ListAdvisorsProps> = ({ advisors }) => {
         <TableRow>
           <TableHeaderCell>Nombre</TableHeaderCell>
           <TableHeaderCell>Email</TableHeaderCell>
-          <TableHeaderCell>Rol</TableHeaderCell>
           <TableHeaderCell>Status</TableHeaderCell>
-          <TableHeaderCell>Fecha de creación</TableHeaderCell>
           <TableHeaderCell>Acciones</TableHeaderCell>
         </TableRow>
       </TableHead>
       <TableBody>
         {advisors.map((advisor: Advisor) => (
           <TableRow key={advisor.id}>
-            <TableCell className="font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong">
-              {advisor.name}
-            </TableCell>
+            <TableCell>{advisor.name}</TableCell>
             <TableCell>{advisor.email}</TableCell>
-            <TableCell>{`${advisor.role.charAt(0).toUpperCase()}${advisor.role
-              .slice(1)
-              .toLowerCase()}`}</TableCell>
             <TableCell>
               {advisor.status === UserStatus.ACTIVE ? (
                 <Badge color="green">Activo</Badge>
@@ -55,7 +46,6 @@ export const ListAdvisors: FC<ListAdvisorsProps> = ({ advisors }) => {
                 <Badge color="red">Inactivo</Badge>
               )}
             </TableCell>
-            <TableCell>{formatDate(advisor.createdAt)}</TableCell>
             <TableCell className="flex gap-1">
               <Button
                 color="blue"
