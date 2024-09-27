@@ -1,34 +1,62 @@
-'use server'
+"use server";
 
+import { RedirectType, redirect } from "next/navigation";
 
-import { simplifyZodErrors } from "@/shared/utils";
 import { signinSchema } from "../schemas/signin";
-import { signIn } from "../services/auth";
-import { redirect, RedirectType } from "next/navigation";
+import { verifyCredentialsService } from "../services/verify-credentials.service";
 
+import { getSession } from "@/lib/iron-session/get-session";
+import { createSessionService } from "@/features/session/services/create-session.service";
+import { prefix } from "@/shared/utils/constants";
+import { simplifyZodErrors } from "@/shared/utils";
 
-export async function authenticate(prevState: any, formData: FormData) {
+export interface ActionData {
+  errors?: {
+    email?: string;
+    password?: string;
+  };
+  error?: string;
+}
+
+export const signin = async (prevState: any, formData: FormData) => {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
-  const zodResult = signinSchema.safeParse({
+  const session = await getSession();
+
+  const result = signinSchema.safeParse({
     email,
     password,
   });
 
-  if (!zodResult.success) {
-    const simplifiedErrors = simplifyZodErrors(zodResult.error);
-
+  if (!result.success) {
+    const simplifiedErrors = simplifyZodErrors(result.error);
     return {
       errors: simplifiedErrors,
     };
   }
 
-  const result = await signIn(email, password);
+  const user = await verifyCredentialsService(email, password);
 
-  if (result.error) {
-    return { error: "El email o la contraseña son incorrectos" };
+  if (!user) {
+    return {
+      error: "Invalid credentials",
+    };
   }
 
-  redirect("/dashboard", RedirectType.replace);
-}
+  const sessionDB = await createSessionService(user);
+
+  if (!sessionDB) {
+    return {
+      error: "Internal server error",
+    };
+  }
+
+  session.isLoggedIn = true;
+  session.user = user;
+  session.sessionId = sessionDB.id;
+
+  await session.save();
+
+  redirect(`${prefix}/dashboard`, RedirectType.replace);
+};

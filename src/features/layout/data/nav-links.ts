@@ -1,3 +1,4 @@
+import { prefix } from "@/shared/utils/constants";
 import { ContactIcon, HomeIcon } from "lucide-react";
 
 export interface NavLiks {
@@ -8,6 +9,6 @@ export interface NavLiks {
 }
 
 export const navLinks: NavLiks[] = [
-  { name: 'Inicio', href: '/dashboard', icon: HomeIcon, roles: ['ADMIN', 'ADVISOR'] },
-  { name: 'Asesores', href: '/asesores', icon: ContactIcon, roles: ['ADMIN'] },
+  { name: 'Inicio', href: `${prefix}/dashboard`, icon: HomeIcon, roles: ['ADMIN', 'ADVISOR'] },
+  { name: 'Asesores', href: `${prefix}/asesores`, icon: ContactIcon, roles: ['ADMIN'] },
 ];

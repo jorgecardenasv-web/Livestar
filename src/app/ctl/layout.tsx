@@ -1,4 +1,5 @@
 import { MainLayout } from "@/features/layout/layouts/main-layout";
+import { SessionValidator } from "@/features/session/components/session-validator";
 
 export default function DashboardLayout({
   children,
@@ -6,6 +7,9 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <MainLayout>{children}</MainLayout>    
+    <MainLayout>
+      <SessionValidator />
+      {children}
+    </MainLayout>
   );
 }

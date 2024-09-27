@@ -1,12 +1,12 @@
 "use server";
 
-import prisma from "@/lib/prisma";
 import { simplifyZodErrors } from "@/shared/utils";
 import { updateProfileSchema } from "../schemas/update-profile";
-import { getServerSession, updateSession } from "@/features/auth/services/auth";
+import { updateProfileService } from "../services/update-profile.service";
+import { getSession } from "@/lib/iron-session/get-session";
 
 export const updateProfile = async (prevState: any, formData: FormData) => {
-  const session = await getServerSession();
+  const session = await getSession()
 
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
@@ -24,17 +24,15 @@ export const updateProfile = async (prevState: any, formData: FormData) => {
     };
   }
   
-  updateSession({ ...session!.user, name, email });
+  session.user.name = name
+  session.user.email = email
+  session.save()
 
-  const result = await prisma.user.update({
-    where: {
-      uuid: session!.user.id,
-    },
-    data: {
-      name,
-      email,
-    },
-  });
+  const result = await updateProfileService({
+    userId: session.user.id,
+    name,
+    email,
+  })
 
   return { result }
 };

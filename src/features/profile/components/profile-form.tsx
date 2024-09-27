@@ -2,13 +2,13 @@
 
 import { SubmitButton } from "@/shared/components/submit-button";
 import { Card, TextInput } from "@tremor/react";
-import { Session } from "next-auth";
 import { updateProfile } from "../actions/update-profile";
 import { useFormState } from "react-dom";
 import { useEffect } from "react";
 import { useNotificationStore } from "@/features/notification/store/notification-store";
+import { AuthenticadedUser } from "@/lib/iron-session/types";
 
-export const ProfileForm = ({ user }: { user?: Session["user"] }) => {
+export const ProfileForm = ({ user }: { user: AuthenticadedUser }) => {
   const showNotification = useNotificationStore(state => state.showNotification);
 
   const [state, formAction] = useFormState(updateProfile, null);

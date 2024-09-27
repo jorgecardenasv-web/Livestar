@@ -13,17 +13,17 @@ enum UserStatus {
   ACTIVE
   INACTIVE
   SUSPENDED
-  
+
   @@schema("auth")
 }
 
 model Session {
-  id           String      @id @default(uuid())
-  userId       Int
-  expires      DateTime
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(uuid())
+  userId    Int
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@schema("auth")
 }
