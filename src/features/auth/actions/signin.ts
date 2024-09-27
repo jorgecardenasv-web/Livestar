@@ -58,5 +58,5 @@ export const signin = async (prevState: any, formData: FormData) => {
 
   await session.save();
 
-  redirect(`${prefix}/dashboard`, RedirectType.replace);
+  redirect(`${prefix}/panel`, RedirectType.replace);
 };

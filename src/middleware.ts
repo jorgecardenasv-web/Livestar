@@ -2,14 +2,13 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getSession } from "@/lib/iron-session/get-session";
 import { prefix } from "@/shared/utils/constants";
-import { checkSession } from "@/features/session/services/verify-session.service";
 
 const routeRoles: { [key: string]: string[] } = {
-  "/dashboard": ["ADMIN", "ADVISOR"],
+  "/panel": ["ADMIN", "ADVISOR"],
   "/asesores": ["ADMIN"],
 };
 
-const publicPaths = ["/", "/ini-ses-adm"];
+const publicPaths = ["/", "/ini-ses-adm", "/comparador-cotizador-seguros-salud"];
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
@@ -29,7 +28,7 @@ export async function middleware(request: NextRequest) {
     const allowedRoles = routeRoles[path];
 
     if (allowedRoles && !allowedRoles.includes(userRole)) {
-      return NextResponse.redirect(new URL(`${prefix}/dashboard`, request.url));
+      return NextResponse.redirect(new URL(`${prefix}/panel`, request.url));
     }
   }
 
