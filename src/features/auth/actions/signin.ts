@@ -40,7 +40,7 @@ export const signin = async (prevState: any, formData: FormData) => {
 
   if (!user) {
     return {
-      error: "Invalid credentials",
+      error: "Error en las credenciales",
     };
   }
 
