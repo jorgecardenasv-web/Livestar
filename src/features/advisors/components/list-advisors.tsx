@@ -27,9 +27,9 @@ export const ListAdvisors: FC<ListAdvisorsProps> = ({ advisors }) => {
   const { openDeleteAdvisorModal, openEditAdvisorModal } = useAdvisorActions();
 
   return (
-    <Table className="ring-1 ring-tremor-border dark:ring-dark-tremor-border rounded-md">
+    <Table>
       <TableHead>
-        <TableRow className="border-b border-tremor-border dark:border-dark-tremor-border">
+        <TableRow>
           <TableHeaderCell>Nombre</TableHeaderCell>
           <TableHeaderCell>Email</TableHeaderCell>
           <TableHeaderCell>Rol</TableHeaderCell>
@@ -58,16 +58,18 @@ export const ListAdvisors: FC<ListAdvisorsProps> = ({ advisors }) => {
             <TableCell>{formatDate(advisor.createdAt)}</TableCell>
             <TableCell className="flex gap-1">
               <Button
-                color="red"
-                onClick={() => openDeleteAdvisorModal(advisor)}
-              >
-                <Trash2 size={20} />
-              </Button>
-              <Button
                 color="blue"
+                variant="secondary"
                 onClick={() => openEditAdvisorModal(advisor)}
               >
                 <Pencil size={20} />
+              </Button>
+              <Button
+                color="red"
+                variant="secondary"
+                onClick={() => openDeleteAdvisorModal(advisor)}
+              >
+                <Trash2 size={20} />
               </Button>
             </TableCell>
           </TableRow>
