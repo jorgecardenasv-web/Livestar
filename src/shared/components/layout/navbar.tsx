@@ -5,7 +5,7 @@ import Logo from "@/assets/shared/livestar_logo_horizontal_blanco.svg";
 export const Navbar = () => {
   return (
     <>
-      <div className="hidden justify-between md:flex pt-10 items-center text-white">
+      <div className="hidden justify-between md:flex pt-5 items-center text-white">
         <Link href="/">
           <Image src={Logo} alt="Logo Principal" width={238} height={68} />
         </Link>

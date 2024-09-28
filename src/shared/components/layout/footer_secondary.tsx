@@ -8,49 +8,31 @@ import Image from "next/image";
 
 export function FooterComponent() {
   return (
-    <footer className="bg-gradient-to-r text-[#666666] py-10 border-t border-[#666666]/15">
-      <div className="container mx-auto px-4 pt-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pb-10">
+    <footer className="bg-gradient-to-r text-[#666666] pt-2 pb-4 border-t border-[#666666]/15">
+      <div className="container mx-auto px-4 pt-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="flex flex-col items-center md:items-start">
             <Image src={Logo} width={257} height={158} alt={"Logo empresa"} />
           </div>
           <div className="flex flex-col items-center md:items-start">
             <h3 className="font-semibold text-lg mb-4">Enlaces Rápidos</h3>
             <nav className="flex flex-col space-y-2">
-              <Link
-                href="#"
-                className="transition-colors"
-              >
+              <Link href="#" className="transition-colors">
                 Seguros
               </Link>
-              <Link
-                href="#"
-                className="transition-colors"
-              >
+              <Link href="#" className="transition-colors">
                 Simulador Seguro de Vida
               </Link>
-              <Link
-                href="#"
-                className="transition-colors"
-              >
+              <Link href="#" className="transition-colors">
                 Cotizadores
               </Link>
-              <Link
-                href="#"
-                className="transition-colors"
-              >
+              <Link href="#" className="transition-colors">
                 Nosotros
               </Link>
-              <Link
-                href="#"
-                className="transition-colors"
-              >
+              <Link href="#" className="transition-colors">
                 Contacto
               </Link>
-              <Link
-                href="#"
-                className="transition-colors"
-              >
+              <Link href="#" className="transition-colors">
                 En confianza
               </Link>
             </nav>
@@ -75,30 +57,21 @@ export function FooterComponent() {
             </div>
           </div>
         </div>
-        <div className="mt-8 pt-8 border-t border-[#666666]/15 flex justify-between items-center">
+        <div className="mt-8 pt-4 border-t border-[#666666]/15 flex justify-between items-center">
           <p className="text-sm">
             © {new Date().getFullYear()} Livestar. Todos los derechos
             reservados.
           </p>
           <div className="flex space-x-4">
-            <Link
-              href="#"
-              className="transition-colors"
-            >
+            <Link href="#" className="transition-colors">
               <Facebook size={24} />
               <span className="sr-only">Facebook</span>
             </Link>
-            <Link
-              href="#"
-              className="transition-colors"
-            >
+            <Link href="#" className="transition-colors">
               <Instagram size={24} />
               <span className="sr-only">Instagram</span>
             </Link>
-            <Link
-              href="#"
-              className="transition-colors"
-            >
+            <Link href="#" className="transition-colors">
               <Twitter size={24} />
               <span className="sr-only">Twitter</span>
             </Link>
