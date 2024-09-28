@@ -1,7 +1,7 @@
 "use server";
 
 import { simplifyZodErrors } from "@/shared/utils";
-import { insuranceFormSchema } from "../schemas/get-quote-schema";
+
 import prisma from "@/lib/prisma";
 //TODO: pending model in prisma scheme :D left at bottom for now
 // import { InsuranceForm } from "@prisma/client";
@@ -20,28 +20,28 @@ export const getQuoteForm = async (prevState: any, formData: FormData) => {
   const whatsapp = formData.get("whatsapp") as string;
   const email = formData.get("email") as string;
 
-  const zodResult = insuranceFormSchema.safeParse({
-    name,
-    age: parseInt(age),
-    gender,
-    postalCode,
-    protectWho,
-    partnerGender,
-    partnerAge: partnerAge ? parseInt(partnerAge) : undefined,
-    children: parseInt(children),
-    childrenAges: childrenAges ? childrenAges.split(',').map(Number) : undefined,
-    whatsapp,
-    email,
-  });
+  // const zodResult = insuranceFormSchema.safeParse({
+  //   name,
+  //   age: parseInt(age),
+  //   gender,
+  //   postalCode,
+  //   protectWho,
+  //   partnerGender,
+  //   partnerAge: partnerAge ? parseInt(partnerAge) : undefined,
+  //   children: parseInt(children),
+  //   childrenAges: childrenAges ? childrenAges.split(',').map(Number) : undefined,
+  //   whatsapp,
+  //   email,
+  // });
   
 
-  if (!zodResult.success) {
-    const simplifiedErrors = simplifyZodErrors(zodResult.error);
+  // if (!zodResult.success) {
+  //   const simplifiedErrors = simplifyZodErrors(zodResult.error);
 
-    return {
-      errors: simplifiedErrors,
-    };
-  }
+  //   return {
+  //     errors: simplifiedErrors,
+  //   };
+  // }
 
   // const insuranceForm: InsuranceForm | null = await createInsuranceForm(zodResult.data);
 
