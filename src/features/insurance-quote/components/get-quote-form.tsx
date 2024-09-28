@@ -4,6 +4,7 @@ import { Button } from '@tremor/react';
 import { useGetQuoteForm } from '../hooks/use-get-quote-form';
 import { PersonalInfoSection } from './personal-info-section';
 import { ContactInfoSection } from './contact-info-section';
+/* import { PersonalInfoSectionDynamic } from './dynamic-personal-info'; */
 
 export const GetQuoteForm: React.FC = () => {
   const {
@@ -12,6 +13,7 @@ export const GetQuoteForm: React.FC = () => {
     showContactInfo,
     handleInputChange,
     handleChildAgeChange,
+    handleProtectedAgeChange,
     handleSubmit,
   } = useGetQuoteForm();
 
@@ -22,7 +24,13 @@ export const GetQuoteForm: React.FC = () => {
         errors={errors}
         handleInputChange={handleInputChange}
         handleChildAgeChange={handleChildAgeChange}
+        handleProtectedAgeChange={handleProtectedAgeChange}
       />
+      {/* <PersonalInfoSectionDynamic 
+        formData={formData}
+        errors={errors}
+        handleInputChange={handleInputChange as (field: string | number, value: string | number) => void}
+      /> */}
 
       {showContactInfo && (
         <ContactInfoSection

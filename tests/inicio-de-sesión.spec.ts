@@ -36,7 +36,7 @@ test.describe("Authentication Tests", () => {
     await page.click('button[type="submit"]');
 
     await expect(
-      page.locator("text=Ingresa un correo electrónico valido")
+      page.locator("text=escribe un correo electrónico valido")
     ).toBeVisible();
     await expect(
       page.locator("text=La contraseña debe tener al menos 6 caracteres")

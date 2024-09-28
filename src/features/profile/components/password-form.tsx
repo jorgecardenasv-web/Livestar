@@ -39,7 +39,7 @@ export const PasswordForm = () => {
             id="current-password"
             name="currentPassword"
             autoComplete="current-password"
-            placeholder="Ingrese su contraseña actual"
+            placeholder="escribe tu contraseña actual"
           />
           <span className="text-sm text-red-600">
             {state?.errors?.currentPassword && state?.errors?.currentPassword}
@@ -57,7 +57,7 @@ export const PasswordForm = () => {
             id="new-password"
             name="newPassword"
             autoComplete="new-password"
-            placeholder="Ingrese su nueva contraseña"
+            placeholder="escribe tu nueva contraseña"
           />
           <span className="text-sm text-red-600">
             {state?.errors?.newPassword && state?.errors?.newPassword}
@@ -75,7 +75,7 @@ export const PasswordForm = () => {
             id="confirm-password"
             name="confirmPassword"
             autoComplete="new-password"
-            placeholder="Ingrese de nuevo su nueva contraseña"
+            placeholder="escribe de nuevo tu nueva contraseña"
           />
           <span className="text-sm text-red-600">
             {state?.errors?.confirmPassword && state?.errors?.confirmPassword}

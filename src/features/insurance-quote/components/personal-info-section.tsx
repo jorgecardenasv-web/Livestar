@@ -6,6 +6,7 @@ interface PersonalInfoSectionProps {
   errors: Record<string, string>;
   handleInputChange: (field: keyof FormData, value: string | number) => void;
   handleChildAgeChange: (index: number, value: number) => void;
+  handleProtectedAgeChange: (index: number, value: number) => void;
 }
 
 export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
@@ -13,6 +14,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   errors,
   handleInputChange,
   handleChildAgeChange,
+  handleProtectedAgeChange,
 }) => {
   return (
     <div className="space-y-6">
@@ -84,22 +86,20 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
             value={formData.protectWho}
             onValueChange={(value) => handleInputChange("protectWho", value)}
             error={!!errors.protectWho}
+            errorMessage={errors.protectWho}
           >
-            <SelectItem value="mi">mí</SelectItem>
-            <SelectItem value="mi_pareja_y_a_mi">mi pareja y a mí</SelectItem>
-            <SelectItem value="familia">la familia (niños, pareja)</SelectItem>
-            <SelectItem value="mis_ninos_y_yo">mis niños y yo</SelectItem>
-            <SelectItem value="solo_mis_ninos">solo mis niños</SelectItem>
-            <SelectItem value="mis_padres">mis padres</SelectItem>
-            <SelectItem value="otros">otro(s)</SelectItem>
+            <SelectItem value="solo_yo">Solo yo</SelectItem>
+            <SelectItem value="mi_pareja_y_yo">Mi pareja y yo</SelectItem>
+            <SelectItem value="familia">Mi familia completa</SelectItem>
+            <SelectItem value="mis_hijos_y_yo">Mis hijos y yo</SelectItem>
+            <SelectItem value="solo_mis_hijos">Solo mis hijos</SelectItem>
+            <SelectItem value="mis_padres">Mis padres</SelectItem>
+            <SelectItem value="otros">Otro(s)</SelectItem>
           </Select>
-          {errors.protectWho && (
-            <p className="text-red-500 text-sm mt-1">{errors.protectWho}</p>
-          )}
         </div>
 
         <div className="col-span-2 grid grid-cols-2 gap-4">
-          {(formData.protectWho === "mi_pareja_y_a_mi" ||
+          {(formData.protectWho === "mi_pareja_y_yo" ||
             formData.protectWho === "familia") && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -113,22 +113,18 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                   handleInputChange("partnerGender", value)
                 }
                 error={!!errors.partnerGender}
+                errorMessage={errors.partnerGender}
               >
                 <SelectItem value="hombre">Hombre</SelectItem>
                 <SelectItem value="mujer">Mujer</SelectItem>
                 <SelectItem value="otro">Otro</SelectItem>
               </Select>
-              {errors.partnerGender && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.partnerGender}
-                </p>
-              )}
             </div>
           )}
 
-          {(formData.protectWho === "mi_pareja_y_a_mi" ||
-            formData.protectWho === "mis_ninos_y_yo" ||
-            formData.protectWho === "mi") && (
+          {(formData.protectWho === "mi_pareja_y_yo" ||
+            formData.protectWho === "mis_hijos_y_yo" ||
+            formData.protectWho === "solo_yo") && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Yo tengo
@@ -147,7 +143,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
             </div>
           )}
 
-          {(formData.protectWho === "mi_pareja_y_a_mi" ||
+          {(formData.protectWho === "mi_pareja_y_yo" ||
             formData.protectWho === "familia") && (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -169,8 +165,8 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
             </div>
           )}
           {(formData.protectWho === "familia" ||
-            formData.protectWho === "mis_ninos_y_yo" ||
-            formData.protectWho === "solo_mis_ninos") && (
+            formData.protectWho === "mis_hijos_y_yo" ||
+            formData.protectWho === "solo_mis_hijos") && (
             <>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -219,31 +215,23 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
             </>
           )}
 
-          {/* TODO: add other options, it is not possible yet, just a template we should add this to another component p: */}
-          {/* {formData.protectWho === "otros" && (
+          {formData.protectWho === "otros" && (
             <>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  ¿A quién?
+                  Selecciona su parentesco contigo
                 </label>
-                <Select
-                  name="othersCategory" //is this ok?
-                  placeholder="Seleccionar"
-                  value={formData.othersCategory}
-                  onValueChange={(value) =>
-                    handleInputChange("othersCategory", value)
+                <TextInput
+                  name="relationship"
+                  placeholder="Ej: hermanos, tios"
+                  value={formData.relationship}
+                  onChange={(e) =>
+                    handleInputChange("relationship", e.target.value)
                   }
-                  error={!!errors.othersCategory}
-                >
-                  <SelectItem value="hermanos">Hermanos</SelectItem>
-                  <SelectItem value="empleados">Empleados</SelectItem>
-                  <SelectItem value="amigos">Amigos</SelectItem>
-                </Select>
-                {errors.othersCategory && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {errors.othersCategory}
-                  </p>
-                )}
+                  error={!!errors.relationship}
+                  errorMessage={errors.relationship}
+                  className="w-full"
+                />
               </div>
 
               <div>
@@ -266,24 +254,96 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
               </div>
 
               <div className="col-span-2">
-                {formData.protectedAges?.map((age, index) => (
-                  <NumberInput
-                    key={index}
-                    name={`protectedAge${index}`}
-                    placeholder={`Hijo ${index + 1}`}
-                    value={age}
-                    onValueChange={(value) =>
-                      handleProtectedAgeChange(index, value)
-                    }
-                    error={!!errors[`protectedAges.${index}`]}
-                    errorMessage={errors[`protectedAges.${index}`]}
-                    className="w-20"
-                    min={0}
-                  />
-                ))}
+                {formData.protectedCount && formData.protectedCount > 0 && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      {formData.protectedCount === 1
+                        ? `Edad de mi ${formData.relationship}`
+                        : `Edades de mis ${formData.protectedCount} ${formData.relationship}s`}
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {formData.protectedAges?.map((age, index) => (
+                        <NumberInput
+                          key={index}
+                          name={`protectedAge${index}`}
+                          placeholder={`Pariente ${index + 1}`}
+                          value={age}
+                          onValueChange={(value) =>
+                            handleProtectedAgeChange(index, value)
+                          }
+                          error={!!errors[`protectedAges.${index}`]}
+                          errorMessage={errors[`protectedAges.${index}`]}
+                          className="w-20"
+                          min={0}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </>
-          )} */}
+          )}
+
+          {formData.protectWho === "mis_padres" && (
+            <>
+              <div className="flex flex-wrap gap-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Nombre de mamá
+                </label>
+                <TextInput
+                  name="momName"
+                  placeholder="Ej: Juan Perez"
+                  value={formData.momName}
+                  onChange={(e) => handleInputChange("momName", e.target.value)}
+                  error={!!errors.momName}
+                  errorMessage={errors.momName}
+                  className="w-full"
+                />
+
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Nombre de papá
+                </label>
+                <TextInput
+                  name="dadName"
+                  placeholder="Ej: Juan Perez"
+                  value={formData.dadName}
+                  onChange={(e) => handleInputChange("dadName", e.target.value)}
+                  error={!!errors.dadName}
+                  errorMessage={errors.dadName}
+                  className="w-full"
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Edad de mamá
+                </label>
+                <NumberInput
+                  name="momAge"
+                  placeholder="Edad de mamá"
+                  value={formData.momAge}
+                  onValueChange={(value) => handleInputChange("momAge", value)}
+                  error={!!errors.momAge}
+                  errorMessage={errors.momAge}
+                  className="w-full"
+                  min={0}
+                />
+
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Edad de papá
+                </label>
+                <NumberInput
+                  name="dadAge"
+                  placeholder="Edad de papá"
+                  value={formData.dadAge}
+                  onValueChange={(value) => handleInputChange("dadAge", value)}
+                  error={!!errors.dadAge}
+                  errorMessage={errors.dadAge}
+                  className="w-full"
+                  min={0}
+                />
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

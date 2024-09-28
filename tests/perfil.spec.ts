@@ -93,7 +93,7 @@ test.describe("Pruebas de la Página de Perfil", () => {
     await page.click('button:has-text("Actualizar información")');
 
     await expect(page.locator("text=El nombre debe tener al menos 3 caracteres")).toBeVisible();
-    await expect(page.locator("text=Ingresa un correo electrónico valido")).toBeVisible();
+    await expect(page.locator("text=escribe un correo electrónico valido")).toBeVisible();
   });
 
   test("debe cambiar la contraseña con éxito", async ({ authedPage: page }) => {
