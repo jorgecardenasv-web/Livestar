@@ -1,4 +1,4 @@
-import InsurancePlans from "@/features/insurance-plans/components/insurance-plans";
+import { InsurancePlans } from "@/features/insurance-plans/components/insurance-plans";
 import { HeaderSecondary } from "@/shared/components/layout/header-secondary";
 
 export default function HealthInsuranceComparison() {

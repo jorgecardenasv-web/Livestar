@@ -1,4 +1,4 @@
-import { InsuranceCompany } from "../types";
+import { InsuranceCompany } from "../../../shared/types/types";
 import AXALogo from '../../../assets/logos/axa.svg'
 import GNPLogo from '../../../assets/logos/gnp.svg'
 import MetlifeLogo from '../../../assets/logos/metlife.svg'
