@@ -3,11 +3,11 @@ import { z } from "zod";
 import { FormData, buildSchema } from "../schemas/form-schema";
 
 export const useGetQuoteForm = () => {
-  const [formData, setFormData] = useState<Partial<FormData>>({
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     gender: "",
     postalCode: "",
-    protectWho: undefined,
+    protectWho: "",
     whatsapp: "",
     email: "",
   });
