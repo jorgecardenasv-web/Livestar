@@ -1,7 +1,7 @@
 import corazon from "@/assets/home/heart-icon.png";
 import Ahorro from "@/assets/home/Ahorro.png";
 import vehiculos from "@/assets/home/vehiculos.png";
-import { QuoteCard } from "./quote-card";
+import { QuoteCard } from "../cards/quote-card";
 
 export const Quotes = () => {
   return (
@@ -11,7 +11,7 @@ export const Quotes = () => {
         Soluciones personalizadas y eficientes
       </h3>
       <p className="my-3 text-lg text-wrap max-w-[650px] text-center w-3/4">
-        obtén el apoyo experto, la asistencia humana y la agiad de respuesta que
+        obtén el apoyo experto, la asistencia humana y la agilidad de respuesta que
         necesitas en los momentos críticos.
       </p>
       <div className="w-full bg-white flex flex-col md:flex-row gap-y-10 justify-around items-center gap-x-5 mt-10">

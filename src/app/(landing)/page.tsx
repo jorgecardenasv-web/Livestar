@@ -1,12 +1,13 @@
-import { Coverage } from "@/features/home/components/coverage";
-import { FooterPage } from "@/features/home/components/footer";
-import { GreaterSpecialization } from "@/features/home/components/greater-specialization";
-import { Header } from "@/features/home/components/header";
-import { Hero } from "@/features/home/components/hero";
-import { MedicalExpenses } from "@/features/home/components/medical-expenses";
-import { Quotes } from "@/features/home/components/quotes";
-import { SuccessStory } from "@/features/home/components/success-story";
-import { ScrollAnimatedComponent } from "@/shared/components/ScrollAnimatedComponent";
+import { Coverage } from "@/features/home/components/sections/coverage";
+import { FooterPage } from "@/shared/components/layout/footer";
+import { GreaterSpecialization } from "@/features/home/components/sections/greater-specialization";
+import { Header } from "@/shared/components/layout/header";
+import { Hero } from "@/features/home/components/sections/hero";
+import { MedicalExpenses } from "@/features/home/components/sections/medical-expenses";
+import { Quotes } from "@/features/home/components/sections/quotes";
+import { SuccessStory } from "@/features/home/components/sections/success-story";
+import { ScrollAnimatedComponent } from "@/shared/components/scroll-animated";
+import { FooterComponent } from "@/shared/components/layout/footer_secondary";
 
 export default function Home() {
   return (
@@ -31,7 +32,7 @@ export default function Home() {
         <ScrollAnimatedComponent>
           <GreaterSpecialization />
         </ScrollAnimatedComponent>
-        <FooterPage />
+        <FooterComponent />
       </main>
     </>
   );

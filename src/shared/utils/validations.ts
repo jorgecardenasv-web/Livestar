@@ -7,5 +7,5 @@ export const emailValidation = z
   })
   .trim()
   .email({
-    message: "Ingresa un correo electrónico valido",
+    message: "escribe un correo electrónico valido",
   });

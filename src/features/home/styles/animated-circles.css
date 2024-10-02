@@ -1,7 +1,7 @@
 .circle {
   position: absolute;
   border-radius: 50%;
-  z-index: 1;
+  z-index: -1;
 }
 
 .circle1 {
@@ -12,7 +12,7 @@
     rgba(0, 138, 237, 0.3) 0%,
     rgba(0, 78, 135, 0) 70%
   );
-  animation: moveCircle1 15s infinite alternate ease-in-out; /* Reduced from 20s to 15s */
+  animation: moveCircle1 15s infinite alternate ease-in-out;
 }
 
 .circle2 {
@@ -23,7 +23,7 @@
     rgba(0, 138, 237, 0.2) 0%,
     rgba(0, 78, 135, 0) 70%
   );
-  animation: moveCircle2 18.75s infinite alternate-reverse ease-in-out; /* Reduced from 25s to 18.75s */
+  animation: moveCircle2 18.75s infinite alternate-reverse ease-in-out;
 }
 
 .circle3 {
@@ -34,7 +34,7 @@
     rgba(0, 78, 135, 0.3) 0%,
     rgba(0, 138, 237, 0) 70%
   );
-  animation: moveCircle3 16.5s infinite alternate ease-in-out; /* Reduced from 22s to 16.5s */
+  animation: moveCircle3 16.5s infinite alternate ease-in-out;
 }
 
 .circle4 {
@@ -45,7 +45,7 @@
     rgba(0, 138, 237, 0.4) 0%,
     rgba(0, 78, 135, 0) 70%
   );
-  animation: moveCircle4 13.5s infinite alternate-reverse ease-in-out; /* Reduced from 18s to 13.5s */
+  animation: moveCircle4 13.5s infinite alternate-reverse ease-in-out;
 }
 
 .circle5 {
@@ -56,7 +56,7 @@
     rgba(0, 78, 135, 0.2) 0%,
     rgba(0, 138, 237, 0) 70%
   );
-  animation: moveCircle5 17.25s infinite alternate ease-in-out; /* Reduced from 23s to 17.25s */
+  animation: moveCircle5 17.25s infinite alternate ease-in-out;
 }
 
 @keyframes moveCircle1 {
