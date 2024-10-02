@@ -2,11 +2,11 @@
 
 import { TextInput } from "@tremor/react";
 import { useFormState } from "react-dom";
-import { authenticate } from "../actions/signin";
+import { signin } from "../actions/signin";
 import { SubmitButton } from "@/shared/components/submit-button";
 
 export const SigninForm = () => {
-  const [state, formAction] = useFormState(authenticate, {
+  const [state, formAction] = useFormState(signin, {
     errors: {
       email: "",
       password: "",

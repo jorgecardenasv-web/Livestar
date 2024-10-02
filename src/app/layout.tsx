@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import { getServerSession } from "@/features/auth/services/auth";
 
 const openSans = Open_Sans({ subsets: ["latin"] });
 
@@ -16,7 +15,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await getServerSession();
   const basePath = process.env.NEXTAUTH_BASE_PATH;
 
   return (
@@ -24,7 +22,7 @@ export default async function RootLayout({
       <body
         className={`${openSans.className} flex h-screen flex-col`}
       >
-        <Providers session={session} basePath={basePath}>
+        <Providers>
           {children}
         </Providers>
       </body>

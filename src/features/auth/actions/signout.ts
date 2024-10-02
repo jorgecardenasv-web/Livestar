@@ -1,9 +1,17 @@
-"use server";
+'use server';
 
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export async function signOut() {
-  cookies().delete("next-auth.session-token");
-  redirect("/auth/signin");
-}
+import { getSession } from "@/lib/iron-session/get-session";
+import { deleteSessionService } from "@/features/session/services/delete-session.service";
+
+
+export const signout = async () => {
+  const session = await getSession();
+
+  await deleteSessionService(session.sessionId!);
+  
+  session.destroy();
+
+  redirect("/ini-ses-adm");
+};

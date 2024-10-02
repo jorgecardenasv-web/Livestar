@@ -27,21 +27,6 @@ const rolOptions = [
 export const UsersList = ({ users }: { users: User[] }) => {
   return (
     <div className="w-full">
-      <div className="mb-4 w-[50%] flex gap-4">
-        <SelectFilter
-          statusOptions={statusOptions}
-          rowSearch={"status"}
-          placeholder="Todos"
-          filterName="Filtrar por Estado"
-        />
-        <SelectFilter
-          statusOptions={rolOptions}
-          rowSearch={"role"}
-          placeholder="Todos"
-          filterName="Filtrar por  Rol"
-        />
-      </div>
-
       {users && users.length > 0 ? (
         <>
           <Card className="dark:bg-dark-tremor-background-subtle">

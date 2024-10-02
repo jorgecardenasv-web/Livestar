@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { navLinks } from "../data/nav-links";
 
-export default function NavLinks({ userRole }: { userRole?: string }) {
+export default function NavLinks({ userRole }: { userRole?: string | null }) {
   const pathname = usePathname();
 
   return (

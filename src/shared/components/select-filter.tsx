@@ -38,7 +38,7 @@ export const SelectFilter: React.FC<SelectFilterProps> = ({
 
   return (
     <div className="w-full space-y-2">
-      <label className="text-sm text-tremor-content-strong dark:text-dark-tremor-content-strong">
+      <label className="text-[13px] text-tremor-content-strong dark:text-dark-tremor-content-strong">
         {filterName}:
       </label>
       <Select

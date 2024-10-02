@@ -2,9 +2,9 @@ import Link from "next/link";
 import NavLinks from "@/features/layout/components/nav-link";
 import { ThemeSelector } from "@/features/theming/components/theme-selector";
 import { Dropdown } from "./dropdown";
-import { User } from "next-auth";
+import { AuthenticadedUser } from "@/lib/iron-session/types";
 
-export const SidebarClient = ({ user }: { user?: User }) => {
+export const SidebarClient = ({ user }: { user?: AuthenticadedUser }) => {
   return (
     <>
       <Link
