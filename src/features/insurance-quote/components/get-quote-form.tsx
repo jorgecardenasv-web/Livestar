@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { Button } from '@tremor/react';
 import { useGetQuoteForm } from '../hooks/use-get-quote-form';
@@ -11,8 +11,8 @@ export const GetQuoteForm: React.FC = () => {
     errors,
     showContactInfo,
     handleInputChange,
-    handleChildAgeChange,
-    handleProtectedAgeChange,
+    handleChildChange,
+    handleProtectedPersonChange,
     handleSubmit,
   } = useGetQuoteForm();
 
@@ -22,8 +22,8 @@ export const GetQuoteForm: React.FC = () => {
         formData={formData}
         errors={errors}
         handleInputChange={handleInputChange}
-        handleChildAgeChange={handleChildAgeChange}
-        handleProtectedAgeChange={handleProtectedAgeChange}
+        handleChildChange={handleChildChange}
+        handleProtectedPersonChange={handleProtectedPersonChange}
       />
 
       {showContactInfo && (
