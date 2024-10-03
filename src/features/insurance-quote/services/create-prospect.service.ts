@@ -5,6 +5,7 @@ export const createProspectService = async (
   {
     name,
     gender,
+    age,
     postalCode,
     protectWho,
     whatsapp,
@@ -22,6 +23,7 @@ export const createProspectService = async (
       data: {
         name,
         gender,
+        age,
         postalCode,
         protectWho,
         whatsapp,

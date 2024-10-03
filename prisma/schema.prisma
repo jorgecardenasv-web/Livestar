@@ -123,6 +123,7 @@ model Prospect {
   uuid            String           @unique @default(uuid())
   name            String
   gender          String
+  age             Int?
   postalCode      String
   protectWho      String
   whatsapp        String
