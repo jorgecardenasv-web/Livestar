@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { z } from "zod";
 import { FormData, buildSchema } from "../schemas/form-schema";
+import { createProspect } from "../actions/create-prospect";
 
 export const useGetQuoteForm = () => {
   const [formData, setFormData] = useState<FormData>({
@@ -253,13 +254,13 @@ export const useGetQuoteForm = () => {
     return cleanedData;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const schema = buildSchema(formData.protectWho!);
       const validatedData = schema.parse(formData);
       const cleanedData = cleanFormData(validatedData);
-      console.log(cleanedData);
+      await createProspect(cleanedData);
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors: Record<string, string> = {};

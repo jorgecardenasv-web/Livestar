@@ -1,9 +1,9 @@
 "use client";
 
-import { Button } from '@tremor/react';
-import { useGetQuoteForm } from '../hooks/use-get-quote-form';
-import { PersonalInfoSection } from './personal-info-section';
-import { ContactInfoSection } from './contact-info-section';
+import { Button } from "@tremor/react";
+import { useGetQuoteForm } from "../hooks/use-get-quote-form";
+import { PersonalInfoSection } from "./personal-info-section";
+import { ContactInfoSection } from "./contact-info-section";
 
 export const GetQuoteForm: React.FC = () => {
   const {
