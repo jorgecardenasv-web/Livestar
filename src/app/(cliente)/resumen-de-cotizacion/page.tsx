@@ -1,39 +1,24 @@
-import { QuoteSummary } from "@/features/quote-summary/components/quote-sumary";
+import { QuoteSummary } from "@/features/quote-summary/components/quote-summary";
 import { HeaderSecondary } from "@/shared/components/layout/header-secondary";
-import { ArrowLeft } from "lucide-react";
-import { StaticImageData } from "next/image";
+import { getInsuranceState } from "@/features/insurance-plans/actions/insurance-actions";
 import { notFound } from "next/navigation";
 
 export interface InsuranceQuoteData {
   company: string;
-  companyLogo: StaticImageData;
+  companyLogo: string;
   plan: string;
   paymentType: string;
-  sumInsured: number;
-  deductible: number;
-  coInsurance: number;
-  coInsuranceCap: number;
-  coverage_fee: number;
+  sumInsured: string;
+  deductible: string;
+  coInsurance: string;
+  coInsuranceCap: string;
+  coverage_fee: string;
 }
 
-export default function QuoteSummaryPage({
-  searchParams,
-}: {
-  searchParams: {
-    data: string;
-  };
-}) {
-  let data: InsuranceQuoteData | null = null;
+export default async function QuoteSummaryPage() {
+  const { selectedPlan } = await getInsuranceState();
 
-  if (typeof searchParams.data === "string") {
-    try {
-      data = JSON.parse(searchParams.data) as InsuranceQuoteData;
-    } catch (error) {
-      console.error("Error parsing insurance data:", error);
-    }
-  }
-
-  if (!data) {
+  if (!selectedPlan || Object.keys(selectedPlan).length === 0) {
     notFound();
   }
 
@@ -41,7 +26,7 @@ export default function QuoteSummaryPage({
     <>
       <HeaderSecondary />
       <div className="py-14 px-5">
-        <QuoteSummary {...data} />
+        <QuoteSummary {...selectedPlan} />
       </div>
     </>
   );

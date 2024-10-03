@@ -12,10 +12,10 @@ const config: Config = {
     current: "currentColor",
     extend: {
       fontFamily: {
-        'source-serif': ['var(--font-source-serif-4)'],
+        "source-serif": ["var(--font-source-serif-4)"],
       },
       colors: {
-        primary: colors.sky[600],
+        primary: "#00A5E3",
         // light mode
         tremor: {
           brand: {

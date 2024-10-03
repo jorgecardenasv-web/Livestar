@@ -6,8 +6,8 @@ export default function HealthInsuranceComparison() {
     <div>
       <HeaderSecondary />
       <main className="flex flex-col items-center justify-center pb-16">
-        <h1 className="text-5xl font-bold text-center md:text-lef text-wrap text-tremor-content-emphasis">
-          ¡Tu cotización está lista!
+        <h1 className="text-5xl font-bold text-center md:text-lef text-wrap text-primary">
+          ¡Ya tienes tu cotización disponible!
         </h1>
         <InsurancePlans />
       </main>

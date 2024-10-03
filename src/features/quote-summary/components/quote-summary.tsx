@@ -2,7 +2,7 @@ import { InsuranceQuoteData } from "@/app/(cliente)/resumen-de-cotizacion/page";
 import Image from "next/image";
 import { Shield, DollarSign, Percent, Heart } from "lucide-react";
 
-export const QuoteSummary = ({
+export const QuoteSummary: React.FC<InsuranceQuoteData> = ({
   coInsurance,
   coInsuranceCap,
   coverage_fee,
@@ -12,7 +12,7 @@ export const QuoteSummary = ({
   companyLogo,
   plan,
   paymentType,
-}: InsuranceQuoteData) => {
+}) => {
   const isPriceMonthly = paymentType === "Mensual";
 
   return (
@@ -37,11 +37,7 @@ export const QuoteSummary = ({
               Total {isPriceMonthly ? "Mensual" : "Anual"}
             </p>
             <p className="text-3xl sm:text-4xl font-bold text-[#223E99]">
-              $
-              {coverage_fee?.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
+              ${coverage_fee}
             </p>
           </div>
           <div className="text-center sm:text-right">
@@ -78,9 +74,14 @@ export const QuoteSummary = ({
         />
       </div>
 
-      <button className="w-full bg-[#223E99] text-white py-3 rounded font-bold text-base sm:text-lg hover:bg-primary transition duration-300">
-        Contratar ahora
-      </button>
+      <form action="/api/contract">
+        <button
+          type="submit"
+          className="w-full bg-[#223E99] text-white py-3 rounded font-bold text-base sm:text-lg hover:bg-primary transition duration-300"
+        >
+          Contratar ahora
+        </button>
+      </form>
     </div>
   );
 };

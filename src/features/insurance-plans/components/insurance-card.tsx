@@ -1,13 +1,11 @@
-"use client";
-
 import Image from "next/image";
 import {
   InsuranceCompany,
   InsurancePlan,
 } from "../../../shared/types/insurance";
 import { calculateTotalPrice } from "../utils/insurance-calculations";
-import { useRouter } from "next/navigation";
 import { Shield, DollarSign, Percent, Heart, Check } from "lucide-react";
+import { handleInterestClick } from "../actions/insurance-actions";
 
 interface InsuranceCardProps {
   company: InsuranceCompany;
@@ -22,24 +20,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = ({
   paymentType,
   isRecommended,
 }) => {
-  const router = useRouter();
-
-  const handleInterestClick = () => {
-    const insuranceData = {
-      company: company.name,
-      companyLogo: company.logo,
-      plan: plan.name,
-      paymentType,
-      sumInsured: plan.sumInsured.toLocaleString(),
-      deductible: plan.deductible.toLocaleString(),
-      coInsurance: `${(plan.coInsurance * 100).toFixed(0)}`,
-      coInsuranceCap: plan.coInsuranceCap?.toLocaleString(),
-      coverage_fee: calculateTotalPrice(plan.totalPrice, paymentType),
-    };
-
-    const encodedData = encodeURIComponent(JSON.stringify(insuranceData));
-    router.push(`/resumen-de-cotizacion?data=${encodedData}`);
-  };
+  const coverage_fee = calculateTotalPrice(plan.totalPrice, paymentType);
 
   return (
     <div
@@ -67,13 +48,10 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = ({
             </p>
             <p className="text-3xl font-bold text-[#223E99]">
               $
-              {calculateTotalPrice(plan.totalPrice, paymentType).toLocaleString(
-                undefined,
-                {
-                  minimumFractionDigits: 2,
-                  maximumFractionDigits: 2,
-                },
-              )}
+              {coverage_fee.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
             </p>
           </div>
         </div>
@@ -108,12 +86,55 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = ({
           </span>
         </div>
 
-        <button
-          onClick={handleInterestClick}
-          className="w-full bg-[#223E99] text-white py-3 rounded font-bold text-lg hover:bg-primary transition duration-300"
-        >
-          Me interesa
-        </button>
+        <form action={handleInterestClick}>
+          <input type="hidden" name="company" value={company.name} />
+          <input type="hidden" name="companyLogo" value={company.logo} />
+          <input type="hidden" name="plan" value={plan.name} />
+          <input type="hidden" name="paymentType" value={paymentType} />
+          <input
+            type="hidden"
+            name="sumInsured"
+            value={plan.sumInsured.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          />
+          <input
+            type="hidden"
+            name="deductible"
+            value={plan.deductible.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          />
+          <input
+            type="hidden"
+            name="coInsurance"
+            value={`${(plan.coInsurance * 100).toFixed(0)}`}
+          />
+          <input
+            type="hidden"
+            name="coInsuranceCap"
+            value={plan.coInsuranceCap?.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          />
+          <input
+            type="hidden"
+            name="coverage_fee"
+            value={coverage_fee.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            })}
+          />
+          <button
+            type="submit"
+            className="w-full bg-[#223E99] text-white py-3 rounded font-bold text-lg hover:bg-primary transition duration-300"
+          >
+            Me interesa
+          </button>
+        </form>
       </div>
     </div>
   );

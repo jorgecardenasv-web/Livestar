@@ -17,7 +17,7 @@ export interface InsuranceCompany {
   id: number;
   uuid: string;
   name: string;
-  logo: StaticImageData;
+  logo: string;
   description?: string;
   status: CompanyStatus;
   createdAt: Date;

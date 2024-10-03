@@ -1,37 +1,43 @@
+import React from "react";
 import { CreditCard, Calendar } from "lucide-react";
+import { setActivePaymentType } from "../actions/insurance-actions";
 
 interface PaymentSelectorProps {
   paymentTypes: string[];
   activePaymentType: string;
-  setActivePaymentType: (type: string) => void;
 }
 
 export const PaymentSelector: React.FC<PaymentSelectorProps> = ({
   paymentTypes,
   activePaymentType,
-  setActivePaymentType,
 }) => {
   return (
-    <div className="mb-2">
-      <h3 className="text-base font-bold text-[#223E99] mb-2">Tipo de Pago</h3>
-      <div className="flex space-x-4">
-        {paymentTypes.map((type) => (
-          <button
-            key={type}
-            className={`flex items-center px-4 py-2 rounded text-sm font-medium transition-all duration-300 ${
-              activePaymentType === type
-                ? "bg-[#223E99] text-white shadow-lg transform scale-105"
-                : "bg-white text-[#223E99] border-2 border-[#223E99] hover:bg-sky-50 hover:shadow-md"
-            }`}
-            onClick={() => setActivePaymentType(type)}
-          >
-            {type === "Mensual" ? (
-              <CreditCard className="w-5 h-5 mr-2" />
-            ) : (
-              <Calendar className="w-5 h-5 mr-2" />
-            )}
-            {type}
-          </button>
+    <div className="mb-8">
+      <div className="relative w-64 h-14 bg-white rounded shadow-md">
+        <div
+          className={`absolute top-0.5 left-0.5 w-[calc(50%-2px)] h-[calc(100%-4px)] bg-[#223E99] rounded transition-transform duration-300 ease-in-out ${
+            activePaymentType === paymentTypes[1] ? "translate-x-full" : ""
+          }`}
+        />
+        {paymentTypes.map((type, index) => (
+          <form key={type} action={setActivePaymentType}>
+            <input type="hidden" name="paymentType" value={type} />
+            <button
+              type="submit"
+              className={`absolute top-0 ${
+                index === 0 ? "left-0" : "right-0"
+              } w-1/2 h-full flex items-center justify-center text-sm font-medium transition-colors duration-300 ${
+                activePaymentType === type ? "text-white" : "text-[#223E99]"
+              }`}
+            >
+              {type === "Mensual" ? (
+                <CreditCard className="w-5 h-5 mr-2" />
+              ) : (
+                <Calendar className="w-5 h-5 mr-2" />
+              )}
+              {type}
+            </button>
+          </form>
         ))}
       </div>
     </div>

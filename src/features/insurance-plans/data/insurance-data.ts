@@ -1,14 +1,11 @@
 import { InsuranceCompany } from "@/shared/types/insurance";
-import AXALogo from "../../../assets/logos/axa.svg";
-import GNPLogo from "../../../assets/logos/gnp.svg";
-import MetlifeLogo from "../../../assets/logos/metlife.svg";
 
 export const insuranceCompanies: InsuranceCompany[] = [
   {
     id: 1,
     uuid: "123e4567-e89b-12d3-a456-426614174000",
     name: "Axa",
-    logo: AXALogo,
+    logo: "/api/images/axa.svg",
     description: "Compañía líder en seguros de salud",
     status: "ACTIVE",
     createdAt: new Date("2024-09-27T10:00:00Z"),
@@ -119,7 +116,7 @@ export const insuranceCompanies: InsuranceCompany[] = [
     id: 2,
     uuid: "523e4567-e89b-12d3-a456-426614174004",
     name: "GNP Seguros",
-    logo: GNPLogo,
+    logo: "/api/images/gnp.svg",
     description: "Innovación en seguros de salud",
     status: "ACTIVE",
     createdAt: new Date("2024-09-28T10:00:00Z"),
@@ -230,7 +227,7 @@ export const insuranceCompanies: InsuranceCompany[] = [
     id: 3,
     uuid: "923e4567-e89b-12d3-a456-426614174008",
     name: "Metlife",
-    logo: MetlifeLogo,
+    logo: "/api/images/metlife.svg",
     description: "Seguros personalizados para cada necesidad",
     status: "ACTIVE",
     createdAt: new Date("2024-09-29T10:00:00Z"),
