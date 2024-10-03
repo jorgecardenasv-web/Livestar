@@ -16,8 +16,6 @@ export async function handleInterestClick(formData: FormData) {
     coverage_fee: formData.get("coverage_fee"),
   };
 
-  console.log("Stored insuranceData:", insuranceData);
-
   cookies().set("selectedPlan", JSON.stringify(insuranceData));
   redirect("/resumen-de-cotizacion");
 }
