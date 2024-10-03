@@ -32,7 +32,6 @@ export default function Home() {
         <ScrollAnimatedComponent>
           <GreaterSpecialization />
         </ScrollAnimatedComponent>
-        <FooterComponent />
       </main>
     </>
   );

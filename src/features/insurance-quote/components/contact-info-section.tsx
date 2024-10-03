@@ -15,7 +15,7 @@ export const ContactInfoSection: React.FC<ContactInfoSectionProps> = ({
   return (
     <div className="space-y-6">
       <div className="flex items-center space-x-4 mb-6">
-        <span className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-xl">
+        <span className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-xl">
           2
         </span>
         <h3 className="text-2xl font-bold text-gray-800">Datos de contacto</h3>

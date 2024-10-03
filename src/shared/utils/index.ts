@@ -1,5 +1,5 @@
 import { ZodError } from "zod";
-import { FormError } from "../types";
+import { FormError } from "../types/types";
 export * from "./format-date";
 
 export function simplifyZodErrors<T>(errors: ZodError<T>): FormError {

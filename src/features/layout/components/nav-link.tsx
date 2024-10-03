@@ -29,7 +29,7 @@ export default function NavLinks({ userRole }: { userRole?: string | null }) {
                 }
               )}
             >
-              <LinkIcon className="w-6" />
+              <LinkIcon className="w-5" />
               <p className="hidden md:block">{link.name}</p>
             </Link>
           );

@@ -85,22 +85,44 @@ enum PlanStatus {
   @@schema("public")
 }
 
+enum HospitalTier {
+  BASIC
+  INTERMEDIATE
+  EXECUTIVE
+  PLUS
+
+  @@schema("public")
+}
+
+enum MedicalFeeSchedule {
+  BASIC
+  INTERMEDIATE
+  HIGH
+  EXECUTIVE
+
+  @@schema("public")
+}
+
 model InsurancePlan {
-  id                  Int              @id @default(autoincrement())
-  uuid                String           @unique @default(uuid())
+  id                  Int                @id @default(autoincrement())
+  uuid                String             @unique @default(uuid())
+  totalPrice          Float
   name                String
-  company             InsuranceCompany @relation(fields: [companyId], references: [id])
+  company             InsuranceCompany   @relation(fields: [companyId], references: [id])
   companyId           Int
   description         String?
-  sumInsured          Float?
-  deductible          Float?
-  coInsurance         Float?
+  sumInsured          Float
+  deductible          Float
+  coInsurance         Float
   coInsuranceCap      Float?
+  hospitalTier        HospitalTier
+  medicalFeeSchedule  MedicalFeeSchedule
+  additionalClauses   Json
   benefits            Json
   customizableOptions Json
-  status              PlanStatus       @default(ACTIVE)
-  createdAt           DateTime         @default(now())
-  updatedAt           DateTime         @updatedAt
+  status              PlanStatus         @default(ACTIVE)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
   quotes              Quote[]
 
   @@schema("public")

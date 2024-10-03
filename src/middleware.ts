@@ -8,7 +8,12 @@ const routeRoles: { [key: string]: string[] } = {
   "/asesores": ["ADMIN"],
 };
 
-const publicPaths = ["/", "/ini-ses-adm", "/comparador-cotizador-seguros-salud"];
+const publicPaths = [
+  "/",
+  "/ini-ses-adm",
+  "/comparador-cotizador-seguros-salud",
+  "/resumen-de-cotizacion",
+];
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
