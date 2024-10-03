@@ -1,15 +1,15 @@
 import { Role, UserStatus } from "@prisma/client";
 import { hash } from "bcrypt";
 
-const dotenv = require('dotenv');
-const path = require('path');
-const { PrismaClient } = require('@prisma/client');
-import { faker } from '@faker-js/faker/locale/es_MX';
+const dotenv = require("dotenv");
+const path = require("path");
+const { PrismaClient } = require("@prisma/client");
+import { faker } from "@faker-js/faker/locale/es_MX";
 
-const env = process.env.NODE_ENV || 'development';
+const env = process.env.NODE_ENV || "development";
 dotenv.config({ path: path.resolve(process.cwd(), `.env.${env}`) });
 
-const prisma = new PrismaClient();;
+const prisma = new PrismaClient();
 
 async function main() {
   const adminPassword = "AdminPass123";
@@ -21,23 +21,23 @@ async function main() {
 
   await prisma.user.create({
     data: {
-      name: 'Administrador',
-      email: 'admin@example.com',
+      name: "Administrador",
+      email: "admin@example.com",
       password: hashedAdminPassword,
       role: Role.ADMIN,
       status: UserStatus.ACTIVE,
     },
-  })
+  });
 
   await prisma.user.create({
     data: {
-      name: 'Asesor',
-      email: 'advisor@example.com',
+      name: "Asesor",
+      email: "advisor@example.com",
       password: hashedAdvisorPassword,
       role: Role.ADVISOR,
       status: UserStatus.ACTIVE,
     },
-  })
+  });
 
   function getRandomStatus() {
     return Math.random() < 0.5 ? UserStatus.ACTIVE : UserStatus.INACTIVE;
@@ -63,9 +63,9 @@ async function main() {
     }
   }
 
-  await createRandomUsers(104);
+  await createRandomUsers(9);
 
-  console.log('El seed se completó con éxito')
+  console.log("El seed se completó con éxito");
 }
 
 main()

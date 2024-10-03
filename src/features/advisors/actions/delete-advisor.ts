@@ -1,17 +1,22 @@
-'use server'
-import prisma from "@/lib/prisma"
-import { prefix } from "@/shared/utils/constants"
-import { revalidatePath } from "next/cache"
+"use server";
+import { reassignProspectService } from "@/features/insurance-quote/services/reassign-prospect.service";
+import prisma from "@/lib/prisma";
+import { prefix } from "@/shared/utils/constants";
+import { revalidatePath } from "next/cache";
 
-export const deleteAdvisor = async (uuid: string): Promise<boolean> => {
-    try {
-        await prisma.user.delete({ where: { uuid } })
-        revalidatePath(`${prefix}/asesores`)
+export const deleteAdvisor = async (advisorId: string): Promise<boolean> => {
+  try {
+    await prisma.$transaction(async (prisma) => {
+      await reassignProspectService(advisorId);
 
-        return true;
-    } catch (error) {
-        console.error(error);
-        return false;
-    }
-
-}
+      await prisma.user.delete({
+        where: { uuid: advisorId },
+      });
+    });
+    revalidatePath(`${prefix}/asesores`);
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+};

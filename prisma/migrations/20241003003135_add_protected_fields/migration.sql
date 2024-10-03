@@ -24,11 +24,9 @@ CREATE TYPE "public"."TrackingNumberStatus" AS ENUM ('ACTIVE', 'CLOSED', 'EXPIRE
 
 -- CreateTable
 CREATE TABLE "auth"."Session" (
-    "id" SERIAL NOT NULL,
+    "id" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
-    "expires" TIMESTAMP(3) NOT NULL,
-    "sessionToken" TEXT NOT NULL,
-    "accessToken" TEXT NOT NULL,
+    "active" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -89,16 +87,37 @@ CREATE TABLE "public"."Prospect" (
     "id" SERIAL NOT NULL,
     "uuid" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "gender" TEXT NOT NULL,
+    "postalCode" TEXT NOT NULL,
+    "protectWho" TEXT NOT NULL,
+    "whatsapp" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "dateOfBirth" TIMESTAMP(3),
-    "postalCode" TEXT,
-    "advisorId" INTEGER,
-    "status" "public"."ProspectStatus" NOT NULL DEFAULT 'NEW',
-    "additionalInfo" JSONB,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "userId" INTEGER,
+
+    CONSTRAINT "Prospect_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "public"."ProspectAdditionalInfo" (
+    "id" SERIAL NOT NULL,
+    "prospectId" INTEGER NOT NULL,
+    "age" INTEGER,
+    "partnerAge" INTEGER,
+    "partnerGender" TEXT,
+    "childrenCount" INTEGER,
+    "children" JSONB,
+    "momName" TEXT,
+    "dadName" TEXT,
+    "momAge" INTEGER,
+    "dadAge" INTEGER,
+    "protectedCount" INTEGER,
+    "protectedPersons" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Prospect_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "ProspectAdditionalInfo_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -131,12 +150,6 @@ CREATE TABLE "public"."TrackingNumber" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Session_sessionToken_key" ON "auth"."Session"("sessionToken");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Session_accessToken_key" ON "auth"."Session"("accessToken");
-
--- CreateIndex
 CREATE UNIQUE INDEX "User_uuid_key" ON "auth"."User"("uuid");
 
 -- CreateIndex
@@ -150,6 +163,9 @@ CREATE UNIQUE INDEX "InsurancePlan_uuid_key" ON "public"."InsurancePlan"("uuid")
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Prospect_uuid_key" ON "public"."Prospect"("uuid");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ProspectAdditionalInfo_prospectId_key" ON "public"."ProspectAdditionalInfo"("prospectId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Quote_uuid_key" ON "public"."Quote"("uuid");
@@ -170,7 +186,10 @@ ALTER TABLE "auth"."Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("
 ALTER TABLE "public"."InsurancePlan" ADD CONSTRAINT "InsurancePlan_companyId_fkey" FOREIGN KEY ("companyId") REFERENCES "public"."InsuranceCompany"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "public"."Prospect" ADD CONSTRAINT "Prospect_advisorId_fkey" FOREIGN KEY ("advisorId") REFERENCES "auth"."User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "public"."Prospect" ADD CONSTRAINT "Prospect_userId_fkey" FOREIGN KEY ("userId") REFERENCES "auth"."User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "public"."ProspectAdditionalInfo" ADD CONSTRAINT "ProspectAdditionalInfo_prospectId_fkey" FOREIGN KEY ("prospectId") REFERENCES "public"."Prospect"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "public"."Quote" ADD CONSTRAINT "Quote_prospectId_fkey" FOREIGN KEY ("prospectId") REFERENCES "public"."Prospect"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
