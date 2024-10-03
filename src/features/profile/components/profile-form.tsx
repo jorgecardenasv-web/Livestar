@@ -37,7 +37,7 @@ export const ProfileForm = ({ user }: { user: AuthenticadedUser }) => {
             id="name"
             name="name"
             autoComplete="name"
-            placeholder="Ingrese su nombre"
+            placeholder="escribe tu nombre"
             defaultValue={user?.name ?? ""}
           />
           {<span className="text-sm text-red-500">{state?.errors?.name}</span>}
@@ -54,7 +54,7 @@ export const ProfileForm = ({ user }: { user: AuthenticadedUser }) => {
             id="email"
             name="email"
             autoComplete="email"
-            placeholder="Ingrese su correo electrónico"
+            placeholder="escribe tu correo electrónico"
             defaultValue={user?.email ?? ""}
           />
           <span className="text-sm text-red-500">{state?.errors?.email}</span>

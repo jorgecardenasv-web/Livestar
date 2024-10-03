@@ -14,8 +14,8 @@ export const InsurancePlans = () => {
   const paymentTypes = ["Mensual", "Anual"];
 
   return (
-    <div className="mx-auto px-4 py-8">
-      <div className="flex flex-col justify-center items-center mt-10 mb-20 gap-y-4">
+    <div className="mx-auto px-4 py-2">
+      <div className="flex flex-col justify-center items-center my-10 gap-y-2">
         <PaymentSelector
           paymentTypes={paymentTypes}
           activePaymentType={activePaymentType}
@@ -30,7 +30,7 @@ export const InsurancePlans = () => {
       <div className="grid grid-flow-col md:auto-cols-max gap-2 items-end">
         {insuranceCompanies.map((company, index) => {
           const activePlan = company.plans.find(
-            (plan) => plan.name === activePlanType,
+            (plan: any) => plan.name === activePlanType,
           );
           return (
             activePlan && (

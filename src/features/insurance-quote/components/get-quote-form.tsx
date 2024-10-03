@@ -1,9 +1,8 @@
-'use client';
+"use client";
 
-import { Button } from '@tremor/react';
-import { useGetQuoteForm } from '../hooks/use-get-quote-form';
-import { PersonalInfoSection } from './personal-info-section';
-import { ContactInfoSection } from './contact-info-section';
+import { useGetQuoteForm } from "../hooks/use-get-quote-form";
+import { PersonalInfoSection } from "./personal-info-section";
+import { ContactInfoSection } from "./contact-info-section";
 
 export const GetQuoteForm: React.FC = () => {
   const {
@@ -11,7 +10,8 @@ export const GetQuoteForm: React.FC = () => {
     errors,
     showContactInfo,
     handleInputChange,
-    handleChildAgeChange,
+    handleChildChange,
+    handleProtectedPersonChange,
     handleSubmit,
   } = useGetQuoteForm();
 
@@ -21,7 +21,8 @@ export const GetQuoteForm: React.FC = () => {
         formData={formData}
         errors={errors}
         handleInputChange={handleInputChange}
-        handleChildAgeChange={handleChildAgeChange}
+        handleChildChange={handleChildChange}
+        handleProtectedPersonChange={handleProtectedPersonChange}
       />
 
       {showContactInfo && (
@@ -32,12 +33,12 @@ export const GetQuoteForm: React.FC = () => {
         />
       )}
 
-      <Button
+      <button
         type="submit"
-        className="bg-blue-500 text-white px-6 py-3 rounded-lg font-bold text-lg w-full mt-6 hover:bg-blue-600"
+        className="bg-primary text-white px-6 py-3 rounded font-bold text-lg w-full mt-6 hover:bg-[#223E99]"
       >
         Cotizar
-      </Button>
+      </button>
     </form>
   );
 };

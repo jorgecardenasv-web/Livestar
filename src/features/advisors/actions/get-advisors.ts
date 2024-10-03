@@ -11,7 +11,7 @@ export const getAdvisors = async ({
   page?: number;
   status?: string;
 }) => {
-  const pageSize = 6;
+  const pageSize = 5;
   const skip = (page - 1) * pageSize;
 
   const whereClause: any = { role: "ADVISOR" };

@@ -1,7 +1,7 @@
-import { InsuranceCompany } from "../../../shared/types/types";
-import AXALogo from '../../../assets/logos/axa.svg'
-import GNPLogo from '../../../assets/logos/gnp.svg'
-import MetlifeLogo from '../../../assets/logos/metlife.svg'
+import { InsuranceCompany } from "@/shared/types/insurance";
+import AXALogo from "../../../assets/logos/axa.svg";
+import GNPLogo from "../../../assets/logos/gnp.svg";
+import MetlifeLogo from "../../../assets/logos/metlife.svg";
 
 export const insuranceCompanies: InsuranceCompany[] = [
   {
@@ -22,29 +22,30 @@ export const insuranceCompanies: InsuranceCompany[] = [
         description: "Plan básico con cobertura esencial",
         sumInsured: 5000000,
         deductible: 10000,
-        coInsurance: 0.20,
+        coInsurance: 0.2,
         coInsuranceCap: 50000,
         hospitalTier: "BASIC",
         medicalFeeSchedule: "BASIC",
         additionalClauses: {
           internationalCoverage: false,
-          maternityWaitingPeriod: 12
+          maternityWaitingPeriod: 12,
         },
         benefits: {
           dentalCoverage: true,
           opticalCoverage: {
             examinations: true,
             lenses: 200,
-            frames: 150
-          }
+            frames: 150,
+          },
         },
         customizableOptions: {
           deductibleOptions: [8000, 10000, 12000],
-          coInsuranceOptions: [0.20, 0.25, 0.30]
+          coInsuranceOptions: [0.2, 0.25, 0.3],
         },
         status: "ACTIVE",
         createdAt: new Date("2024-09-27T10:00:00Z"),
-        updatedAt: new Date("2024-09-27T10:00:00Z")
+        updatedAt: new Date("2024-09-27T10:00:00Z"),
+        totalPrice: 5000,
       },
       {
         id: 2,
@@ -60,23 +61,24 @@ export const insuranceCompanies: InsuranceCompany[] = [
         medicalFeeSchedule: "INTERMEDIATE",
         additionalClauses: {
           internationalCoverage: true,
-          maternityWaitingPeriod: 10
+          maternityWaitingPeriod: 10,
         },
         benefits: {
           dentalCoverage: true,
           opticalCoverage: {
             examinations: true,
             lenses: 300,
-            frames: 200
-          }
+            frames: 200,
+          },
         },
         customizableOptions: {
           deductibleOptions: [5000, 7500, 10000],
-          coInsuranceOptions: [0.15, 0.20, 0.25]
+          coInsuranceOptions: [0.15, 0.2, 0.25],
         },
         status: "ACTIVE",
         createdAt: new Date("2024-09-27T11:00:00Z"),
-        updatedAt: new Date("2024-09-27T11:00:00Z")
+        updatedAt: new Date("2024-09-27T11:00:00Z"),
+        totalPrice: 8000,
       },
       {
         id: 3,
@@ -86,36 +88,37 @@ export const insuranceCompanies: InsuranceCompany[] = [
         description: "Plan premium con cobertura completa",
         sumInsured: 20000000,
         deductible: 5000,
-        coInsurance: 0.10,
+        coInsurance: 0.1,
         coInsuranceCap: 100000,
         hospitalTier: "EXECUTIVE",
         medicalFeeSchedule: "HIGH",
         additionalClauses: {
           internationalCoverage: true,
-          maternityWaitingPeriod: 0
+          maternityWaitingPeriod: 0,
         },
         benefits: {
           dentalCoverage: true,
           opticalCoverage: {
             examinations: true,
             lenses: 400,
-            frames: 250
-          }
+            frames: 250,
+          },
         },
         customizableOptions: {
           deductibleOptions: [3000, 5000, 7000],
-          coInsuranceOptions: [0.10, 0.15, 0.20]
+          coInsuranceOptions: [0.1, 0.15, 0.2],
         },
         status: "ACTIVE",
         createdAt: new Date("2024-09-27T12:00:00Z"),
-        updatedAt: new Date("2024-09-27T12:00:00Z")
-      }
-    ]
+        updatedAt: new Date("2024-09-27T12:00:00Z"),
+        totalPrice: 12000,
+      },
+    ],
   },
   {
     id: 2,
     uuid: "523e4567-e89b-12d3-a456-426614174004",
-    name: "Seguros Beta",
+    name: "GNP Seguros",
     logo: GNPLogo,
     description: "Innovación en seguros de salud",
     status: "ACTIVE",
@@ -136,23 +139,24 @@ export const insuranceCompanies: InsuranceCompany[] = [
         medicalFeeSchedule: "BASIC",
         additionalClauses: {
           internationalCoverage: false,
-          maternityWaitingPeriod: 12
+          maternityWaitingPeriod: 12,
         },
         benefits: {
           dentalCoverage: true,
           opticalCoverage: {
             examinations: true,
             lenses: 180,
-            frames: 120
-          }
+            frames: 120,
+          },
         },
         customizableOptions: {
           deductibleOptions: [7000, 9000, 11000],
-          coInsuranceOptions: [0.18, 0.23, 0.28]
+          coInsuranceOptions: [0.18, 0.23, 0.28],
         },
         status: "ACTIVE",
         createdAt: new Date("2024-09-28T10:00:00Z"),
-        updatedAt: new Date("2024-09-28T10:00:00Z")
+        updatedAt: new Date("2024-09-28T10:00:00Z"),
+        totalPrice: 5500,
       },
       {
         id: 5,
@@ -168,23 +172,24 @@ export const insuranceCompanies: InsuranceCompany[] = [
         medicalFeeSchedule: "INTERMEDIATE",
         additionalClauses: {
           internationalCoverage: true,
-          maternityWaitingPeriod: 9
+          maternityWaitingPeriod: 9,
         },
         benefits: {
           dentalCoverage: true,
           opticalCoverage: {
             examinations: true,
             lenses: 320,
-            frames: 220
-          }
+            frames: 220,
+          },
         },
         customizableOptions: {
           deductibleOptions: [4500, 6500, 8500],
-          coInsuranceOptions: [0.14, 0.19, 0.24]
+          coInsuranceOptions: [0.14, 0.19, 0.24],
         },
         status: "ACTIVE",
         createdAt: new Date("2024-09-28T11:00:00Z"),
-        updatedAt: new Date("2024-09-28T11:00:00Z")
+        updatedAt: new Date("2024-09-28T11:00:00Z"),
+        totalPrice: 8500,
       },
       {
         id: 6,
@@ -200,30 +205,31 @@ export const insuranceCompanies: InsuranceCompany[] = [
         medicalFeeSchedule: "HIGH",
         additionalClauses: {
           internationalCoverage: true,
-          maternityWaitingPeriod: 0
+          maternityWaitingPeriod: 0,
         },
         benefits: {
           dentalCoverage: true,
           opticalCoverage: {
             examinations: true,
             lenses: 450,
-            frames: 300
-          }
+            frames: 300,
+          },
         },
         customizableOptions: {
           deductibleOptions: [2000, 4000, 6000],
-          coInsuranceOptions: [0.09, 0.14, 0.19]
+          coInsuranceOptions: [0.09, 0.14, 0.19],
         },
         status: "ACTIVE",
         createdAt: new Date("2024-09-28T12:00:00Z"),
-        updatedAt: new Date("2024-09-28T12:00:00Z")
-      }
-    ]
+        updatedAt: new Date("2024-09-28T12:00:00Z"),
+        totalPrice: 13000,
+      },
+    ],
   },
   {
     id: 3,
     uuid: "923e4567-e89b-12d3-a456-426614174008",
-    name: "Seguros Gamma",
+    name: "Metlife",
     logo: MetlifeLogo,
     description: "Seguros personalizados para cada necesidad",
     status: "ACTIVE",
@@ -244,23 +250,24 @@ export const insuranceCompanies: InsuranceCompany[] = [
         medicalFeeSchedule: "BASIC",
         additionalClauses: {
           internationalCoverage: false,
-          maternityWaitingPeriod: 12
+          maternityWaitingPeriod: 12,
         },
         benefits: {
           dentalCoverage: true,
           opticalCoverage: {
             examinations: true,
             lenses: 160,
-            frames: 100
-          }
+            frames: 100,
+          },
         },
         customizableOptions: {
           deductibleOptions: [9000, 11000, 13000],
-          coInsuranceOptions: [0.22, 0.27, 0.32]
+          coInsuranceOptions: [0.22, 0.27, 0.32],
         },
         status: "ACTIVE",
         createdAt: new Date("2024-09-29T10:00:00Z"),
-        updatedAt: new Date("2024-09-29T10:00:00Z")
+        updatedAt: new Date("2024-09-29T10:00:00Z"),
+        totalPrice: 4800,
       },
       {
         id: 8,
@@ -276,23 +283,24 @@ export const insuranceCompanies: InsuranceCompany[] = [
         medicalFeeSchedule: "INTERMEDIATE",
         additionalClauses: {
           internationalCoverage: true,
-          maternityWaitingPeriod: 10
+          maternityWaitingPeriod: 10,
         },
         benefits: {
           dentalCoverage: true,
           opticalCoverage: {
             examinations: true,
             lenses: 280,
-            frames: 180
-          }
+            frames: 180,
+          },
         },
         customizableOptions: {
           deductibleOptions: [6000, 8000, 10000],
-          coInsuranceOptions: [0.16, 0.21, 0.26]
+          coInsuranceOptions: [0.16, 0.21, 0.26],
         },
         status: "ACTIVE",
         createdAt: new Date("2024-09-29T11:00:00Z"),
-        updatedAt: new Date("2024-09-29T11:00:00Z")
+        updatedAt: new Date("2024-09-29T11:00:00Z"),
+        totalPrice: 7500,
       },
       {
         id: 9,
@@ -308,24 +316,25 @@ export const insuranceCompanies: InsuranceCompany[] = [
         medicalFeeSchedule: "HIGH",
         additionalClauses: {
           internationalCoverage: true,
-          maternityWaitingPeriod: 0
+          maternityWaitingPeriod: 0,
         },
         benefits: {
           dentalCoverage: true,
           opticalCoverage: {
             examinations: true,
             lenses: 380,
-            frames: 230
-          }
+            frames: 230,
+          },
         },
         customizableOptions: {
           deductibleOptions: [4000, 6000, 8000],
-          coInsuranceOptions: [0.11, 0.16, 0.21]
+          coInsuranceOptions: [0.11, 0.16, 0.21],
         },
         status: "ACTIVE",
         createdAt: new Date("2024-09-29T12:00:00Z"),
-        updatedAt: new Date("2024-09-29T12:00:00Z")
-      }
-    ]
-  }
+        updatedAt: new Date("2024-09-29T12:00:00Z"),
+        totalPrice: 11500,
+      },
+    ],
+  },
 ];

@@ -1,9 +1,13 @@
+"use client";
+
 import Image from "next/image";
 import {
   InsuranceCompany,
   InsurancePlan,
 } from "../../../shared/types/insurance";
-import { calculatePremium } from "../utils/insurance-calculations";
+import { calculateTotalPrice } from "../utils/insurance-calculations";
+import { useRouter } from "next/navigation";
+import { Shield, DollarSign, Percent, Heart, Check } from "lucide-react";
 
 interface InsuranceCardProps {
   company: InsuranceCompany;
@@ -18,28 +22,29 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = ({
   paymentType,
   isRecommended,
 }) => {
-  const premium = calculatePremium(plan.sumInsured, paymentType);
+  const router = useRouter();
 
   const handleInterestClick = () => {
-    const planInfo = {
-      compañía: company.name,
+    const insuranceData = {
+      company: company.name,
+      companyLogo: company.logo,
       plan: plan.name,
-      sumaAsegurada: plan.sumInsured.toLocaleString(),
-      deducible: plan.deductible.toLocaleString(),
-      coaseguro: `${(plan.coInsurance * 100).toFixed(0)}%`,
-      topeCoaseguro: plan.coInsuranceCap?.toLocaleString(),
-      coberturaDental: plan.benefits.dentalCoverage
-        ? "Incluida"
-        : "No incluida",
-      prima: `${paymentType.toLowerCase()}: $${premium.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      paymentType,
+      sumInsured: plan.sumInsured.toLocaleString(),
+      deductible: plan.deductible.toLocaleString(),
+      coInsurance: `${(plan.coInsurance * 100).toFixed(0)}`,
+      coInsuranceCap: plan.coInsuranceCap?.toLocaleString(),
+      coverage_fee: calculateTotalPrice(plan.totalPrice, paymentType),
     };
-    console.log("Información del plan seleccionado:", planInfo);
+
+    const encodedData = encodeURIComponent(JSON.stringify(insuranceData));
+    router.push(`/resumen-de-cotizacion?data=${encodedData}`);
   };
 
   return (
     <div
-      className={`bg-white w-64 border rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-lg ${
-        isRecommended ? "ring-4 ring-[#00a5e3] -mt-8 border-0" : ""
+      className={`bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${
+        isRecommended ? "ring-4 ring-[#00a5e3]" : ""
       }`}
     >
       {isRecommended && (
@@ -48,81 +53,86 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = ({
         </div>
       )}
       <div className="p-6">
-        <Image
-          src={company.logo}
-          width={128}
-          height={128}
-          alt={company.name}
-          className="w-32 h-16 mx-auto mb-4"
-        />
-        <div className="text-3xl font-bold text-center mb-2 text-[#223E99]">
-          $
-          {premium.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          })}
-        </div>
-        <div className="text-sm text-zinc-500 text-center mb-4">
-          Pago {paymentType.toLowerCase()}
-        </div>
-        <div className="space-y-4">
+        <div className="flex flex-col items-center mb-6">
+          <Image
+            src={company.logo}
+            width={128}
+            height={128}
+            alt={company.name}
+            className="w-32 h-16 object-contain mb-4"
+          />
           <div className="text-center">
-            <div className="text-sm text-zinc-500">Suma asegurada</div>
-            <div className="font-bold text-zinc-900">
-              ${(plan.sumInsured / 1000000).toFixed(1)} MILLONES
-            </div>
-          </div>
-          <div className="text-center">
-            <div className="text-sm text-zinc-500">Deducible</div>
-            <div className="font-bold text-zinc-900">
-              ${plan.deductible.toLocaleString()}
-            </div>
-          </div>
-          <div className="flex items-center justify-center">
-            <svg
-              className="w-5 h-5 text-blue-500 mr-2"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span className="text-sm text-zinc-500">
-              $0 deducible por accidente
-            </span>
-          </div>
-          <div className="text-center">
-            <div className="text-sm text-zinc-500">Coaseguro</div>
-            <div className="font-bold text-zinc-900">
-              {(plan.coInsurance * 100).toFixed(0)}%
-            </div>
-          </div>
-          <div className="text-center">
-            <div className="text-sm text-zinc-500">Tope coaseguro</div>
-            <div className="font-bold text-zinc-900">
-              ${plan.coInsuranceCap?.toLocaleString()}
-            </div>
-          </div>
-          <div className="text-center">
-            <div className="text-sm text-zinc-500">Dental</div>
-            <div className="font-bold text-zinc-900">
-              {plan.benefits.dentalCoverage ? "Incluido" : "No incluido"}
-            </div>
+            <p className="text-sm text-sky-600 font-semibold uppercase mb-1">
+              {paymentType === "Mensual" ? "Pago mensual" : "Pago anual"}
+            </p>
+            <p className="text-3xl font-bold text-[#223E99]">
+              $
+              {calculateTotalPrice(plan.totalPrice, paymentType).toLocaleString(
+                undefined,
+                {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                },
+              )}
+            </p>
           </div>
         </div>
-        <div className="mt-6">
-          <button
-            onClick={handleInterestClick}
-            className="w-full bg-[#223E99] hover:bg-[#223E99]/90 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-[#00a5e3] focus:ring-opacity-50"
-            aria-label={`Me interesa el plan ${plan.name} de ${company.name}`}
-          >
-            Me interesa
-          </button>
+
+        <div className="space-y-4 mb-6">
+          <InfoItem
+            icon={<Shield className="w-5 h-5" />}
+            title="Suma asegurada"
+            value={`$${(plan.sumInsured / 1000000).toFixed(1)} MILLONES`}
+          />
+          <InfoItem
+            icon={<DollarSign className="w-5 h-5" />}
+            title="Deducible"
+            value={`$${plan.deductible.toLocaleString()}`}
+          />
+          <InfoItem
+            icon={<Percent className="w-5 h-5" />}
+            title="Coaseguro"
+            value={`${(plan.coInsurance * 100).toFixed(0)}%`}
+          />
+          <InfoItem
+            icon={<Heart className="w-5 h-5" />}
+            title="Tope coaseguro"
+            value={`$${plan.coInsuranceCap?.toLocaleString()}`}
+          />
         </div>
+
+        <div className="flex items-center justify-center mb-6">
+          <Check className="w-5 h-5 text-sky-600 mr-2" />
+          <span className="text-sm text-zinc-500">
+            $0 deducible por accidente
+          </span>
+        </div>
+
+        <button
+          onClick={handleInterestClick}
+          className="w-full bg-[#223E99] text-white py-3 rounded font-bold text-lg hover:bg-primary transition duration-300"
+        >
+          Me interesa
+        </button>
       </div>
     </div>
   );
 };
+
+const InfoItem = ({
+  icon,
+  title,
+  value,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  value: string;
+}) => (
+  <div className="bg-white rounded-xl p-4 shadow-sm flex items-center space-x-3">
+    <div className="bg-sky-100 p-2 rounded-lg text-sky-600">{icon}</div>
+    <div>
+      <p className="text-xs text-sky-600 font-semibold uppercase">{title}</p>
+      <p className="text-lg font-bold text-[#223E99]">{value}</p>
+    </div>
+  </div>
+);

@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "auth"."User" ADD COLUMN     "isNewAdvisor" BOOLEAN NOT NULL DEFAULT true,
+ALTER COLUMN "role" SET DEFAULT 'ADVISOR';

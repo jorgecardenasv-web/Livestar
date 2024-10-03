@@ -1,31 +1,31 @@
-import { useState, useEffect } from 'react';
-import { z } from 'zod';
-import { formSchema, FormData } from '../schemas/form-schema';
+import { useState, useEffect } from "react";
+import { z } from "zod";
+import { FormData, buildSchema } from "../schemas/form-schema";
+import { createProspect } from "../actions/create-prospect";
 
 export const useGetQuoteForm = () => {
   const [formData, setFormData] = useState<FormData>({
-    name: '',
-    gender: '',
-    postalCode: '',
-    protectWho: '',
-    partnerGender: undefined,
-    age: 0,
-    partnerAge: undefined,
-    childrenCount: undefined,
-    childrenAges: [],
-    whatsapp: '',
-    email: '',
+    name: "",
+    gender: "",
+    postalCode: "",
+    protectWho: "",
+    whatsapp: "",
+    email: "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showContactInfo, setShowContactInfo] = useState(false);
 
   const validateField = (field: keyof FormData, value: any) => {
+    const schema = buildSchema(formData.protectWho!);
+
     try {
-      formSchema.shape[field].parse(value);
+      (schema.shape as typeof schema.shape)[
+        field as keyof typeof schema.shape
+      ].parse(value);
       setErrors((prev) => {
         const newErrors = { ...prev };
-        delete newErrors[field];
+        delete newErrors[field as number];
         return newErrors;
       });
     } catch (error) {
@@ -39,64 +39,145 @@ export const useGetQuoteForm = () => {
   };
 
   const handleInputChange = (field: keyof FormData, value: string | number) => {
-    setFormData(prev => {
+    setFormData((prev: any) => {
       const updatedData = { ...prev, [field]: value };
-      
-      if (field === 'childrenCount') {
-        const count = typeof value === 'number' ? value : 0;
-        updatedData.childrenAges = count > 0 ? Array(count).fill(0) : [];
+
+      if (field === "childrenCount") {
+        const count = typeof value === "number" ? value : 0;
+        updatedData.children = Array(count).fill({ age: 0, gender: "" });
       }
-      
+
+      if (field === "protectedCount") {
+        const count = typeof value === "number" ? value : 0;
+        updatedData.protectedPersons = Array(count).fill({
+          relationship: "",
+          age: 0,
+          gender: "",
+        });
+      }
+
       return updatedData;
     });
-    
+
     validateField(field, value);
   };
 
-  const handleChildAgeChange = (index: number, value: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      childrenAges: prev.childrenAges
-        ? prev.childrenAges.map((age, i) => (i === index ? value : age))
-        : [value],
-    }));
-    validateField(
-      "childrenAges",
-      formData.childrenAges?.map((age, i) => (i === index ? value : age)) || [value]
-    );
+  const handleChildChange = (
+    index: number,
+    field: string,
+    value: string | number,
+  ) => {
+    setFormData((prevData: any) => {
+      const updatedChildren = [...(prevData.children || [])];
+      if (!updatedChildren[index]) {
+        updatedChildren[index] = { age: 0, gender: "" };
+      }
+      updatedChildren[index] = {
+        ...updatedChildren[index],
+        [field]: value,
+      };
+      return {
+        ...prevData,
+        children: updatedChildren,
+      };
+    });
+  };
+
+  const handleProtectedPersonChange = (
+    index: number,
+    field: string,
+    value: string | number,
+  ) => {
+    setFormData((prevData: any) => {
+      const updatedProtectedPersons = [...(prevData.protectedPersons || [])];
+      if (!updatedProtectedPersons[index]) {
+        updatedProtectedPersons[index] = {
+          relationship: "",
+          age: 0,
+          gender: "",
+        };
+      }
+      updatedProtectedPersons[index] = {
+        ...updatedProtectedPersons[index],
+        [field]: value,
+      };
+      return {
+        ...prevData,
+        protectedPersons: updatedProtectedPersons,
+      };
+    });
   };
 
   const checkIfContactInfoShouldShow = (): boolean => {
+    const baseFieldsFilled = Boolean(
+      formData.name &&
+        formData.gender &&
+        formData.postalCode &&
+        formData.protectWho,
+    );
+
+    if (!baseFieldsFilled) return false;
+
     switch (formData.protectWho) {
-      case "mi":
+      case "solo_yo":
+        return Boolean(formData.age);
+      case "mi_pareja_y_yo":
         return Boolean(
-          formData.name &&
-            formData.age &&
-            formData.gender &&
-            formData.postalCode
-        );
-      case "mi_pareja_y_a_mi":
-        return Boolean(
-          formData.name &&
-            formData.age &&
-            formData.gender &&
-            formData.postalCode &&
-            formData.partnerGender &&
-            formData.partnerAge
+          formData.age && formData.partnerGender && formData.partnerAge,
         );
       case "familia":
-      case "mis_ninos_y_yo":
-      case "solo_mis_ninos":
         return Boolean(
-          formData.name &&
-            formData.age &&
-            formData.gender &&
-            formData.postalCode &&
-            formData.childrenCount !== undefined &&
-            formData.childrenAges &&
-            Object.keys(formData.childrenAges).length ===
-              formData.childrenCount &&
-            Object.values(formData.childrenAges).every((age) => age > 0)
+          formData.age &&
+            formData.partnerGender &&
+            formData.partnerAge &&
+            formData.childrenCount &&
+            formData.children &&
+            formData.children.length === formData.childrenCount &&
+            formData.children.every(
+              (child: { age: number; gender: string }) => {
+                return child.age > 0 && child.gender;
+              },
+            ),
+        );
+      case "mis_hijos_y_yo":
+        return Boolean(
+          formData.age &&
+            formData.childrenCount &&
+            formData.children &&
+            formData.children.length === formData.childrenCount &&
+            formData.children.every(
+              (child: { age: number; gender: string }) => {
+                return child.age > 0 && child.gender;
+              },
+            ),
+        );
+      case "solo_mis_hijos":
+        return Boolean(
+          formData.childrenCount &&
+            formData.children &&
+            formData.children.length === formData.childrenCount &&
+            formData.children.every(
+              (child: { age: number; gender: string }) => {
+                return child.age > 0 && child.gender;
+              },
+            ),
+        );
+      case "otros":
+        return Boolean(
+          formData.protectedCount &&
+            formData.protectedPersons &&
+            formData.protectedPersons.length === formData.protectedCount &&
+            formData.protectedPersons.every(
+              (person: { age: number; gender: string; relationship: string }) =>
+                person.age > 0 && person.gender && person.relationship,
+            ),
+        );
+      case "mis_padres":
+        return Boolean(
+          formData.momName &&
+            formData.dadName &&
+            formData.momAge &&
+            formData.dadAge,
         );
       default:
         return false;
@@ -108,43 +189,78 @@ export const useGetQuoteForm = () => {
   }, [formData]);
 
   const cleanFormData = (data: FormData): Partial<FormData> => {
-    const cleanedData: Partial<FormData> = {
-      name: data.name,
-      gender: data.gender,
-      postalCode: data.postalCode,
-      protectWho: data.protectWho,
-      age: data.age,
-      whatsapp: data.whatsapp,
-      email: data.email,
-    };
+    const baseFields: (keyof FormData)[] = [
+      "name",
+      "gender",
+      "postalCode",
+      "protectWho",
+      "whatsapp",
+      "email",
+    ];
+    const cleanedData: Partial<FormData> = {};
+
+    baseFields.forEach((field) => {
+      if (data[field] !== undefined) {
+        cleanedData[field] = data[field];
+      }
+    });
 
     switch (data.protectWho) {
-      case "mi_pareja_y_a_mi":
-        cleanedData.partnerGender = data.partnerGender;
-        cleanedData.partnerAge = data.partnerAge;
+      case "solo_yo":
+        if (data.age !== undefined) cleanedData.age = data.age;
+        break;
+      case "mi_pareja_y_yo":
+        if (data.age !== undefined) cleanedData.age = data.age;
+        if (data.partnerGender !== undefined)
+          cleanedData.partnerGender = data.partnerGender;
+        if (data.partnerAge !== undefined)
+          cleanedData.partnerAge = data.partnerAge;
         break;
       case "familia":
-      case "mis_ninos_y_yo":
-      case "solo_mis_ninos":
-        cleanedData.childrenCount = data.childrenCount;
-        cleanedData.childrenAges = data.childrenAges;
-        if (data.protectWho === "familia") {
+        if (data.age !== undefined) cleanedData.age = data.age;
+        if (data.partnerGender !== undefined)
           cleanedData.partnerGender = data.partnerGender;
+        if (data.partnerAge !== undefined)
           cleanedData.partnerAge = data.partnerAge;
-        }
+        if (data.childrenCount !== undefined)
+          cleanedData.childrenCount = data.childrenCount;
+        if (data.children) cleanedData.children = data.children;
+        break;
+      case "mis_hijos_y_yo":
+        if (data.age !== undefined) cleanedData.age = data.age;
+        if (data.childrenCount !== undefined)
+          cleanedData.childrenCount = data.childrenCount;
+        if (data.children) cleanedData.children = data.children;
+        break;
+      case "solo_mis_hijos":
+        if (data.childrenCount !== undefined)
+          cleanedData.childrenCount = data.childrenCount;
+        if (data.children) cleanedData.children = data.children;
+        break;
+      case "otros":
+        if (data.protectedCount !== undefined)
+          cleanedData.protectedCount = data.protectedCount;
+        if (data.protectedPersons)
+          cleanedData.protectedPersons = data.protectedPersons;
+        break;
+      case "mis_padres":
+        if (data.momName !== undefined) cleanedData.momName = data.momName;
+        if (data.dadName !== undefined) cleanedData.dadName = data.dadName;
+        if (data.momAge !== undefined) cleanedData.momAge = data.momAge;
+        if (data.dadAge !== undefined) cleanedData.dadAge = data.dadAge;
         break;
     }
 
     return cleanedData;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const validatedData = formSchema.parse(formData);
+      const schema = buildSchema(formData.protectWho!);
+      const validatedData = schema.parse(formData);
       const cleanedData = cleanFormData(validatedData);
-      const formDataString = JSON.stringify(cleanedData, null, 2);
-      alert(`Formulario enviado con éxito:\n${formDataString}`);
+      await createProspect(cleanedData);
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors: Record<string, string> = {};
@@ -152,6 +268,7 @@ export const useGetQuoteForm = () => {
           newErrors[err.path.join(".")] = err.message;
         });
         setErrors(newErrors);
+        console.error(newErrors);
       }
     }
   };
@@ -161,7 +278,8 @@ export const useGetQuoteForm = () => {
     errors,
     showContactInfo,
     handleInputChange,
-    handleChildAgeChange,
     handleSubmit,
+    handleProtectedPersonChange,
+    handleChildChange,
   };
 };

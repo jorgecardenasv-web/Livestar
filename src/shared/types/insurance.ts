@@ -1,10 +1,17 @@
 import { StaticImageData } from "next/image";
 
-export type CompanyStatus = 'ACTIVE' | 'INACTIVE' | 'PENDING_REVIEW' | 'BLACKLISTED';
-export type PlanStatus = 'ACTIVE' | 'INACTIVE' | 'DRAFT' | 'DISCONTINUED';
-export type HospitalTier = 'BASIC' | 'INTERMEDIATE' | 'EXECUTIVE' | 'PLUS';
-export type MedicalFeeSchedule = 'BASIC' | 'INTERMEDIATE' | 'HIGH' | 'EXECUTIVE';
-
+export type CompanyStatus =
+  | "ACTIVE"
+  | "INACTIVE"
+  | "PENDING_REVIEW"
+  | "BLACKLISTED";
+export type PlanStatus = "ACTIVE" | "INACTIVE" | "DRAFT" | "DISCONTINUED";
+export type HospitalTier = "BASIC" | "INTERMEDIATE" | "EXECUTIVE" | "PLUS";
+export type MedicalFeeSchedule =
+  | "BASIC"
+  | "INTERMEDIATE"
+  | "HIGH"
+  | "EXECUTIVE";
 
 export interface InsuranceCompany {
   id: number;
@@ -21,6 +28,7 @@ export interface InsuranceCompany {
 export interface InsurancePlan {
   id: number;
   uuid: string;
+  totalPrice: number;
   name: string;
   companyId: number;
   description?: string;

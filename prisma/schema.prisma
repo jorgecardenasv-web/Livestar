@@ -29,17 +29,19 @@ model Session {
 }
 
 model User {
-  id        Int        @id @default(autoincrement())
-  uuid      String     @unique @default(uuid())
-  name      String
-  email     String     @unique
-  password  String
-  role      Role
-  status    UserStatus @default(ACTIVE)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  prospects Prospect[]
-  sessions  Session[]
+  id                   Int        @id @default(autoincrement())
+  uuid                 String     @unique @default(uuid())
+  name                 String
+  email                String     @unique
+  password             String
+  role                 Role
+  status               UserStatus @default(ACTIVE)
+  isNewAdvisor         Boolean    @default(true)
+  lastProspectAssigned DateTime?
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime   @updatedAt
+  prospects            Prospect[]
+  sessions             Session[]
 
   @@schema("auth")
 }
@@ -102,25 +104,26 @@ enum MedicalFeeSchedule {
 }
 
 model InsurancePlan {
-  id                    Int              @id @default(autoincrement())
-  uuid                  String           @unique @default(uuid())
-  name                  String
-  company               InsuranceCompany @relation(fields: [companyId], references: [id])
-  companyId             Int
-  description           String?
-  sumInsured            Float
-  deductible            Float
-  coInsurance           Float
-  coInsuranceCap        Float?
-  hospitalTier          HospitalTier
-  medicalFeeSchedule    MedicalFeeSchedule
-  additionalClauses     Json
-  benefits              Json
-  customizableOptions   Json
-  status                PlanStatus       @default(ACTIVE)
-  createdAt             DateTime         @default(now())
-  updatedAt             DateTime         @updatedAt
-  quotes                Quote[]
+  id                  Int                @id @default(autoincrement())
+  uuid                String             @unique @default(uuid())
+  totalPrice          Float
+  name                String
+  company             InsuranceCompany   @relation(fields: [companyId], references: [id])
+  companyId           Int
+  description         String?
+  sumInsured          Float
+  deductible          Float
+  coInsurance         Float
+  coInsuranceCap      Float?
+  hospitalTier        HospitalTier
+  medicalFeeSchedule  MedicalFeeSchedule
+  additionalClauses   Json
+  benefits            Json
+  customizableOptions Json
+  status              PlanStatus         @default(ACTIVE)
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
+  quotes              Quote[]
 
   @@schema("public")
 }
@@ -141,17 +144,20 @@ model Prospect {
   id              Int              @id @default(autoincrement())
   uuid            String           @unique @default(uuid())
   name            String
+  gender          String
+  age             Int?
+  postalCode      String
+  protectWho      String
+  whatsapp        String
   email           String
-  dateOfBirth     DateTime?
-  postalCode      String?
-  assignedAdvisor User?            @relation(fields: [advisorId], references: [id])
-  advisorId       Int?
-  status          ProspectStatus   @default(NEW)
-  additionalInfo  Json?
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
-  quotes          Quote[]
-  trackingNumbers TrackingNumber[]
+  additionalInfo  Json?
+  assignmentOrder Int              @default(autoincrement())
+  User            User?            @relation(fields: [userId], references: [id])
+  userId          Int?
+  Quote           Quote[]
+  TrackingNumber  TrackingNumber[]
 
   @@schema("public")
 }

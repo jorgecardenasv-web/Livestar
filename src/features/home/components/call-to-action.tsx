@@ -30,7 +30,7 @@ export const CallToAction = () => {
                 id="name"
                 name="name"
                 autoComplete="off"
-                placeholder="Ingrese su nombre"
+                placeholder="Escribe tu nombre"
                 className="-z-10"
               />
             </div>
@@ -46,7 +46,7 @@ export const CallToAction = () => {
                 id="cp"
                 name="cp"
                 autoComplete="off"
-                placeholder="Ingrese su código postal"
+                placeholder="escribe tu código postal"
                 className="-z-10"
               />
             </div>
