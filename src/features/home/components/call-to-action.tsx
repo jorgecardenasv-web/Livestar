@@ -1,8 +1,6 @@
 "use client";
 
 import { TextInput, Button } from "@tremor/react";
-import { GetQuoteForm } from "@/features/insurance-quote/components/get-quote-form";
-import { Modal } from "@/shared/components/modal";
 import { useModalStore } from "@/shared/store/modal-store";
 
 export const CallToAction = () => {
@@ -55,7 +53,7 @@ export const CallToAction = () => {
             </div>
           </div>
           <Button
-            onClick={() => openModal("getQuote")}
+            onClick={() => openModal("formQuote")}
             className="bg-white lg:w-5/6 mx-auto text-[#008AED] px-6 py-3 rounded-lg font-bold text-lg w-full"
           >
             ¡Ver mi precio ahora!
