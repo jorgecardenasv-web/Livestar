@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  TextInput,
-  Button,
-} from "@tremor/react";
+import { TextInput, Button } from "@tremor/react";
 import { GetQuoteForm } from "@/features/insurance-quote/components/get-quote-form";
 import { Modal } from "@/shared/components/modal";
 import { useModalStore } from "@/shared/store/modal-store";
@@ -19,7 +16,10 @@ export const CallToAction = () => {
           ¡Descubre el precio más conveniente al momento!
         </p>
         <div className="flex flex-col gap-y-6">
-          <div className="hover:cursor-pointer" onClick={() => openModal("getQuote")}>
+          <div
+            className="hover:cursor-pointer"
+            onClick={() => openModal("getQuote")}
+          >
             <div className="flex flex-col gap-y-2">
               <label htmlFor="name" className="text-lg font-bold">
                 Mi nombre es
@@ -35,7 +35,10 @@ export const CallToAction = () => {
               />
             </div>
           </div>
-          <div className="hover:cursor-pointer" onClick={() => openModal("getQuote")}>
+          <div
+            className="hover:cursor-pointer"
+            onClick={() => openModal("getQuote")}
+          >
             <div className="flex flex-col gap-y-2">
               <label htmlFor="cp" className="text-lg font-bold">
                 Mi código postal es
@@ -59,14 +62,6 @@ export const CallToAction = () => {
           </Button>
         </div>
       </div>
-
-      <Modal
-        title=""
-        description=""
-        size="3xl"
-      >
-        <GetQuoteForm />
-      </Modal>
     </>
   );
 };

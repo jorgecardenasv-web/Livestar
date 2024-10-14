@@ -6,13 +6,18 @@ export const QuoteCard = ({
   image,
   title,
   description,
+  openModal,
 }: {
   image: StaticImageData;
   title: string;
   description: string;
+  openModal: (type: string, props?: Record<string, any>) => void;
 }) => {
   return (
-    <button onClick={() => console.log("Ver más")} className="w-full border max-w-xs sm:w-72 h-auto sm:h-80 bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 sm:hover:shadow-xl relative group">
+    <button
+      onClick={() => openModal(title)}
+      className="w-full border max-w-xs sm:w-72 h-auto sm:h-80 bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 sm:hover:shadow-xl relative group"
+    >
       <div className="absolute inset-0 bg-gradient-to-b from-[#008AED] to-[#004E87] opacity-0 sm:group-hover:opacity-70 transition-opacity duration-300 z-10"></div>
 
       <div className="flex flex-col items-center sm:justify-center h-full p-6 relative z-20">
@@ -35,9 +40,7 @@ export const QuoteCard = ({
           <p className="text-gray-800 sm:text-white mb-3 text-sm">
             {description}
           </p>
-          <span
-            className="mt-2 inline-flex items-center justify-center w-full sm:w-auto text-blue-500 sm:text-white transition-colors duration-300 sm:bg-white sm:bg-opacity-20 hover:bg-opacity-10 px-4 py-2 rounded text-"
-          >
+          <span className="mt-2 inline-flex items-center justify-center w-full sm:w-auto text-blue-500 sm:text-white transition-colors duration-300 sm:bg-white sm:bg-opacity-20 hover:bg-opacity-10 px-4 py-2 rounded text-">
             Ver más
             <ArrowRight className="ml-2 w-4 h-4" />
           </span>
