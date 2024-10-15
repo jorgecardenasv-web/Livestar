@@ -1,6 +1,6 @@
 import { prefix } from "@/shared/utils/constants";
-import { Card } from "@tremor/react";
 import { ChevronRightIcon, HomeIcon } from "lucide-react";
+import Link from "next/link";
 
 type BreadcrumbItem = {
   label: string;
@@ -14,7 +14,7 @@ export const Breadcrumbs = ({ items }: { items: BreadcrumbItem[] }) => {
         <li className="inline-flex items-center">
           <a
             href={`${prefix}/dashboard`}
-            className="inline-flex items-center text-base font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"
+            className="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"
           >
             <HomeIcon className="w-4 h-4 mr-2" />
             Inicio
@@ -25,16 +25,16 @@ export const Breadcrumbs = ({ items }: { items: BreadcrumbItem[] }) => {
             <div className="flex items-center">
               <ChevronRightIcon className="w-4 h-4 text-gray-400" />
               {index === items.length - 1 ? (
-                <span className="ml-1 text-base font-medium text-gray-500 md:ml-2 dark:text-gray-400">
+                <span className="ml-1 text-sm font-medium text-gray-500 md:ml-2 dark:text-gray-400">
                   {item.label}
                 </span>
               ) : (
-                <a
+                <Link
                   href={item.href}
-                  className="ml-1 text-base font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white"
+                  className="ml-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ml-2 dark:text-gray-400 dark:hover:text-white"
                 >
                   {item.label}
-                </a>
+                </Link>
               )}
             </div>
           </li>

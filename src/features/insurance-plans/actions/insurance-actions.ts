@@ -33,8 +33,6 @@ export async function setActivePaymentType(formData: FormData) {
 export async function getInsuranceState() {
   const cookieStore = cookies();
   const selectedPlanJson = cookieStore.get("selectedPlan")?.value;
-  console.log("Raw selectedPlan from cookie:", selectedPlanJson);
-
   const selectedPlan = selectedPlanJson ? JSON.parse(selectedPlanJson) : {};
 
   return {

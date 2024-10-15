@@ -1,8 +1,8 @@
-'use client'
+"use client";
 
 import { Select, SelectItem } from "@tremor/react";
 import React from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParamsBuilder } from "../hooks/use-search-params-builder";
 
 interface StatusOption {
   value: string;
@@ -11,7 +11,7 @@ interface StatusOption {
 
 interface SelectFilterProps {
   statusOptions: StatusOption[];
-  filterName: string;
+  label: string;
   rowSearch: string;
   placeholder?: string;
 }
@@ -20,30 +20,19 @@ export const SelectFilter: React.FC<SelectFilterProps> = ({
   statusOptions,
   rowSearch,
   placeholder = "Todos",
-  filterName,
+  label,
 }) => {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
-
-  const handleStatusChange = (value: string) => {
-    const params = new URLSearchParams(searchParams);
-    if (value) {
-      params.set(rowSearch, value);
-    } else {
-      params.delete(rowSearch);
-    }
-    replace(`${pathname}?${params.toString()}`);
-  };
+  const { handleSearchParams, searchParams } =
+    useSearchParamsBuilder(rowSearch);
 
   return (
     <div className="w-full space-y-2">
       <label className="text-[13px] text-tremor-content-strong dark:text-dark-tremor-content-strong">
-        {filterName}:
+        {label}:
       </label>
       <Select
         className="max-w-xs"
-        onValueChange={handleStatusChange}
+        onValueChange={handleSearchParams}
         placeholder={placeholder}
         defaultValue={searchParams.get(rowSearch) ?? ""}
       >

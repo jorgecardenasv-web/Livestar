@@ -1,10 +1,14 @@
 import { PaymentSelector } from "./payment-selector";
 import { PlanSelector } from "./plan-selector";
-import { insuranceCompanies } from "../data/insurance-data";
 import { InsuranceCard } from "./insurance-card";
 import { getInsuranceState } from "../actions/insurance-actions";
+import { InsurancePlan } from "@/shared/types/insurance";
 
-export async function InsurancePlans() {
+export async function InsurancePlans({
+  insurancePlans,
+}: {
+  insurancePlans: InsurancePlan[];
+}) {
   const { activePlanType, activePaymentType } = await getInsuranceState();
 
   const planTypes = ["Esencial", "Protegido", "Blindado"];
@@ -20,15 +24,14 @@ export async function InsurancePlans() {
         />
       </div>
       <div className="grid grid-flow-col md:auto-cols-max gap-2 items-end">
-        {insuranceCompanies.map((company, index) => {
-          const activePlan = company.plans.find(
-            (plan: any) => plan.name === activePlanType,
-          );
+        {insurancePlans.map((plan, index) => {
+          const activePlan = plan.name === activePlanType ? plan : null;
+
           return (
             activePlan && (
               <InsuranceCard
-                key={`${company.name}-${activePlanType}`}
-                company={company}
+                key={`${plan.company.name}-${activePlanType}`}
+                company={plan.company}
                 plan={activePlan}
                 paymentType={activePaymentType}
                 isRecommended={index === 1}

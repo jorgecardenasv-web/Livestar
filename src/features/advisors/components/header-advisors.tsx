@@ -1,7 +1,6 @@
 "use client";
 
 import { Card } from "@tremor/react";
-import { ModalAdvisorActions } from "./modal-advisor-actions";
 import { useAdvisorActions } from "../hooks/use-advisor-actions";
 import { UserRoundPlus } from "lucide-react";
 

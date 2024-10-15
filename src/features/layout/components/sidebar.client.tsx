@@ -3,13 +3,14 @@ import NavLinks from "@/features/layout/components/nav-link";
 import { ThemeSelector } from "@/features/theming/components/theme-selector";
 import { Dropdown } from "./dropdown";
 import { AuthenticadedUser } from "@/lib/iron-session/types";
+import { prefix } from "@/shared/utils/constants";
 
 export const SidebarClient = ({ user }: { user?: AuthenticadedUser }) => {
   return (
     <>
       <Link
         className="mb-2 flex h-20 items-end justify-start rounded-md bg-primary p-4 md:h-40"
-        href="/"
+        href={`${prefix}/panel`}
       >
         <div className="w-32 text-white md:w-40">
           <h2 className="text-3xl font-bold">Livestar</h2>
