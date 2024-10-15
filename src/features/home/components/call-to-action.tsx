@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  TextInput,
-  Button,
-} from "@tremor/react";
-import { GetQuoteForm } from "@/features/insurance-quote/components/get-quote-form";
-import { Modal } from "@/shared/components/modal";
+import { TextInput, Button } from "@tremor/react";
 import { useModalStore } from "@/shared/store/modal-store";
 
 export const CallToAction = () => {
@@ -19,7 +14,10 @@ export const CallToAction = () => {
           ¡Descubre el precio más conveniente al momento!
         </p>
         <div className="flex flex-col gap-y-6">
-          <div className="hover:cursor-pointer" onClick={() => openModal("getQuote")}>
+          <div
+            className="hover:cursor-pointer"
+            onClick={() => openModal("getQuote")}
+          >
             <div className="flex flex-col gap-y-2">
               <label htmlFor="name" className="text-lg font-bold">
                 Mi nombre es
@@ -35,7 +33,10 @@ export const CallToAction = () => {
               />
             </div>
           </div>
-          <div className="hover:cursor-pointer" onClick={() => openModal("getQuote")}>
+          <div
+            className="hover:cursor-pointer"
+            onClick={() => openModal("getQuote")}
+          >
             <div className="flex flex-col gap-y-2">
               <label htmlFor="cp" className="text-lg font-bold">
                 Mi código postal es
@@ -52,21 +53,13 @@ export const CallToAction = () => {
             </div>
           </div>
           <Button
-            onClick={() => openModal("getQuote")}
+            onClick={() => openModal("formQuote")}
             className="bg-white lg:w-5/6 mx-auto text-[#008AED] px-6 py-3 rounded-lg font-bold text-lg w-full"
           >
             ¡Ver mi precio ahora!
           </Button>
         </div>
       </div>
-
-      <Modal
-        title=""
-        description=""
-        size="3xl"
-      >
-        <GetQuoteForm />
-      </Modal>
     </>
   );
 };

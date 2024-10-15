@@ -1,13 +1,13 @@
 import React, { ReactNode } from "react";
 import { Dialog, DialogPanel } from "@tremor/react";
 import { useModalStore } from "../store/modal-store";
-import { X } from "lucide-react"
+import { X } from "lucide-react";
 
 interface ModalProps {
   title: string;
   description?: string;
   children: ReactNode;
-  size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
+  size?: "sm" | "md" | "lg" | "xl" | "xl6" | "2xl" | "3xl";
 }
 
 const sizeClasses = {
@@ -15,6 +15,7 @@ const sizeClasses = {
   md: "max-w-md",
   lg: "max-w-lg",
   xl: "max-w-xl",
+  xl6: "max-w-6xl",
   "2xl": "max-w-2xl",
   "3xl": "max-w-3xl",
 };
