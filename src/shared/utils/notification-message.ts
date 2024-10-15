@@ -6,6 +6,7 @@ export const notificationMessages: NotificationMessage = {
   addAdvisor: "¡Asesor creado exitosamente!",
   editAdvisor: "¡Asesor editado exitosamente!",
   deleteAdvisor: "¡Asesor borrado exitosamente!",
+  editProspect: "¡Prospecto editado exitosamente!",
   error: "Error desconocido",
   general: "Error al editar al asesor"
 }

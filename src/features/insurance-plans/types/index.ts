@@ -37,4 +37,5 @@ interface InsurancePlan {
   status: "ACTIVE" | string;
   createdAt: Date;
   updatedAt: Date;
+  totalPrice: number;
 }

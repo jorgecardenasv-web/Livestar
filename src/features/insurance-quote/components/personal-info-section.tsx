@@ -1,5 +1,6 @@
 import { NumberInput, Select, SelectItem, TextInput } from "@tremor/react";
 import { FormData } from "../schemas/form-schema";
+import { getSession } from "@/lib/iron-session/get-session";
 
 interface PersonalInfoSectionProps {
   formData: FormData;
@@ -8,12 +9,12 @@ interface PersonalInfoSectionProps {
   handleChildChange: (
     index: number,
     field: string,
-    value: string | number,
+    value: string | number
   ) => void;
   handleProtectedPersonChange: (
     index: number,
     field: string,
-    value: string | number,
+    value: string | number
   ) => void;
 }
 
@@ -24,18 +25,21 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   handleChildChange,
   handleProtectedPersonChange,
 }) => {
+
   return (
     <div className="space-y-6">
       <div className="flex items-center space-x-4 mb-6">
         <span className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-xl">
           1
         </span>
-        <h3 className="text-2xl font-bold text-gray-800">Datos Personales</h3>
+        <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
+          Datos Personales
+        </h3>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 dark:text-gray-400 mb-1">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
             Mi nombre es
           </label>
           <TextInput
@@ -50,7 +54,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-70 mb-1">
             Soy
           </label>
           <Select
@@ -69,7 +73,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
             Mi código postal es
           </label>
           <TextInput
@@ -84,7 +88,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 dark:text-gray-400 mb-1">
             Quiero proteger a
           </label>
           <Select
@@ -112,7 +116,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           formData.protectWho === "solo_yo" ||
           formData.protectWho === "familia") && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
               Yo tengo
             </label>
             <NumberInput
@@ -135,7 +139,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
             <div>
               <label
                 htmlFor="partnerGender"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1"
               >
                 Mi pareja es
               </label>
@@ -161,7 +165,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
             <div>
               <label
                 htmlFor="partnerAge"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1"
               >
                 Mi pareja tiene
               </label>
@@ -190,7 +194,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
             <div className="col-span-2">
               <label
                 htmlFor="childrenCount"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1"
               >
                 Número de hijos
               </label>
@@ -211,7 +215,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
             </div>
             {formData.childrenCount && formData.childrenCount > 0 && (
               <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
                   {formData.childrenCount === 1
                     ? "Datos de mi hijo"
                     : `Datos de mis ${formData.childrenCount} hijos`}
@@ -221,12 +225,12 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                     (_, index) => (
                       <div
                         key={index}
-                        className="grid grid-cols-1 md:grid-cols-3 gap-4"
+                        className="grid grid-cols-1 md:grid-cols-2 gap-4"
                       >
                         <div>
                           <label
                             htmlFor={`childAge${index}`}
-                            className="block text-sm font-medium text-gray-700 mb-1"
+                            className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1"
                           >
                             Edad
                           </label>
@@ -248,7 +252,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                         <div>
                           <label
                             htmlFor={`childGender${index}`}
-                            className="block text-sm font-medium text-gray-700 mb-1"
+                            className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1"
                           >
                             Género
                           </label>
@@ -272,7 +276,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                           )}
                         </div>
                       </div>
-                    ),
+                    )
                   )}
                 </div>
               </div>
@@ -285,7 +289,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
             <div className="col-span-2">
               <label
                 htmlFor="protectedCount"
-                className="block text-sm font-medium text-gray-700 mb-1"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1"
               >
                 ¿Cuántas personas quieres asegurar?
               </label>
@@ -317,7 +321,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                         <div>
                           <label
                             htmlFor={`protectedRelationship${index}`}
-                            className="block text-sm font-medium text-gray-700 mb-1"
+                            className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1"
                           >
                             Parentesco
                           </label>
@@ -333,7 +337,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                               handleProtectedPersonChange(
                                 index,
                                 "relationship",
-                                e.target.value,
+                                e.target.value
                               )
                             }
                             error={
@@ -348,7 +352,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                         <div>
                           <label
                             htmlFor={`protectedAge${index}`}
-                            className="block text-sm font-medium text-gray-700 mb-1"
+                            className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1"
                           >
                             Edad
                           </label>
@@ -371,7 +375,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                         <div>
                           <label
                             htmlFor={`protectedGender${index}`}
-                            className="block text-sm font-medium text-gray-700 mb-1"
+                            className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1"
                           >
                             Género
                           </label>
@@ -386,7 +390,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                               handleProtectedPersonChange(
                                 index,
                                 "gender",
-                                value,
+                                value
                               )
                             }
                             error={!!errors[`protectedPersons.${index}.gender`]}
@@ -401,7 +405,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                           )}
                         </div>
                       </div>
-                    ),
+                    )
                   )}
                 </div>
               )}
@@ -413,7 +417,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           <>
             <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
                   Nombre de mamá
                 </label>
                 <TextInput
@@ -427,7 +431,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
                   Nombre de papá
                 </label>
                 <TextInput
@@ -441,7 +445,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
                   Edad de mamá
                 </label>
                 <NumberInput
@@ -456,7 +460,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
                   Edad de papá
                 </label>
                 <NumberInput

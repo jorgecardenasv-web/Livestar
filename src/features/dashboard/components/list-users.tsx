@@ -11,7 +11,6 @@ import {
 } from "@tremor/react";
 import { User } from "../types/user";
 import { Role, UserStatus } from "@prisma/client";
-import { SelectFilter } from "@/shared/components/select-filter";
 import { formatDate } from "@/shared/utils";
 
 const statusOptions = [

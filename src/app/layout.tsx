@@ -15,8 +15,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const basePath = process.env.NEXTAUTH_BASE_PATH;
-
   return (
     <html lang="es">
       <body

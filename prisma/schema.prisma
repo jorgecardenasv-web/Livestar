@@ -66,7 +66,7 @@ model InsuranceCompany {
   id          Int             @id @default(autoincrement())
   uuid        String          @unique @default(uuid())
   name        String
-  logo        String?
+  logo        String
   description String?
   status      CompanyStatus   @default(ACTIVE)
   createdAt   DateTime        @default(now())
@@ -124,6 +124,15 @@ model InsurancePlan {
   createdAt           DateTime           @default(now())
   updatedAt           DateTime           @updatedAt
   quotes              Quote[]
+  isRecommended       Boolean            @default(false)
+
+  @@schema("public")
+}
+
+enum PlanType {
+  ESENCIAL
+  PROTEGIDO
+  BLINDADO
 
   @@schema("public")
 }
@@ -141,8 +150,8 @@ enum ProspectStatus {
 }
 
 model Prospect {
-  id              Int              @id @default(autoincrement())
-  uuid            String           @unique @default(uuid())
+  id              Int            @id @default(autoincrement())
+  uuid            String         @unique @default(uuid())
   name            String
   gender          String
   age             Int?
@@ -150,14 +159,15 @@ model Prospect {
   protectWho      String
   whatsapp        String
   email           String
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  isVerified      Boolean        @default(false)
+  status          ProspectStatus @default(NEW)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
   additionalInfo  Json?
-  assignmentOrder Int              @default(autoincrement())
-  User            User?            @relation(fields: [userId], references: [id])
+  user            User?          @relation(fields: [userId], references: [id])
   userId          Int?
-  Quote           Quote[]
-  TrackingNumber  TrackingNumber[]
+  quotes          Quote[]
+  lastContactDate DateTime?
 
   @@schema("public")
 }
@@ -165,6 +175,7 @@ model Prospect {
 enum QuoteStatus {
   DRAFT
   SENT
+  UNDER_REVIEW
   ACCEPTED
   REJECTED
   EXPIRED
@@ -181,35 +192,26 @@ model Quote {
   plan           InsurancePlan   @relation(fields: [planId], references: [id])
   planId         Int
   customizations Json?
-  totalPrice     Float?
+  totalPrice     Float
   status         QuoteStatus     @default(DRAFT)
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   trackingNumber TrackingNumber?
-
-  @@schema("public")
-}
-
-enum TrackingNumberStatus {
-  ACTIVE
-  CLOSED
-  EXPIRED
-  CANCELLED
+  expirationDate DateTime?
 
   @@schema("public")
 }
 
 model TrackingNumber {
-  id         Int                  @id @default(autoincrement())
-  uuid       String               @unique @default(uuid())
-  number     String               @unique
-  prospect   Prospect             @relation(fields: [prospectId], references: [id])
-  prospectId Int
-  quote      Quote?               @relation(fields: [quoteId], references: [id])
-  quoteId    Int?                 @unique
-  status     TrackingNumberStatus @default(ACTIVE)
-  createdAt  DateTime             @default(now())
-  updatedAt  DateTime             @updatedAt
+  id           Int      @id @default(autoincrement())
+  uuid         String   @unique @default(uuid())
+  number       String   @unique
+  quote        Quote    @relation(fields: [quoteId], references: [id])
+  quoteId      Int      @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  lastActivity DateTime @default(now())
+  activityLog  Json?
 
   @@schema("public")
 }

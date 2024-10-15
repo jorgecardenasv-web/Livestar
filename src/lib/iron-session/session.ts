@@ -24,7 +24,7 @@ export const sessionOptions: SessionOptions = {
   cookieName: "auth_session",
   cookieOptions: {
     httpOnly: true,
-    maxAge: 60 * 60 * 24 * 365,
+    maxAge: 60 * 60 * 24,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
     path: "/",

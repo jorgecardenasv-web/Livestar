@@ -18,12 +18,14 @@ export const ContactInfoSection: React.FC<ContactInfoSectionProps> = ({
         <span className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-xl">
           2
         </span>
-        <h3 className="text-2xl font-bold text-gray-800">Datos de contacto</h3>
+        <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
+          Datos de contacto
+        </h3>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
             Mi whatsapp es
           </label>
           <TextInput
@@ -38,7 +40,7 @@ export const ContactInfoSection: React.FC<ContactInfoSectionProps> = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
             Mi correo es
           </label>
           <TextInput

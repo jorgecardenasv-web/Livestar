@@ -3,9 +3,6 @@ import prisma from "@/lib/prisma";
 
 export const reassignProspectService = async (advisorId: string) => {
   const prospectsToReassign = await prisma.prospect.findMany({
-    where: {
-      uuid: advisorId,
-    },
     select: {
       id: true,
     },

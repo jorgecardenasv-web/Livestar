@@ -1,15 +1,16 @@
 import { Role, UserStatus } from "@prisma/client";
 import { hash } from "bcrypt";
-
-const dotenv = require("dotenv");
-const path = require("path");
-const { PrismaClient } = require("@prisma/client");
+import {
+  insuranceCompanies,
+  insurancePlans,
+} from "@/features/insurance-plans/data/insurance-data";
 import { faker } from "@faker-js/faker/locale/es_MX";
+import prisma from "@/lib/prisma";
+import DotEnv from "dotenv";
+import path from "path";
 
 const env = process.env.NODE_ENV || "development";
-dotenv.config({ path: path.resolve(process.cwd(), `.env.${env}`) });
-
-const prisma = new PrismaClient();
+DotEnv.config({ path: path.resolve(process.cwd(), `.env.${env}`) });
 
 async function main() {
   const adminPassword = "AdminPass123";
@@ -18,6 +19,8 @@ async function main() {
   const hashedAdvisorPassword = await hash(advisorPassword, 10);
 
   await prisma.user.deleteMany();
+  await prisma.insuranceCompany.deleteMany();
+  await prisma.insurancePlan.deleteMany();
 
   await prisma.user.create({
     data: {
@@ -64,6 +67,16 @@ async function main() {
   }
 
   await createRandomUsers(9);
+
+  await prisma.insuranceCompany.createMany({
+    data: insuranceCompanies,
+    skipDuplicates: true,
+  });
+
+  await prisma.insurancePlan.createMany({
+    data: insurancePlans,
+    skipDuplicates: true,
+  });
 
   console.log("El seed se completó con éxito");
 }

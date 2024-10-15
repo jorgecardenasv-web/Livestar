@@ -1,6 +1,8 @@
-import { InsuranceQuoteData } from "@/app/(cliente)/resumen-de-cotizacion/page";
 import Image from "next/image";
+import { InsuranceQuoteData } from "@/app/(cliente)/resumen-de-cotizacion/page";
 import { Shield, DollarSign, Percent, Heart } from "lucide-react";
+import { ContractForm } from "./confirm-form";
+import { InfoCard } from "./info-card";
 
 export const QuoteSummary: React.FC<InsuranceQuoteData> = ({
   coInsurance,
@@ -16,7 +18,7 @@ export const QuoteSummary: React.FC<InsuranceQuoteData> = ({
   const isPriceMonthly = paymentType === "Mensual";
 
   return (
-    <div className="max-w-4xl mx-auto p-4 sm:p-6 rounded-3xl shadow-lg">
+    <div className="max-w-4xl mx-auto p-4 sm:p-6 rounded-3xl shadow-lg border">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-2 space-y-4 sm:space-y-0">
         <h2 className="text-xl sm:text-2xl font-bold text-tremor-content-emphasis">
           Resumen de cotización
@@ -74,36 +76,8 @@ export const QuoteSummary: React.FC<InsuranceQuoteData> = ({
         />
       </div>
 
-      <form action="/api/contract">
-        <button
-          type="submit"
-          className="w-full bg-[#223E99] text-white py-3 rounded font-bold text-base sm:text-lg hover:bg-primary transition duration-300"
-        >
-          Contratar ahora
-        </button>
-      </form>
+      <ContractForm />
     </div>
   );
 };
 
-function InfoCard({
-  icon,
-  title,
-  value,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  value: string;
-}) {
-  return (
-    <div className="bg-white rounded-xl p-3 sm:p-4 shadow-sm flex items-center space-x-3">
-      <div className="bg-sky-100 p-1.5 sm:p-2 rounded-lg text-sky-600">
-        {icon}
-      </div>
-      <div>
-        <p className="text-xs text-sky-600 font-semibold uppercase">{title}</p>
-        <p className="text-base sm:text-lg font-bold text-[#223E99]">{value}</p>
-      </div>
-    </div>
-  );
-}
