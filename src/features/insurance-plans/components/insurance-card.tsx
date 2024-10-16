@@ -21,7 +21,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = ({
   isRecommended,
 }) => {
   const coverage_fee = calculateTotalPrice(plan.totalPrice, paymentType);
-
+  console.log("planes", plan);
   return (
     <div
       className={`bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${
@@ -128,6 +128,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = ({
               maximumFractionDigits: 2,
             })}
           />
+          <input type="hidden" name="id" value={plan.id} />
           <button
             type="submit"
             className="w-full bg-[#223E99] text-white py-3 rounded font-bold text-lg hover:bg-primary transition duration-300"

@@ -14,6 +14,7 @@ export async function handleInterestClick(formData: FormData) {
     coInsurance: formData.get("coInsurance"),
     coInsuranceCap: formData.get("coInsuranceCap"),
     coverage_fee: formData.get("coverage_fee"),
+    id: formData.get("id"),
   };
 
   cookies().set("selectedPlan", JSON.stringify(insuranceData));
