@@ -31,6 +31,13 @@ export async function setActivePaymentType(formData: FormData) {
   cookies().set("activePaymentType", paymentType);
 }
 
+export async function getProspect() {
+  const cookieStore = cookies();
+  const prospectJson = cookieStore.get("prospect")?.value;
+  const prospect = prospectJson ? JSON.parse(prospectJson) : {};
+  return prospect;
+}
+
 export async function getInsuranceState() {
   const cookieStore = cookies();
   const selectedPlanJson = cookieStore.get("selectedPlan")?.value;

@@ -13,6 +13,7 @@ const publicPaths = [
   "/ini-ses-adm",
   "/comparador-cotizador-seguros-salud",
   "/resumen-de-cotizacion",
+  "/finalizar-cotizacion",
 ];
 
 export async function middleware(request: NextRequest) {

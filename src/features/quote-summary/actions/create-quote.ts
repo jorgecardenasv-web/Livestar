@@ -8,6 +8,7 @@ import {
 } from "../services/create-quote.service";
 import { createTrackingNumberService } from "../services/create-traking.service";
 import { getProspectByIdService } from "@/features/prospects/services/get-prospect-by-id.service";
+import { redirect } from "next/navigation";
 
 export async function handleContractNow() {
   const { selectedPlan } = await getInsuranceState();
@@ -34,13 +35,11 @@ export async function handleContractNow() {
       expirationDate: new Date(),
     };
 
-    try {
-      const quote = await createQuoteService(quoteData);
+    const quote = await createQuoteService(quoteData);
 
-      await createTrackingNumberService({ quoteId: quote.id });
-      console.log("Quote y Tracking Number creados con éxito");
-    } catch (error) {
-      console.error("Error al crear el quote:", error);
-    }
+    await createTrackingNumberService({ quoteId: quote.id });
+
+    console.log("Quote y Tracking Number creados con éxito");
+    redirect("/finalizar-cotizacion");
   }
 }

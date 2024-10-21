@@ -1,6 +1,6 @@
 "use server";
 
-import { redirect, RedirectType } from "next/navigation";
+import { redirect } from "next/navigation";
 import { createProspectService } from "../services/create-prospect.service";
 import { getAdvisorWithLeastProspectsService } from "@/features/advisors/services/get-advisor-with-least-prospects.service";
 import { cookies } from "next/headers";
@@ -25,5 +25,5 @@ export const createProspect = async (formData: any) => {
     })
   );
 
-  redirect("/comparador-cotizador-seguros-salud", RedirectType.replace);
+  redirect("/comparador-cotizador-seguros-salud");
 };

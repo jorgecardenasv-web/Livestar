@@ -7,7 +7,7 @@ interface ModalProps {
   title: string;
   description?: string;
   children: ReactNode;
-  size?: "sm" | "md" | "lg" | "xl" | "xl6" | "2xl" | "3xl";
+  size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "6xl";
 }
 
 const sizeClasses = {
@@ -15,9 +15,9 @@ const sizeClasses = {
   md: "max-w-md",
   lg: "max-w-lg",
   xl: "max-w-xl",
-  xl6: "max-w-6xl",
   "2xl": "max-w-2xl",
   "3xl": "max-w-3xl",
+  "6xl": "max-w-6xl h-[600px]",
 };
 
 export const Modal: React.FC<ModalProps> = ({
@@ -31,7 +31,7 @@ export const Modal: React.FC<ModalProps> = ({
   return (
     <Dialog open={isOpen} onClose={closeModal} static={true}>
       <DialogPanel className={`${sizeClasses[size]}`}>
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-2">
           <h3 className="text-lg font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
             {title}
           </h3>
