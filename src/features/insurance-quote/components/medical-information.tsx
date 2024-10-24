@@ -1,58 +1,50 @@
 "use client";
+import HealthConditionForm from "./HealtConditionForm";
+import RadioGroup from "./RadioGrup";
+import { Question, RadioOption } from "../types";
 
-import {
-  Card,
-  Text,
-  TextInput,
-  Select,
-  SelectItem,
-  DatePicker,
-} from "@tremor/react";
-import { useState } from "react";
-
-type RadioOption = "Sí" | "No" | "Sano" | "En tratamiento";
-
-interface RadioGroupProps {
-  name: string;
-  options: RadioOption[];
-  onChange: (name: string, value: RadioOption) => void;
+interface FormData {
+  nombrePadecimiento?: string;
+  tipoEvento?: string;
+  fechaInicio?: Date | undefined;
+  tipoTratamiento?: string;
+  hospitalizado?: RadioOption;
+  complicacion?: RadioOption;
+  detalleComplicacion?: string;
+  estadoSalud?: RadioOption;
+  medicamento?: RadioOption;
+  detalleMedicamento?: string;
+  [key: string]: RadioOption | string | Date | undefined;
 }
 
-interface SelectedOptions {
-  [key: string]: RadioOption;
+interface MedicalInformationProps {
+  forms: any[];
+  setForms: React.Dispatch<React.SetStateAction<any[]>>;
+  questions: Question[];
 }
 
-export const MedicalInformation = () => {
-  const [selectedOptions, setSelectedOptions] = useState<SelectedOptions>({});
+export const MedicalInformation: React.FC<MedicalInformationProps> = ({
+  forms,
+  setForms,
+  questions,
+}) => {
+  const handleFormChange = (
+    index: number,
+    field: keyof FormData,
+    value: string | RadioOption | Date | null | undefined
+  ) => {
+    const updatedForms = [...forms];
 
-  const handleRadioChange = (name: string, value: RadioOption) => {
-    setSelectedOptions((prev) => ({ ...prev, [name]: value }));
+    if (!updatedForms[index]) {
+      updatedForms[index] = {};
+    }
+
+    if (!updatedForms[index][field]) {
+      updatedForms[index][field] = null;
+    }
+    updatedForms[index] = { ...updatedForms[index], [field]: value };
+    setForms(updatedForms);
   };
-
-  const RadioGroup: React.FC<RadioGroupProps> = ({
-    name,
-    options,
-    onChange,
-  }) => (
-    <div className="flex space-x-4">
-      {options.map((option) => (
-        <label
-          key={option}
-          className="flex items-center space-x-2 cursor-pointer"
-        >
-          <input
-            type="radio"
-            name={name}
-            value={option}
-            checked={selectedOptions[name] === option}
-            onChange={() => onChange(name, option)}
-            className="form-radio text-primary"
-          />
-          <span>{option}</span>
-        </label>
-      ))}
-    </div>
-  );
 
   return (
     <>
@@ -66,89 +58,31 @@ export const MedicalInformation = () => {
       </div>
 
       <div className="space-y-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-5">
-            1.- ¿Algún solicitante padece o ha padecido alguna enfermedad como
-            hipertensión arterial, infarto, hepatitis, diabetes, epilepsia,
-            esclerosis, fiebre reumática, SIDA, cáncer, tumores, COVID- 19;
-            enfermedades mentales, congénitas, inmunológicas u otras de tipo
-            renal, pulmonar, neurológico o cardiovascular?
-          </label>
-          <RadioGroup
-            name="answer"
-            options={["Sí", "No"]}
-            onChange={handleRadioChange}
-          />
-        </div>
+        {questions.map((question, index) => (
+          <div key={index} className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-5">
+                {index + 1}.- {question.text}
+              </label>
+              <RadioGroup
+                name={`answer-${index}`}
+                options={["Sí", "No"]}
+                value={forms[index][`answer-${index}`]}
+                onChange={(name, value) => handleFormChange(index, name, value)}
+              />
+            </div>
 
-        {selectedOptions.answer === "Sí" && (
-          <div className="grid grid-cols-2 gap-4">
-            <TextInput placeholder="Nombre del padecimiento" />
-            <Select placeholder="Tipo de evento">
-              <SelectItem value="1">Opción 1</SelectItem>
-              <SelectItem value="2">Opción 2</SelectItem>
-            </Select>
-            <DatePicker placeholder="Fecha de inicio" />
-            <Select placeholder="Tipo de tratamiento">
-              <SelectItem value="1">Opción 1</SelectItem>
-              <SelectItem value="2">Opción 2</SelectItem>
-            </Select>
+            {forms[index][`answer-${index}`] === "Sí" && (
+              <HealthConditionForm
+                formData={forms[index]}
+                onChange={(field, value) =>
+                  handleFormChange(index, field, value)
+                }
+                index={index}
+              />
+            )}
           </div>
-        )}
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
-              ¿Estuvo hospitalizado?
-            </label>
-            <RadioGroup
-              name="hospitalizado"
-              options={["Sí", "No"]}
-              onChange={handleRadioChange}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
-              ¿Quedó con alguna complicación?
-            </label>
-            <RadioGroup
-              name="complicacion"
-              options={["Sí", "No"]}
-              onChange={handleRadioChange}
-            />
-          </div>
-        </div>
-
-        {selectedOptions.complicacion === "Sí" && (
-          <TextInput placeholder="¿Cuál?" />
-        )}
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
-              Estado actual de salud
-            </label>
-            <RadioGroup
-              name="estado-salud"
-              options={["Sano", "En tratamiento"]}
-              onChange={handleRadioChange}
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
-              ¿Actualmente toma algún medicamento?
-            </label>
-            <RadioGroup
-              name="medicamento"
-              options={["Sí", "No"]}
-              onChange={handleRadioChange}
-            />
-          </div>
-        </div>
-
-        {selectedOptions.medicamento === "Sí" && (
-          <TextInput placeholder="¿Cuál?" />
-        )}
+        ))}
       </div>
     </>
   );
