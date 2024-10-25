@@ -6,7 +6,7 @@ import { cookies } from "next/headers";
 export default async function HealthInsuranceComparison() {
   const prospect = cookies().get("prospect")?.value;
   const plans = await getInsurancePlans();
-  
+  console.log("planes", plans);
 
   return (
     <div>

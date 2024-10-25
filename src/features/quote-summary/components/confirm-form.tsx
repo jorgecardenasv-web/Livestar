@@ -2,12 +2,13 @@
 
 import { Badge } from "@tremor/react";
 import { useState } from "react";
+import { handleContractNow } from "../actions/create-quote";
 
 export const ContractForm = () => {
   const [isConfirmed, setIsConfirmed] = useState(false);
 
   return (
-    <form className="mt-10">
+    <form className="mt-10" action={handleContractNow}>
       <Badge className="w-full mb-2">
         <div className="flex items-center space-x-2 my-4">
           <input

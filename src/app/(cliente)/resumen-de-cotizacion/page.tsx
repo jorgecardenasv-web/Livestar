@@ -13,6 +13,7 @@ export interface InsuranceQuoteData {
   coInsurance: string;
   coInsuranceCap: string;
   coverage_fee: string;
+  id: string;
 }
 
 export default async function QuoteSummaryPage() {
