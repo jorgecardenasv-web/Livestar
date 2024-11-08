@@ -9,7 +9,7 @@ import { CallToAction } from "../call-to-action";
 
 export const Hero = () => {
   return (
-    <div className="relative w-full min-h-screen text-white">
+    <div className="relative w-full min-h-screen">
       <div className="absolute inset-0">
         <Image
           src={HeroImageMobile}

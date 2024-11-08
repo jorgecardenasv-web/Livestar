@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { InsuranceQuoteData } from "@/app/(cliente)/resumen-de-cotizacion/page";
+import { InsuranceQuoteData } from "@/app/(cliente)/cotizar/page";
 import { Shield, DollarSign, Percent, Heart } from "lucide-react";
 import { ContractForm } from "./confirm-form";
 import { InfoCard } from "./info-card";

@@ -2,14 +2,14 @@
 
 import { FC } from "react";
 import Image from "next/image";
-import { Modal } from "@/shared/components/modal";
+import { Modal } from "@/shared/components/ui/modal";
 import prueba from "@/assets/images/Video-Placeholder.jpg";
 
 import { useModalStore } from "@/shared/store/modal-store";
 import { GetQuoteForm } from "@/features/insurance-quote/components/get-quote-form";
 
 export const ModalQuotesAction: FC = () => {
-  const { isOpen, modalType } = useModalStore();
+  const { isOpen, modalType, modalProps } = useModalStore();
 
   return (
     <>
@@ -62,7 +62,7 @@ export const ModalQuotesAction: FC = () => {
           description="Modifique la información necesaria para actualizar el perfil del asesor."
           size="3xl"
         >
-          <GetQuoteForm />
+          <GetQuoteForm prospect={modalProps.prospect} />
         </Modal>
       )}
     </>

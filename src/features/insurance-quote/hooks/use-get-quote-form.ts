@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { z } from "zod";
 import { FormData, buildSchema } from "../schemas/form-schema";
-import { createProspect } from "../actions/create-prospect";
+import { saveProspectInCookies } from "../actions/save-prospect-in-cookies";
+import { useModalStore } from "@/shared/store/modal-store";
 
 export const useGetQuoteForm = (initialState?: any) => {
+  const { openModal } = useModalStore();
   const [formData, setFormData] = useState<FormData>(
     initialState || {
       name: "",
@@ -263,7 +265,7 @@ export const useGetQuoteForm = (initialState?: any) => {
       const schema = buildSchema(formData.protectWho!);
       const validatedData = schema.parse(formData);
       const cleanedData = cleanFormData(validatedData);
-      await createProspect(cleanedData);
+      await saveProspectInCookies(null, cleanedData);
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors: Record<string, string> = {};
@@ -276,6 +278,8 @@ export const useGetQuoteForm = (initialState?: any) => {
     }
   };
 
+  const openFormQuoteModal = (prospect: any) => openModal("formQuote", { prospect });
+
   return {
     formData,
     errors,
@@ -284,5 +288,6 @@ export const useGetQuoteForm = (initialState?: any) => {
     handleSubmit,
     handleProtectedPersonChange,
     handleChildChange,
+    openFormQuoteModal
   };
 };

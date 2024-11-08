@@ -1,5 +1,5 @@
-import { TextInput } from "@tremor/react";
 import { FormData } from "../schemas/form-schema";
+import { TextInput } from "@/shared/components/ui/text-input";
 
 interface ContactInfoSectionProps {
   formData: FormData;
@@ -24,35 +24,27 @@ export const ContactInfoSection: React.FC<ContactInfoSectionProps> = ({
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
-            Mi whatsapp es
-          </label>
-          <TextInput
-            name="whatsapp"
-            placeholder=""
-            value={formData.whatsapp}
-            onChange={(e) => handleInputChange("whatsapp", e.target.value)}
-            error={!!errors.whatsapp}
-            errorMessage={errors.whatsapp}
-            className="w-full"
-          />
-        </div>
+        <TextInput
+          label="Mi whatsapp es"
+          id="whatsapp"
+          name="whatsapp"
+          placeholder="Ej: 3312456789"
+          value={formData.whatsapp}
+          onChange={(e) => handleInputChange("whatsapp", e.target.value)}
+          className="w-full"
+          error={errors.whatsapp}
+        />
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
-            Mi correo es
-          </label>
-          <TextInput
-            name="email"
-            placeholder=""
-            value={formData.email}
-            onChange={(e) => handleInputChange("email", e.target.value)}
-            error={!!errors.email}
-            errorMessage={errors.email}
-            className="w-full"
-          />
-        </div>
+        <TextInput
+          label="Mi correo es"
+          id="email"
+          name="email"
+          placeholder="Ej: juanperez@gmail.com"
+          value={formData.email}
+          onChange={(e) => handleInputChange("email", e.target.value)}
+          className="w-full"
+          error={errors.email}
+        />
       </div>
     </div>
   );

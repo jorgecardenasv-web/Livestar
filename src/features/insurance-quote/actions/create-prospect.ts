@@ -14,9 +14,6 @@ export const createProspect = async (formData: any) => {
 
   const prospect = await createProspectService(formData, advisorId!);
 
-  console.log('create prospect', prospect);
-  
-
   cookies().set(
     "prospect",
     JSON.stringify({

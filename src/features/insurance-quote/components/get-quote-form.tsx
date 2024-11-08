@@ -4,7 +4,11 @@ import { useGetQuoteForm } from "../hooks/use-get-quote-form";
 import { PersonalInfoSection } from "./personal-info-section";
 import { ContactInfoSection } from "./contact-info-section";
 
-export const GetQuoteForm: React.FC = () => {
+export const GetQuoteForm: React.FC<{
+  prospect: any;
+}> = ({
+  prospect
+}) => {
   const {
     formData,
     errors,
@@ -13,7 +17,8 @@ export const GetQuoteForm: React.FC = () => {
     handleChildChange,
     handleProtectedPersonChange,
     handleSubmit,
-  } = useGetQuoteForm();
+  } = useGetQuoteForm(prospect);
+  
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8 bg-white p-6">

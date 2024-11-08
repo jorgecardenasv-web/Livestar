@@ -11,8 +11,7 @@ const routeRoles: { [key: string]: string[] } = {
 const publicPaths = [
   "/",
   "/ini-ses-adm",
-  "/comparador-cotizador-seguros-salud",
-  "/resumen-de-cotizacion",
+  "/cotizar",
   "/finalizar-cotizacion",
 ];
 
