@@ -5,7 +5,7 @@ import { PersonalInfoSection } from "@/features/insurance-quote/components/perso
 import { useGetQuoteForm } from "@/features/insurance-quote/hooks/use-get-quote-form";
 import { Card, Divider } from "@tremor/react";
 import { useState } from "react";
-import { Question } from "@/features/insurance-quote/types";
+import { FormDataMedical, Question } from "@/features/insurance-quote/types";
 import { actionCreateMedicalHistory } from "@/features/insurance-quote/actions/create-medical-history";
 
 const questions: Question[] = [
@@ -40,14 +40,22 @@ export default function QuoteFinalizationClientPage({
     handleProtectedPersonChange,
   } = useGetQuoteForm(prospect);
 
-  //Inicializar el estado de los formularios
-  const [forms, setForms] = useState(
+  const [forms, setForms] = useState<FormDataMedical[]>(
     questions.map((question) => ({
       [`answer-${question.id}`]: "No",
-      hospitalizado: "No",
-      complicacion: "No",
-      estadoSalud: "Sano",
-      medicamento: "No",
+      healthConditions: [
+        {
+          hospitalizado: "No",
+          complicacion: "No",
+          estadoSalud: "Sano",
+          medicamento: "No",
+          nombrePadecimiento: "",
+          tipoEvento: "",
+          tipoTratamiento: "",
+          detalleComplicacion: "",
+          detalleMedicamento: "",
+        },
+      ],
     }))
   );
 
@@ -56,7 +64,7 @@ export default function QuoteFinalizationClientPage({
     actionCreateMedicalHistory(forms);
     console.log("Datos del formulario:", forms);
   };
-
+  console.log(formData);
   return (
     <Card className="max-w-6xl mx-auto">
       <form onSubmit={handleSubmit}>
@@ -84,6 +92,7 @@ export default function QuoteFinalizationClientPage({
             forms={forms}
             setForms={setForms}
             questions={questions}
+            formFamily={formData}
           />
         </div>
         <div className="flex justify-end">

@@ -1,36 +1,32 @@
 "use client";
 import HealthConditionForm from "./HealtConditionForm";
 import RadioGroup from "./RadioGrup";
-import { Question, RadioOption } from "../types";
-
-interface FormData {
-  nombrePadecimiento?: string;
-  tipoEvento?: string;
-  fechaInicio?: Date | undefined;
-  tipoTratamiento?: string;
-  hospitalizado?: RadioOption;
-  complicacion?: RadioOption;
-  detalleComplicacion?: string;
-  estadoSalud?: RadioOption;
-  medicamento?: RadioOption;
-  detalleMedicamento?: string;
-  [key: string]: RadioOption | string | Date | undefined;
-}
+import {
+  FormDataMedical,
+  HealthCondition,
+  Question,
+  RadioOption,
+} from "../types";
+import { Divider } from "@tremor/react";
+import { Plus, X } from "lucide-react";
+import { FormData } from "../schemas/form-schema";
 
 interface MedicalInformationProps {
   forms: any[];
   setForms: React.Dispatch<React.SetStateAction<any[]>>;
   questions: Question[];
+  formFamily: FormData;
 }
 
 export const MedicalInformation: React.FC<MedicalInformationProps> = ({
   forms,
   setForms,
   questions,
+  formFamily,
 }) => {
-  const handleFormChange = (
+  const handleFormChangeRadio = (
     index: number,
-    field: keyof FormData,
+    field: keyof FormDataMedical,
     value: string | RadioOption | Date | null | undefined
   ) => {
     const updatedForms = [...forms];
@@ -39,11 +35,106 @@ export const MedicalInformation: React.FC<MedicalInformationProps> = ({
       updatedForms[index] = {};
     }
 
-    if (!updatedForms[index][field]) {
-      updatedForms[index][field] = null;
-    }
     updatedForms[index] = { ...updatedForms[index], [field]: value };
     setForms(updatedForms);
+  };
+
+  const handleFormChange2 = (
+    formIndex: number, // este es el formulario principal
+    conditionIndex: number, // este es el numero de la condicion
+    field: keyof HealthCondition,
+    value: string | RadioOption | Date | null | undefined
+  ) => {
+    setForms((prevForms) => {
+      const updatedForms = [...prevForms];
+      const updatedConditions = [...updatedForms[formIndex].healthConditions];
+
+      updatedConditions[conditionIndex] = {
+        ...updatedConditions[conditionIndex],
+        [field]: value,
+      };
+
+      updatedForms[formIndex] = {
+        ...updatedForms[formIndex],
+        healthConditions: updatedConditions,
+      };
+
+      return updatedForms;
+    });
+  };
+  const addHealthCondition = (personaIndex: number) => {
+    // Desestructuramos `protectWho` y `childrenCount` del objeto `formFamily`
+    const { protectWho, childrenCount } = formFamily;
+
+    // Define el límite máximo de condiciones basado en `protectWho` y `childrenCount`
+    let maxConditions = 1; // Valor por defecto para "solo_yo"
+
+    switch (protectWho) {
+      case "mi_pareja_y_yo":
+        maxConditions = 2;
+        break;
+      case "familia":
+        maxConditions = 2 + (childrenCount || 0);
+        break;
+      case "mis_hijos_y_yo":
+        maxConditions = 1 + (childrenCount || 0);
+        break;
+      case "solo_mis_hijos":
+        maxConditions = childrenCount || 0;
+        break;
+      case "mis_padres":
+        maxConditions = 2;
+        break;
+    }
+
+    if (forms[personaIndex].healthConditions?.length >= maxConditions) {
+      console.warn("Se ha alcanzado el límite máximo de condiciones de salud.");
+      return;
+    }
+
+    const updatedForms = [...forms];
+    const newCondition: HealthCondition = {
+      nombrePadecimiento: "",
+      tipoEvento: "",
+      fechaInicio: undefined,
+      tipoTratamiento: "",
+      hospitalizado: "No",
+      complicacion: "No",
+      detalleComplicacion: "",
+      estadoSalud: "Sano",
+      medicamento: "No",
+      detalleMedicamento: "",
+    };
+
+    if (!updatedForms[personaIndex].healthConditions) {
+      updatedForms[personaIndex].healthConditions = [];
+    }
+
+    updatedForms[personaIndex].healthConditions.push(newCondition);
+    setForms(updatedForms);
+  };
+
+  const handleDeleteCondition = (formIndex: number, conditionIndex: number) => {
+    setForms((prevForms) => {
+      const updatedForms = [...prevForms];
+
+      if (updatedForms[formIndex]?.healthConditions) {
+        const updatedConditions = [...updatedForms[formIndex].healthConditions];
+
+        if (updatedConditions.length > 1) {
+          updatedConditions.splice(conditionIndex, 1);
+
+          updatedForms[formIndex] = {
+            ...updatedForms[formIndex],
+            healthConditions: updatedConditions,
+          };
+        } else {
+          console.warn("Debe haber al menos una condición de salud.");
+        }
+      }
+
+      return updatedForms;
+    });
   };
 
   return (
@@ -68,18 +159,50 @@ export const MedicalInformation: React.FC<MedicalInformationProps> = ({
                 name={`answer-${index}`}
                 options={["Sí", "No"]}
                 value={forms[index][`answer-${index}`]}
-                onChange={(name, value) => handleFormChange(index, name, value)}
+                onChange={(name, value) =>
+                  handleFormChangeRadio(index, name, value)
+                }
               />
             </div>
 
             {forms[index][`answer-${index}`] === "Sí" && (
-              <HealthConditionForm
-                formData={forms[index]}
-                onChange={(field, value) =>
-                  handleFormChange(index, field, value)
-                }
-                index={index}
-              />
+              <>
+                {forms[index].healthConditions?.map(
+                  (condition: HealthCondition, conditionIndex: number) => (
+                    <>
+                      <div className="flex justify-between">
+                        <h1>Persona {conditionIndex + 1} </h1>
+                        <button
+                          onClick={() =>
+                            handleDeleteCondition(index, conditionIndex)
+                          }
+                        >
+                          <X className="text-red-500 hover:text-red-600" />
+                        </button>
+                      </div>
+                      <HealthConditionForm
+                        key={conditionIndex}
+                        formData={condition}
+                        onChange={(field, value) =>
+                          handleFormChange2(index, conditionIndex, field, value)
+                        }
+                        index={conditionIndex}
+                        indexform={index}
+                      />
+                      <Divider />
+                    </>
+                  )
+                )}
+                <button
+                  type="button"
+                  onClick={() => addHealthCondition(index)}
+                  className="text-primary font-semibold "
+                >
+                  <span className="flex gap-2 hover:underline">
+                    <Plus /> Agregar otra persona
+                  </span>
+                </button>
+              </>
             )}
           </div>
         ))}

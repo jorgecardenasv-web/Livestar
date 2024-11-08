@@ -2,21 +2,11 @@
 import { createMedicalHistoryService } from "../services/create-medical-history.service";
 import { cookies } from "next/headers";
 import { getProspectByIdService } from "@/features/prospects/services/get-prospect-by-id.service";
-interface FormData {
-  nombrePadecimiento?: string;
-  tipoEvento?: string;
-  fechaInicio?: Date | undefined;
-  tipoTratamiento?: string;
-  hospitalizado: string;
-  complicacion: string;
-  detalleComplicacion?: string;
-  estadoSalud: string;
-  medicamento: string;
-  detalleMedicamento?: string;
-  [key: string]: Date | string | undefined;
-}
+import { FormDataMedical } from "../types";
 
-export const actionCreateMedicalHistory = async (formMedical: FormData[]) => {
+export const actionCreateMedicalHistory = async (
+  formMedical: FormDataMedical[]
+) => {
   const cookieStore = cookies();
   const prospectJson = cookieStore.get("prospect")?.value;
   const prospect = prospectJson ? JSON.parse(prospectJson) : {};
