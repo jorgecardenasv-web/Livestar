@@ -19,13 +19,6 @@ export default async function Dashboard({
     role: searchParams?.role,
   });
 
-  // function toXlsx(): any {
-    // console.log(users);
-    // const worksheet = XLSX.utils.json_to_sheet(rows);
-    // const workbook = XLSX.utils.book_new();
-    // XLSX.utils.book_append_sheet(workbook, worksheet, "Dates");
-  // }
-
   return (
     <>
       <div className="flex gap-5 w-full flex-col lg:flex-row">
@@ -33,7 +26,6 @@ export default async function Dashboard({
         <CardExample />
         <CardExample />
       </div>
-      {/* <button onClick={toXlsx()}>dataaa</button> */}
       <UsersList users={users} />
       <Pagination
         totalPages={totalPages}

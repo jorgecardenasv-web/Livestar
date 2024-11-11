@@ -4,8 +4,6 @@ import { ModalProspectActions } from "@/features/prospects/components/modal-pros
 import { getAdvisors } from "@/features/prospects/loaders/get-advisors";
 import { getProspects } from "@/features/prospects/loaders/get-prospects";
 import { getCurrentUser } from "@/features/session/loaders/get-current-user";
-import { SearchBar } from "@/shared/components/search-bar";
-import { SelectFilter } from "@/shared/components/select-filter";
 import { Prospect } from "@prisma/client";
 import { Card, Divider } from "@tremor/react";
 import { FilterSetion } from "@/features/prospects/components/filter-section"
