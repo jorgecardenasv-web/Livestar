@@ -24,9 +24,8 @@ export const FilterSetion = () => {
           ]}
         />
         <button onClick={openXlsxModal} className="flex items-center flex-row bg-primary p-4 gap-1 rounded-md text-white text-base">
-            <Sheet/>
-            <span className="m-0 text-sm">Crear reporte
-            </span>
+            <Sheet className="w-12"/>
+            <span className="m-0 text-sm">Crear reporte</span>
         </button>
       </div>
     )

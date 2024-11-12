@@ -8,6 +8,7 @@ import { Button, DateRangePicker } from "@tremor/react";
 import { xlsx } from "@/shared/utils/create-xlsx";
 import { Prospect } from "../types/prospect";
 import { useState } from "react";
+import { es } from "date-fns/locale";
 
 export const ModalProspectActions = ({
   advisors,
@@ -43,23 +44,26 @@ export const ModalProspectActions = ({
       {isOpen && modalType === "createXlsx" && (
         <Modal title="Creación de Reporte" description="" size="lg">
           <form
-           className="mx-auto max-w-md space-y-6"
+            className="mx-auto max-w-md space-y-6"
             action={() =>
               xlsx(
                 prospect,
                 "Prospectos",
                 ["id", "nombre", "email"],
-                "text-test",
+                "Prospectos",
                 dateRange.startDate,
                 dateRange.endDate
               )
             }
           >
-              <DateRangePicker
-                onValueChange={handleDateChange}
-                className="mx-auto max-w-md"
-              />{" "}
-              <Button color="sky" className="w-full">Crear</Button>
+            <DateRangePicker
+              onValueChange={handleDateChange}
+              className="mx-auto max-w-md"
+              locale={es}
+            />{" "}
+            <Button className="w-full bg-primary text-white px-6 py-3 rounded font-bold text-lg mt-10">
+              Crear
+            </Button>
           </form>
         </Modal>
       )}
