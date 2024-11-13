@@ -56,7 +56,7 @@ export const Hero = () => {
               tu bienestar y el de los que más amas.
             </p>
             <button className="bg-white text-[#008AED] py-3 px-6 rounded font-bold text-base md:text-lg">
-              Quiero saber más
+              Quiero saber más.
             </button>
           </div>
           <div className="w-full lg:w-auto">

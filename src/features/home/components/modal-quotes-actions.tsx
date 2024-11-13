@@ -13,7 +13,7 @@ export const ModalQuotesAction: FC = () => {
   return (
     <>
       {isOpen && modalType === "Vida" && (
-        <Modal title="Vida" description="Descripcion para Vida" size="xl6">
+        <Modal title="Vida" description="Descripción para Vida" size="xl6">
           <div className="flex justify-center items-center w-full ">
             {" "}
             <Image
@@ -27,7 +27,7 @@ export const ModalQuotesAction: FC = () => {
         </Modal>
       )}
       {isOpen && modalType === "Ahorro" && (
-        <Modal title="Ahorro" description="Descripcion para ahorro" size="xl6">
+        <Modal title="Ahorro" description="Descripción para ahorro" size="xl6">
           <div className="flex justify-center items-center w-full ">
             {" "}
             <Image
@@ -43,7 +43,7 @@ export const ModalQuotesAction: FC = () => {
       {isOpen && modalType === "Vehículos" && (
         <Modal
           title="Vehículos"
-          description=" Descripcion para Vehículos"
+          description=" Descripción para vehículos"
           size="xl6"
         >
           <div className="flex justify-center items-center w-full ">

@@ -20,7 +20,7 @@ export const ContractForm = () => {
           />
           <label className="text-sm text-gray-700">
             Confirmo que no padezco ninguna enfermedad preexistente ni me
-            encuentro en estado de embarazo
+            encuentro en estado de embarazo.
           </label>
         </div>
       </Badge>

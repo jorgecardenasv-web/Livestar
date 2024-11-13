@@ -15,7 +15,7 @@ export const ModalAdvisorActions = (): JSX.Element => {
       {isOpen && modalType === "addAdvisor" && (
         <Modal
           title="Crear Nuevo Asesor"
-          description="escribe la información requerida para crear un nuevo perfil de asesor."
+          description="Escribe la información requerida para crear un nuevo perfil de asesor."
           size="lg"
         >
           <AddAdvisorForm />
