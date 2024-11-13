@@ -6,23 +6,10 @@ import { Advisor } from "@/features/advisors/types/advisor";
 import { FormSelectorProspect } from "./form-selector-prospect";
 import { Button, DateRangePicker } from "@tremor/react";
 import { xlsx } from "@/shared/utils/create-xlsx";
-import { Prospect } from "../types/prospect";
 import { useState } from "react";
 import { es } from "date-fns/locale";
 
-export const ModalProspectActions = ({
-  advisors,
-  prospects,
-}: {
-  advisors: Advisor[];
-  prospects?: Prospect[];
-}) => {
-  const prospect = prospects?.map((a) => ({
-    id: a.id,
-    nombre: a.name,
-    email: a.email,
-    createdAt: a.createdAt,
-  }));
+export const ModalProspectActions = ({ advisors }: { advisors: Advisor[] }) => {
   const { isOpen, modalType } = useProspectActions();
   const [dateRange, setDateRange] = useState({ startDate: "", endDate: "" });
 
@@ -45,11 +32,18 @@ export const ModalProspectActions = ({
         <Modal title="Creación de Reporte" description="" size="lg">
           <form
             className="mx-auto max-w-md space-y-6"
-            action={() =>
-              xlsx(
-                prospect,
+            action={async () =>
+              await xlsx(
+                "/api/reports/prospect",
                 "Prospectos",
-                ["id", "nombre", "email"],
+                [
+                  "id",
+                  "nombre",
+                  "email",
+                  "asesor",
+                  "email asesor",
+                  "createdAt",
+                ],
                 "Prospectos",
                 dateRange.startDate,
                 dateRange.endDate
@@ -60,7 +54,7 @@ export const ModalProspectActions = ({
               onValueChange={handleDateChange}
               className="mx-auto max-w-md"
               locale={es}
-            />{" "}
+            />
             <Button className="w-full bg-primary text-white px-6 py-3 rounded font-bold text-lg mt-10">
               Crear
             </Button>

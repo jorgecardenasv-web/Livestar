@@ -1,20 +1,18 @@
 import * as XLSX from "xlsx";
 
-export function xlsx(
-  data: any,
+export async function xlsx(
+  url: string,
   worksheetName: string,
   headers: string[],
   fileName: string,
   startDate: string,
   endDate: string
-): any {
+): Promise<any> {
   const date = new Date();
   const formattedDate = `${String(date.getDate()).padStart(2, "0")}/${String(date.getMonth() + 1).padStart(2, "0")}/${date.getFullYear()}`;
-  const rows = startDate
-    ? data.filter(
-        (a: any) => a.createdAt >= startDate && a.createdAt <= endDate
-      )
-    : data;
+
+  const res = await fetch(`${url}?startDate=${startDate}&endDate=${endDate}`);
+  const rows = await res.json();
   const worksheet = XLSX.utils.json_to_sheet(rows);
 
   const workbook = XLSX.utils.book_new();

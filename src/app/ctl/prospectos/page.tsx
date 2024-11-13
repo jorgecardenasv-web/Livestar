@@ -6,7 +6,7 @@ import { getProspects } from "@/features/prospects/loaders/get-prospects";
 import { getCurrentUser } from "@/features/session/loaders/get-current-user";
 import { Prospect } from "@prisma/client";
 import { Card, Divider } from "@tremor/react";
-import { FilterSetion } from "@/features/prospects/components/filter-section"
+import { FilterSetion } from "@/features/prospects/components/filter-section";
 
 const isVerifiedMap: { [key: string]: boolean | undefined } = {
   true: true,
@@ -38,11 +38,11 @@ export default async function ProspectsPage({
     <>
       <HeaderProspects />
       <Card className="dark:bg-dark-tremor-background-subtle space-y-6">
-      <FilterSetion />
+        <FilterSetion />
         <Divider />
         <ListProspects prospects={prospects} />
       </Card>
-      <ModalProspectActions advisors={advisors} prospects={prospects} />
+      <ModalProspectActions advisors={advisors} />
     </>
   );
 }
