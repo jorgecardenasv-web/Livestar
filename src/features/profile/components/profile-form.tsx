@@ -1,6 +1,6 @@
 "use client";
 
-import { SubmitButton } from "@/shared/components/submit-button";
+import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { Card, TextInput } from "@tremor/react";
 import { updateProfile } from "../actions/update-profile";
 import { useFormState } from "react-dom";

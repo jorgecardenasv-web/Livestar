@@ -6,10 +6,9 @@ import { Modal } from "@/shared/components/ui/modal";
 import prueba from "@/assets/images/Video-Placeholder.jpg";
 
 import { useModalStore } from "@/shared/store/modal-store";
-import { GetQuoteForm } from "@/features/insurance-quote/components/get-quote-form";
 
 export const ModalQuotesAction: FC = () => {
-  const { isOpen, modalType, modalProps } = useModalStore();
+  const { isOpen, modalType } = useModalStore();
 
   return (
     <>
@@ -54,15 +53,6 @@ export const ModalQuotesAction: FC = () => {
               33vw"
             />
           </div>
-        </Modal>
-      )}
-      {isOpen && modalType === "formQuote" && (
-        <Modal
-          title="Editar Asesor"
-          description="Modifique la información necesaria para actualizar el perfil del asesor."
-          size="3xl"
-        >
-          <GetQuoteForm prospect={modalProps.prospect} />
         </Modal>
       )}
     </>

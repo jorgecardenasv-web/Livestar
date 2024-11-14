@@ -4,12 +4,9 @@ import { saveProspectInCookies } from "@/features/insurance-quote/actions/save-p
 import { useGetQuoteForm } from "@/features/insurance-quote/hooks/use-get-quote-form";
 import { Button } from "@/shared/components/ui/button";
 import { TextInput } from "@/shared/components/ui/text-input";
-import { useModalStore } from "@/shared/store/modal-store";
 import { useFormState } from "react-dom";
 
 export const CallToAction = () => {
-  const { openModal } = useModalStore();
-
   const [state, formAction] = useFormState(saveProspectInCookies, {
     name: "",
     postalCode: 0,
@@ -52,7 +49,7 @@ export const CallToAction = () => {
             size="lg"
             className="bg-white lg:w-5/6 mx-auto text-[#008AED] hover:text-white px-6 py-3 rounded-lg font-bold text-lg w-full"
           >
-            ¡Ver mi precio ahora!
+            Descubre más y cotiza
           </Button>
         </form>
       </div>

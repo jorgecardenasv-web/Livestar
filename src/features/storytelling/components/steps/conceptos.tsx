@@ -1,8 +1,4 @@
-import {
-  Coins,
-  LineChart,
-  PieChart,
-} from "lucide-react";
+import { Coins, LineChart, PieChart } from "lucide-react";
 
 interface Concept {
   title: string;
@@ -31,20 +27,18 @@ const concepts: Concept[] = [
   },
 ];
 
-export const steps = [
-  {
-    title: "¡Hola!",
-    content:
-      "Imagina tener la tranquilidad de saber que, pase lo que pase, tú y tu familia estarán cubiertos ante cualquier emergencia médica. Un Seguro de Gastos Médicos que protege tu Economía permitiendo concentrarte en lo más importante que es tu Salud.",
-  },
-  {
-    title: "¿Qué es un seguro de Gastos Médicos Mayores?",
-    content:
-      "Un seguro de Gastos Médicos Mayores es tu respaldo cuando ocurre una enfermedad o accidente. Te permite acceder a los mejores hospitales y especialistas, sin que el costo sea una preocupación. El seguro te brinda la tranquilidad mientras nosotros nos encargamos de la cuenta.",
-  },
-  {
-    title: "¿Cómo funciona? Los 3 conceptos básicos que necesitas saber:",
-    content: (
+export const Conceptos = () => {
+  return (
+    <div className="space-y-10">
+      <div>
+        <h2 className="text-3xl font-bold text-center text-gray-600 mb-3">
+          ¿Cómo funciona?
+        </h2>
+        <h4 className="text-xl font-semibold text-center text-gray-600 mb-6">
+          Los 3 conceptos básicos que necesitas saber
+        </h4>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 mt-6">
         {concepts.map(({ title, decription, icon }) => (
           <div
@@ -80,15 +74,10 @@ export const steps = [
           </div>
         ))}
       </div>
-    ),
-    footerContent: (
-      <div className="text-balance leading-7">
+      <div className="text-balance leading-7 text-center">
         <p>¡No te olvides que tu prima es deducible de impuestos!</p>
         <p>Además hacienda te apoya pagando hasta el 30% de la prima.</p>
       </div>
-    ),
-  },
-  {
-    title: "¿Cómo se ve en la vida real?",
-  },
-];
+    </div>
+  );
+};

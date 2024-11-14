@@ -1,7 +1,8 @@
-import { SubmitButton } from "@/shared/components/submit-button";
+
 import { TextInput } from "@tremor/react";
 import { useAdvisorActions } from "../../hooks/use-advisor-actions";
 import { addAdvisor } from "../../actions/add-advisor";
+import { SubmitButton } from "@/shared/components/ui/submit-button";
 
 export const AddAdvisorForm = () => {
   const { formAction, state } = useAdvisorActions(addAdvisor);

@@ -1,5 +1,6 @@
 import { HeaderSecondary } from "@/shared/components/layout/header-secondary";
-import { InsuranceFlow } from "@/components/insurance-flow";
+import { InsuranceFlow } from "@/features/storytelling/components/insurance-flow";
+import { ModalStorytellingActions } from "@/features/storytelling/components/modal-storytelling-actions";
 
 export interface InsuranceQuoteData {
   company: string;
@@ -19,6 +20,7 @@ export default function QuoteSummaryPage() {
     <>
       <HeaderSecondary />
       <InsuranceFlow />
+      <ModalStorytellingActions />
     </>
   );
 }
