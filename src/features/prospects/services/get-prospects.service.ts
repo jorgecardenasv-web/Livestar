@@ -11,6 +11,11 @@ interface GetProspectsService extends Partial<Prospect> {
   query: string;
 }
 
+interface GetAllProspectsByDateService {
+  startDate: string;
+  endDate: string;
+}
+
 export const getProspectsService = async ({
   advisorId: userId,
   page,
@@ -51,5 +56,27 @@ export const getProspectsService = async ({
         createdAt: "desc",
       },
     ],
+  });
+};
+
+export const getAllProspectsByDateService = async ({
+  startDate,
+  endDate,
+}: GetAllProspectsByDateService) => {
+  return await prisma.prospect.findMany({
+    where: {
+      createdAt: {
+        gte: startDate,
+        lte: endDate,
+      },
+    },
+    include: {
+      user: {
+        select: {
+          name: true,
+          email: true,
+        },
+      },
+    },
   });
 };
