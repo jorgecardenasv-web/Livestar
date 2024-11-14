@@ -46,6 +46,9 @@ export const useProspectActions = () => {
   const openEditProspectModal = (prospect: Prospect) =>
     openModal("editProspect", { prospect });
 
+  const openXlsxModal = () =>
+    openModal("createXlsx");
+
   return {
     // General Actions
     state,
@@ -64,5 +67,8 @@ export const useProspectActions = () => {
 
     // Edit prospect
     openEditProspectModal,
+
+    // Create Xlsx
+    openXlsxModal,
   };
 };
