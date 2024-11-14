@@ -47,17 +47,14 @@ export const Hero = () => {
 
       <div className="relative max-w-7xl mx-auto z-10 flex flex-col justify-center items-center min-h-screen px-4 pt-24 lg:pt-0">
         <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-8">
-          <div className="text-center lg:text-left lg:max-w-xl">
-            <h1 className="text-2xl md:text-5xl font-bold mb-3 md:mb-4 text-white">
+          <div className="text-center lg:text-left lg:max-w-2xl">
+            <h1 className="text-2xl md:text-6xl font-bold mb-3 md:mb-4 text-white">
               ¡Protege tu salud y la de tu familia hoy!
             </h1>
             <p className="text-lg md:text-xl mb-4 md:mb-6 text-white">
               Obtén una cotización rápida y sin compromiso ahora mismo y asegura
               tu bienestar y el de los que más amas.
             </p>
-            <button className="bg-white text-[#008AED] py-3 px-6 rounded font-bold text-base md:text-lg">
-              Quiero saber más
-            </button>
           </div>
           <div className="w-full lg:w-auto">
             <CallToAction />

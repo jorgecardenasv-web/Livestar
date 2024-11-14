@@ -22,7 +22,7 @@ export const SigninForm = () => {
           </h3>
           <form action={formAction} className="mt-6 space-y-4">
             <TextInput
-              label="Correo electrónico<"
+              label="Correo electrónico"
               type="email"
               id="email"
               name="email"

@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { z } from "zod";
 import { FormData, buildSchema } from "../schemas/form-schema";
-import { saveProspectInCookies } from "../actions/save-prospect-in-cookies";
+import { createProspect } from "../actions/create-prospect";
 import { useModalStore } from "@/shared/store/modal-store";
 
 export const useGetQuoteForm = (initialState?: any) => {
-  const { openModal } = useModalStore();
+  const { openModal, closeModal } = useModalStore();
   const [formData, setFormData] = useState<FormData>(
     initialState || {
       name: "",
@@ -265,7 +265,8 @@ export const useGetQuoteForm = (initialState?: any) => {
       const schema = buildSchema(formData.protectWho!);
       const validatedData = schema.parse(formData);
       const cleanedData = cleanFormData(validatedData);
-      await saveProspectInCookies(null, cleanedData);
+      await createProspect(cleanedData);
+      closeModal();
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors: Record<string, string> = {};
@@ -278,7 +279,8 @@ export const useGetQuoteForm = (initialState?: any) => {
     }
   };
 
-  const openFormQuoteModal = (prospect: any) => openModal("formQuote", { prospect });
+  const openFormQuoteModal = (prospect: any) =>
+    openModal("formQuote", { prospect });
 
   return {
     formData,
@@ -288,6 +290,6 @@ export const useGetQuoteForm = (initialState?: any) => {
     handleSubmit,
     handleProtectedPersonChange,
     handleChildChange,
-    openFormQuoteModal
+    openFormQuoteModal,
   };
 };

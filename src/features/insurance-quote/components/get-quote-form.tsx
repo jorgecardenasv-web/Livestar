@@ -3,12 +3,11 @@
 import { useGetQuoteForm } from "../hooks/use-get-quote-form";
 import { PersonalInfoSection } from "./personal-info-section";
 import { ContactInfoSection } from "./contact-info-section";
+import { SubmitButton } from "@/shared/components/ui/submit-button";
 
 export const GetQuoteForm: React.FC<{
   prospect: any;
-}> = ({
-  prospect
-}) => {
+}> = ({ prospect }) => {
   const {
     formData,
     errors,
@@ -18,7 +17,6 @@ export const GetQuoteForm: React.FC<{
     handleProtectedPersonChange,
     handleSubmit,
   } = useGetQuoteForm(prospect);
-  
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8 bg-white p-6">
@@ -38,12 +36,12 @@ export const GetQuoteForm: React.FC<{
         />
       )}
 
-      <button
+      <SubmitButton
         type="submit"
-        className="bg-primary text-white px-6 py-3 rounded font-bold text-lg w-full mt-6 hover:bg-[#223E99]"
-      >
-        Cotizar
-      </button>
+        textPending="Cotizando..."
+        textStatic="Cotizar"
+        className="bg-primary text-white p-6 rounded font-bold text-lg w-full mt-6 hover:bg-[#223E99]"
+      />
     </form>
   );
 };

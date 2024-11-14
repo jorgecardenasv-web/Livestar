@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -18,7 +19,7 @@ export async function handleInterestClick(formData: FormData) {
   };
 
   cookies().set("selectedPlan", JSON.stringify(insuranceData));
-  redirect("/resumen-de-cotizacion");
+  revalidatePath("/cotizar");
 }
 
 export async function setActivePlanType(formData: FormData) {
@@ -49,3 +50,8 @@ export async function getInsuranceState() {
     selectedPlan,
   };
 }
+
+export const deleteSelectedPlan = () => {
+  cookies().delete("selectedPlan");
+  revalidatePath("/cotizar");
+};

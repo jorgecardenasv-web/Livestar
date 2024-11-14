@@ -1,9 +1,9 @@
 "use client";
 
 import { saveProspectInCookies } from "@/features/insurance-quote/actions/save-prospect-in-cookies";
-import { useGetQuoteForm } from "@/features/insurance-quote/hooks/use-get-quote-form";
 import { Button } from "@/shared/components/ui/button";
 import { TextInput } from "@/shared/components/ui/text-input";
+import Link from "next/link";
 import { useFormState } from "react-dom";
 
 export const CallToAction = () => {
@@ -11,8 +11,6 @@ export const CallToAction = () => {
     name: "",
     postalCode: 0,
   });
-
-  const { openFormQuoteModal } = useGetQuoteForm();
 
   return (
     <>
@@ -45,11 +43,10 @@ export const CallToAction = () => {
             placeholder="Escribe tu código postal"
           />
           <Button
-            onClick={() => openFormQuoteModal(state)}
             size="lg"
             className="bg-white lg:w-5/6 mx-auto text-[#008AED] hover:text-white px-6 py-3 rounded-lg font-bold text-lg w-full"
           >
-            Descubre más y cotiza
+            <Link href="/cotizar">Descubre más y cotiza</Link>
           </Button>
         </form>
       </div>

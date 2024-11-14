@@ -44,46 +44,89 @@ export function InsuranceFlow() {
               </motion.div>
             </AnimatePresence>
 
-            <div className="flex justify-between items-center gap-x-4 mt-10">
-              <div>
-                {step === 0 && (
-                  <Button
-                    variant="link"
-                    onClick={() => setStep(() => steps.length - 1)}
-                  >
-                    Saltar introducción
-                  </Button>
-                )}
-              </div>
-              {/* Quote */}
-              {step === steps.length - 1 && (
-                <Button
-                  onClick={openModalStorytelling}
-                  className="bg-primary text-white rounded-lg my-auto"
-                >
-                  <span className="text-xl">Cotizar ahora</span>
-                </Button>
-              )}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+              className="flex flex-col items-center gap-y-4 mt-10"
+            >
+              <div className="flex justify-between items-center w-full">
+                <div className="flex-1">
+                  <AnimatePresence mode="wait">
+                    {step === 0 && (
+                      <motion.div
+                        key="skip-intro"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -20 }}
+                        transition={{ duration: 0.4 }}
+                      >
+                        <Button
+                          variant="link"
+                          onClick={() => setStep(() => steps.length - 1)}
+                        >
+                          Saltar introducción
+                        </Button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
 
-              <div className="flex items-center gap-x-4">
-                <Button
-                  onClick={() =>
-                    setStep((prev) => (prev - 1 + steps.length) % steps.length)
-                  }
-                  className="bg-primary text-white size-12 rounded-full my-auto"
-                  disabled={step === 0}
-                >
-                  <ArrowLeft size={24} strokeWidth={3} />
-                </Button>
-                <Button
-                  onClick={() => setStep((prev) => (prev + 1) % steps.length)}
-                  className="bg-primary text-white size-12 rounded-full my-auto"
-                  disabled={step === steps.length - 1}
-                >
-                  <ArrowRight size={24} strokeWidth={3} />
-                </Button>
+                <div className="flex-1 flex justify-center">
+                  {/* Quote */}
+                  <AnimatePresence mode="wait">
+                    {step === steps.length - 1 && (
+                      <motion.div
+                        key="quote-button"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.4 }}
+                      >
+                        <Button
+                          onClick={openModalStorytelling}
+                          className="bg-primary text-white rounded p-6 my-auto"
+                        >
+                          <span className="text-xl">Cotizar ahora</span>
+                        </Button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                <div className="flex-1 flex justify-end items-center gap-x-4">
+                  <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: 0.2 }}
+                  >
+                    <Button
+                      onClick={() =>
+                        setStep((prev) => (prev - 1 + steps.length) % steps.length)
+                      }
+                      className="bg-primary text-white size-12 rounded-full my-auto"
+                      disabled={step === 0}
+                    >
+                      <ArrowLeft size={24} strokeWidth={3} />
+                    </Button>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.4, delay: 0.2 }}
+                  >
+                    <Button
+                      onClick={() => setStep((prev) => (prev + 1) % steps.length)}
+                      className="bg-primary text-white size-12 rounded-full my-auto"
+                      disabled={step === steps.length - 1}
+                    >
+                      <ArrowRight size={24} strokeWidth={3} />
+                    </Button>
+                  </motion.div>
+                </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </CardContent>
       </Card>

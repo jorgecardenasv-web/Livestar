@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { createProspectService } from "../services/create-prospect.service";
 import { getAdvisorWithLeastProspectsService } from "@/features/advisors/services/get-advisor-with-least-prospects.service";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 export const createProspect = async (formData: any) => {
   const advisorId = await getAdvisorWithLeastProspectsService();
@@ -22,5 +23,5 @@ export const createProspect = async (formData: any) => {
     })
   );
 
-  redirect("/comparador-cotizador-seguros-salud");
+  revalidatePath("/cotizar");
 };

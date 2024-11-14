@@ -13,8 +13,7 @@ export const ModalStorytellingActions: FC = () => {
     <>
       {isOpen && modalType === "formQuote" && (
         <Modal
-          title="Editar Asesor"
-          description="Modifique la información necesaria para actualizar el perfil del asesor."
+          title=""
           size="3xl"
         >
           <GetQuoteForm prospect={modalProps.prospect} />
