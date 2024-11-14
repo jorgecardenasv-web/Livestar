@@ -40,8 +40,8 @@ export const MedicalInformation: React.FC<MedicalInformationProps> = ({
   };
 
   const handleFormChange2 = (
-    formIndex: number, // este es el formulario principal
-    conditionIndex: number, // este es el numero de la condicion
+    formIndex: number,
+    conditionIndex: number,
     field: keyof HealthCondition,
     value: string | RadioOption | Date | null | undefined
   ) => {
@@ -63,11 +63,9 @@ export const MedicalInformation: React.FC<MedicalInformationProps> = ({
     });
   };
   const addHealthCondition = (personaIndex: number) => {
-    // Desestructuramos `protectWho` y `childrenCount` del objeto `formFamily`
     const { protectWho, childrenCount } = formFamily;
 
-    // Define el límite máximo de condiciones basado en `protectWho` y `childrenCount`
-    let maxConditions = 1; // Valor por defecto para "solo_yo"
+    let maxConditions = 1;
 
     switch (protectWho) {
       case "mi_pareja_y_yo":

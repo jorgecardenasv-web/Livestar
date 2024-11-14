@@ -3,10 +3,11 @@ import { ContactInfoSection } from "@/features/insurance-quote/components/contac
 import { MedicalInformation } from "@/features/insurance-quote/components/medical-information";
 import { PersonalInfoSection } from "@/features/insurance-quote/components/personal-info-section";
 import { useGetQuoteForm } from "@/features/insurance-quote/hooks/use-get-quote-form";
-import { Card, Divider } from "@tremor/react";
 import { useState } from "react";
 import { FormDataMedical, Question } from "@/features/insurance-quote/types";
 import { actionCreateMedicalHistory } from "@/features/insurance-quote/actions/create-medical-history";
+import { Card, CardContent } from "@/shared/components/ui/card";
+import { Separator } from "@/shared/components/ui/separator";
 
 const questions: Question[] = [
   {
@@ -66,44 +67,45 @@ export default function QuoteFinalizationClientPage({
   };
   console.log(formData);
   return (
-    <Card className="max-w-6xl mx-auto">
-      <form onSubmit={handleSubmit}>
-        {" "}
-        <div className="space-y-10">
-          <PersonalInfoSection
-            formData={formData}
-            errors={errors}
-            handleInputChange={handleInputChange}
-            handleChildChange={handleChildChange}
-            handleProtectedPersonChange={handleProtectedPersonChange}
-          />
+    <Card className="max-w-6xl mx-auto p-5">
+      <CardContent className="pt-6">
+        <form onSubmit={handleSubmit}>
+          <div className="space-y-10">
+            <PersonalInfoSection
+              formData={formData}
+              errors={errors}
+              handleInputChange={handleInputChange}
+              handleChildChange={handleChildChange}
+              handleProtectedPersonChange={handleProtectedPersonChange}
+            />
 
-          <Divider />
+            <Separator />
 
-          <ContactInfoSection
-            formData={formData}
-            errors={errors}
-            handleInputChange={handleInputChange}
-          />
+            <ContactInfoSection
+              formData={formData}
+              errors={errors}
+              handleInputChange={handleInputChange}
+            />
 
-          <Divider />
+            <Separator />
 
-          <MedicalInformation
-            forms={forms}
-            setForms={setForms}
-            questions={questions}
-            formFamily={formData}
-          />
-        </div>
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            className="bg-primary text-white px-6 py-3 rounded font-bold text-lg hover:bg-primary-dark mt-10"
-          >
-            Enviar solicitud
-          </button>
-        </div>
-      </form>
+            <MedicalInformation
+              forms={forms}
+              setForms={setForms}
+              questions={questions}
+              formFamily={formData}
+            />
+          </div>
+          <div className="flex justify-end">
+            <button
+              type="submit"
+              className="bg-primary text-white px-6 py-3 rounded font-bold text-lg hover:bg-primary-dark mt-10"
+            >
+              Enviar solicitud
+            </button>
+          </div>
+        </form>
+      </CardContent>
     </Card>
   );
 }

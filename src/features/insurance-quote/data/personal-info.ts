@@ -35,3 +35,22 @@ export const whoOptions = [
     value: "otros",
   },
 ]
+
+export const eventTypeOptions = [
+  {
+    label: "Enfermedad",
+    value: "enfermedad",
+  },
+  {
+    label: "Accidente",
+    value: "accidente",
+  },
+  {
+    label: "Maternidad",
+    value: "maternidad",
+  },
+  {
+    label: "Estético",
+    value: "estetico",
+  },
+]
