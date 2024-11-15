@@ -52,7 +52,7 @@ export const AddAdvisorForm = () => {
       </div>
       <div className="mb-4">
         <p className="mb-2 leading-5 text-tremor-default dark:text-dark-tremor-content text-dark-tremor-background">
-          Confirme contraseña
+          Confirme contraseña.
         </p>
         <TextInput
           type="password"

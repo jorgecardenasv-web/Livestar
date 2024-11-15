@@ -22,7 +22,7 @@ export default async function ProspectPage({
           items={[
             { label: "Prospectos", href: `${prefix}/prospectos` },
             {
-              label: "Detalle de Prospecto",
+              label: "Detalle de prospecto",
               href: `${prefix}/prospectos/${id}`,
             },
           ]}

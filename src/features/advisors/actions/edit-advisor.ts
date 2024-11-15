@@ -27,7 +27,7 @@ export const editAdvisor = async (prevState: any, formData: FormData) => {
   if (!user) {
     return {
       errors: {
-        general: "Error al editar al asesor",
+        general: "Error al editar al asesor.",
       },
     };
   }

@@ -33,7 +33,7 @@ export const SigninForm = () => {
                 id="email"
                 name="email"
                 autoComplete="email"
-                placeholder="escribe tu correo electrónico"
+                placeholder="Escribe tu correo electrónico."
               />
               <span className="text-sm text-red-500">
                 {state?.errors?.email}
@@ -51,7 +51,7 @@ export const SigninForm = () => {
                 id="password"
                 name="password"
                 autoComplete="current-password"
-                placeholder="Escribe tu contraseña"
+                placeholder="Escribe tu contraseña."
               />
               <span className="text-sm text-red-600">
                 {state?.errors?.password && state.errors.password}

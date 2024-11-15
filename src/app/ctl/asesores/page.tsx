@@ -36,7 +36,7 @@ export default async function Advisors({
           statusOptions={statusOptions}
           rowSearch={"status"}
           placeholder="Todos"
-          label="Filtrar por Estado"
+          label="Filtrar por estado"
         />
         <ListAdvisors advisors={advisors} />
         <Pagination

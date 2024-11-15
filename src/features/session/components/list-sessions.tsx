@@ -15,7 +15,6 @@ import {
 } from "@tremor/react";
 import { Badge } from "@tremor/react";
 import { Button } from "@tremor/react";
-import { Select, SelectItem } from "@tremor/react";
 import { Session } from "../types/session";
 import { User } from "@prisma/client";
 import { formatDate } from "@/shared/utils";
@@ -89,7 +88,7 @@ export const ListSessions = ({ sessions }: { sessions: Session[] }) => {
       ) : (
         <div className="mt-6 flex flex-col items-center justify-center text-center p-8 bg-tremor-background-subtle dark:bg-dark-tremor-background-subtle rounded-md">
           <Icon icon={UsersIcon} size="lg" color="gray" />
-          <Title className="mt-4">No hay sesiones activas</Title>
+          <Title className="mt-4">No hay sesiones activas.</Title>
           <Text className="mt-2 text-gray-500">
             Actualmente no hay sesiones activas que coincidan con los criterios
             de filtrado.

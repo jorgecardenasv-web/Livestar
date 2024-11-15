@@ -9,7 +9,7 @@ export const CallToAction = () => {
   return (
     <>
       <div className="backdrop-blur-sm bg-white/10 p-6 rounded-2xl shadow-lg w-full xl:w-auto text-left">
-        <h2 className="text-4xl font-bold mb-1">Cotiza tu seguro médico</h2>
+        <h2 className="text-4xl font-bold mb-1">Cotiza tu seguro médico.</h2>
         <p className="mb-4 text-base">
           ¡Descubre el precio más conveniente al momento!
         </p>
