@@ -13,7 +13,7 @@ export const TextInput: FC<Props> = ({ label, error, darkLabel, ...props }) => {
     <div className="grid w-full items-center gap-1.5">
       <Label
         htmlFor={props.name}
-        className={`${darkLabel ? "text-white" : null}`}
+        className={`${darkLabel ? "text-white" : null} mt-4`}
       >
         {label}
       </Label>

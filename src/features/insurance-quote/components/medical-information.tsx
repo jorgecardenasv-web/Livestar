@@ -16,6 +16,7 @@ interface MedicalInformationProps {
   setForms: React.Dispatch<React.SetStateAction<any[]>>;
   questions: Question[];
   formFamily: FormData;
+  errors: { [key: string]: string }; // Aquí recibimos los errores como props
 }
 
 export const MedicalInformation: React.FC<MedicalInformationProps> = ({
@@ -23,6 +24,7 @@ export const MedicalInformation: React.FC<MedicalInformationProps> = ({
   setForms,
   questions,
   formFamily,
+  errors,
 }) => {
   const handleFormChangeRadio = (
     index: number,
@@ -186,6 +188,7 @@ export const MedicalInformation: React.FC<MedicalInformationProps> = ({
                         }
                         index={conditionIndex}
                         indexform={index}
+                        errors={errors}
                       />
                       <Divider />
                     </>
