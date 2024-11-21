@@ -6,6 +6,7 @@ import HeroImageMobile from "@/assets/home/hero_mobile.png";
 import HeroDecorationMobile from "@/assets/home/hero_decorator_mobile.svg";
 
 import { CallToAction } from "../call-to-action";
+import Link from "next/link";
 
 export const Hero = () => {
   return (
@@ -45,19 +46,24 @@ export const Hero = () => {
         />
       </div>
 
-      <div className="relative max-w-7xl mx-auto z-10 flex flex-col justify-center items-center min-h-screen px-4 pt-24 lg:pt-0">
-        <div className="w-full flex flex-col lg:flex-row items-center justify-between gap-8">
-          <div className="text-center lg:text-left lg:max-w-2xl">
-            <h1 className="text-2xl md:text-6xl font-bold mb-3 md:mb-4 text-white">
+      <div className="relative max-w-7xl mx-auto z-10 flex flex-col justify-center items-end min-h-screen px-4 pt-24 lg:pt-0">
+        <div className="text-center lg:text-right lg:max-w-4xl space-y-12">
+          <div className="space-y-4">
+            <h1 className="text-2xl md:text-7xl font-bold text-white text-balance leading-8">
               ¡Protege tu salud y la de tu familia hoy!
             </h1>
-            <p className="text-lg md:text-xl mb-4 md:mb-6 text-white">
+            <p className="text-xl md:text-xl text-white text-balance leading-10">
               Obtén una cotización rápida y sin compromiso ahora mismo y asegura
               tu bienestar y el de los que más amas.
             </p>
           </div>
-          <div className="w-full lg:w-auto">
-            <CallToAction />
+          <div>
+            <Link
+              href="/cotizar"
+              className="bg-white hover:bg-primary lg:w-5/6 mx-auto text-primary hover:text-white px-6 py-4 rounded font-bold text-lg w-full"
+            >
+              Descubre más y cotiza
+            </Link>
           </div>
         </div>
       </div>

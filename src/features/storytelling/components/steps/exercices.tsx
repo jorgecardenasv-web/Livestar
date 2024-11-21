@@ -1,31 +1,26 @@
 "use client";
 
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/shared/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { useState } from "react";
 
 const rows = [
-  { label: "Monto de la reclamación", value: "$ 300,000" },
+  { label: "Monto de la reclamación", value: "$300,000" },
   {
     label: "Deducible a pagar",
-    value: "- $ 21,000",
+    value: "-$21,000",
     valueColor: "text-red-500",
   },
-  { label: "Saldo después del Deducible", value: "$ 279,000" },
+  { label: "Saldo después del Deducible", value: "$279,000" },
   { label: "% de Coaseguro", value: "10%", valueColor: "text-sky-500" },
-  { label: "Coaseguro a pagar", value: "$ 27,900" },
+  { label: "Coaseguro a pagar", value: "$27,900" },
   {
     label: "Tu participación",
-    value: "$ 48,900",
+    value: "$48,900",
     special: "sky",
   },
   {
     label: "Participación de la aseguradora",
-    value: "$ 251,100",
+    value: "$251,100",
     special: "blue",
   },
 ];
@@ -47,7 +42,7 @@ export default function Component() {
   return (
     <div className="w-full">
       <h2 className="text-3xl font-bold text-center text-gray-600 mb-6">
-        ¿Cómo se ve en la vida real?
+        ¿Cómo se cubre un siniestro en la vida real?
       </h2>
       <h4 className="text-center text-balance mb-8 text-gray-500">
         Imagina que sufres una emergencia médica y los gastos ascienden a
@@ -92,9 +87,9 @@ export default function Component() {
           {selectedOption === "coaseguro" && (
             <div className="mb-8 w-80 text-center">
               <p className="text-gray-600 text-balance leading-8">
-                Si tu coaseguro, por ejemplo, es del 10%, cubririas $27,900 y la
-                aseguradora se encargaría de lo demás hasta mas de $100,000,000
-                de pesos de acuerdo a la suma asegurada contratada.
+                Si tu coaseguro, por ejemplo, es del 10%, cubrirías $27,900 y la
+                aseguradora se encargaría de lo demás hasta más de $100,000,000
+                de pesos de acuerdo con la suma asegurada contratada.
               </p>
             </div>
           )}
@@ -102,9 +97,9 @@ export default function Component() {
           {selectedOption === "total" && (
             <div className="mb-8 text-center w-80">
               <p className="text-gray-600 leading-8">
-                En total, solo pagarías $48,900 y el seguro
+                En total, solo pagarías $48,900 y el seguro se encargaría de
+                $251,100.
               </p>
-              <p className="text-gray-600">se encargaría de $251,100.</p>
             </div>
           )}
 

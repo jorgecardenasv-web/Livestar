@@ -42,12 +42,6 @@ export const CallToAction = () => {
             darkLabel
             placeholder="Escribe tu código postal"
           />
-          <Button
-            size="lg"
-            className="bg-white lg:w-5/6 mx-auto text-[#008AED] hover:text-white px-6 py-3 rounded-lg font-bold text-lg w-full"
-          >
-            <Link href="/cotizar">Descubre más y cotiza</Link>
-          </Button>
         </form>
       </div>
     </>
