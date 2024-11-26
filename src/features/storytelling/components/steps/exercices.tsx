@@ -97,7 +97,7 @@ export default function Component() {
           {selectedOption === "total" && (
             <div className="mb-8 text-center w-80">
               <p className="text-gray-600 leading-8">
-                En total, solo pagarías $48,900 y el seguro se encargaría de
+                En total, solo cubrirías $48,900 y el seguro se encargaría de
                 $251,100.
               </p>
             </div>

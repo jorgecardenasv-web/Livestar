@@ -26,7 +26,7 @@ const concepts: Concept[] = [
     icon: <PieChart size={50} className="text-primary" />,
 
     description:
-      "Es un porcentaje a cubrir después del deducible. Es variable y tiene tope. Puede ser del: 5%, 10%, 15%, 20%",
+      "Es un porcentaje a cubrir después del deducible. Es variable y tiene tope. Puede ser de entre el 5% o hasta el 20%. Pudiendo ser del 0% de la cuenta hospitalaria.",
   },
 ];
 

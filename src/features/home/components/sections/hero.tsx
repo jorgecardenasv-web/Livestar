@@ -49,7 +49,7 @@ export const Hero = () => {
       <div className="relative max-w-7xl mx-auto z-10 flex flex-col justify-center items-end min-h-screen px-4 pt-24 lg:pt-0">
         <div className="text-center lg:text-right lg:max-w-4xl space-y-12">
           <div className="space-y-4">
-            <h1 className="text-2xl md:text-7xl font-bold text-white text-balance leading-8">
+            <h1 className="text-2xl md:text-7xl font-bold text-white leading-10">
               ¡Protege tu salud y la de tu familia hoy!
             </h1>
             <p className="text-xl md:text-xl text-white text-balance leading-10">
