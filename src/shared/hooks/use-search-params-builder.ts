@@ -7,7 +7,7 @@ export const useSearchParamsBuilder = (rowSearch: string) => {
 
   const handleSearchParams = (value: string) => {
     const params = new URLSearchParams(searchParams);
-    if (value) {
+    if (value && value !== "todos") {
       params.set(rowSearch, value);
     } else {
       params.delete(rowSearch);

@@ -1,19 +1,23 @@
 "use client";
 
-import { TextInput } from "@tremor/react";
 import { Search } from "lucide-react";
 import { useSearchParamsBuilder } from "../hooks/use-search-params-builder";
 import { useDebouncedCallback } from "use-debounce";
+import { TextInput } from "./ui/text-input";
+import { FC } from "react";
 
-export const SearchBar = ({
-  label,
-  placeholder
-}: {
+interface SearchBarProps {
   label: string;
-  placeholder: string;
+  placeholder?: string;
+  iconPosition?: "start" | "end";
+}
+
+export const SearchBar: FC<SearchBarProps> = ({
+  label,
+  placeholder = "Buscar...",
+  iconPosition = "start",
 }) => {
-  const { handleSearchParams, searchParams } =
-    useSearchParamsBuilder("query");
+  const { handleSearchParams, searchParams } = useSearchParamsBuilder("query");
 
   const handleSearch = useDebouncedCallback((term) => {
     handleSearchParams(term);
@@ -25,10 +29,10 @@ export const SearchBar = ({
         {label}:
       </label>
       <TextInput
-        icon={Search}
+        icon={<Search className="h-5 w-5 text-muted-foreground" />}
+        iconPosition={iconPosition}
         placeholder={placeholder}
         onChange={(e) => handleSearch(e.target.value)}
-        defaultValue={searchParams.get("query") ?? ""}
       />
     </div>
   );

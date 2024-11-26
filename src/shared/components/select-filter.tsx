@@ -1,8 +1,15 @@
 "use client";
 
-import { Select, SelectItem } from "@tremor/react";
-import React from "react";
 import { useSearchParamsBuilder } from "../hooks/use-search-params-builder";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { SelectInput } from "./ui/select-input";
 
 interface StatusOption {
   value: string;
@@ -30,21 +37,23 @@ export const SelectFilter: React.FC<SelectFilterProps> = ({
       <label className="text-[13px] text-tremor-content-strong dark:text-dark-tremor-content-strong">
         {label}:
       </label>
+
       <Select
-        className="max-w-xs"
-        onValueChange={handleSearchParams}
-        placeholder={placeholder}
-        defaultValue={searchParams.get(rowSearch) ?? ""}
+        defaultValue={searchParams.get(rowSearch) ?? "todos"}
+        onValueChange={(value) => handleSearchParams(value)}
       >
-        {statusOptions.map((option) => (
-          <SelectItem
-            key={option.value}
-            value={option.value}
-            className="hover:bg-tremor-background-subtle dark:hover:bg-dark-tremor-brand-subtle focus:bg-tremor-background dark:focus:bg-dark-tremor-background text-tremor-content dark:text-dark-tremor-content"
-          >
-            {option.label}
-          </SelectItem>
-        ))}
+        <SelectTrigger className="w-full">
+          <SelectValue placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            {statusOptions.map(({ label, value }) => (
+              <SelectItem key={value} value={value}>
+                {label}
+              </SelectItem>
+            ))}
+          </SelectGroup>
+        </SelectContent>
       </Select>
     </div>
   );
