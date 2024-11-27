@@ -66,7 +66,7 @@ export const MedicalInformation: React.FC<MedicalInformationProps> = ({
   };
   const addHealthCondition = (personaIndex: number) => {
     const { protectWho, childrenCount } = formFamily;
-
+    console.log(protectWho);
     let maxConditions = 1;
 
     switch (protectWho) {
@@ -170,16 +170,18 @@ export const MedicalInformation: React.FC<MedicalInformationProps> = ({
                 {forms[index].healthConditions?.map(
                   (condition: HealthCondition, conditionIndex: number) => (
                     <>
-                      <div className="flex justify-between">
-                        <h1>Persona {conditionIndex + 1} </h1>
-                        <button
-                          onClick={() =>
-                            handleDeleteCondition(index, conditionIndex)
-                          }
-                        >
-                          <X className="text-red-500 hover:text-red-600" />
-                        </button>
-                      </div>
+                      {conditionIndex > 0 && (
+                        <div className="flex justify-between">
+                          <h1>Paciente {conditionIndex + 1} </h1>
+                          <button
+                            onClick={() =>
+                              handleDeleteCondition(index, conditionIndex)
+                            }
+                          >
+                            <X className="text-red-500 hover:text-red-600" />
+                          </button>
+                        </div>
+                      )}
                       <HealthConditionForm
                         key={conditionIndex}
                         formData={condition}
@@ -194,15 +196,17 @@ export const MedicalInformation: React.FC<MedicalInformationProps> = ({
                     </>
                   )
                 )}
-                <button
-                  type="button"
-                  onClick={() => addHealthCondition(index)}
-                  className="text-primary font-semibold "
-                >
-                  <span className="flex gap-2 hover:underline">
-                    <Plus /> Agregar otra persona
-                  </span>
-                </button>
+                {formFamily.protectWho !== "solo_yo" && (
+                  <button
+                    type="button"
+                    onClick={() => addHealthCondition(index)}
+                    className="text-primary font-semibold "
+                  >
+                    <span className="flex gap-2 hover:underline">
+                      <Plus /> Agregar otra persona
+                    </span>
+                  </button>
+                )}
               </>
             )}
           </div>
