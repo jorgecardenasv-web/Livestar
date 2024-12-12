@@ -1,21 +1,20 @@
 "use client";
-import React, { FC } from "react";
-import {
-  Card,
-  Badge,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeaderCell,
-  TableRow,
-  Button,
-} from "@tremor/react";
+import { FC } from "react";
 
 import { Advisor } from "../types/advisor";
 import { UserStatus } from "@prisma/client";
 import { Pencil, Trash2 } from "lucide-react";
 import { useAdvisorActions } from "../hooks/use-advisor-actions";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/shared/components/ui/table";
+import { Badge } from "@/shared/components/ui/badge";
+import { Button } from "@/shared/components/ui/button";
 
 interface ListAdvisorsProps {
   advisors: Advisor[];
@@ -26,14 +25,14 @@ export const ListAdvisors: FC<ListAdvisorsProps> = ({ advisors }) => {
 
   return (
     <Table>
-      <TableHead>
+      <TableHeader>
         <TableRow>
-          <TableHeaderCell>Nombre</TableHeaderCell>
-          <TableHeaderCell>Email</TableHeaderCell>
-          <TableHeaderCell>Status</TableHeaderCell>
-          <TableHeaderCell>Acciones</TableHeaderCell>
+          <TableHead>Nombre</TableHead>
+          <TableHead>Email</TableHead>
+          <TableHead>Status</TableHead>
+          <TableHead>Acciones</TableHead>
         </TableRow>
-      </TableHead>
+      </TableHeader>
       <TableBody>
         {advisors.map((advisor: Advisor) => (
           <TableRow key={advisor.id}>
@@ -41,9 +40,9 @@ export const ListAdvisors: FC<ListAdvisorsProps> = ({ advisors }) => {
             <TableCell>{advisor.email}</TableCell>
             <TableCell>
               {advisor.status === UserStatus.ACTIVE ? (
-                <Badge color="green">Activo</Badge>
+                <Badge color="success">Activo</Badge>
               ) : (
-                <Badge color="red">Inactivo</Badge>
+                <Badge color="destructive">Inactivo</Badge>
               )}
             </TableCell>
             <TableCell className="flex gap-1">

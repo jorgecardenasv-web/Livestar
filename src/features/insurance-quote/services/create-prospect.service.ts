@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { FormData } from "../schemas/form-schema";
+import { prospectTransformer } from "@/features/prospects/transformers/prospect-transformer";
 
 export const createProspectService = async (
   {
@@ -12,7 +13,7 @@ export const createProspectService = async (
     email,
     ...additionalInfo
   }: FormData,
-  advisorId: number,
+  advisorId: number
 ) => {
   if (!advisorId) {
     throw new Error("No hay asesores disponibles para asignar al prospecto.");
@@ -29,10 +30,7 @@ export const createProspectService = async (
         whatsapp,
         email,
         additionalInfo,
-        User: { connect: { id: advisorId } },
-      },
-      include: {
-        User: true,
+        user: { connect: { id: advisorId! } },
       },
     });
 
@@ -47,5 +45,5 @@ export const createProspectService = async (
     return createdProspect;
   });
 
-  return prospect;
+  return prospectTransformer(prospect);
 };

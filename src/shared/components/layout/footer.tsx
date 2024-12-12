@@ -32,7 +32,7 @@ export const FooterPage = () => {
         <div className="w-[250px] mx-auto md:mx-0">
           <p className="text-lg font-bold text-[#008AED]">
             La información es valiosa. Síguenos en redes y mantente actualizado
-            de la mano de nuestros expertos
+            de la mano de nuestros expertos.
           </p>
         </div>
 

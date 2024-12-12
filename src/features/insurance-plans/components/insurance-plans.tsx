@@ -1,45 +1,38 @@
-"use client";
-
-import { useState } from "react";
 import { PaymentSelector } from "./payment-selector";
 import { PlanSelector } from "./plan-selector";
-import { insuranceCompanies } from "../data/insurance-data";
 import { InsuranceCard } from "./insurance-card";
+import { getInsuranceState } from "../actions/insurance-actions";
 
-export const InsurancePlans = () => {
-  const [activePlanType, setActivePlanType] = useState("Esencial");
-  const [activePaymentType, setActivePaymentType] = useState("Mensual");
+export async function InsurancePlans({
+  insurancePlans,
+}: {
+  insurancePlans: any[];
+}) {
+  const { activePlanType, activePaymentType } = await getInsuranceState();
 
   const planTypes = ["Esencial", "Protegido", "Blindado"];
   const paymentTypes = ["Mensual", "Anual"];
 
   return (
-    <div className="mx-auto px-4 py-2">
-      <div className="flex flex-col justify-center items-center my-10 gap-y-2">
+    <div className="mx-auto px-4 py-2 space-y-4 m-8">
+      <div className="flex flex-col justify-center items-center">
+        <PlanSelector planTypes={planTypes} activePlanType={activePlanType} />
         <PaymentSelector
           paymentTypes={paymentTypes}
           activePaymentType={activePaymentType}
-          setActivePaymentType={setActivePaymentType}
-        />
-        <PlanSelector
-          planTypes={planTypes}
-          activePlanType={activePlanType}
-          setActivePlanType={setActivePlanType}
         />
       </div>
-      <div className="grid grid-flow-col md:auto-cols-max gap-2 items-end">
-        {insuranceCompanies.map((company, index) => {
-          const activePlan = company.plans.find(
-            (plan: any) => plan.name === activePlanType,
-          );
+      <div className="grid grid-flow-col justify-center md:auto-cols-max gap-2 items-end">
+        {insurancePlans.map((plan, index) => {
+          const activePlan = plan.name === activePlanType ? plan : null;
           return (
             activePlan && (
               <InsuranceCard
-                key={`${company.name}-${activePlanType}`}
-                company={company}
+                key={`${plan.company.name}-${activePlanType}`}
+                company={plan.company}
                 plan={activePlan}
                 paymentType={activePaymentType}
-                isRecommended={index === 1}
+                isRecommended={index === 0}
               />
             )
           );
@@ -47,4 +40,4 @@ export const InsurancePlans = () => {
       </div>
     </div>
   );
-};
+}

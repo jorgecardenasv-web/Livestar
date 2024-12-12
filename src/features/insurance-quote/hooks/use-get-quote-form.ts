@@ -2,16 +2,20 @@ import { useState, useEffect } from "react";
 import { z } from "zod";
 import { FormData, buildSchema } from "../schemas/form-schema";
 import { createProspect } from "../actions/create-prospect";
+import { useModalStore } from "@/shared/store/modal-store";
 
-export const useGetQuoteForm = () => {
-  const [formData, setFormData] = useState<FormData>({
-    name: "",
-    gender: "",
-    postalCode: "",
-    protectWho: "",
-    whatsapp: "",
-    email: "",
-  });
+export const useGetQuoteForm = (initialState?: any) => {
+  const { openModal, closeModal } = useModalStore();
+  const [formData, setFormData] = useState<FormData>(
+    initialState || {
+      name: "",
+      gender: "",
+      postalCode: "",
+      protectWho: "",
+      whatsapp: "",
+      email: "",
+    }
+  );
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showContactInfo, setShowContactInfo] = useState(false);
@@ -42,8 +46,9 @@ export const useGetQuoteForm = () => {
     setFormData((prev: any) => {
       const updatedData = { ...prev, [field]: value };
 
-      if (field === "childrenCount") {
+      if (field === "childrenCount" && !Number.isNaN(value)) {
         const count = typeof value === "number" ? value : 0;
+
         updatedData.children = Array(count).fill({ age: 0, gender: "" });
       }
 
@@ -65,7 +70,7 @@ export const useGetQuoteForm = () => {
   const handleChildChange = (
     index: number,
     field: string,
-    value: string | number,
+    value: string | number
   ) => {
     setFormData((prevData: any) => {
       const updatedChildren = [...(prevData.children || [])];
@@ -86,7 +91,7 @@ export const useGetQuoteForm = () => {
   const handleProtectedPersonChange = (
     index: number,
     field: string,
-    value: string | number,
+    value: string | number
   ) => {
     setFormData((prevData: any) => {
       const updatedProtectedPersons = [...(prevData.protectedPersons || [])];
@@ -113,7 +118,7 @@ export const useGetQuoteForm = () => {
       formData.name &&
         formData.gender &&
         formData.postalCode &&
-        formData.protectWho,
+        formData.protectWho
     );
 
     if (!baseFieldsFilled) return false;
@@ -123,7 +128,7 @@ export const useGetQuoteForm = () => {
         return Boolean(formData.age);
       case "mi_pareja_y_yo":
         return Boolean(
-          formData.age && formData.partnerGender && formData.partnerAge,
+          formData.age && formData.partnerGender && formData.partnerAge
         );
       case "familia":
         return Boolean(
@@ -136,8 +141,8 @@ export const useGetQuoteForm = () => {
             formData.children.every(
               (child: { age: number; gender: string }) => {
                 return child.age > 0 && child.gender;
-              },
-            ),
+              }
+            )
         );
       case "mis_hijos_y_yo":
         return Boolean(
@@ -148,8 +153,8 @@ export const useGetQuoteForm = () => {
             formData.children.every(
               (child: { age: number; gender: string }) => {
                 return child.age > 0 && child.gender;
-              },
-            ),
+              }
+            )
         );
       case "solo_mis_hijos":
         return Boolean(
@@ -159,8 +164,8 @@ export const useGetQuoteForm = () => {
             formData.children.every(
               (child: { age: number; gender: string }) => {
                 return child.age > 0 && child.gender;
-              },
-            ),
+              }
+            )
         );
       case "otros":
         return Boolean(
@@ -169,15 +174,15 @@ export const useGetQuoteForm = () => {
             formData.protectedPersons.length === formData.protectedCount &&
             formData.protectedPersons.every(
               (person: { age: number; gender: string; relationship: string }) =>
-                person.age > 0 && person.gender && person.relationship,
-            ),
+                person.age > 0 && person.gender && person.relationship
+            )
         );
       case "mis_padres":
         return Boolean(
           formData.momName &&
             formData.dadName &&
             formData.momAge &&
-            formData.dadAge,
+            formData.dadAge
         );
       default:
         return false;
@@ -261,6 +266,7 @@ export const useGetQuoteForm = () => {
       const validatedData = schema.parse(formData);
       const cleanedData = cleanFormData(validatedData);
       await createProspect(cleanedData);
+      closeModal();
     } catch (error) {
       if (error instanceof z.ZodError) {
         const newErrors: Record<string, string> = {};
@@ -273,6 +279,9 @@ export const useGetQuoteForm = () => {
     }
   };
 
+  const openFormQuoteModal = (prospect: any) =>
+    openModal("formQuote", { prospect });
+
   return {
     formData,
     errors,
@@ -281,5 +290,6 @@ export const useGetQuoteForm = () => {
     handleSubmit,
     handleProtectedPersonChange,
     handleChildChange,
+    openFormQuoteModal,
   };
 };

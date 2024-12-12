@@ -1,15 +1,14 @@
 import { Shield, ShieldCheck, ShieldAlert } from "lucide-react";
+import { setActivePlanType } from "../actions/insurance-actions";
 
 interface PlanSelectorProps {
   planTypes: string[];
   activePlanType: string;
-  setActivePlanType: (type: string) => void;
 }
 
 export const PlanSelector: React.FC<PlanSelectorProps> = ({
   planTypes,
   activePlanType,
-  setActivePlanType,
 }) => {
   const getPlanIcon = (type: string) => {
     switch (type) {
@@ -26,21 +25,22 @@ export const PlanSelector: React.FC<PlanSelectorProps> = ({
 
   return (
     <div className="mb-2">
-      <h3 className="text-base font-bold text-[#223E99] mb-2">Tipo de Plan</h3>
       <div className="flex flex-wrap gap-4">
         {planTypes.map((type) => (
-          <button
-            key={type}
-            className={`flex items-center px-4 py-2 rounded text-sm font-medium transition-all duration-300 ${
-              activePlanType === type
-                ? "bg-[#223E99] text-white shadow-lg transform scale-105"
-                : "bg-white text-[#223E99] border-2 border-[#223E99] hover:bg-sky-50 hover:shadow-md"
-            }`}
-            onClick={() => setActivePlanType(type)}
-          >
-            {getPlanIcon(type)}
-            {type}
-          </button>
+          <form key={type} action={setActivePlanType}>
+            <input type="hidden" name="planType" value={type} />
+            <button
+              type="submit"
+              className={`flex items-center px-4 py-3 rounded text-sm font-medium transition-all duration-300 ${
+                activePlanType === type
+                  ? "bg-[#223E99] text-white shadow-lg transform scale-105"
+                  : "bg-white text-[#223E99] border-2 border-[#223E99] hover:bg-sky-50 hover:shadow-md"
+              }`}
+            >
+              {getPlanIcon(type)}
+              {type}
+            </button>
+          </form>
         ))}
       </div>
     </div>

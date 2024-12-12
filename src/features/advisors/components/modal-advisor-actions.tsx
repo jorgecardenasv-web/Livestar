@@ -1,6 +1,6 @@
 "use client";
 
-import { Modal } from "@/shared/components/modal";
+import { Modal } from "@/shared/components/ui/modal";
 import { useAdvisorActions } from "../hooks/use-advisor-actions";
 import { AddAdvisorForm } from "./forms/add-advisor-form";
 import { DeleteAdvisorForm } from "./forms/delete-advisor-form";
@@ -15,7 +15,7 @@ export const ModalAdvisorActions = (): JSX.Element => {
       {isOpen && modalType === "addAdvisor" && (
         <Modal
           title="Crear Nuevo Asesor"
-          description="escribe la información requerida para crear un nuevo perfil de asesor."
+          description="Escribe la información requerida para crear un nuevo perfil de asesor."
           size="lg"
         >
           <AddAdvisorForm />

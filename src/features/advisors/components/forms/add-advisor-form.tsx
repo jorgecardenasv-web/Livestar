@@ -1,7 +1,8 @@
-import { SubmitButton } from "@/shared/components/submit-button";
+
 import { TextInput } from "@tremor/react";
 import { useAdvisorActions } from "../../hooks/use-advisor-actions";
 import { addAdvisor } from "../../actions/add-advisor";
+import { SubmitButton } from "@/shared/components/ui/submit-button";
 
 export const AddAdvisorForm = () => {
   const { formAction, state } = useAdvisorActions(addAdvisor);
@@ -52,7 +53,7 @@ export const AddAdvisorForm = () => {
       </div>
       <div className="mb-4">
         <p className="mb-2 leading-5 text-tremor-default dark:text-dark-tremor-content text-dark-tremor-background">
-          Confirme contraseña
+          Confirme contraseña.
         </p>
         <TextInput
           type="password"
