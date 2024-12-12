@@ -40,6 +40,7 @@ export default function QuoteFinalizationClientPage({
     handleInputChange,
     handleProtectedPersonChange,
   } = useGetQuoteForm(prospect);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [forms, setForms] = useState<FormDataMedical[]>(
     questions.map((question) => ({
@@ -59,13 +60,93 @@ export default function QuoteFinalizationClientPage({
       ],
     }))
   );
+  const validateHealthConditions = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    forms.forEach((form, questionIndex) => {
+      if (form[`answer-${questionIndex}`] === "No") {
+        return;
+      }
+
+      if (!form.healthConditions || form.healthConditions.length === 0) {
+        return;
+      }
+
+      form.healthConditions.forEach((healthCondition, conditionIndex) => {
+        if (!healthCondition) {
+          return;
+        }
+
+        if (!healthCondition.nombrePadecimiento?.trim()) {
+          newErrors[
+            `question-${questionIndex}-condition-${conditionIndex}-nombrePadecimiento`
+          ] = "El nombre del padecimiento es requerido.";
+        }
+
+        // Validación de tipoEvento
+        if (!healthCondition.tipoEvento) {
+          newErrors[
+            `question-${questionIndex}-condition-${conditionIndex}-tipoEvento`
+          ] = "El tipo de evento es requerido.";
+        }
+
+        // Validación de fechaInicio
+        if (!healthCondition.fechaInicio) {
+          newErrors[
+            `question-${questionIndex}-condition-${conditionIndex}-fechaInicio`
+          ] = "La fecha de inicio es requerida.";
+        }
+
+        // Validación de tipoTratamiento
+        if (!healthCondition.tipoTratamiento) {
+          newErrors[
+            `question-${questionIndex}-condition-${conditionIndex}-tipoTratamiento`
+          ] = "El tipo de tratamiento es requerido.";
+        }
+
+        // Validación de detalleComplicacion si complicacion es "Sí"
+        if (
+          healthCondition.complicacion === "Sí" &&
+          !healthCondition.detalleComplicacion?.trim()
+        ) {
+          newErrors[
+            `question-${questionIndex}-condition-${conditionIndex}-detalleComplicacion`
+          ] = "Debe especificar la complicación.";
+        }
+
+        // Validación de detalleMedicamento si medicamento es "Sí"
+        if (
+          healthCondition.medicamento === "Sí" &&
+          !healthCondition.detalleMedicamento?.trim()
+        ) {
+          newErrors[
+            `question-${questionIndex}-condition-${conditionIndex}-detalleMedicamento`
+          ] = "Debe especificar el medicamento.";
+        }
+      });
+    });
+
+    return newErrors;
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log("Datos del formulario:", forms);
+    // Validar los formularios antes de enviar
+    setIsSubmitting(true);
+    const validationErrors = validateHealthConditions();
+    console.log(validationErrors);
+    if (Object.keys(validationErrors).length > 0) {
+      // Si hay errores, actualizar el estado de errores y no enviar el formulario
+      setForms((prevForms) => [...prevForms]); // Trigger re-render
+      return;
+    }
+
+    // Si no hay errores, se envía el formulario
     actionCreateMedicalHistory(forms);
     console.log("Datos del formulario:", forms);
   };
-  console.log(formData);
+
   return (
     <Card className="max-w-6xl mx-auto p-5">
       <CardContent className="pt-6">
@@ -94,6 +175,7 @@ export default function QuoteFinalizationClientPage({
               setForms={setForms}
               questions={questions}
               formFamily={formData}
+              errors={isSubmitting ? validateHealthConditions() : {}} // Aquí pasamos los errores
             />
           </div>
           <div className="flex justify-end">

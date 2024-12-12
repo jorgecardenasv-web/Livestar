@@ -1,6 +1,17 @@
 "use client";
 
-import { Tabs, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+} from "@/shared/components/ui/tabs";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/shared/components/ui/tooltip"; // Importa Tooltip de ShadCN
+import { CircleHelp } from "lucide-react"; // Importa el icono de Heroicons
 import { useState } from "react";
 
 const rows = [
@@ -37,6 +48,23 @@ export default function Component() {
       return "border-2 border-red-600";
     }
     return "";
+  };
+
+  const showQuestionIcon = (index: number) => {
+    return (
+      (selectedOption === "deducible" && index === 1) || // Icono para deducible
+      (selectedOption === "coaseguro" && (index === 3 || index === 4)) // Icono para coaseguro
+    );
+  };
+
+  const getTooltipMessage = () => {
+    if (selectedOption === "deducible") {
+      return "Si contrataste la cláusula de eliminación de deducible por accidente, tu deducible sería $0.";
+    }
+    if (selectedOption === "coaseguro") {
+      return "Recuerda que el coaseguro puede ser del %0 de la cuenta hospitalaria.";
+    }
+    return null;
   };
 
   return (
@@ -89,7 +117,7 @@ export default function Component() {
               <p className="text-gray-600 text-balance leading-8">
                 Si tu coaseguro, por ejemplo, es del 10%, cubrirías $27,900 y la
                 aseguradora se encargaría de lo demás hasta más de $100,000,000
-                de pesos de acuerdo con la suma asegurada contratada.
+                de pesos de acuerdo a la suma asegurada contratada.
               </p>
             </div>
           )}
@@ -105,23 +133,40 @@ export default function Component() {
 
           <div className="space-y-1 text-sm w-1/2">
             {rows.map((row, index) => (
-              <div
-                key={row.label}
-                className={`grid grid-cols-2 rounded overflow-hidden ${getHighlightStyle(index)} ${
-                  row.special === "sky"
-                    ? "bg-primary text-white"
-                    : row.special === "blue"
-                      ? "bg-blue-900 text-white"
-                      : index % 2 === 0
-                        ? "bg-gray-100"
-                        : "bg-white"
-                }`}
-              >
-                <div className="p-2 font-medium">{row.label}</div>
-                <div className={`p-2 text-right ${row.valueColor || ""}`}>
-                  {row.value}
-                </div>
-              </div>
+              <TooltipProvider key={row.label}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div
+                      className={`grid grid-cols-2 rounded overflow-hidden cursor-pointer items-center ${getHighlightStyle(
+                        index
+                      )} ${
+                        row.special === "sky"
+                          ? "bg-primary text-white"
+                          : row.special === "blue"
+                            ? "bg-blue-900 text-white"
+                            : index % 2 === 0
+                              ? "bg-gray-100"
+                              : "bg-white"
+                      }`}
+                    >
+                      <div className="p-2 font-medium flex items-center">
+                        {row.label}
+                        {showQuestionIcon(index) && (
+                          <CircleHelp className="ml-2 text-gray-400" />
+                        )}
+                      </div>
+                      <div className={`p-2 text-right ${row.valueColor || ""}`}>
+                        {row.value}
+                      </div>
+                    </div>
+                  </TooltipTrigger>
+                  {getTooltipMessage() && (
+                    <TooltipContent className="bg-gray-800 text-white p-2 rounded text-xs shadow-lg">
+                      {getTooltipMessage()}
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
             ))}
           </div>
         </div>

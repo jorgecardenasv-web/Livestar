@@ -1,6 +1,10 @@
-import { TextInput, Select, SelectItem, DatePicker } from "@tremor/react";
+import React from "react";
 import RadioGroup from "./RadioGrup";
 import { RadioOption } from "../types";
+import { TextInput } from "@/shared/components/ui/text-input";
+import { SelectInput } from "@/shared/components/ui/select-input";
+import { DatePicker } from "@tremor/react";
+import { DatePickerDemo } from "@/shared/components/ui/data-picker";
 
 interface FormData {
   nombrePadecimiento?: string;
@@ -23,6 +27,7 @@ interface HealthConditionFormProps {
   ) => void;
   index: number;
   indexform: number;
+  errors: { [key: string]: string }; // Recibimos los errores
 }
 
 const HealthConditionForm: React.FC<HealthConditionFormProps> = ({
@@ -30,45 +35,71 @@ const HealthConditionForm: React.FC<HealthConditionFormProps> = ({
   onChange,
   index,
   indexform,
+  errors, // Aquí recibimos el error
 }) => {
   return (
     <div>
       <div className="grid grid-cols-2 gap-4">
         <TextInput
+          label="Nombre del padecimiento"
           placeholder="Nombre del padecimiento"
           value={formData.nombrePadecimiento}
           onChange={(e) => onChange("nombrePadecimiento", e.target.value)}
+          error={
+            errors[
+              `question-${indexform}-condition-${index}-nombrePadecimiento`
+            ] || ""
+          }
         />
-        <Select
-          placeholder="Tipo de evento"
+        <SelectInput
+          label="Tipo de evento"
+          options={[
+            { label: "Enfermedad", value: "1" },
+            { label: "Accidente", value: "2" },
+            { label: "Maternidad", value: "3" },
+            { label: "Estético", value: "4" },
+          ]}
           value={formData.tipoEvento}
           onValueChange={(value) => onChange("tipoEvento", value)}
-        >
-          <SelectItem value="1">Enfermedad</SelectItem>
-          <SelectItem value="2">Accidente</SelectItem>
-          <SelectItem value="3">Maternidad</SelectItem>
-          <SelectItem value="4">Estético</SelectItem>
-        </Select>
-        <DatePicker
+          error={
+            errors[`question-${indexform}-condition-${index}-tipoEvento`] || ""
+          }
+        />
+        <DatePickerDemo
+          value={formData.fechaInicio}
+          title="Fecha de inicio"
+          placeholder="Fecha de inicio"
+          onValueChange={(value) => onChange("fechaInicio", value)}
+          error={
+            errors[`question-${indexform}-condition-${index}-fechaInicio`] || ""
+          }
+        />
+        {/* <DatePicker
           value={formData.fechaInicio}
           placeholder="Fecha de inicio"
           onValueChange={(value) => onChange("fechaInicio", value)}
-        />
-        <Select
-          placeholder="Tipo de tratamiento"
+        /> */}
+        <SelectInput
+          label="Tipo de tratamiento"
+          options={[
+            { label: "Quirúrgico", value: "1" },
+            { label: "Médico", value: "2" },
+            { label: "Psicológico", value: "3" },
+            { label: "Rehabilitación", value: "4" },
+            { label: "Ninguno", value: "5" },
+            { label: "Quimioterapia", value: "6" },
+            { label: "En observación", value: "7" },
+            { label: "Radioterapia", value: "8" },
+            { label: "Trasplante", value: "9" },
+          ]}
           value={formData.tipoTratamiento}
           onValueChange={(value) => onChange("tipoTratamiento", value)}
-        >
-          <SelectItem value="1">Quirúrgico</SelectItem>
-          <SelectItem value="2">Médico</SelectItem>
-          <SelectItem value="3">Psicológico</SelectItem>
-          <SelectItem value="4">Rehabilitación</SelectItem>
-          <SelectItem value="5">Ninguno</SelectItem>
-          <SelectItem value="6">Quimioterapia</SelectItem>
-          <SelectItem value="7">En observación</SelectItem>
-          <SelectItem value="8">Radioterapia</SelectItem>
-          <SelectItem value="9">Trasplante</SelectItem>
-        </Select>
+          error={
+            errors[
+              `question-${indexform}-condition-${index}-tipoTratamiento`
+            ] || ""
+          }
+        />
       </div>
 
       <div className="grid grid-cols-2 gap-4 pt-4">
@@ -98,10 +129,15 @@ const HealthConditionForm: React.FC<HealthConditionFormProps> = ({
 
       {formData.complicacion === "Sí" && (
         <TextInput
-          className="mt-4"
+          label="¿Cuál?"
           placeholder="¿Cuál?"
           value={formData.detalleComplicacion}
           onChange={(e) => onChange("detalleComplicacion", e.target.value)}
+          error={
+            errors[
+              `question-${indexform}-condition-${index}-detalleComplicacion`
+            ] || ""
+          }
         />
       )}
 
@@ -132,10 +168,15 @@ const HealthConditionForm: React.FC<HealthConditionFormProps> = ({
 
       {formData.medicamento === "Sí" && (
         <TextInput
-          className="mt-4"
+          label="¿Cuál?"
           placeholder="¿Cuál?"
           value={formData.detalleMedicamento}
           onChange={(e) => onChange("detalleMedicamento", e.target.value)}
+          error={
+            errors[
+              `question-${indexform}-condition-${index}-detalleMedicamento`
+            ] || ""
+          }
         />
       )}
     </div>

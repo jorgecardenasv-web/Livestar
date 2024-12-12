@@ -1,19 +1,18 @@
 "use client";
 
-import { Card } from "@tremor/react";
-import { UserRoundPlus } from "lucide-react";
+import { Card, CardContent } from "@/shared/components/ui/card";
 
 export const HeaderSessions = () => {
   return (
-    <Card className="flex flex-row items-center justify-between gap-2 dark:bg-dark-tremor-background-subtle dark:ring-0">
-      <section>
-        <h3 className="font-semibold text-lg text-tremor-content-strong dark:text-dark-tremor-content-strong">
-          Sesiones
-        </h3>
-        <p className="mt-1 text-tremor-default leading-6">
-          Visión general de todas las sesiones activas en tu organización.
-        </p>
-      </section>
+    <Card className="dark:bg-card">
+      <CardContent className="flex flex-row items-center justify-between gap-2 p-6">
+        <section>
+          <h3 className="font-semibold text-lg text-foreground">Sesiones</h3>
+          <p className="mt-1 text-sm text-muted-foreground leading-6">
+            Visión general de todos las sessiones activas en tu organización.
+          </p>
+        </section>
+      </CardContent>
     </Card>
   );
 };
