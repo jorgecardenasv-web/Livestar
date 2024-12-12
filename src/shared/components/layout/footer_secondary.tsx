@@ -35,6 +35,9 @@ export function FooterComponent() {
               <Link href="#" className="transition-colors">
                 En confianza
               </Link>
+              <Link href="/aviso-de-Privacidad" className="transition-colors">
+                Aviso de Privacidad
+              </Link>
             </nav>
           </div>
           <div className="flex flex-col items-center md:items-start text-[#666666]">
