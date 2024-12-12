@@ -63,7 +63,7 @@ export const UsersList = ({ users }: { users: User[] }) => {
           </Card>
         </>
       ) : (
-        <p className="text-center">No hay usuarios</p>
+        <p className="text-center">No hay usuarios.</p>
       )}
     </div>
   );

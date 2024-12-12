@@ -5,7 +5,7 @@ export const getProspectById = async (id: string) => {
   const prospect = await getProspectByIdService(id);
 
   if (!prospect) {
-    throw new Error("Prospecto no encontrado");
+    throw new Error("Prospecto no encontrado.");
   }
 
   const transformedProspect = prospectTransformer(prospect as any);

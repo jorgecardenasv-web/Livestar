@@ -31,7 +31,7 @@ export const Coverage = () => {
           </h2>
           <p className="text-xl sm:w-[100%] md:w-[65%]">
             Protege tus finanzas, tu salud y la de tu familia contra accidentes
-            y enfermedades
+            y enfermedades.
           </p>
           <button className="w-52 relative bg-transparent hover:bg-[#223E99] hover:text-white border-0 px-4 py-2 rounded overflow-hidden transition-colors duration-300">
             <span className="relative z-10 font-semibold text-lg">Ver más</span>

@@ -16,7 +16,7 @@ export const Quotes = () => {
         Soluciones personalizadas y eficientes
       </h3>
       <p className="my-3 text-lg text-wrap max-w-[650px] text-center w-3/4">
-        obtén el apoyo experto, la asistencia humana y la agilidad de respuesta
+        Obtén el apoyo experto, la asistencia humana y la agilidad de respuesta
         que necesitas en los momentos críticos.
       </p>
       <div className="w-full bg-white flex flex-col md:flex-row gap-y-10 justify-around items-center gap-x-5 mt-10">
@@ -27,8 +27,7 @@ export const Quotes = () => {
           openModal={openModal}
         />
         <QuoteCard
-          description="Protege lo que más importa con nuestro seguro de vida. Brinda
-            tranquilidad a ti y a tus seres queridos."
+          description="Protege lo que más importa con nuestro seguro de vida. Brinda tranquilidad a ti y a tus seres queridos."
           image={Ahorro}
           title={"Ahorro"}
           openModal={openModal}

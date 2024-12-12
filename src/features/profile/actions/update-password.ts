@@ -31,7 +31,7 @@ export const updatePassword = async (prevState: any, formData: FormData) => {
 
   if (!user) {
     return {
-      error: "El usuario no existe",
+      error: "El usuario no existe.",
     };
   }
 
@@ -39,7 +39,7 @@ export const updatePassword = async (prevState: any, formData: FormData) => {
 
   if (!isValid) {
     return {
-      error: "La contraseña actual es incorrecta",
+      error: "La contraseña actual es incorrecta.",
     };
   }
 

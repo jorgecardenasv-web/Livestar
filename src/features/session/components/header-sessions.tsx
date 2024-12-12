@@ -11,7 +11,7 @@ export const HeaderSessions = () => {
           Sesiones
         </h3>
         <p className="mt-1 text-tremor-default leading-6">
-          Visión general de todos las sessiones activas en tu organización.
+          Visión general de todas las sesiones activas en tu organización.
         </p>
       </section>
     </Card>

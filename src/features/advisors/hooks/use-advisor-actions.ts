@@ -29,7 +29,7 @@ export const useAdvisorActions = (action?: any) => {
 
     if (state?.errors?.general) {
       closeModal();
-      showNotification(state.errors.general ?? "Error desconocido", "error");
+      showNotification(state.errors.general ?? "Error desconocido.", "error");
     }
   }, [state.errors, closeModal, showNotification, modalType]);
 
@@ -46,7 +46,7 @@ export const useAdvisorActions = (action?: any) => {
 
     if (isOperationConfirmed)
       return showNotification(getErrorMessage("deleteAdvisor"), "success");
-    showNotification("Error desconocido", "error");
+    showNotification("Error desconocido.", "error");
   };
 
   // Edit Advisor
