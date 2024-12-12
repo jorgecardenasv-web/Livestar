@@ -13,6 +13,7 @@ const publicPaths = [
   "/ini-ses-adm",
   "/cotizar",
   "/finalizar-cotizacion",
+  "/aviso-de-Privacidad"
 ];
 
 export async function middleware(request: NextRequest) {

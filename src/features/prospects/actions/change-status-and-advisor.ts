@@ -1,4 +1,4 @@
-'use server'
+"use server";
 
 import { z } from "zod";
 import { simplifyZodErrors } from "@/shared/utils";
@@ -32,21 +32,21 @@ export const changeStatusAndAdvisor = async (
       errors: simplifiedErrors,
     };
   }
-  
+
   const prospect = await changeStatusAndAdvisorService({
     prospectId,
     advisorId,
-    status
-  })
+    status,
+  });
 
   if (!prospect) {
     return {
       errors: {
-        general: "Error al crear el asesor",
+        general: "Error al crear el asesor.",
       },
     };
   }
-  
+
   revalidatePath("/prospects");
   return {
     errors: null,

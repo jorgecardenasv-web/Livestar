@@ -17,8 +17,8 @@ export const addAdvisor = async (prevState: any, formData: FormData) => {
   if (password !== passwordConfirmation) {
     return {
       errors: {
-        password: "Las contraseñas no coinciden",
-        passwordConfirmation: "Las contraseñas no coinciden",
+        password: "Las contraseñas no coinciden.",
+        passwordConfirmation: "Las contraseñas no coinciden.",
       },
     };
   }
@@ -42,7 +42,7 @@ export const addAdvisor = async (prevState: any, formData: FormData) => {
   if (!user) {
     return {
       errors: {
-        general: "Error al crear el asesor",
+        general: "Error al crear el asesor.",
       },
     };
   }
