@@ -4,11 +4,11 @@ export default async function HealthInsuranceComparison() {
   return (
     <div>
       <HeaderSecondary />
-      <main className="p-12 max-w-8xl mx-auto bg-white shadow-md rounded-lg mt-6">
-        <h1 className="text-6xl font-bold text-center md:text-lef text-wrap text-primary pb-6">
+      <main className="p-12 max-w-7xl mx-auto bg-white m-6 space-y-6 prose lg:prose-lg">
+        <h1 className="text-5xl font-bold text-center md:text-lef text-primary">
           Aviso de Privacidad
         </h1>
-        <p className="mb-4 text-2xl">
+        <p className="mb-4 text-xl">
           En Livestar, sabemos lo importante que es para ti la privacidad y
           seguridad de tus datos. Queremos que te sientas tranquilo al utilizar
           nuestros servicios, y por eso hemos preparado este aviso de privacidad
@@ -16,10 +16,10 @@ export default async function HealthInsuranceComparison() {
           información personal y qué hacemos con ella.
         </p>
 
-        <h2 className="text-4xl font-bold text-blue-600 mb-2">
+        <h3 className="text-xl font-bold text-primary mb-2">
           1. ¿Qué información recabamos?
-        </h2>
-        <p className="mb-4 text-2xl">
+        </h3>
+        <p className="mb-4 text-xl">
           Cuando interactúas con nosotros, ya sea a través de nuestro sitio web
           o por otros medios, es posible que nos compartas ciertos datos
           personales. Estos pueden incluir tu nombre, código postal, correo
@@ -28,10 +28,10 @@ export default async function HealthInsuranceComparison() {
           mayor confidencialidad y cuidado.
         </p>
 
-        <h2 className="text-4xl font-bold text-blue-600 mb-2">
+        <h3 className="text-xl font-bold text-primary mb-2">
           2. ¿Cómo utilizamos tu información?
-        </h2>
-        <p className="mb-4 text-2xl">
+        </h3>
+        <p className="mb-4 text-xl">
           Los datos que nos proporcionas los usamos exclusivamente para mejorar
           tu experiencia con nosotros. Por ejemplo, podemos usarlos para
           ofrecerte una cotización personalizada, responder a tus consultas, o
@@ -41,10 +41,10 @@ export default async function HealthInsuranceComparison() {
           el servicio que has solicitado o cumplir con las leyes aplicables.
         </p>
 
-        <h2 className="text-4xl font-bold text-blue-600 mb-2">
+        <h3 className="text-xl font-bold text-primary mb-2">
           3. ¿Con quién compartimos tu información?
-        </h2>
-        <p className="mb-4 text-2xl">
+        </h3>
+        <p className="mb-4 text-xl">
           Es posible que, en algunos casos, tengamos que compartir tus datos con
           terceros, como proveedores de servicios técnicos o administrativos que
           nos ayudan a operar el sitio o a procesar solicitudes. Siempre nos
@@ -53,10 +53,10 @@ export default async function HealthInsuranceComparison() {
           vendemos tu información personal a ninguna empresa o persona.
         </p>
 
-        <h2 className="text-4xl font-bold text-blue-600 mb-2">
+        <h3 className="text-xl font-bold text-primary mb-2">
           4. Derechos sobre tu información
-        </h2>
-        <p className="mb-4 text-2xl">
+        </h3>
+        <p className="mb-4 text-xl">
           Recuerda que siempre tienes control sobre tus datos personales. Puedes
           solicitar el acceso, rectificación, cancelación o incluso la oposición
           al tratamiento de tus datos en cualquier momento. Si deseas ejercer
@@ -64,10 +64,10 @@ export default async function HealthInsuranceComparison() {
           atenderemos tu solicitud de manera rápida y eficiente.
         </p>
 
-        <h2 className="text-4xl font-bold text-blue-600 mb-2">
+        <h3 className="text-xl font-bold text-primary mb-2">
           5. Seguridad de tus datos
-        </h2>
-        <p className="mb-4 text-2xl">
+        </h3>
+        <p className="mb-4 text-xl">
           Para nosotros, tu seguridad es lo primero. Por eso, utilizamos medidas
           de seguridad físicas, técnicas y administrativas diseñadas para
           proteger tu información de accesos no autorizados, alteraciones,
@@ -76,10 +76,10 @@ export default async function HealthInsuranceComparison() {
           cuando navegas en internet para evitar posibles riesgos.
         </p>
 
-        <h2 className="text-4xl font-bold text-blue-600 mb-2">
+        <h3 className="text-xl font-bold text-primary mb-2">
           6. Uso de cookies
-        </h2>
-        <p className="mb-4 text-2xl">
+        </h3>
+        <p className="mb-4 text-xl">
           Nuestro sitio web utiliza cookies para ofrecerte una experiencia más
           personalizada y eficiente. Las cookies nos ayudan a entender cómo
           interactúas con nuestro sitio, permitiéndonos mejorar nuestras
@@ -87,20 +87,20 @@ export default async function HealthInsuranceComparison() {
           cookies, puedes desactivarlas en tu navegador en cualquier momento.
         </p>
 
-        <h2 className="text-4xl font-bold text-blue-600 mb-2">
+        <h3 className="text-xl font-bold text-primary mb-2">
           7. Cambios en el Aviso de Privacidad
-        </h2>
-        <p className="mb-4 text-2xl">
+        </h3>
+        <p className="mb-4 text-xl">
           Nos comprometemos a mantener este aviso actualizado y alineado con
           cualquier cambio en nuestras prácticas o en las leyes que nos regulan.
           Si realizamos algún cambio importante, te lo haremos saber para que
           siempre estés informado sobre cómo cuidamos tu privacidad.
         </p>
 
-        <h2 className="text-4xl font-bold text-blue-600 mb-2">
+        <h3 className="text-xl font-bold text-primary mb-2">
           8. ¿Tienes alguna duda? ¡Estamos para ayudarte!
-        </h2>
-        <p className="mb-4 text-2xl">
+        </h3>
+        <p className="mb-4 text-xl">
           Si tienes alguna pregunta o inquietud sobre este aviso de privacidad o
           sobre cómo manejamos tu información personal, no dudes en ponerte en
           contacto con nosotros. Estamos aquí para asegurarnos de que tengas
@@ -108,26 +108,25 @@ export default async function HealthInsuranceComparison() {
           seguro al confiar en nuestros servicios.
         </p>
 
-        <h2 className="text-4xl font-bold text-blue-600 mb-2">9. Contacto</h2>
-        <ul className="list-disc pl-5 mb-4 text-2xl">
-          <li className="flex text-2xl">
-            <p className="font-bold">• Correo electrónico:</p>
-            <p className="pl-3">contacto@livestar.mx</p>
+        <h3 className="text-xl font-bold text-primary mb-2">9. Contacto</h3>
+        <ul className="mb-4 text-xl">
+          <li className="flex text-xl">
+            <span className="font-bold">• Correo electrónico:</span>
+            <span className="pl-3">contacto@livestar.mx</span>
           </li>
-          <li className="flex text-2xl">
-            <p className="font-bold">• Teléfonos:</p>
-            <p className="pl-3">33-31-10-11-22 y 33-18-10-11-18</p>
+          <li className="flex text-xl">
+            <span className="font-bold">• Teléfonos:</span>
+            <span className="pl-3">33-31-10-11-22 y 33-18-10-11-18</span>
           </li>
-          <li className="flex text-2xl">
-            <p className="font-bold">• Dirección:</p> 
-            <p className="pl-3">
-                Plaza Concentro, Ave. Vallarta Pte.
-                #6503, Local B5-5A. Ciudad Granja 45010, Zapopan, Jalisco, México.
-            </p>
+          <li className="flex text-xl">
+            <span className="font-bold">• Dirección:</span>
+            <span className="pl-3">
+              Plaza Concentro, Ave. Vallarta Pte. #6503, Local B5-5A. Ciudad
+              Granja 45010, Zapopan, Jalisco, México.
+            </span>
           </li>
         </ul>
       </main>
     </div>
   );
 }
-
