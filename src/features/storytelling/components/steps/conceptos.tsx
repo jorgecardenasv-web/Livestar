@@ -2,7 +2,7 @@ import { Coins, LineChart, PieChart } from "lucide-react";
 
 interface Concept {
   title: string;
-  decription: string;
+  description: string;
   icon: React.ReactNode;
 }
 
@@ -10,20 +10,23 @@ const concepts: Concept[] = [
   {
     title: "PRIMA",
     icon: <Coins size={50} className="text-primary" />,
-    decription:
-      "Es lo que pagas para estar protegido. Varía según tu edad, tu genero, el lugar donde vives, y otros factores. ",
+
+    description:
+      "Es lo que pagas para estar protegido. Varía según tu edad, tu género, el lugar donde vives y otros factores.",
   },
   {
     title: "DEDUCIBLE",
     icon: <LineChart size={50} className="text-primary" />,
-    decription:
-      "Es la cantidad fija que debes cubrir antes de que tu seguro comience a cubrir los gastos por una enfermedad o accidente.",
+
+    description:
+      "Es la cantidad fija que debes cubrir antes de que tu seguro comience a pagar los gastos por una enfermedad o accidente.",
   },
   {
     title: "COASEGURO",
     icon: <PieChart size={50} className="text-primary" />,
-    decription:
-      "Es un porcentaje a cubrir después del deducible. Es variable y tiene tope. Puede ser del: 5% 10% 15% 20%",
+
+    description:
+      "Es un porcentaje a cubrir después del deducible. Es variable y tiene tope. Puede ser de entre el 5% o hasta el 20%. Pudiendo ser del 0% de la cuenta hospitalaria.",
   },
 ];
 
@@ -40,7 +43,7 @@ export const Conceptos = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 mt-6">
-        {concepts.map(({ title, decription, icon }) => (
+        {concepts.map(({ title, description, icon }) => (
           <div
             key={title}
             className="border bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 sm:hover:shadow-xl relative group w-52 h-60"
@@ -59,7 +62,7 @@ export const Conceptos = () => {
 
               <div className="mt-4 text-center text-gray-600 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300 sm:absolute sm:left-6 sm:right-6">
                 <p className="text-gray-800 sm:text-white mb-3 leading-6 text-balance">
-                  {decription}
+                  {description}
                 </p>
               </div>
             </div>
@@ -76,7 +79,10 @@ export const Conceptos = () => {
       </div>
       <div className="text-balance leading-7 text-center">
         <p>¡No te olvides que tu prima es deducible de impuestos!</p>
-        <p>Además hacienda te apoya pagando hasta el 30% de la prima.</p>
+        <p>
+          Hacienda te apoya pagando hasta el 30% del costo de tu seguro de
+          gastos médicos.
+        </p>
       </div>
     </div>
   );

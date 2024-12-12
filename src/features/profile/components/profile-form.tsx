@@ -9,7 +9,9 @@ import { useNotificationStore } from "@/features/notification/store/notification
 import { AuthenticadedUser } from "@/lib/iron-session/types";
 
 export const ProfileForm = ({ user }: { user: AuthenticadedUser }) => {
-  const showNotification = useNotificationStore(state => state.showNotification);
+  const showNotification = useNotificationStore(
+    (state) => state.showNotification
+  );
 
   const [state, formAction] = useFormState(updateProfile, null);
 
@@ -37,7 +39,7 @@ export const ProfileForm = ({ user }: { user: AuthenticadedUser }) => {
             id="name"
             name="name"
             autoComplete="name"
-            placeholder="escribe tu nombre"
+            placeholder="Escribe tu nombre."
             defaultValue={user?.name ?? ""}
           />
           {<span className="text-sm text-red-500">{state?.errors?.name}</span>}
@@ -54,7 +56,7 @@ export const ProfileForm = ({ user }: { user: AuthenticadedUser }) => {
             id="email"
             name="email"
             autoComplete="email"
-            placeholder="escribe tu correo electrónico"
+            placeholder="Escribe tu correo electrónico."
             defaultValue={user?.email ?? ""}
           />
           <span className="text-sm text-red-500">{state?.errors?.email}</span>

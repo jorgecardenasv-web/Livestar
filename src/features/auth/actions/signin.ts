@@ -40,7 +40,7 @@ export const signin = async (prevState: any, formData: FormData) => {
 
   if (!user) {
     return {
-      error: "Error en las credenciales",
+      error: "Error en las credenciales.",
     };
   }
 
@@ -48,7 +48,7 @@ export const signin = async (prevState: any, formData: FormData) => {
 
   if (!sessionDB) {
     return {
-      error: "Internal server error",
+      error: "Internal server error.",
     };
   }
 

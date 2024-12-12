@@ -31,7 +31,7 @@ export const FormSelectorProspect = ({ advisors }: { advisors: Advisor[] }) => {
       />
       <ActionSelector
         inputName="userId"
-        label="Asesor Asignado"
+        label="Asesor asignado"
         datasources={createSelectOptions(advisors)}
         currentValue={selectedAdvisor}
         setSelectedValue={setSelectedAdvisor}

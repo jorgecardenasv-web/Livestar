@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { Card, TextInput } from "@tremor/react";
@@ -8,7 +8,9 @@ import { useEffect, useRef } from "react";
 import { useNotificationStore } from "@/features/notification/store/notification-store";
 
 export const PasswordForm = () => {
-  const showNotification = useNotificationStore(state => state.showNotification);
+  const showNotification = useNotificationStore(
+    (state) => state.showNotification
+  );
 
   const [state, formAction] = useFormState(updatePassword, null);
 
@@ -16,7 +18,7 @@ export const PasswordForm = () => {
 
   useEffect(() => {
     if (state?.result) {
-      showNotification('Contraseña actualizada', 'success');
+      showNotification("Contraseña actualizada", "success");
       formRef.current.reset();
     }
   }, [showNotification, state?.result]);
@@ -39,7 +41,7 @@ export const PasswordForm = () => {
             id="current-password"
             name="currentPassword"
             autoComplete="current-password"
-            placeholder="escribe tu contraseña actual"
+            placeholder="Escribe tu contraseña actual."
           />
           <span className="text-sm text-red-600">
             {state?.errors?.currentPassword && state?.errors?.currentPassword}
@@ -68,14 +70,14 @@ export const PasswordForm = () => {
             htmlFor="confirm-password"
             className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong"
           >
-            Repetir nueva contraseña
+            Repetir nueva contraseña
           </label>
           <TextInput
             type="password"
             id="confirm-password"
             name="confirmPassword"
             autoComplete="new-password"
-            placeholder="escribe de nuevo tu nueva contraseña"
+            placeholder="Escribe de nuevo tu nueva contraseña."
           />
           <span className="text-sm text-red-600">
             {state?.errors?.confirmPassword && state?.errors?.confirmPassword}
