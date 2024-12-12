@@ -1,17 +1,15 @@
 "use client";
 
-
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { useProspectActions } from "../hooks/use-prospect-actions";
 import { FileSpreadsheet } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 
-
 export const HeaderProspects = () => {
   const { openXlsxModal } = useProspectActions();
 
   return (
-    <Card className="dark:bg-card">
+    <Card>
       <CardContent className="flex flex-row items-center justify-between gap-2 p-6">
         <section>
           <h3 className="font-semibold text-lg text-foreground">Prospectos</h3>
