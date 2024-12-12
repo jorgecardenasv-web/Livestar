@@ -1,6 +1,6 @@
 "use client";
 
-import { Modal } from "@/shared/components/modal";
+import { Modal } from "@/shared/components/ui/modal";
 import { useAdvisorActions } from "../hooks/use-advisor-actions";
 import { AddAdvisorForm } from "./forms/add-advisor-form";
 import { DeleteAdvisorForm } from "./forms/delete-advisor-form";

@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -18,7 +19,7 @@ export async function handleInterestClick(formData: FormData) {
   };
 
   cookies().set("selectedPlan", JSON.stringify(insuranceData));
-  redirect("/resumen-de-cotizacion");
+  revalidatePath("/cotizar");
 }
 
 export async function setActivePlanType(formData: FormData) {
@@ -31,10 +32,37 @@ export async function setActivePaymentType(formData: FormData) {
   cookies().set("activePaymentType", paymentType);
 }
 
+export async function getProspect() {
+  const cookieStore = cookies();
+  const prospectJson = cookieStore.get("prospect")?.value;
+  const prospect = prospectJson ? JSON.parse(prospectJson) : {};
+  return prospect;
+}
+
 export async function getInsuranceState() {
   const cookieStore = cookies();
   const selectedPlanJson = cookieStore.get("selectedPlan")?.value;
-  const selectedPlan = selectedPlanJson ? JSON.parse(selectedPlanJson) : {};
+  console.log("selectedPlanJson: ", selectedPlanJson);
+
+  const formatNumber = (value: string) =>
+    new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(
+      Number(value.replace(/,/g, ""))
+    );
+
+  const parseAndFormatPlan = (json: string) => {
+    const plan = JSON.parse(json);
+    return {
+      ...plan,
+      sumInsured: formatNumber(plan.sumInsured || "0"),
+      deductible: formatNumber(plan.deductible || "0"),
+      coInsuranceCap: formatNumber(plan.coInsuranceCap || "0"),
+      coverage_fee: formatNumber(plan.coverage_fee || "0"),
+    };
+  };
+
+  const selectedPlan = selectedPlanJson
+    ? parseAndFormatPlan(selectedPlanJson)
+    : {};
 
   return {
     activePlanType: cookieStore.get("activePlanType")?.value || "Esencial",
@@ -42,3 +70,8 @@ export async function getInsuranceState() {
     selectedPlan,
   };
 }
+
+export const deleteSelectedPlan = () => {
+  cookies().delete("selectedPlan");
+  revalidatePath("/cotizar");
+};

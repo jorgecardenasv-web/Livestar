@@ -2,12 +2,11 @@ import { PaymentSelector } from "./payment-selector";
 import { PlanSelector } from "./plan-selector";
 import { InsuranceCard } from "./insurance-card";
 import { getInsuranceState } from "../actions/insurance-actions";
-import { InsurancePlan } from "@/shared/types/insurance";
 
 export async function InsurancePlans({
   insurancePlans,
 }: {
-  insurancePlans: InsurancePlan[];
+  insurancePlans: any[];
 }) {
   const { activePlanType, activePaymentType } = await getInsuranceState();
 
@@ -15,7 +14,7 @@ export async function InsurancePlans({
   const paymentTypes = ["Mensual", "Anual"];
 
   return (
-    <div className="mx-auto px-4 py-2 space-y-4 mt-8">
+    <div className="mx-auto px-4 py-2 space-y-4 m-8">
       <div className="flex flex-col justify-center items-center">
         <PlanSelector planTypes={planTypes} activePlanType={activePlanType} />
         <PaymentSelector
@@ -23,10 +22,9 @@ export async function InsurancePlans({
           activePaymentType={activePaymentType}
         />
       </div>
-      <div className="grid grid-flow-col md:auto-cols-max gap-2 items-end">
+      <div className="grid grid-flow-col justify-center md:auto-cols-max gap-2 items-end">
         {insurancePlans.map((plan, index) => {
           const activePlan = plan.name === activePlanType ? plan : null;
-
           return (
             activePlan && (
               <InsuranceCard
@@ -34,7 +32,7 @@ export async function InsurancePlans({
                 company={plan.company}
                 plan={activePlan}
                 paymentType={activePaymentType}
-                isRecommended={index === 1}
+                isRecommended={index === 0}
               />
             )
           );

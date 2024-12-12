@@ -1,7 +1,7 @@
 'use client'
 
-import { Button, ButtonProps } from "@tremor/react";
 import { useFormStatus } from "react-dom";
+import { Button, ButtonProps } from "./button";
 
 interface Props extends ButtonProps {
   textStatic: string;

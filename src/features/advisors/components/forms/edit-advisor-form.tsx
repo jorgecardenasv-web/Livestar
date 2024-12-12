@@ -1,4 +1,4 @@
-import { SubmitButton } from "@/shared/components/submit-button";
+import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { Badge, Button, Select, SelectItem, TextInput } from "@tremor/react";
 import { UserStatus } from "@prisma/client";
 import { useAdvisorActions } from "../../hooks/use-advisor-actions";

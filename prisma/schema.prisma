@@ -168,9 +168,21 @@ model Prospect {
   userId          Int?
   quotes          Quote[]
   lastContactDate DateTime?
+  medicalHistories MedicalHistory[]
+  @@schema("public")
+}
+model MedicalHistory {
+  id          Int       @id @default(autoincrement())
+  uuid        String    @unique @default(uuid())
+  responses   Json      
+  prospect    Prospect   @relation(fields: [prospectId], references: [id])
+  prospectId  Int        
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 
   @@schema("public")
 }
+
 
 enum QuoteStatus {
   DRAFT

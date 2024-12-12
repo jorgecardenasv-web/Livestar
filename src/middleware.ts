@@ -11,8 +11,9 @@ const routeRoles: { [key: string]: string[] } = {
 const publicPaths = [
   "/",
   "/ini-ses-adm",
-  "/comparador-cotizador-seguros-salud",
-  "/resumen-de-cotizacion",
+  "/cotizar",
+  "/finalizar-cotizacion",
+  "/aviso-de-Privacidad"
 ];
 
 export async function middleware(request: NextRequest) {

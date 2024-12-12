@@ -1,8 +1,10 @@
 import Image from "next/image";
-import { InsuranceQuoteData } from "@/app/(cliente)/resumen-de-cotizacion/page";
-import { Shield, DollarSign, Percent, Heart } from "lucide-react";
+import { InsuranceQuoteData } from "@/app/(cliente)/cotizar/page";
+import { Shield, DollarSign, Percent, Heart, ArrowLeft } from "lucide-react";
 import { ContractForm } from "./confirm-form";
 import { InfoCard } from "./info-card";
+import { Button } from "@/shared/components/ui/button";
+import { deleteSelectedPlan } from "@/features/insurance-plans/actions/insurance-actions";
 
 export const QuoteSummary: React.FC<InsuranceQuoteData> = ({
   coInsurance,
@@ -17,14 +19,19 @@ export const QuoteSummary: React.FC<InsuranceQuoteData> = ({
   id,
 }) => {
   const isPriceMonthly = paymentType === "Mensual";
-  console.log("plan", plan);
-  console.log(id);
   return (
-    <div className="max-w-4xl mx-auto p-4 sm:p-6 rounded-3xl shadow-lg border">
+    <div className="max-w-4xl mx-auto p-4 sm:p-6 rounded-3xl shadow-lg border m-8">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-2 space-y-4 sm:space-y-0">
-        <h2 className="text-xl sm:text-2xl font-bold text-tremor-content-emphasis">
-          Resumen de cotización
-        </h2>
+        <div className="flex items-center space-x-4">
+          <form action={deleteSelectedPlan}>
+            <button className="text-tremor-content-emphasis mt-2">
+              <ArrowLeft strokeWidth={3} size={30} />
+            </button>
+          </form>
+          <h2 className="text-xl sm:text-2xl font-bold text-tremor-content-emphasis">
+            Resumen de cotización
+          </h2>
+        </div>
         <Image
           src={companyLogo}
           width={60}

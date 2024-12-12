@@ -1,6 +1,6 @@
 "use client";
 
-import { Modal } from "@/shared/components/modal";
+import { Modal } from "@/shared/components/ui/modal";
 import { useProspectActions } from "../hooks/use-prospect-actions";
 import { Advisor } from "@/features/advisors/types/advisor";
 import { FormSelectorProspect } from "./form-selector-prospect";

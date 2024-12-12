@@ -1,9 +1,10 @@
 "use server";
 
-import { redirect, RedirectType } from "next/navigation";
+import { redirect } from "next/navigation";
 import { createProspectService } from "../services/create-prospect.service";
 import { getAdvisorWithLeastProspectsService } from "@/features/advisors/services/get-advisor-with-least-prospects.service";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 export const createProspect = async (formData: any) => {
   const advisorId = await getAdvisorWithLeastProspectsService();
@@ -14,9 +15,6 @@ export const createProspect = async (formData: any) => {
 
   const prospect = await createProspectService(formData, advisorId!);
 
-  console.log('create prospect', prospect);
-  
-
   cookies().set(
     "prospect",
     JSON.stringify({
@@ -25,5 +23,5 @@ export const createProspect = async (formData: any) => {
     })
   );
 
-  redirect("/comparador-cotizador-seguros-salud", RedirectType.replace);
+  revalidatePath("/cotizar");
 };

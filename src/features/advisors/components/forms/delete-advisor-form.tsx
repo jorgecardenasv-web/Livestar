@@ -1,8 +1,9 @@
 import { Badge, Button, Callout } from "@tremor/react";
 import { UserStatus } from "@prisma/client";
-import { SubmitButton } from "@/shared/components/submit-button";
+
 import { useAdvisorActions } from "../../hooks/use-advisor-actions";
 import { deleteAdvisor } from "../../actions/delete-advisor";
+import { SubmitButton } from "@/shared/components/ui/submit-button";
 
 export const DeleteAdvisorForm = () => {
   const {
