@@ -11,7 +11,7 @@ export const FilterSetion = () => {
         label="Filtrar por verificación"
         rowSearch="isVerified"
         statusOptions={[
-          { value: "", label: "Todos" },
+          { value: "todos", label: "Todos" },
           { value: "true", label: "Verificado" },
           { value: "false", label: "No Vericado" },
         ]}

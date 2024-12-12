@@ -1,19 +1,12 @@
 "use client";
 
-import {
-  Badge,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeaderCell,
-  TableRow,
-} from "@tremor/react";
 import { Prospect } from "../types/prospect";
 import { formatDate } from "@/shared/utils";
 import { useRouter } from "next/navigation";
 import { prefix } from "@/shared/utils/constants";
 import { ProspectActions } from "./prospect-actions";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table";
+import { Badge } from "@/shared/components/ui/badge";
 
 export const ListProspects = ({ prospects }: { prospects: Prospect[] }) => {
   const { push } = useRouter();
@@ -22,17 +15,17 @@ export const ListProspects = ({ prospects }: { prospects: Prospect[] }) => {
     <div className="w-full">
       {prospects && prospects.length > 0 ? (
         <Table>
-          <TableHead>
+          <TableHeader>
             <TableRow>
-              <TableHeaderCell>Nombre</TableHeaderCell>
-              <TableHeaderCell>Correo electrónico</TableHeaderCell>
-              <TableHeaderCell>Verificación</TableHeaderCell>
-              <TableHeaderCell>Fecha de creación</TableHeaderCell>
-              <TableHeaderCell>Estado</TableHeaderCell>
-              <TableHeaderCell>Asesor asignado</TableHeaderCell>
-              <TableHeaderCell>Acciones</TableHeaderCell>
+              <TableHead>Nombre</TableHead>
+              <TableHead>Correo electrónico</TableHead>
+              <TableHead>Verificación</TableHead>
+              <TableHead>Fecha de creación</TableHead>
+              <TableHead>Estado</TableHead>
+              <TableHead>Asesor asignado</TableHead>
+              <TableHead>Acciones</TableHead>
             </TableRow>
-          </TableHead>
+          </TableHeader>
 
           <TableBody>
             {prospects.map((prospect) => (
@@ -54,9 +47,9 @@ export const ListProspects = ({ prospects }: { prospects: Prospect[] }) => {
                   onClick={() => push(`${prefix}/prospectos/${prospect.id}`)}
                 >
                   {prospect.isVerified ? (
-                    <Badge color="green">Verificado</Badge>
+                    <Badge color="success">Verificado</Badge>
                   ) : (
-                    <Badge color="red">No verificado</Badge>
+                    <Badge color="destructive">No verificado</Badge>
                   )}
                 </TableCell>
                 <TableCell

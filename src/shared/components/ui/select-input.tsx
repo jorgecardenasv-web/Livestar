@@ -14,15 +14,10 @@ import { Label } from "./label";
 interface Props extends SelectPrimitive.SelectProps {
   label: string;
   options: { label: string; value: string }[];
-  error: string;
+  error?: string;
 }
 
-export const SelectInput: FC<Props> = ({
-  label,
-  options,
-  error,
-  ...props
-}) => {
+export const SelectInput: FC<Props> = ({ label, options, error, ...props }) => {
   return (
     <div className="grid w-full">
       <Label htmlFor={props.name}>{label}</Label>

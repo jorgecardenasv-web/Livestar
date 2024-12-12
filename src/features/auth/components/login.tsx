@@ -43,6 +43,7 @@ export const SigninForm = () => {
             <SubmitButton
               textStatic="Iniciar sesión"
               textPending="Iniciando sesión..."
+              className="w-full"
             />
           </form>
         </div>
