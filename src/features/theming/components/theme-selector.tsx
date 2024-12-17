@@ -33,7 +33,7 @@ export const ThemeSelector: React.FC = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="w-full h-[48px] justify-between">
+        <Button variant="outline" className="w-full h-[48px] justify-between dark:bg-background-subtle">
           <div className="flex items-center space-x-2">
             {React.createElement(selectedOption.icon, {
               size: 20,

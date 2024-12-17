@@ -28,7 +28,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ label }) => {
       <DropdownMenuTrigger>
         <Button
           variant="outline"
-          className="w-full h-14 justify-between dark:bg-background border border-primary"
+          className="w-full h-14 justify-between dark:bg-background-subtle border border-primary"
         >
           <div className="flex items-center space-x-2">
             <UserCircle size={20} className="text-sky-600 dark:text-primary" />

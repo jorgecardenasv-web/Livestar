@@ -34,7 +34,6 @@ export const SigninForm = () => {
             />
             <PasswordInput
               label="Contraseña"
-              type="password"
               id="password"
               name="password"
               autoComplete="current-password"
