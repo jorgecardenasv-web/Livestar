@@ -4,6 +4,7 @@ import { useFormState } from "react-dom";
 import { signin } from "../actions/signin";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { TextInput } from "@/shared/components/ui/text-input";
+import { PasswordInput } from "@/shared/components/ui/password-input";
 
 export const SigninForm = () => {
   const [state, formAction] = useFormState(signin, {
@@ -20,6 +21,7 @@ export const SigninForm = () => {
           <h3 className="text-center text-3xl font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
             Iniciar sesión
           </h3>
+          
           <form action={formAction} className="mt-6 space-y-4">
             <TextInput
               label="Correo electrónico"
@@ -30,7 +32,7 @@ export const SigninForm = () => {
               placeholder="escribe tu correo electrónico"
               error={state?.errors?.email || ""}
             />
-            <TextInput
+            <PasswordInput
               label="Contraseña"
               type="password"
               id="password"
@@ -46,6 +48,7 @@ export const SigninForm = () => {
               className="w-full"
             />
           </form>
+
         </div>
       </div>
     </>

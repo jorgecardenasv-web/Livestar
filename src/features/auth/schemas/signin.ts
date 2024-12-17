@@ -2,7 +2,15 @@ import { emailValidation } from "@/shared/utils/validations";
 import { z } from "zod";
 
 export const signinSchema = z.object({
-  email: emailValidation,
+  email: z
+    .string({
+      required_error: "El email es requerido.",
+      invalid_type_error: "El email debe ser un string.",
+    })
+    .trim()
+    .email({
+      message: "Escribe un correo electrónico válido.",
+    }),
   password: z
     .string({
       required_error: "La contraseña es requerida.",

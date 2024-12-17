@@ -4,8 +4,8 @@ import { getSession } from "@/lib/iron-session/get-session";
 import { prefix } from "@/shared/utils/constants";
 
 const routeRoles: { [key: string]: string[] } = {
-  "/panel": ["ADMIN", "ADVISOR"],
-  "/asesores": ["ADMIN"],
+  "/ctl/panel": ["ADMIN", "ADVISOR"],
+  "/ctl/asesores": ["ADMIN"],
 };
 
 const publicPaths = [
@@ -13,7 +13,7 @@ const publicPaths = [
   "/ini-ses-adm",
   "/cotizar",
   "/finalizar-cotizacion",
-  "/aviso-de-Privacidad"
+  "/aviso-de-Privacidad",
 ];
 
 export async function middleware(request: NextRequest) {
@@ -31,6 +31,7 @@ export async function middleware(request: NextRequest) {
 
   if (session.isLoggedIn && session.user.role) {
     const userRole = session.user.role as string;
+
     const allowedRoles = routeRoles[path];
 
     if (allowedRoles && !allowedRoles.includes(userRole)) {

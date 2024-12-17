@@ -4,13 +4,13 @@ import { Navbar } from "./navbar";
 
 export const HeaderSecondary = () => {
   return (
-    <header className="relative w-full h-screen md:h-40 text-white">
+    <header className="relative w-full md:h-40 text-white">
       <Image
         src={HeaderDecorator}
         alt="Header Decorator"
         fill
         sizes="100vw"
-        className="object-cover hidden lg:block -z-10"
+        className="object-cover block -z-10"
         priority
       />
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 absolute inset-0 md:h-full text-[#666]">
