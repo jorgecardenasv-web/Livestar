@@ -2,13 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-source-serif;
   }
   :root {
     --background: 0 0% 100%;
+    --background-subtle: 0 0% 3.9%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
@@ -36,14 +41,16 @@
     --radius: 0.5rem;
   }
   .dark {
+    --primary: 197 100% 44%;
+    --primary-hover: 197, 82%, 48%;
+    --primary-foreground: 0 0% 98%;
     --background: 0 0% 3.9%;
+    --background-subtle: 240, 4%, 16%;
     --foreground: 0 0% 98%;
     --card: 0 0% 3.9%;
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
     --secondary: 0 0% 14.9%;
     --secondary-foreground: 0 0% 98%;
     --muted: 0 0% 14.9%;
@@ -102,7 +109,7 @@ main {
 }
 
 .text-gradiant {
-  background-image: linear-gradient(to top, #004E87, #008AED);
+  background-image: linear-gradient(to top, #004e87, #008aed);
   background-clip: text;
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;

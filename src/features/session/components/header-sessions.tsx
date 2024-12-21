@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/shared/components/ui/card";
 
 export const HeaderSessions = () => {
   return (
-    <Card className="dark:bg-card">
+    <Card>
       <CardContent className="flex flex-row items-center justify-between gap-2 p-6">
         <section>
           <h3 className="font-semibold text-lg text-foreground">Sesiones</h3>

@@ -8,7 +8,7 @@ import { Button } from "@/shared/components/ui/button";
 export const HeaderAdvisors = () => {
   const { openAddAdvisorModal } = useAdvisorActions();
   return (
-    <Card className="dark:bg-card">
+    <Card>
       <CardContent className="flex flex-row items-center justify-between gap-2 p-6">
         <section>
           <h3 className="font-semibold text-lg text-foreground">Asesores</h3>
