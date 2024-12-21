@@ -15,7 +15,7 @@ export const Navbar = () => {
       <NavigationMenu.Root>
         <NavigationMenu.List className="flex gap-x-10 items-center font-bold">
           <NavigationMenu.Item>
-            <NavigationMenu.Trigger className="px-5 py-2 bg-white text-[#008AED] rounded hover:bg-[#0077CC] hover:text-white transition duration-300">
+            <NavigationMenu.Trigger className="px-5 py-2 bg-white text-[#223E99] rounded hover:bg-[#223E99] hover:text-white transition duration-300">
               Cotizadores
             </NavigationMenu.Trigger>
           </NavigationMenu.Item>
@@ -28,7 +28,7 @@ export const Navbar = () => {
 							aria-hidden
 						/>
             </NavigationMenu.Trigger>
-            <NavigationMenu.Content className="mt-2 absolute bg-white text-[#001F3F] shadow-lg rounded-lg py-2 w-48 z-10">
+            <NavigationMenu.Content className="mt-2 absolute bg-white text-[#223E99] shadow-lg rounded-lg py-2 w-48 z-10">
               <ul className="list-none p-0">
                 <li>
                   <NavigationMenu.Link
