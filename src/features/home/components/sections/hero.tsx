@@ -57,7 +57,7 @@ export const Hero = () => {
             </p>
             <Link
               href="/cotizar"
-              className="inline-flex font-bold h-14 items-center justify-center rounded bg-white px-6 text-primary hover:bg-white hover:text-gray-600 transition-colors"
+              className="inline-flex font-bold h-14 items-center justify-center rounded bg-white px-6 text-[#223E99] hover:text-primary transition-colors"
             >
               Descubre más y cotiza
             </Link>
