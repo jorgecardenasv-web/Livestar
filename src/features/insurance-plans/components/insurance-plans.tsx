@@ -22,7 +22,7 @@ export async function InsurancePlans({
           activePaymentType={activePaymentType}
         />
       </div>
-      <div className="grid grid-flow-col justify-center md:auto-cols-max gap-2 items-end">
+      <div className="grid grid-flow-row md:grid-flow-col justify-center lg:auto-cols-max gap-2 items-end">
         {insurancePlans.map((plan, index) => {
           const activePlan = plan.name === activePlanType ? plan : null;
           return (
