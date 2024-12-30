@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { advisorTransformer } from "../transformers/advisor-transformer";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export const getAdvisors = async ({
   page = 1,
@@ -33,7 +33,7 @@ export const getAdvisors = async ({
 
   const totalPages = Math.ceil(totalAdvisors / pageSize);
 
-  revalidatePath("/asesores");
+  revalidateTag("asesores");
 
   return {
     advisors: advisors.map(advisorTransformer),

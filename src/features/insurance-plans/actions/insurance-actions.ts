@@ -42,7 +42,6 @@ export async function getProspect() {
 export async function getInsuranceState() {
   const cookieStore = cookies();
   const selectedPlanJson = cookieStore.get("selectedPlan")?.value;
-  console.log("selectedPlanJson: ", selectedPlanJson);
 
   const formatNumber = (value: string) =>
     new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(

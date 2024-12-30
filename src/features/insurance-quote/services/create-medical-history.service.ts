@@ -7,7 +7,6 @@ export async function createMedicalHistoryService(
 ) {
   try {
     const responses = JSON.parse(JSON.stringify(formMedical));
-    console.log(responses);
     const medicalHistory = await prisma.medicalHistory.create({
       data: {
         responses,
@@ -16,7 +15,6 @@ export async function createMedicalHistoryService(
         },
       },
     });
-    console.log("Historial médico creado con éxito");
     return medicalHistory;
   } catch (error) {
     console.error("Error al crear el historial médico:", error);

@@ -1,12 +1,5 @@
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/components/ui/table';
 import React from 'react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeaderCell,
-  TableRow,
-} from "@tremor/react";
 
 interface TableSkeletonProps {
   columns: string[];
@@ -18,15 +11,15 @@ export const TableSkeleton: React.FC<TableSkeletonProps> = ({ columns, rowCount 
     <div className="w-full">
       <div className="mx-auto max-w-2xl">
         <Table>
-          <TableHead>
+          <TableHeader>
             <TableRow>
               {columns?.map((column, index) => (
-                <TableHeaderCell key={index}>
+                <TableHead key={index}>
                   <div className="h-6 bg-gray-200 rounded animate-pulse w-2/4"></div>
-                </TableHeaderCell>
+                </TableHead>
               ))}
             </TableRow>
-          </TableHead>
+          </TableHeader>
           <TableBody>
             {[...Array(rowCount)].map((_, rowIndex) => (
               <TableRow key={rowIndex}>

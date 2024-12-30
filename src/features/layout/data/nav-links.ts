@@ -3,9 +3,9 @@ import {
   ContactIcon,
   LayoutDashboardIcon,
   KeyIcon,
+  UsersIcon,
   NotepadTextIcon,
   BriefcaseMedicalIcon,
-  UsersIcon,
 } from "lucide-react";
 
 export interface NavLiks {
@@ -29,27 +29,27 @@ export const navLinks: NavLiks[] = [
     roles: ["ADMIN"],
   },
   {
-    name: "Sesiones",
-    href: `${prefix}/sesiones`,
-    icon: KeyIcon,
-    roles: ["ADMIN"],
-  },
-  // {
-  //   name: "Planes",
-  //   href: `${prefix}/planes`,
-  //   icon: NotepadTextIcon,
-  //   roles: ["ADMIN"],
-  // },
-  // {
-  //   name: "Aseguradoras",
-  //   href: `${prefix}/aseguradoras`,
-  //   icon: BriefcaseMedicalIcon,
-  //   roles: ["ADMIN"],
-  // },
-  {
     name: "Prospectos",
     href: `${prefix}/prospectos`,
     icon: UsersIcon,
     roles: ["ADMIN", "ADVISOR"],
+  },
+  {
+    name: "Aseguradoras",
+    href: `${prefix}/aseguradoras`,
+    icon: BriefcaseMedicalIcon,
+    roles: ["ADMIN"],
+  },
+  {
+    name: "Planes",
+    href: `${prefix}/planes`,
+    icon: NotepadTextIcon,
+    roles: ["ADMIN"],
+  },
+  {
+    name: "Sesiones",
+    href: `${prefix}/sesiones`,
+    icon: KeyIcon,
+    roles: ["ADMIN"],
   },
 ];

@@ -4,7 +4,7 @@ import { Sidebar } from "../components/sidebar";
 export const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex h-screen flex-col md:flex-row overflow-hidden">
-      <div className="lg:w-64 flex-shrink-0">
+      <div className="md:w-72 flex-shrink-0">
         <Sidebar />
       </div>
       <div className="flex flex-col flex-grow overflow-hidden">

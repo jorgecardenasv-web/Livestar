@@ -1,12 +1,33 @@
 "use client";
 
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { generatePagination, getCounterText } from "../utils";
-import { PaginationArrow } from "./pagination-arrow";
-import { PaginationNumber } from "./pagination-number";
+import {
+  Pagination as PaginationBase,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext as PaginationNextBase,
+  PaginationPrevious as PaginationPreviousBase,
+} from "@/shared/components/ui/pagination";
+import { pluralizeItemName } from "../utils";
 
-export const Pagination = ({
+const PaginationPrevious = ({
+  children,
+  ...props
+}: React.ComponentProps<typeof PaginationPreviousBase>) => (
+  <PaginationPreviousBase {...props}>{children}</PaginationPreviousBase>
+);
+
+const PaginationNext = ({
+  children,
+  ...props
+}: React.ComponentProps<typeof PaginationNextBase>) => (
+  <PaginationNextBase {...props}>{children}</PaginationNextBase>
+);
+
+export function Pagination({
   totalPages,
   totalItems,
   itemsPerPage,
@@ -16,7 +37,7 @@ export const Pagination = ({
   totalItems: number;
   itemsPerPage: number;
   itemName: string;
-}) => {
+}) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -32,8 +53,6 @@ export const Pagination = ({
     }
   }, [pathname, searchParams, replace]);
 
-  const allPages = generatePagination({ currentPage, totalPages });
-
   const createPageURL = (pageNumber: number | string) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", pageNumber.toString());
@@ -46,43 +65,74 @@ export const Pagination = ({
   const shouldShowPagination = totalItems > itemsPerPage;
 
   return (
-    <div className="flex items-center justify-between mx-3">
-      <p className="text-tremor-default tabular-nums text-tremor-content dark:text-dark-tremor-content">
-        {getCounterText({
-          totalItems,
-          itemsPerPage,
-          startItem,
-          endItem,
-          itemName,
-        })}
+    <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 px-4">
+      <p className="text-sm text-muted-foreground flex flex-grow">
+        Mostrando {startItem} a {endItem} de {totalItems} {pluralizeItemName(totalItems, itemName)}
       </p>
       {shouldShowPagination && (
-        <div className="inline-flex">
-          <PaginationArrow
-            direction="left"
-            href={createPageURL(currentPage - 1)}
-            isDisabled={currentPage <= 1}
-          />
+        <PaginationBase className="w-full sm:w-auto">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious
+                href={
+                  currentPage > 1 ? createPageURL(currentPage - 1) : undefined
+                }
+                aria-disabled={currentPage <= 1}
+                className={
+                  currentPage <= 1 ? "pointer-events-none opacity-50" : ""
+                }
+              >
+                Anterior
+              </PaginationPrevious>
+            </PaginationItem>
+            {[...Array(totalPages)].map((_, index) => {
+              const page = index + 1;
+              const isCurrentPage = page === currentPage;
 
-          <div className="flex gap-x-1">
-            {allPages.map((page, index) => (
-              <PaginationNumber
-                key={index}
-                href={typeof page === "number" ? createPageURL(page) : "#"}
-                page={page}
-                isActive={currentPage === page}
-                isDisabled={page === "..."}
-              />
-            ))}
-          </div>
+              if (
+                page === 1 ||
+                page === totalPages ||
+                (page >= currentPage - 1 && page <= currentPage + 1)
+              ) {
+                return (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      href={createPageURL(page)}
+                      isActive={isCurrentPage}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              } else if (
+                (page === currentPage - 2 && currentPage > 3) ||
+                (page === currentPage + 2 && currentPage < totalPages - 2)
+              ) {
+                return <PaginationEllipsis key={page} />;
+              }
 
-          <PaginationArrow
-            direction="right"
-            href={createPageURL(currentPage + 1)}
-            isDisabled={currentPage >= totalPages}
-          />
-        </div>
+              return null;
+            })}
+            <PaginationItem>
+              <PaginationNext
+                href={
+                  currentPage < totalPages
+                    ? createPageURL(currentPage + 1)
+                    : undefined
+                }
+                aria-disabled={currentPage >= totalPages}
+                className={
+                  currentPage >= totalPages
+                    ? "pointer-events-none opacity-50"
+                    : ""
+                }
+              >
+                Siguiente
+              </PaginationNext>
+            </PaginationItem>
+          </PaginationContent>
+        </PaginationBase>
       )}
     </div>
   );
-};
+}

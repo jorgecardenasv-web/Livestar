@@ -1,77 +1,54 @@
-
-import { TextInput } from "@tremor/react";
 import { useAdvisorActions } from "../../hooks/use-advisor-actions";
 import { addAdvisor } from "../../actions/add-advisor";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
+import { TextInput } from "@/shared/components/ui/text-input";
+import { PasswordInput } from "@/shared/components/ui/password-input";
 
 export const AddAdvisorForm = () => {
   const { formAction, state } = useAdvisorActions(addAdvisor);
 
   return (
-    <form action={formAction} className="mt-5">
-      <div className="mb-4">
-        <p className="mb-2 leading-5 text-tremor-default dark:text-dark-tremor-content text-dark-tremor-background">
-          Nombre completo
-        </p>
-        <TextInput
-          placeholder=""
-          type="text"
-          id="name"
-          name="name"
-          required
-          error={Boolean(state?.errors?.name?.length)}
-          errorMessage={state?.errors?.name}
-        />
-      </div>
-      <div className="mb-4">
-        <p className="mb-2 leading-5 text-tremor-default dark:text-dark-tremor-content text-dark-tremor-background">
-          Email
-        </p>
-        <TextInput
-          type="email"
-          placeholder=""
-          id="email"
-          name="email"
-          required
-          error={Boolean(state?.errors?.email?.length)}
-          errorMessage={state?.errors?.email}
-        />
-      </div>
-      <div className="mb-4">
-        <p className="mb-2 leading-5 text-tremor-default dark:text-dark-tremor-content text-dark-tremor-background">
-          Contraseña
-        </p>
-        <TextInput
-          type="password"
-          placeholder=""
-          id="password"
-          name="password"
-          required
-          error={Boolean(state?.errors?.password?.length)}
-          errorMessage={state?.errors?.password}
-        />
-      </div>
-      <div className="mb-4">
-        <p className="mb-2 leading-5 text-tremor-default dark:text-dark-tremor-content text-dark-tremor-background">
-          Confirme contraseña.
-        </p>
-        <TextInput
-          type="password"
-          placeholder=""
-          id="password-confirmation"
-          name="password-confirmation"
-          required
-          error={Boolean(state?.errors?.passwordConfirmation?.length)}
-          errorMessage={state?.errors?.passwordConfirmation}
-        />
-      </div>
-      <div className="mt-8 w-full flex flex-row gap-2">
-        <SubmitButton
-          textStatic="Crear Asesor"
-          className="flex-1"
-          textPending="Creando Asesor..."
-        />
-      </div>
+    <form action={formAction} className="space-y-4">
+      <TextInput
+        label="Nombre completo"
+        placeholder="Escibe tu nombre completo"
+        type="text"
+        id="name"
+        name="name"
+        required
+        error={state?.errors?.name}
+      />
+      <TextInput
+        label="Correo electrónico"
+        type="email"
+        placeholder="Escribe tu correo electrónico"
+        id="email"
+        name="email"
+        required
+        error={state?.errors?.email}
+      />
+      <PasswordInput
+        label="Contraseña"
+        placeholder="Escibe tu contraseña"
+        id="password"
+        name="password"
+        required
+        error={state?.errors?.password}
+      />
+      <PasswordInput
+        label="Confirmar contraseña"
+        placeholder="Escibe tu contraseña de nuevo"
+        id="password-confirmation"
+        name="password-confirmation"
+        required
+        error={state?.errors?.passwordConfirmation}
+      />
+
+      <SubmitButton
+        textStatic="Crear Asesor"
+        className="flex-1"
+        textPending="Creando Asesor..."
+      />
     </form>
   );
 };

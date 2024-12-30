@@ -65,7 +65,7 @@ enum CompanyStatus {
 model InsuranceCompany {
   id          Int             @id @default(autoincrement())
   uuid        String          @unique @default(uuid())
-  name        String
+  name        String          @unique
   logo        String
   description String?
   status      CompanyStatus   @default(ACTIVE)
@@ -150,39 +150,40 @@ enum ProspectStatus {
 }
 
 model Prospect {
-  id              Int            @id @default(autoincrement())
-  uuid            String         @unique @default(uuid())
-  name            String
-  gender          String
-  age             Int?
-  postalCode      String
-  protectWho      String
-  whatsapp        String
-  email           String
-  isVerified      Boolean        @default(false)
-  status          ProspectStatus @default(NEW)
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  additionalInfo  Json?
-  user            User?          @relation(fields: [userId], references: [id])
-  userId          Int?
-  quotes          Quote[]
-  lastContactDate DateTime?
+  id               Int              @id @default(autoincrement())
+  uuid             String           @unique @default(uuid())
+  name             String
+  gender           String
+  age              Int?
+  postalCode       String
+  protectWho       String
+  whatsapp         String
+  email            String
+  isVerified       Boolean          @default(false)
+  status           ProspectStatus   @default(NEW)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  additionalInfo   Json?
+  user             User?            @relation(fields: [userId], references: [id])
+  userId           Int?
+  quotes           Quote[]
+  lastContactDate  DateTime?
   medicalHistories MedicalHistory[]
+
   @@schema("public")
 }
+
 model MedicalHistory {
-  id          Int       @id @default(autoincrement())
-  uuid        String    @unique @default(uuid())
-  responses   Json      
-  prospect    Prospect   @relation(fields: [prospectId], references: [id])
-  prospectId  Int        
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id         Int      @id @default(autoincrement())
+  uuid       String   @unique @default(uuid())
+  responses  Json
+  prospect   Prospect @relation(fields: [prospectId], references: [id])
+  prospectId Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@schema("public")
 }
-
 
 enum QuoteStatus {
   DRAFT

@@ -3,8 +3,7 @@ import RadioGroup from "./RadioGrup";
 import { RadioOption } from "../types";
 import { TextInput } from "@/shared/components/ui/text-input";
 import { SelectInput } from "@/shared/components/ui/select-input";
-import { DatePicker } from "@tremor/react";
-import { DatePickerDemo } from "@/shared/components/ui/data-picker";
+import { DatePicker } from "@/shared/components/ui/data-picker";
 
 interface FormData {
   nombrePadecimiento?: string;
@@ -27,7 +26,7 @@ interface HealthConditionFormProps {
   ) => void;
   index: number;
   indexform: number;
-  errors: { [key: string]: string }; // Recibimos los errores
+  errors: { [key: string]: string };
 }
 
 const HealthConditionForm: React.FC<HealthConditionFormProps> = ({
@@ -35,7 +34,7 @@ const HealthConditionForm: React.FC<HealthConditionFormProps> = ({
   onChange,
   index,
   indexform,
-  errors, // Aquí recibimos el error
+  errors,
 }) => {
   return (
     <div>
@@ -65,7 +64,7 @@ const HealthConditionForm: React.FC<HealthConditionFormProps> = ({
             errors[`question-${indexform}-condition-${index}-tipoEvento`] || ""
           }
         />
-        <DatePickerDemo
+        <DatePicker
           value={formData.fechaInicio}
           title="Fecha de inicio"
           placeholder="Fecha de inicio"

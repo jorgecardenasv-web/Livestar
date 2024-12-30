@@ -16,8 +16,6 @@ export async function handleContractNow() {
 
   const prospectJson = cookieStore.get("prospect")?.value;
   const prospect = prospectJson ? JSON.parse(prospectJson) : {};
-  console.log("prospecto", prospect);
-  console.log("plan", selectedPlan);
 
   if (!prospect.id || !selectedPlan.id) {
     console.error("Datos insuficientes para crear el quote.");
@@ -25,7 +23,6 @@ export async function handleContractNow() {
   }
   const prospectData = await getProspectByIdService(prospect.id);
   const planData = await getPlanByUuid(selectedPlan.id);
-  console.log(prospectData);
   if (prospectData && planData) {
     const quoteData = {
       prospectId: prospectData.id,
@@ -38,8 +35,6 @@ export async function handleContractNow() {
     const quote = await createQuoteService(quoteData);
 
     await createTrackingNumberService({ quoteId: quote.id });
-
-    console.log("Quote y Tracking Number creados con éxito");
     redirect("/finalizar-cotizacion");
   }
 }

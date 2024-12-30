@@ -131,11 +131,11 @@ export default function QuoteFinalizationClientPage({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Datos del formulario:", forms);
+    
     // Validar los formularios antes de enviar
     setIsSubmitting(true);
     const validationErrors = validateHealthConditions();
-    console.log(validationErrors);
+    
     if (Object.keys(validationErrors).length > 0) {
       // Si hay errores, actualizar el estado de errores y no enviar el formulario
       setForms((prevForms) => [...prevForms]); // Trigger re-render
@@ -144,7 +144,6 @@ export default function QuoteFinalizationClientPage({
 
     // Si no hay errores, se envía el formulario
     actionCreateMedicalHistory(forms);
-    console.log("Datos del formulario:", forms);
   };
 
   return (

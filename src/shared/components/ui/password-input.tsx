@@ -27,7 +27,7 @@ export const PasswordInput: FC<Props> = ({
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="grid w-full items-center gap-1.5">
+    <div className="w-full space-y-1">
       {label && (
         <Label
           htmlFor={props.name}

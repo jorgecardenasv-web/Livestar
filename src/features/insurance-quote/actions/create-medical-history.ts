@@ -10,10 +10,7 @@ export const actionCreateMedicalHistory = async (
   const cookieStore = cookies();
   const prospectJson = cookieStore.get("prospect")?.value;
   const prospect = prospectJson ? JSON.parse(prospectJson) : {};
-  console.log("prospecto", prospect);
   const prospectData = await getProspectByIdService(prospect.id);
-
-  console.log(formMedical);
 
   if (prospectData)
     await createMedicalHistoryService(formMedical, prospectData?.id);

@@ -1,8 +1,11 @@
 import { SubmitButton } from "@/shared/components/ui/submit-button";
-import { Badge, Button, Select, SelectItem, TextInput } from "@tremor/react";
 import { UserStatus } from "@prisma/client";
 import { useAdvisorActions } from "../../hooks/use-advisor-actions";
 import { editAdvisor } from "../../actions/edit-advisor";
+import { Badge } from "@/shared/components/ui/badge";
+import { TextInput } from "@/shared/components/ui/text-input";
+import { SelectInput } from "@/shared/components/ui/select-input";
+import { Button } from "@/shared/components/ui/button";
 
 export const EditAdvisorForm = () => {
   const {
@@ -13,55 +16,38 @@ export const EditAdvisorForm = () => {
   } = useAdvisorActions(editAdvisor);
 
   return (
-    <form action={formAction} className="mt-5">
-      <div className="mb-4">
-        <p className="mb-2 leading-5 text-tremor-default  dark:text-dark-tremor-content text-dark-tremor-background">
-          Nombre completo
-        </p>
-        <TextInput
-          placeholder=""
-          type="text"
-          id="name"
-          name="name"
-          required
-          defaultValue={advisor?.name}
-          error={Boolean(state?.errors?.name?.length)}
-          errorMessage={state?.errors?.name}
-        />
-      </div>
-      <div className="mb-4">
-        <p className="mb-2 leading-5 text-tremor-default  dark:text-dark-tremor-content text-dark-tremor-background">
-          Email
-        </p>
-        <TextInput
-          type="email"
-          placeholder=""
-          id="email"
-          name="email"
-          defaultValue={advisor?.email}
-          required
-          error={Boolean(state?.errors?.email?.length)}
-          errorMessage={state?.errors?.email}
-        />
-      </div>
-      <div className="mb-4">
-        <p className="mb-2 leading-5 text-tremor-default  dark:text-dark-tremor-content text-dark-tremor-background">
-          Estatus
-        </p>
-        <Select
-          defaultValue={advisor?.status === UserStatus.ACTIVE ? "1" : "2"}
-          id="status"
-          name="status"
-          required
-        >
-          <SelectItem value="1">
-            <Badge color="green">Activo</Badge>
-          </SelectItem>
-          <SelectItem value="2">
-            <Badge color="red">Inactivo</Badge>
-          </SelectItem>
-        </Select>
-      </div>
+    <form action={formAction} className="mt-5 space-y-5">
+      <TextInput
+        label="Nombre completo"
+        placeholder="Escribe el nombre completo del asesor"
+        type="text"
+        id="name"
+        name="name"
+        required
+        defaultValue={advisor?.name}
+        error={state?.errors?.name}
+      />
+      <TextInput
+        type="email"
+        label="Correo electrónico"
+        placeholder=""
+        id="email"
+        name="email"
+        defaultValue={advisor?.email}
+        required
+        error={state?.errors?.email}
+      />
+
+      <SelectInput
+        options={[
+          { label: "Activo", value: "1" },
+          { label: "Inactivo", value: "2" },
+        ]}
+        label="Estatus"
+        name="status"
+        defaultValue={advisor?.status === UserStatus.ACTIVE ? "1" : "2"}
+        required
+      />
 
       <div className="mt-8 w-full flex flex-row gap-2">
         <SubmitButton
@@ -70,7 +56,7 @@ export const EditAdvisorForm = () => {
           textPending="Editando Asesor..."
         />
         <Button
-          variant="secondary"
+          variant="outline"
           type="button"
           className="flex-1"
           onClick={handleCancel}

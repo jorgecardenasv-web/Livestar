@@ -21,7 +21,7 @@ export const TextInput: FC<Props> = ({
   ...props
 }) => {
   return (
-    <div className="grid w-full items-center gap-1.5">
+    <div className="w-full space-y-1">
       {label && (
         <Label
           htmlFor={props.name}

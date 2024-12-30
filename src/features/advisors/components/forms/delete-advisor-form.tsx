@@ -1,9 +1,11 @@
-import { Badge, Button, Callout } from "@tremor/react";
 import { UserStatus } from "@prisma/client";
 
 import { useAdvisorActions } from "../../hooks/use-advisor-actions";
 import { deleteAdvisor } from "../../actions/delete-advisor";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
+import { Callout } from "@/shared/components/ui/callout";
+import { Button } from "@/shared/components/ui/button";
+import { Badge } from "@/shared/components/ui/badge";
 
 export const DeleteAdvisorForm = () => {
   const {
@@ -14,7 +16,7 @@ export const DeleteAdvisorForm = () => {
 
   return (
     <>
-      <Callout title="Asesor a eliminar" className="mt-4" color="red">
+      <Callout title="Asesor a eliminar" className="mt-4" variant="error">
         <div className="flex flex-row gap-2 mb-1">
           <p>Nombre:</p>
           <p className="font-semibold">{advisor?.name}</p>
@@ -23,13 +25,13 @@ export const DeleteAdvisorForm = () => {
           <p>Email:</p>
           <p className="font-semibold">{advisor?.email}</p>
         </div>
-        <div className="flex flex-row gap-2 mb-1">
+        <div className="flex flex-row items-center gap-2 mb-1">
           <p>Status:</p>
           <p>
             {advisor.status === UserStatus.ACTIVE ? (
-              <Badge color="green">Activo</Badge>
+              <Badge variant="success">Activo</Badge>
             ) : (
-              <Badge color="red">Inactivo</Badge>
+              <Badge variant="destructive">Inactivo</Badge>
             )}
           </p>
         </div>
@@ -48,8 +50,7 @@ export const DeleteAdvisorForm = () => {
           onClick={() => handleDeleteAdvisor(advisor.id)}
         />
         <Button
-          variant="secondary"
-          color="red"
+          variant="outline"
           type="button"
           className="flex-1"
           onClick={handleCancel}
