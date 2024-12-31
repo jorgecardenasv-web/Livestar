@@ -42,11 +42,11 @@ export const Conceptos = () => {
         </h4>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4 gap-x-6 mt-6 justify-items-center">
         {concepts.map(({ title, description, icon }) => (
           <div
             key={title}
-            className="border bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 sm:hover:shadow-xl relative group w-52 h-60"
+            className="border bg-white rounded shadow-md overflow-hidden transition-all duration-300 sm:hover:shadow-xl relative group w-52 h-auto md:h-60"
           >
             <div className="absolute inset-0 bg-gradient-to-b from-[#008AED] to-[#004E87] opacity-0 sm:group-hover:opacity-70 transition-opacity duration-300 z-10"></div>
 
