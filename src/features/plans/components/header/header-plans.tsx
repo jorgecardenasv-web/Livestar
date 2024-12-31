@@ -3,9 +3,11 @@
 import { BriefcaseMedical } from "lucide-react";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";
+import { usePlanActions } from "../../hooks/use-plan-actions";
 
 export const HeaderPlans = () => {
-  // const { openAddInsuranceModal } = useInsuranceActions();
+  const { openAddPlanModal } = usePlanActions();
+  
   return (
     <Card>
       <CardContent className="flex flex-row items-center justify-between gap-2 p-6">
@@ -17,7 +19,7 @@ export const HeaderPlans = () => {
         </section>
         <Button
           className="flex items-center flex-row gap-1"
-          // onClick={openAddInsuranceModal}
+          onClick={openAddPlanModal}
         >
           <BriefcaseMedical size={20} />
           <span className="m-0 text-sm hidden lg:block">Nuevo plan</span>

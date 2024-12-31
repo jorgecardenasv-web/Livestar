@@ -13,7 +13,7 @@ interface ModalProps {
   title: string;
   description?: string;
   children: ReactNode;
-  size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "6xl";
+  size?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "6xl";
 }
 
 const sizeClasses = {
@@ -22,7 +22,8 @@ const sizeClasses = {
   lg: "max-w-lg",
   xl: "max-w-xl",
   "2xl": "max-w-2xl",
-  "3xl": "max-w-3xl",
+  "3xl": "max-w-3xl h-[500px]",
+  "4xl": "max-w-4xl h-[600px]",
   "6xl": "max-w-6xl h-[600px]",
 };
 
@@ -41,7 +42,7 @@ export const Modal: React.FC<ModalProps> = ({
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">{children}</div>
+        <div className="space-y-4 py-4 px-2 overflow-auto w-full">{children}</div>
       </DialogContent>
     </Dialog>
   );

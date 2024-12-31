@@ -4,6 +4,7 @@ import { useState } from 'react'
 
 import { DollarSign, Percent, Building2, FileText } from 'lucide-react'
 import { TextInput } from '@/shared/components/ui/text-input'
+import { PriceTableForm } from './price-table-form'
 
 export default function InsurancePlanForm() {
   const [costosPorEdad, setCostosPorEdad] = useState(
@@ -68,6 +69,8 @@ export default function InsurancePlanForm() {
         icon={<DollarSign className="w-4 h-4 text-gray-500" />}
         placeholder="Ingrese tope de coaseguro"
       />
+
+      <PriceTableForm />
 
       <button 
         type="submit"
