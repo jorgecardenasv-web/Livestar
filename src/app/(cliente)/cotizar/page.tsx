@@ -1,5 +1,4 @@
 import { HeaderSecondary } from "@/shared/components/layout/header-secondary";
-import { InsuranceFlow } from "@/features/storytelling/components/insurance-flow";
 import { ModalStorytellingActions } from "@/features/storytelling/components/modal-storytelling-actions";
 import { InsuranceStorytelling } from "@/features/storytelling/components";
 import { getInsurancePlans } from "@/features/insurance-plans/loaders/get-insurance-companies";

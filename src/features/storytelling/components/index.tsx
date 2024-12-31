@@ -1,4 +1,4 @@
-import { InsurancePlans } from "@/features/insurance-plans/components/insurance-plans";
+import { InsurancePlans } from "@/features/insurance-plans/components/main/insurance-plans";
 import { InsuranceFlow } from "./insurance-flow";
 import { QuoteSummary } from "@/features/quote-summary/components/quote-summary";
 import {

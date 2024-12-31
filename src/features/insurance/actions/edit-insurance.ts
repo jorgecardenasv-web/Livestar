@@ -3,7 +3,6 @@
 import { saveImage } from "@/shared/services/upload-image.service";
 import { simplifyZodErrors } from "@/shared/utils";
 import { revalidatePath } from "next/cache";
-import { editInsuranceService } from "../services/edit-insurance.service";
 import { editInsuranceSchema } from "../schemas/edit-insurance";
 
 export async function editInsurance(
@@ -13,16 +12,12 @@ export async function editInsurance(
 ) {
   
   const rawFormData = Object.fromEntries(formData.entries());
-
-  console.log(rawFormData);
   
 
   const result = editInsuranceSchema.safeParse(rawFormData);
 
   if (!result.success) {
     const simplifiedErrors = simplifyZodErrors(result.error);
-    console.log(simplifiedErrors);
-    
     return {
       errors: simplifiedErrors,
     };

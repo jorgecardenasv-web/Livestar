@@ -16,8 +16,6 @@ export const useInsuranceForm = (action: any) => {
     },
   });
 
-  console.log(state);
-
   useEffect(() => {
     if (!state.errors) {
       closeModal();

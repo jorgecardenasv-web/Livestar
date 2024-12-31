@@ -2,10 +2,10 @@ import Image from "next/image";
 import {
   InsuranceCompany,
   InsurancePlan,
-} from "../../../shared/types/insurance";
-import { calculateTotalPrice } from "../utils/insurance-calculations";
+} from "../../../../shared/types/insurance";
+import { calculateTotalPrice } from "../../utils/insurance-calculations";
 import { Shield, DollarSign, Percent, Heart, Check } from "lucide-react";
-import { handleInterestClick } from "../actions/insurance-actions";
+import { handleInterestClick } from "../../actions/insurance-actions";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
 
 interface InsuranceCardProps {
@@ -48,10 +48,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = ({
             </p>
             <p className="text-3xl font-bold text-[#223E99]">
               $
-              {coverage_fee.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-              })}
+              {coverage_fee}
             </p>
           </div>
         </div>
@@ -60,12 +57,12 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = ({
           <InfoItem
             icon={<Shield className="w-5 h-5" />}
             title="Suma asegurada"
-            value={`$${(plan.sumInsured / 1000000).toFixed(1)} MILLONES`}
+            value={`$${(plan.sumInsured / 1000000)} MILLONES`}
           />
           <InfoItem
             icon={<DollarSign className="w-5 h-5" />}
             title="Deducible"
-            value={`$${plan.deductible.toLocaleString()}`}
+            value={`$${plan.deductible}`}
           />
           <InfoItem
             icon={<Percent className="w-5 h-5" />}
@@ -75,16 +72,10 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = ({
           <InfoItem
             icon={<Heart className="w-5 h-5" />}
             title="Tope coaseguro"
-            value={`$${plan.coInsuranceCap?.toLocaleString()}`}
+            value={`$${plan.coInsuranceCap}`}
           />
         </div>
 
-        <div className="flex items-center justify-center mb-6">
-          <Check className="w-5 h-5 text-sky-600 mr-2" />
-          <span className="text-sm text-zinc-500">
-            $0 deducible por accidente
-          </span>
-        </div>
 
         <form action={handleInterestClick}>
           <input type="hidden" name="company" value={company.name} />
@@ -94,18 +85,12 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = ({
           <input
             type="hidden"
             name="sumInsured"
-            value={plan.sumInsured.toLocaleString(undefined, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
+            value={plan.sumInsured}
           />
           <input
             type="hidden"
             name="deductible"
-            value={plan.deductible.toLocaleString(undefined, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
+            value={plan.deductible}
           />
           <input
             type="hidden"
@@ -115,18 +100,12 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = ({
           <input
             type="hidden"
             name="coInsuranceCap"
-            value={plan.coInsuranceCap?.toLocaleString(undefined, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
+            value={plan.coInsuranceCap?.toLocaleString()}
           />
           <input
             type="hidden"
             name="coverage_fee"
-            value={coverage_fee.toLocaleString(undefined, {
-              minimumFractionDigits: 2,
-              maximumFractionDigits: 2,
-            })}
+            value={coverage_fee.toLocaleString()}
           />
           <input type="hidden" name="id" value={plan.id} />
           <SubmitButton

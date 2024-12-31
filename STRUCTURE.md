@@ -16,7 +16,6 @@ En este proyecto, seguimos los principios de **Screaming Architecture**, un enfo
 
 ## Estructura de carpetas
 - **`public/`**: Contiene archivos estáticos accesibles públicamente como imágenes, fuentes, etc. Los archivos aquí se sirven directamente a través de la URL base del sitio. 
-- **`scripts/`**: Incluye scripts que pueden ser utilizados para tareas automatizadas, como scripts de migración o de despliegue.
 - **`src/`**: Carpeta principal que organiza el código fuente del proyecto.
     - **`app/`**: Esta carpeta contiene los componentes y las páginas que forman la interfaz de usuario de la aplicación. Se puede dividir en subcarpetas según las rutas y secciones principales de la aplicación.
     - **`features`/**: Aquí se organizan las funcionalidades principales del sistema. Cada funcionalidad se representa como un módulo o una característica (feature), que puede contener sus propios componentes, hooks, servicios y lógica.
@@ -24,6 +23,4 @@ En este proyecto, seguimos los principios de **Screaming Architecture**, un enfo
   - **`shared/`**: Contiene recursos compartidos entre diferentes partes del proyecto, como componentes comunes, constantes, hooks reutilizables, y más.
   - **`middleware.ts`**: Archivo que contiene la configuración y lógica de los middlewares, útiles para el manejo de solicitudes y respuestas en el servidor.
 
-- **`tests/`**: Contiene todas las pruebas unitarias, de integración o end-to-end del proyecto.
-
-- **`.env`, `.env.development`, `.env.test`**: Archivos de configuración de entorno. Cada archivo contiene variables de entorno específicas para cada ambiente (desarrollo, pruebas, producción).
+- **`.env`: Archivo de configuración de variables de entorno.

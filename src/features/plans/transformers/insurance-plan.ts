@@ -20,10 +20,9 @@ export const InsuranceCompanyTransformer = (
 
 export const InsurancePlanTransformer = (
   plan: InsurancePlanTransformer
-): InsurancePlan => {
+) => {
   return {
     ...plan,
     id: plan.uuid,
-    company: InsuranceCompanyTransformer(plan.company),
   };
 };

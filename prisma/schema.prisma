@@ -76,6 +76,17 @@ model InsuranceCompany {
   @@schema("public")
 }
 
+model HospitalLevel {
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@schema("public")
+}
+
 enum PlanStatus {
   ACTIVE
   INACTIVE
@@ -85,54 +96,29 @@ enum PlanStatus {
   @@schema("public")
 }
 
-enum HospitalTier {
-  BASIC
-  INTERMEDIATE
-  EXECUTIVE
-  PLUS
-
-  @@schema("public")
-}
-
-enum MedicalFeeSchedule {
-  BASIC
-  INTERMEDIATE
-  HIGH
-  EXECUTIVE
-
-  @@schema("public")
-}
-
-model InsurancePlan {
-  id                  Int                @id @default(autoincrement())
-  uuid                String             @unique @default(uuid())
-  totalPrice          Float
-  name                String
-  company             InsuranceCompany   @relation(fields: [companyId], references: [id])
-  companyId           Int
-  description         String?
-  sumInsured          Float
-  deductible          Float
-  coInsurance         Float
-  coInsuranceCap      Float?
-  hospitalTier        HospitalTier
-  medicalFeeSchedule  MedicalFeeSchedule
-  additionalClauses   Json
-  benefits            Json
-  customizableOptions Json
-  status              PlanStatus         @default(ACTIVE)
-  createdAt           DateTime           @default(now())
-  updatedAt           DateTime           @updatedAt
-  quotes              Quote[]
-  isRecommended       Boolean            @default(false)
-
-  @@schema("public")
-}
-
 enum PlanType {
   ESENCIAL
   PROTEGIDO
   BLINDADO
+
+  @@schema("public")
+}
+
+
+model InsurancePlan {
+  id             Int              @id @default(autoincrement())
+  uuid           String           @unique @default(uuid())
+  name           String
+  company        InsuranceCompany @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId      Int
+  sumInsured     Float
+  coInsurance    Float
+  coInsuranceCap Float?
+  status         PlanStatus       @default(ACTIVE)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  quotes         Quote[]
+  isRecommended  Boolean          @default(false)
 
   @@schema("public")
 }

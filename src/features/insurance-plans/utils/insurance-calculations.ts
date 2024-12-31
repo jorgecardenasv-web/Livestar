@@ -10,5 +10,5 @@ export const calculateTotalPrice = (
     totalPrice /= MONTHS_IN_YEAR;
   }
 
-  return Math.round(totalPrice * 100) / 100;
+  return Math.round(totalPrice);
 };

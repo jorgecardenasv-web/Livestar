@@ -1,5 +1,6 @@
 import { Shield, ShieldCheck, ShieldAlert } from "lucide-react";
-import { setActivePlanType } from "../actions/insurance-actions";
+import { setActivePlanType } from "../../actions/insurance-actions";
+
 
 interface PlanSelectorProps {
   planTypes: string[];

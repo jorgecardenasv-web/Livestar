@@ -3,14 +3,9 @@ import { hash } from "bcrypt";
 import {
   insuranceCompanies,
   insurancePlans,
-} from "@/features/insurance-plans/data/insurance-data";
+} from "../../features/insurance-plans/data/insurance-data";
 import { faker } from "@faker-js/faker/locale/es_MX";
-import prisma from "@/lib/prisma";
-import DotEnv from "dotenv";
-import path from "path";
-
-const env = process.env.NODE_ENV || "development";
-DotEnv.config({ path: path.resolve(process.cwd(), `.env.${env}`) });
+import prisma from ".";
 
 async function main() {
   const adminPassword = "AdminPass123";
@@ -57,7 +52,7 @@ async function main() {
       await prisma.user.create({
         data: {
           name: fullName,
-          email: `${firstName.toLowerCase()}${[i]}@example.com`,
+          email: `${firstName.toLowerCase()}_${lastName}}@example.com`,
           password: hashedAdvisorPassword,
           role: Role.ADVISOR,
           status: getRandomStatus(),

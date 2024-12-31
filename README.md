@@ -35,25 +35,12 @@ Antes de ejecutar el proyecto, asegúrate de configurar las variables de entorno
 - **`build`** Compila la aplicación para producción. Establece NODE_ENV en production.
 - **`start`** Inicia el servidor Next.js en modo producción. Utiliza los archivos generados por el comando build y sirve la aplicación de manera optimizada para producción.
 - **`lint`** Ejecuta el linter de Next.js para analizar el código en busca de errores y advertencias de estilo, asegurando la consistencia y calidad del código.
-- **`seed`** Ejecuta el linter de Next.js para analizar el código en busca de errores y advertencias de estilo, asegurando la consistencia y calidad del código.
-- **`seed`**  Ejecuta un script (scripts/seed.ts) para poblar la base de datos con datos iniciales.
-- **`prisma:generate`**  Genera el cliente de Prisma a partir del esquema de la base de datos definido en prisma/schema.prisma. Este comando es necesario para sincronizar el código con cualquier cambio en el esquema.
-- **`prisma:migrate`**  Ejecuta migraciones de base de datos usando Prisma a través de un script (scripts/prisma-migrate.ts), permitiendo aplicar cambios estructurales en la base de datos.
-- **`prisma:push:dev`**  Sincroniza el esquema Prisma con la base de datos en el entorno de desarrollo (development) sin crear migraciones.
-- **`prisma:push:test`**  Similar a **`prisma:push:dev`** , pero aplica los cambios en la base de datos en el entorno de pruebas (test).
-- **`prisma:reset`**  Restablece la base de datos al estado inicial, eliminando todos los datos y aplicando de nuevo el esquema Prisma.
-- **`db:up:dev`**  Levanta la base de datos en el entorno de desarrollo, ejecutando cualquier configuración necesaria.
-- **`db:down:dev`**  Apaga la base de datos en el entorno de desarrollo, deteniendo contenedores o servicios.
-- **`db:up:test`**  Levanta la base de datos en el entorno de pruebas.
-- **`db:down:test`**  Apaga la base de datos en el entorno de pruebas.
-- **`test:e2e:dev`**  Ejecuta pruebas de extremo a extremo en el entorno de desarrollo. Levanta la base de datos de prueba, sincroniza el esquema, genera el cliente Prisma, ejecuta las pruebas y luego apaga la base de datos.
-- **`test:e2e:run`**  Ejecuta pruebas de extremo a extremo usando Playwright en el entorno de prueba, cargando variables de entorno desde un archivo `.env.test`.
-- **`dev:with-db`**  Ejecuta el entorno de desarrollo con la base de datos levantada. Este comando levanta la base de datos, sincroniza el esquema y luego inicia el servidor de desarrollo.
+
 
 ## Ejecutar por primera vez
 Ejecuta los siguientes comandos en orden en la raíz del proyecto:
-1. **`db:up:dev`**
-2. **`prisma:push:dev`**
+1. **`db:up`**
+2. **`prisma:push`**
 3. **`prisma:generate`**
 4. **`dev`**
 
