@@ -1,4 +1,5 @@
-import { GetPlansService } from "../services/index.services";
+
+import { GetPlansService } from "../services/get-plans.service";
 import { InsurancePlanTransformer } from "../transformers/insurance-plan";
 
 export const getPlans = async () => {

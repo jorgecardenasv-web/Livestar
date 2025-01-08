@@ -1,6 +1,5 @@
 "use server";
 
-import { getInsuranceState } from "@/features/insurance-plans/actions/insurance-actions";
 import { cookies } from "next/headers";
 import {
   createQuoteService,
@@ -9,6 +8,7 @@ import {
 import { createTrackingNumberService } from "../services/create-traking.service";
 import { getProspectByIdService } from "@/features/prospects/services/get-prospect-by-id.service";
 import { redirect } from "next/navigation";
+import { getInsuranceState } from "@/features/insurance-plans/loaders/get-insurance-status";
 
 export async function handleContractNow() {
   const { selectedPlan } = await getInsuranceState();

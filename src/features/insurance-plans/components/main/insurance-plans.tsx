@@ -1,5 +1,5 @@
 import { InsuranceCard } from "../card/insurance-card";
-import { getInsuranceState } from "../../actions/insurance-actions";
+import { getInsuranceState } from "../../actions/add-cookies";
 import { PlanSelector } from "../selector/plan-selector";
 import { PaymentSelector } from "../selector/payment-selector";
 import { CompanyStatus, HospitalTier, PlanStatus } from "@prisma/client";

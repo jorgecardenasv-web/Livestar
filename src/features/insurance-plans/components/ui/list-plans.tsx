@@ -19,8 +19,12 @@ import {
 } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
 import { Trash2 } from "lucide-react";
+import { prefix } from "@/shared/utils/constants";
+import { useRouter } from "next/navigation";
 
 export const PlansList = ({ plans }: { plans: Plan[] }) => {
+  const { push } = useRouter();
+
   return (
     <div className="w-full">
       {plans && plans.length > 0 ? (
@@ -36,23 +40,30 @@ export const PlansList = ({ plans }: { plans: Plan[] }) => {
           </TableHeader>
           <TableBody>
             {plans.map((plan) => (
-              <TableRow key={plan.id}>
-                <TableCell>{plan.name}</TableCell>
-                <TableCell>
+              <TableRow key={plan.id} className="cursor-pointer">
+                <TableCell onClick={() => push(`${prefix}/planes/${plan.id}`)}>
+                  {plan.name}
+                </TableCell>
+                <TableCell onClick={() => push(`${prefix}/planes/${plan.id}`)}>
                   <Avatar>
                     <AvatarImage src={plan.company.logo} />
                     <AvatarFallback>{plan.company.name}</AvatarFallback>
                   </Avatar>
                 </TableCell>
-                <TableCell>
+                <TableCell onClick={() => push(`${prefix}/planes/${plan.id}`)}>
                   {plan.status === PlanStatus.ACTIVE ? (
                     <Badge variant="success">Activo</Badge>
                   ) : (
                     <Badge variant="destructive">Inactivo</Badge>
                   )}
                 </TableCell>
-                <TableCell>{formatDate(plan.createdAt)}</TableCell>
-                <TableCell className="flex gap-1">
+                <TableCell onClick={() => push(`${prefix}/planes/${plan.id}`)}>
+                  {formatDate(plan.createdAt)}
+                </TableCell>
+                <TableCell
+                  className="flex gap-1"
+                  onClick={() => push(`${prefix}/planes/${plan.id}`)}
+                >
                   {/* <Button onClick={() => openEditInsuranceModal(insurance)}>
                 <Pencil size={20} />
               </Button> */}

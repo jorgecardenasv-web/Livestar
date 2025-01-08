@@ -16,7 +16,7 @@ export const updateProspectService = async (
 ) => {
   return await prisma.prospect.update({
     where: {
-      uuid: prospectId,
+      id: prospectId,
     },
     data: {
       name,

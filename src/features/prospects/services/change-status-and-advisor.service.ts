@@ -12,13 +12,13 @@ export const changeStatusAndAdvisorService = async ({
 }) => {
   const advisor = await prisma.user.findUnique({
     where: {
-      uuid: advisorId,
+      id: advisorId,
     },
   });
 
   return await prisma.prospect.update({
     where: {
-      uuid: prospectId,
+      id: prospectId,
     },
     data: {
       status,

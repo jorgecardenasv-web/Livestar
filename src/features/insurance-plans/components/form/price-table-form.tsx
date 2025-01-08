@@ -17,11 +17,11 @@ import {
 } from "@/shared/components/ui/table";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
-import { usePlanForm } from "../../hooks/use-plan-form";
 import { PriceInput } from "../ui/price-input";
+import { usePriceTable } from "../../hooks/use-price-table";
 
 export const PriceTableForm: React.FC = () => {
-  const { handleFileUpload, handlePriceChange, prices } = usePlanForm();
+  const { prices, handlePriceChange, handleFileUpload } = usePriceTable();
 
   return (
     <Card className="w-full">

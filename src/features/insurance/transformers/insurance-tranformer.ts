@@ -5,7 +5,7 @@ export const insuranceTransformer = (
   insurance: InsuranceCompany
 ): Insurance => {
   return {
-    id: insurance.uuid,
+    id: insurance.id,
     logo: insurance.logo,
     name: insurance.name,
     createdAt: insurance.createdAt,

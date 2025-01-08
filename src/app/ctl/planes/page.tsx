@@ -1,9 +1,9 @@
-import { HeaderPlans } from "@/features/plans/components/header/header-plans";
-import { ModalPlanActions } from "@/features/plans/components/ui/modal-plan-actions";
-import { PlansList } from "@/features/plans/components/ui/list-plans";
-import { getPlans } from "@/features/plans/loaders/get-plans";
+import { HeaderPlans } from "@/features/insurance-plans/components/header/header-plans";
+import { ModalPlanActions } from "@/features/insurance-plans/components/ui/modal-plan-actions";
+import { PlansList } from "@/features/insurance-plans/components/ui/list-plans";
 import { Pagination } from "@/shared/components/pagination";
 import { Card, CardContent } from "@/shared/components/ui/card";
+import { getPlans } from "@/features/insurance-plans/loaders/get-plans";
 
 export default async function Planes() {
   const { plans, insurancesPerPage, totalPages, totalPlans } = await getPlans();
@@ -22,7 +22,6 @@ export default async function Planes() {
           />
         </CardContent>
       </Card>
-      <ModalPlanActions />
     </>
   );
 }

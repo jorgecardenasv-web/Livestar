@@ -3,7 +3,7 @@ import { FormDataMedical } from "../types";
 
 export async function createMedicalHistoryService(
   formMedical: FormDataMedical[],
-  idProspect: number
+  prospectId: string
 ) {
   try {
     const responses = JSON.parse(JSON.stringify(formMedical));
@@ -11,7 +11,7 @@ export async function createMedicalHistoryService(
       data: {
         responses,
         prospect: {
-          connect: { id: idProspect },
+          connect: { id: prospectId },
         },
       },
     });

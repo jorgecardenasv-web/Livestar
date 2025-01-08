@@ -7,7 +7,7 @@ interface ProspectPayload extends PrismaProspect {
 
 export const prospectTransformer = (prospect: ProspectPayload): Prospect => {
   return {
-    id: prospect.uuid,
+    id: prospect.id,
     name: prospect.name,
     email: prospect.email,
     createdAt: prospect.createdAt,

@@ -44,7 +44,7 @@ export const getProspectsService = async ({
         select: {
           name: true,
           email: true,
-          uuid: true,
+          id: true,
         },
       },
     },

@@ -3,7 +3,7 @@ import { Advisor } from "../types/advisor";
 
 export const advisorTransformer = (user: PrismaUser): Advisor => {
   return {
-    id: user.uuid,
+    id: user.id,
     name: user.name,
     email: user.email,
     role: user.role,

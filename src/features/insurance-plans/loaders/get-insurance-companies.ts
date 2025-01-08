@@ -1,5 +1,5 @@
-import { getInsurancePlansServices } from "../services/get-insurance-companies.service"
+import { getInsuranceCompaniesService } from "../services/get-insurance-companies.service";
 
-export const getInsurancePlans = async () => {
-  return getInsurancePlansServices()
-}
+export const getInsuranceCompany = () => {
+  return getInsuranceCompaniesService();
+};

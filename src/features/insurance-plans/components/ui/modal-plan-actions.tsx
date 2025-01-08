@@ -11,7 +11,7 @@ export const ModalPlanActions: FC = () => {
   return (
     <>
       {isOpen && modalType === "addPlan" && (
-        <Modal title="Nuevo Plan" size="4xl">
+        <Modal title="Nuevo Plan" size="6xl">
           <InsurancePlanForm />
         </Modal>
       )}

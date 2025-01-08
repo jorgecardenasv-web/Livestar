@@ -1,4 +1,3 @@
-import { InsurancePlan } from "@/shared/types/insurance";
 import {
   InsuranceCompany,
   InsuranceCompany as InsuranceCompanyPrisma,
@@ -12,17 +11,11 @@ export interface InsurancePlanTransformer extends InsurancePlanPrisma {
 export const InsuranceCompanyTransformer = (
   insuranceCompany: InsuranceCompanyPrisma
 ) => {
-  return {
-    ...insuranceCompany,
-    id: insuranceCompany.uuid,
-  };
+  return insuranceCompany
 };
 
 export const InsurancePlanTransformer = (
   plan: InsurancePlanTransformer
 ) => {
-  return {
-    ...plan,
-    id: plan.uuid,
-  };
+  return plan;
 };

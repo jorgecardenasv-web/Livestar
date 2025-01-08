@@ -5,6 +5,6 @@ export const deleteInsuranceService = (
   id: string
 ): Promise<InsuranceCompany> => {
   return prisma.insuranceCompany.delete({
-    where: { uuid: id },
+    where: { id },
   });
 };

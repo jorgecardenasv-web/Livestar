@@ -19,7 +19,7 @@ enum UserStatus {
 
 model Session {
   id        String   @id @default(uuid())
-  userId    Int
+  userId    String
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -29,8 +29,7 @@ model Session {
 }
 
 model User {
-  id                   Int        @id @default(autoincrement())
-  uuid                 String     @unique @default(uuid())
+  id                   String     @id @default(uuid())
   name                 String
   email                String     @unique
   password             String
@@ -63,8 +62,7 @@ enum CompanyStatus {
 }
 
 model InsuranceCompany {
-  id          Int             @id @default(autoincrement())
-  uuid        String          @unique @default(uuid())
+  id          String          @id @default(uuid())
   name        String          @unique
   logo        String
   description String?
@@ -77,8 +75,7 @@ model InsuranceCompany {
 }
 
 model HospitalLevel {
-  id          Int      @id @default(autoincrement())
-  uuid        String   @unique @default(uuid())
+  id          String   @id @default(uuid())
   name        String
   description String?
   createdAt   DateTime @default(now())
@@ -104,27 +101,11 @@ enum PlanType {
   @@schema("public")
 }
 
-model AgePricing {
-  id                 Int           @id @default(autoincrement())
-  age                Int           @unique
-  monthlyPriceMale   Float
-  monthlyPriceFemale Float
-  annualPriceMale    Float
-  annualPriceFemale  Float
-  plan               InsurancePlan @relation(fields: [planId], references: [id], onDelete: Cascade)
-  planId             Int
-  createdAt          DateTime      @default(now())
-  updatedAt          DateTime      @updatedAt
-
-  @@schema("public")
-}
-
 model InsurancePlan {
-  id             Int              @id @default(autoincrement())
-  uuid           String           @unique @default(uuid())
-  name           String
+  id             String           @id @default(uuid())
+  name           String           @unique
   company        InsuranceCompany @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  companyId      Int
+  companyId      String
   sumInsured     Float
   coInsurance    Float
   coInsuranceCap Float?
@@ -133,7 +114,7 @@ model InsurancePlan {
   updatedAt      DateTime         @updatedAt
   quotes         Quote[]
   isRecommended  Boolean          @default(false)
-  agePricings    AgePricing[]
+  prices         Json
 
   @@schema("public")
 }
@@ -151,8 +132,7 @@ enum ProspectStatus {
 }
 
 model Prospect {
-  id               Int              @id @default(autoincrement())
-  uuid             String           @unique @default(uuid())
+  id               String           @id @default(uuid())
   name             String
   gender           String
   age              Int?
@@ -166,7 +146,7 @@ model Prospect {
   updatedAt        DateTime         @updatedAt
   additionalInfo   Json?
   user             User?            @relation(fields: [userId], references: [id])
-  userId           Int?
+  userId           String?
   quotes           Quote[]
   lastContactDate  DateTime?
   medicalHistories MedicalHistory[]
@@ -175,11 +155,10 @@ model Prospect {
 }
 
 model MedicalHistory {
-  id         Int      @id @default(autoincrement())
-  uuid       String   @unique @default(uuid())
+  id         String   @id @default(uuid())
   responses  Json
   prospect   Prospect @relation(fields: [prospectId], references: [id])
-  prospectId Int
+  prospectId String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
@@ -199,12 +178,11 @@ enum QuoteStatus {
 }
 
 model Quote {
-  id             Int             @id @default(autoincrement())
-  uuid           String          @unique @default(uuid())
+  id             String          @id @default(uuid())
   prospect       Prospect        @relation(fields: [prospectId], references: [id])
-  prospectId     Int
+  prospectId     String
   plan           InsurancePlan   @relation(fields: [planId], references: [id])
-  planId         Int
+  planId         String
   customizations Json?
   totalPrice     Float
   status         QuoteStatus     @default(DRAFT)
@@ -217,11 +195,10 @@ model Quote {
 }
 
 model TrackingNumber {
-  id           Int      @id @default(autoincrement())
-  uuid         String   @unique @default(uuid())
+  id           String   @id @default(uuid())
   number       String   @unique
   quote        Quote    @relation(fields: [quoteId], references: [id])
-  quoteId      Int      @unique
+  quoteId      String   @unique
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   lastActivity DateTime @default(now())

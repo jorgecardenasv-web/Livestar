@@ -1,6 +1,6 @@
 import { QuoteSummary } from "@/features/quote-summary/components/quote-summary";
 import { HeaderSecondary } from "@/shared/components/layout/header-secondary";
-import { getProspect } from "@/features/insurance-plans/actions/insurance-actions";
+import { getProspect } from "@/features/insurance-plans/actions/add-cookies";
 import { notFound } from "next/navigation";
 import { MedicalInformation } from "@/features/insurance-quote/components/medical-information";
 import { getProspectById } from "@/features/prospects/loaders/get-prospect-by-id";

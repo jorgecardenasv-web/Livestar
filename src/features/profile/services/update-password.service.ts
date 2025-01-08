@@ -9,7 +9,7 @@ export const updatePasswordService = async ({
 }) => {
   return await prisma.user.update({
     where: {
-      uuid: userId,
+      id: userId,
     },
     data: {
       password,

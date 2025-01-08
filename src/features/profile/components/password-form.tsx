@@ -25,8 +25,8 @@ export const PasswordForm = () => {
   }, [showNotification, state?.result]);
 
   return (
-    <Card className="mx-auto dark:bg-zinc-800 dark:text-zinc-100 dark:ring-0">
-      <CardContent>
+    <Card className="mx-auto dark:bg-zinc-800 dark:text-zinc-100 dark:ring-0 w-full">
+      <CardContent className="space-y-6 p-6">
         <h3 className="text-tremor-content-strong dark:text-dark-tremor-content-strong font-semibold">
           Editar contraseña
         </h3>

@@ -5,7 +5,7 @@ import {
 } from "../../../../shared/types/insurance";
 import { calculateTotalPrice } from "../../utils/insurance-calculations";
 import { Shield, DollarSign, Percent, Heart, Check } from "lucide-react";
-import { handleInterestClick } from "../../actions/insurance-actions";
+import { handleInterestClick } from "../../actions/add-cookies";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
 
 interface InsuranceCardProps {

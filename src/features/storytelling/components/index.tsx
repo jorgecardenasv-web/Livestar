@@ -4,7 +4,7 @@ import { QuoteSummary } from "@/features/quote-summary/components/quote-summary"
 import {
   getInsuranceState,
   getProspect,
-} from "@/features/insurance-plans/actions/insurance-actions";
+} from "@/features/insurance-plans/actions/add-cookies";
 
 export const InsuranceStorytelling = async ({ plans }: { plans: any[] }) => {
   const prospect = await getProspect();
