@@ -104,6 +104,20 @@ enum PlanType {
   @@schema("public")
 }
 
+model AgePricing {
+  id                 Int           @id @default(autoincrement())
+  age                Int           @unique
+  monthlyPriceMale   Float
+  monthlyPriceFemale Float
+  annualPriceMale    Float
+  annualPriceFemale  Float
+  plan               InsurancePlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+  planId             Int
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  @@schema("public")
+}
 
 model InsurancePlan {
   id             Int              @id @default(autoincrement())
@@ -119,6 +133,7 @@ model InsurancePlan {
   updatedAt      DateTime         @updatedAt
   quotes         Quote[]
   isRecommended  Boolean          @default(false)
+  agePricings    AgePricing[]
 
   @@schema("public")
 }

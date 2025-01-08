@@ -17,11 +17,11 @@ import {
 } from "@/shared/components/ui/table";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
-import { usePriceForm } from "../../hooks/use-price-table";
+import { usePlanForm } from "../../hooks/use-plan-form";
 import { PriceInput } from "../ui/price-input";
 
 export const PriceTableForm: React.FC = () => {
-  const { handleFileUpload, handlePriceChange, prices } = usePriceForm();
+  const { handleFileUpload, handlePriceChange, prices } = usePlanForm();
 
   return (
     <Card className="w-full">
@@ -76,33 +76,33 @@ export const PriceTableForm: React.FC = () => {
                     <TableCell className="text-center">{row.age}</TableCell>
                     <TableCell>
                       <PriceInput
-                        value={row.mensualHombre}
+                        value={row.monthlyPriceMale}
                         onChange={(value) =>
-                          handlePriceChange(row.age, "mensualHombre", value)
+                          handlePriceChange(row.age, "monthlyPriceMale", value)
                         }
                       />
                     </TableCell>
                     <TableCell>
                       <PriceInput
-                        value={row.mensualMujer}
+                        value={row.monthlyPriceFemale}
                         onChange={(value) =>
-                          handlePriceChange(row.age, "mensualMujer", value)
+                          handlePriceChange(row.age, "monthlyPriceFemale", value)
                         }
                       />
                     </TableCell>
                     <TableCell>
                       <PriceInput
-                        value={row.anualHombre}
+                        value={row.annualPriceMale}
                         onChange={(value) =>
-                          handlePriceChange(row.age, "anualHombre", value)
+                          handlePriceChange(row.age, "annualPriceMale", value)
                         }
                       />
                     </TableCell>
                     <TableCell>
                       <PriceInput
-                        value={row.anualMujer}
+                        value={row.annualPriceFemale}
                         onChange={(value) =>
-                          handlePriceChange(row.age, "anualMujer", value)
+                          handlePriceChange(row.age, "annualPriceFemale", value)
                         }
                       />
                     </TableCell>

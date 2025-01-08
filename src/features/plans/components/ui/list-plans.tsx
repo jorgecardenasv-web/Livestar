@@ -10,10 +10,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/components/ui/table";
-import { Card, CardContent } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
 import { Plan } from "../../types/plan";
-import Image from "next/image";
 import {
   Avatar,
   AvatarFallback,

@@ -1,29 +1,12 @@
-'use client'
-
-import { useState } from 'react'
-
-import { DollarSign, Percent, Building2, FileText } from 'lucide-react'
-import { TextInput } from '@/shared/components/ui/text-input'
-import { PriceTableForm } from './price-table-form'
+import { DollarSign, Percent, Building2, FileText } from "lucide-react";
+import { TextInput } from "@/shared/components/ui/text-input";
+import { PriceTableForm } from "./price-table-form";
+import { addPlan } from "../../actions/add-plan";
+import { Button } from "@/shared/components/ui/button";
 
 export default function InsurancePlanForm() {
-  const [costosPorEdad, setCostosPorEdad] = useState(
-    Array.from({ length: 65 }, (_, i) => ({ edad: i, costo: 0 }))
-  )
-  const [deducibles, setDeducibles] = useState([
-    { nivel: 'A', deducible: 0 },
-    { nivel: 'B', deducible: 0 },
-    { nivel: 'C', deducible: 0 },
-    { nivel: 'D', deducible: 0 }
-  ])
-
-  async function handleSubmit(formData: FormData) {
-    formData.append('costosPorEdad', JSON.stringify(costosPorEdad))
-    formData.append('deducibles', JSON.stringify(deducibles))
-  }
-
   return (
-    <form action={handleSubmit} className="max-w-4xl mx-auto space-y-6">
+    <form action={addPlan} className="max-w-4xl mx-auto space-y-6">
       <TextInput
         name="name"
         label="Nombre del Plan"
@@ -72,12 +55,7 @@ export default function InsurancePlanForm() {
 
       <PriceTableForm />
 
-      <button 
-        type="submit"
-        className="w-full bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90"
-      >
-        Crear Plan
-      </button>
+      <Button className="w-full" type="submit">Crear Plan</Button>
     </form>
-  )
+  );
 }

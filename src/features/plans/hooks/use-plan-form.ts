@@ -3,10 +3,10 @@ import { useCallback, useState } from "react";
 // Tipos de datos
 export interface PriceData {
   age: number;
-  mensualHombre: string;
-  mensualMujer: string;
-  anualHombre: string;
-  anualMujer: string;
+  monthlyPriceMale: string;
+  monthlyPriceFemale: string;
+  annualPriceMale: string;
+  annualPriceFemale: string;
 }
 
 export type FieldType = keyof Omit<PriceData, "age">;
@@ -14,7 +14,7 @@ export type FieldType = keyof Omit<PriceData, "age">;
 const MONTHS_IN_YEAR = 12;
 const DECIMAL_PLACES = 2;
 
-export const usePriceForm = () => {
+export const usePlanForm = () => {
   const [prices, setPrices] = useState<PriceData[]>([]);
 
   // Funcion para calcular el valor mensual a partir del anual
@@ -37,20 +37,20 @@ export const usePriceForm = () => {
         FieldType,
         { dependentField: FieldType; calculate: (val: string) => string }
       > = {
-        mensualHombre: {
-          dependentField: "anualHombre",
+        monthlyPriceMale: {
+          dependentField: "annualPriceMale",
           calculate: calculateAnnual,
         },
-        mensualMujer: {
-          dependentField: "anualMujer",
+        monthlyPriceFemale: {
+          dependentField: "annualPriceFemale",
           calculate: calculateAnnual,
         },
-        anualHombre: {
-          dependentField: "mensualHombre",
+        annualPriceMale: {
+          dependentField: "monthlyPriceMale",
           calculate: calculateMonthly,
         },
-        anualMujer: {
-          dependentField: "mensualMujer",
+        annualPriceFemale: {
+          dependentField: "monthlyPriceFemale",
           calculate: calculateMonthly,
         },
       };
@@ -111,10 +111,10 @@ export const usePriceForm = () => {
           // Crear objeto de precio
           return {
             age,
-            mensualHombre: excelRow?.[1]?.toFixed(DECIMAL_PLACES) || "",
-            mensualMujer: excelRow?.[2]?.toFixed(DECIMAL_PLACES) || "",
-            anualHombre: excelRow?.[3]?.toFixed(DECIMAL_PLACES) || "",
-            anualMujer: excelRow?.[4]?.toFixed(DECIMAL_PLACES) || "",
+            monthlyPriceMale: excelRow?.[1]?.toFixed(DECIMAL_PLACES) || "",
+            monthlyPriceFemale: excelRow?.[2]?.toFixed(DECIMAL_PLACES) || "",
+            annualPriceMale: excelRow?.[3]?.toFixed(DECIMAL_PLACES) || "",
+            annualPriceFemale: excelRow?.[4]?.toFixed(DECIMAL_PLACES) || "",
           };
         });
 
