@@ -68,8 +68,8 @@ export const ProfileForm = ({ user }: { user: AuthenticadedUser }) => {
             <span className="text-sm text-red-500">{state?.errors?.email}</span>
           </div>
           <SubmitButton
-            textStatic="Actualizar información"
-            textPending="Actualizando información..."
+            label="Actualizar información"
+            labelPending="Actualizando información..."
           />
         </form>
       </CardContent>

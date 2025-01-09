@@ -24,8 +24,8 @@ export const AddInsuranceForm = () => {
 
       <SubmitButton
         className="w-full"
-        textPending="Creando aseguradora..."
-        textStatic="Crear aseguradora"
+        label="Crear aseguradora"
+        labelPending="Creando aseguradora..."
       />
     </form>
   );

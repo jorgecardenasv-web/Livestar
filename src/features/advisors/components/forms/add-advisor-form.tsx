@@ -45,9 +45,9 @@ export const AddAdvisorForm = () => {
       />
 
       <SubmitButton
-        textStatic="Crear Asesor"
+        label="Crear Asesor"
         className="flex-1"
-        textPending="Creando Asesor..."
+        labelPending="Creando Asesor..."
       />
     </form>
   );

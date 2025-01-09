@@ -1,3 +1,3 @@
 export interface FormError {
-  [key: string]: string | undefined;
+  [key: string]: string;
 }

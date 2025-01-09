@@ -35,7 +35,7 @@ export default function InsurancePlanForm({
   }, []);
 
   return (
-    <form action={handleSubmit} className="mx-auto space-y-6">
+    <form action={handleSubmit} className="mx-auto space-y-6 w-full">
       <Card>
         <CardContent className="space-y-6 p-6">
           <SelectInput

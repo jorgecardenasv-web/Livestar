@@ -51,9 +51,9 @@ export const EditAdvisorForm = () => {
 
       <div className="mt-8 w-full flex flex-row gap-2">
         <SubmitButton
-          textStatic="Editar Asesor"
+          label="Editar Asesor"
           className="flex-1"
-          textPending="Editando Asesor..."
+          labelPending="Editando Asesor..."
         />
         <Button
           variant="outline"

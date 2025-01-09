@@ -47,6 +47,12 @@ export const navLinks: NavLiks[] = [
     roles: ["ADMIN"],
   },
   {
+    name: "Tipo de planes",
+    href: `${prefix}/planes`,
+    icon: NotepadTextIcon,
+    roles: ["ADMIN"],
+  },
+  {
     name: "Sesiones",
     href: `${prefix}/sesiones`,
     icon: KeyIcon,

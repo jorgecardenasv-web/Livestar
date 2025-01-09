@@ -81,8 +81,8 @@ export const PasswordForm = () => {
           </div>
           {state?.error && <p className="text-red-600">{state?.error}</p>}
           <SubmitButton
-            textStatic="Cambiar contraseña"
-            textPending="Cambiando contraseña..."
+            label="Cambiar contraseña"
+            labelPending="Cambiando contraseña..."
           />
         </form>
       </CardContent>

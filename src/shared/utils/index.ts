@@ -4,9 +4,11 @@ export * from "./format-date";
 
 export function simplifyZodErrors<T>(errors: ZodError<T>): FormError {
   const simplifiedErrors: FormError = {};
-  errors.issues.forEach((key) => {
+
+  errors.issues.forEach((key: any) => {
     simplifiedErrors[key.path[0]] = key.message;
   });
+
   return simplifiedErrors;
 }
 

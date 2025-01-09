@@ -111,8 +111,8 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = ({
           <input type="hidden" name="id" value={plan.id} />
           <SubmitButton
             type="submit"
-            textStatic="Me interesa"
-            textPending="Seleccionando..."
+            label="Me interesa"
+            labelPending="Seleccionando..."
             className="w-full bg-[#223E99] text-white py-3 rounded font-bold text-lg hover:bg-primary transition duration-300"
           />
         </form>

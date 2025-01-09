@@ -42,10 +42,10 @@ export const DeleteInsuranceForm = () => {
 
       <div className="mt-8 w-full flex flex-row gap-2">
         <SubmitButton
-          textStatic="Eliminar"
+          label="Eliminar"
+          labelPending="Eliminando..."
           color="red"
           className="flex-1"
-          textPending="Eliminando..."
           onClick={() => handleDeleteInsurance(insurance.id)}
         />
         <Button

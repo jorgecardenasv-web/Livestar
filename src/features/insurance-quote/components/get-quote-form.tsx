@@ -38,8 +38,8 @@ export const GetQuoteForm: React.FC<{
 
       <SubmitButton
         type="submit"
-        textPending="Cotizando..."
-        textStatic="Cotizar"
+        label="Cotizar"
+        labelPending="Cotizando..."
         className="bg-primary text-white p-6 rounded font-bold text-lg w-full mt-6 hover:bg-[#223E99]"
       />
     </form>

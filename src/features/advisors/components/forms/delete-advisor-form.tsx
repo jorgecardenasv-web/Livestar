@@ -43,10 +43,10 @@ export const DeleteAdvisorForm = () => {
 
       <div className="mt-8 w-full flex flex-row gap-2">
         <SubmitButton
-          textStatic="Eliminar"
+          label="Eliminar"
           color="red"
           className="flex-1"
-          textPending="Eliminando..."
+          labelPending="Eliminando..."
           onClick={() => handleDeleteAdvisor(advisor.id)}
         />
         <Button

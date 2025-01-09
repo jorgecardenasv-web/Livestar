@@ -12,7 +12,6 @@ export interface PriceData {
 export type FieldType = keyof Omit<PriceData, "age">;
 
 const MONTHS_IN_YEAR = 12;
-const DECIMAL_PLACES = 2;
 
 export const usePriceTable = () => {
   const { prices, setPrices } = useInsurancePlanStore();

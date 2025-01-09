@@ -26,7 +26,7 @@ interface ListInsuranceProps {
 }
 
 export const ListInsurance: FC<ListInsuranceProps> = ({ insurances }) => {
-  const { openEditInsuranceModal, openDeleteInsuranceModal } =
+  const { openDeleteInsuranceModal } =
     useInsuranceActions();
   return (
     <Table>
