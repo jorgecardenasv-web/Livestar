@@ -4,7 +4,6 @@ import { Modal } from "@/shared/components/ui/modal";
 import { useInsuranceActions } from "../../hooks/use-insurance-actions";
 import { AddInsuranceForm } from "../form/add-insurence-form";
 import { DeleteInsuranceForm } from "../form/delete-insurance-form";
-import { EditInsuranceForm } from "../form/edit-insurence-form";
 
 export const ModalInsuranceActions = () => {
   const { isOpen, modalType } = useInsuranceActions();

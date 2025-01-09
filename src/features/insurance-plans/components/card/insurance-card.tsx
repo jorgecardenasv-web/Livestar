@@ -60,11 +60,11 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = ({
             title="Suma asegurada"
             value={`$${(plan.sumInsured / 1000000)} MILLONES`}
           />
-          <InfoItem
+          {/* <InfoItem
             icon={<DollarSign className="w-5 h-5" />}
             title="Deducible"
             value={`$${plan.deductible}`}
-          />
+          /> */}
           <InfoItem
             icon={<Percent className="w-5 h-5" />}
             title="Coaseguro"
@@ -88,11 +88,11 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = ({
             name="sumInsured"
             value={plan.sumInsured}
           />
-          <input
+          {/* <input
             type="hidden"
             name="deductible"
             value={plan.deductible}
-          />
+          /> */}
           <input
             type="hidden"
             name="coInsurance"

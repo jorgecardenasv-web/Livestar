@@ -3,7 +3,7 @@ import { getProspectsService } from "../services/get-prospects.service";
 import { prospectTransformer } from "../transformers/prospect-transformer";
 
 interface GetProspects extends Partial<Prospect> {
-  advisorId?: number;
+  advisorId?: string;
   page: number;
   query: string;
 }

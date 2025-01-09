@@ -6,6 +6,6 @@ export const getAdvisors = async (): Promise<Advisor[]> => {
 
   return advisors.map((advisor) => ({
     ...advisor,
-    id: advisor.uuid,
+    id: advisor.id,
   }));
 };

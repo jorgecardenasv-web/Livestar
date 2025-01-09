@@ -19,7 +19,7 @@ export const addPlan = async (formData: FormData) => {
     sumInsured: Number(sumInsured),
     coInsurance: Number(coInsurance),
     coInsuranceCap: Number(coInsuranceCap),
-    prices: flatPricesToJsonPrices(JSON.parse(prices)),
+    prices: prices ? flatPricesToJsonPrices(JSON.parse(prices as string)) : {},
   };
 
   await createPlanService(rawFormData);

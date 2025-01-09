@@ -6,7 +6,7 @@ import {
 import { Prospect } from "@prisma/client";
 
 interface GetProspectsService extends Partial<Prospect> {
-  advisorId?: number;
+  advisorId?: string;
   page: number;
   query: string;
 }
