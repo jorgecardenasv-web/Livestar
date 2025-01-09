@@ -9,15 +9,15 @@ interface PlanSelectorProps {
 
 export const PlanSelector: React.FC<PlanSelectorProps> = ({
   planTypes,
-  activePlanType,
+  activePlanType = "Plan Básico",
 }) => {
   const getPlanIcon = (type: string) => {
     switch (type) {
-      case "Esencial":
+      case "Plan Básico":
         return <Shield className="w-5 h-5 mr-2" />;
-      case "Protegido":
+      case "Plan Intermedio":
         return <ShieldCheck className="w-5 h-5 mr-2" />;
-      case "Blindado":
+      case "Plan Plus":
         return <ShieldAlert className="w-5 h-5 mr-2" />;
       default:
         return null;

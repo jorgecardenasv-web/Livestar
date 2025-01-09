@@ -1,6 +1,6 @@
 "use client";
 
-import { DollarSign, Percent, Building2, FileText } from "lucide-react";
+import { DollarSign, Percent } from "lucide-react";
 import { TextInput } from "@/shared/components/ui/text-input";
 import { PriceTableForm } from "./price-table-form";
 import { addPlan } from "../../actions/add-plan";
@@ -8,6 +8,8 @@ import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { SelectInput } from "@/shared/components/ui/select-input";
 import { useInsurancePlanForm } from "../../hooks/use-insurance-plan-form";
+import { useEffect } from "react";
+import { usePriceTable } from "../../hooks/use-price-table";
 
 interface InsuranceCompany {
   id: string;
@@ -16,10 +18,21 @@ interface InsuranceCompany {
 
 interface Props {
   insuranceCompanies: InsuranceCompany[];
+  insurancePlan?: any;
 }
 
-export default function InsurancePlanForm({ insuranceCompanies }: Props) {
+export default function InsurancePlanForm({
+  insuranceCompanies,
+  insurancePlan,
+}: Props) {
   const { handleSubmit } = useInsurancePlanForm(addPlan);
+  const { setPrices } = usePriceTable();
+
+  useEffect(() => {
+    if (insurancePlan?.prices.length > 0) {
+      setPrices(insurancePlan?.prices);
+    }
+  }, []);
 
   return (
     <form action={handleSubmit} className="mx-auto space-y-6">
@@ -42,6 +55,7 @@ export default function InsurancePlanForm({ insuranceCompanies }: Props) {
                 value: "Plan Plus",
               },
             ]}
+            defaultValue={insurancePlan?.name}
             required
           />
 
@@ -52,6 +66,7 @@ export default function InsurancePlanForm({ insuranceCompanies }: Props) {
               label: insuranceCompany.name,
               value: insuranceCompany.id,
             }))}
+            defaultValue={insurancePlan?.company.id}
             required
           />
 
@@ -61,6 +76,7 @@ export default function InsurancePlanForm({ insuranceCompanies }: Props) {
             type="number"
             icon={<DollarSign className="w-4 h-4 text-gray-500" />}
             placeholder="Ingrese suma asegurada"
+            defaultValue={insurancePlan?.sumInsured}
             required
           />
 
@@ -72,6 +88,7 @@ export default function InsurancePlanForm({ insuranceCompanies }: Props) {
             step="0.01"
             min="0"
             max="1"
+            defaultValue={insurancePlan?.coInsurance}
             placeholder="Ej: 0.10"
             required
           />
@@ -82,6 +99,7 @@ export default function InsurancePlanForm({ insuranceCompanies }: Props) {
             type="number"
             icon={<DollarSign className="w-4 h-4 text-gray-500" />}
             placeholder="Ingrese tope de coaseguro"
+            defaultValue={insurancePlan?.coInsuranceCap}
           />
         </CardContent>
       </Card>

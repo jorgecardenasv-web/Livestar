@@ -3,7 +3,7 @@ import {
   InsuranceCompany,
   InsurancePlan,
 } from "../../../../shared/types/insurance";
-import { calculateTotalPrice } from "../../utils/insurance-calculations";
+import { calculateTotalPrice } from "../../utils";
 import { Shield, DollarSign, Percent, Heart, Check } from "lucide-react";
 import { handleInterestClick } from "../../actions/add-cookies";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
@@ -21,7 +21,8 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = ({
   paymentType,
   isRecommended,
 }) => {
-  const coverage_fee = calculateTotalPrice(plan.totalPrice, paymentType);
+  const coverage_fee = calculateTotalPrice(10, paymentType);
+  
   return (
     <div
       className={`bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${

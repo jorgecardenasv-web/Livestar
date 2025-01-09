@@ -1,10 +1,8 @@
 import { InsurancePlans } from "@/features/insurance-plans/components/main/insurance-plans";
 import { InsuranceFlow } from "./insurance-flow";
 import { QuoteSummary } from "@/features/quote-summary/components/quote-summary";
-import {
-  getInsuranceState,
-  getProspect,
-} from "@/features/insurance-plans/actions/add-cookies";
+import { getProspect } from "@/features/insurance-plans/loaders/get-prospect";
+import { getInsuranceState } from "@/features/insurance-plans/loaders/get-insurance-status";
 
 export const InsuranceStorytelling = async ({ plans }: { plans: any[] }) => {
   const prospect = await getProspect();

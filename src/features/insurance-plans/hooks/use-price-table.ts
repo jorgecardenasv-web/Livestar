@@ -132,5 +132,6 @@ export const usePriceTable = () => {
     prices,
     handlePriceChange,
     handleFileUpload,
+    setPrices,
   };
 };

@@ -5,5 +5,8 @@ export const getInsurancePlanByIdService = async (id: string) => {
     where: {
       id,
     },
+    include: {
+      company: true
+    }
   });
 };

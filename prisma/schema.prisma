@@ -103,7 +103,7 @@ enum PlanType {
 
 model InsurancePlan {
   id             String           @id @default(uuid())
-  name           String           @unique
+  name           String
   company        InsuranceCompany @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId      String
   sumInsured     Float
@@ -116,6 +116,7 @@ model InsurancePlan {
   isRecommended  Boolean          @default(false)
   prices         Json
 
+  @@unique([name, companyId])
   @@schema("public")
 }
 

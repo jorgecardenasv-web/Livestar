@@ -20,6 +20,9 @@ export const createProspect = async (formData: any) => {
     JSON.stringify({
       id: prospect.id,
       postalCode: prospect.postalCode,
+      age: prospect.age,
+      additionalInfo: prospect.additionalInfo,
+      protectWho: prospect.protectWho,
     })
   );
 

@@ -1,8 +1,8 @@
 import { InsuranceCard } from "../card/insurance-card";
-import { getInsuranceState } from "../../actions/add-cookies";
 import { PlanSelector } from "../selector/plan-selector";
 import { PaymentSelector } from "../selector/payment-selector";
-import { CompanyStatus, HospitalTier, PlanStatus } from "@prisma/client";
+import { getInsuranceState } from "../../loaders/get-insurance-status";
+import { getProspect } from "../../loaders/get-prospect";
 
 export const InsurancePlans = async ({
   insurancePlans,
@@ -10,36 +10,13 @@ export const InsurancePlans = async ({
   insurancePlans: any[];
 }) => {
   const { activePlanType, activePaymentType } = await getInsuranceState();
+  const prospect = await getProspect();
 
-  const planTypes = ["Esencial", "Protegido", "Blindado"];
+  console.log(prospect);
+  
+
+  const planTypes = ["Plan Básico", "Plan Intermedio", "Plan Plus"];
   const paymentTypes = ["Mensual", "Anual"];
-
-  const company = {
-    id: "123e4567-e89b-12d3-a456-426614174000",
-    name: "HDI Seguros",
-    logo: "/api/images/bupa-hdi.svg",
-    description: "Compañía líder en seguros de salud",
-    status: CompanyStatus.ACTIVE,
-    createdAt: new Date("2024-09-27T10:00:00Z"),
-    updatedAt: new Date("2024-09-27T10:00:00Z"),
-  };
-
-  const plan = {
-    id: "323e4567-e89b-12d3-a456-426614174002",
-    name: "Hibrido",
-    companyId: 1,
-    sumInsured: 2000000,
-    deductible: 0,
-    coInsurance: 0,
-    coInsuranceCap: 0,
-    hospitalTier: HospitalTier.INTERMEDIATE,
-    status: PlanStatus.ACTIVE,
-    createdAt: new Date("2024-09-27T11:00:00Z"),
-    updatedAt: new Date("2024-09-27T11:00:00Z"),
-    totalPrice: 8000,
-    isRecommended: true,
-    company,
-  };
 
   return (
     <div className="mx-auto px-4 py-2 space-y-4 m-8">
@@ -51,7 +28,7 @@ export const InsurancePlans = async ({
         />
       </div>
       <div className="grid grid-flow-col justify-center md:auto-cols-max gap-2 items-end">
-        {insurancePlans.map((plan, index) => {
+        {insurancePlans.map((plan) => {
           const activePlan = plan.name === activePlanType ? plan : null;
           return (
             activePlan && (
@@ -60,18 +37,11 @@ export const InsurancePlans = async ({
                 company={plan.company}
                 plan={activePlan}
                 paymentType={activePaymentType}
-                isRecommended={index === 0}
+                isRecommended={plan.isRecommended}
               />
             )
           );
         })}
-        <InsuranceCard
-          key="default-card"
-          company={plan.company}
-          plan={plan}
-          paymentType={activePaymentType}
-          isRecommended={false}
-        />
       </div>
     </div>
   );
