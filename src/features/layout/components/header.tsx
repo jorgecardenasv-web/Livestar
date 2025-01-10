@@ -8,7 +8,7 @@ export const Header = async () => {
   return (
     <header className="hidden md:block">
       <Card>
-        <CardContent className="flex flex-row items-center justify-between gap-2 p-6">
+        <CardContent className="flex flex-row items-center justify-between gap-2 p-4">
           <div className="flex-wrap"></div>
           <HeaderClient label={session.user.name} />
         </CardContent>

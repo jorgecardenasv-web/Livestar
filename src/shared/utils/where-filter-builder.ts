@@ -1,4 +1,4 @@
-type FilterOptions = Record<string, any>;
+export type FilterOptions = Record<string, any>;
 
 export const whereFilterBuilder = <T>(filtersOptions: FilterOptions) => {
   const where: any = {};

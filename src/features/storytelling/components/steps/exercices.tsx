@@ -18,20 +18,20 @@ const rows = [
   { label: "Monto de la reclamación", value: "$300,000" },
   {
     label: "Deducible a pagar",
-    value: "-$21,000",
+    value: "-$20,000",
     valueColor: "text-red-500",
   },
-  { label: "Saldo después del Deducible", value: "$279,000" },
+  { label: "Saldo después del Deducible", value: "$280,000" },
   { label: "% de Coaseguro", value: "10%", valueColor: "text-sky-500" },
-  { label: "Coaseguro a pagar", value: "$27,900" },
+  { label: "Coaseguro a pagar", value: "$28,000" },
   {
     label: "Tu participación",
-    value: "$48,900",
+    value: "$48,000",
     special: "sky",
   },
   {
     label: "Participación de la aseguradora",
-    value: "$251,100",
+    value: "$252,000",
     special: "blue",
   },
 ];
@@ -44,6 +44,16 @@ export default function Component() {
       (selectedOption === "deducible" && index === 1) ||
       (selectedOption === "coaseguro" && (index === 3 || index === 4)) ||
       (selectedOption === "total" && (index === 5 || index === 6))
+    ) {
+      return "border-2 border-red-600";
+    }
+    return "";
+  };
+
+  const getBGStyle = (index: number) => {
+    if (
+      (selectedOption === "deducible" && index === 1) ||
+      (selectedOption === "coaseguro" && (index === 3 || index === 4))
     ) {
       return "border-2 border-red-600";
     }

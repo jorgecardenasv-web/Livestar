@@ -5,7 +5,7 @@ export const createSessionService = async (user: any) => {
     data: {
       user: {
         connect: {
-          uuid: user.id,
+          id: user.id,
         },
       },
     },

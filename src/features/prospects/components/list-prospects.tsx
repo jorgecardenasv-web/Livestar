@@ -47,9 +47,9 @@ export const ListProspects = ({ prospects }: { prospects: Prospect[] }) => {
                   onClick={() => push(`${prefix}/prospectos/${prospect.id}`)}
                 >
                   {prospect.isVerified ? (
-                    <Badge color="success">Verificado</Badge>
+                    <Badge variant="success">Verificado</Badge>
                   ) : (
-                    <Badge color="destructive">No verificado</Badge>
+                    <Badge variant="destructive">No verificado</Badge>
                   )}
                 </TableCell>
                 <TableCell

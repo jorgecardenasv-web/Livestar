@@ -4,6 +4,14 @@ interface PluralizationRule {
 }
 
 const pluralizationRules: PluralizationRule[] = [
+  { test: /ora$/i, replace: "oras" },
+  { test: /ana$/i, replace: "anas" },
+  { test: /ona$/i, replace: "onas" },
+  { test: /esa$/i, replace: "esas" },
+  { test: /ina$/i, replace: "inas" },
+  { test: /iza$/i, replace: "izas" },
+  { test: /triz$/i, replace: "trices" },
+
   { test: /or$/i, replace: "ores" },
   { test: /án$/i, replace: (match) => match.slice(0, -2) + "anes" },
   { test: /ón$/i, replace: (match) => match.slice(0, -2) + "ones" },

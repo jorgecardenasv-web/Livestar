@@ -19,7 +19,7 @@ enum UserStatus {
 
 model Session {
   id        String   @id @default(uuid())
-  userId    Int
+  userId    String
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -29,8 +29,7 @@ model Session {
 }
 
 model User {
-  id                   Int        @id @default(autoincrement())
-  uuid                 String     @unique @default(uuid())
+  id                   String     @id @default(uuid())
   name                 String
   email                String     @unique
   password             String
@@ -63,15 +62,24 @@ enum CompanyStatus {
 }
 
 model InsuranceCompany {
-  id          Int             @id @default(autoincrement())
-  uuid        String          @unique @default(uuid())
-  name        String
+  id          String          @id @default(uuid())
+  name        String          @unique
   logo        String
   description String?
   status      CompanyStatus   @default(ACTIVE)
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
   plans       InsurancePlan[]
+
+  @@schema("public")
+}
+
+model HospitalLevel {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@schema("public")
 }
@@ -85,55 +93,30 @@ enum PlanStatus {
   @@schema("public")
 }
 
-enum HospitalTier {
-  BASIC
-  INTERMEDIATE
-  EXECUTIVE
-  PLUS
-
-  @@schema("public")
-}
-
-enum MedicalFeeSchedule {
-  BASIC
-  INTERMEDIATE
-  HIGH
-  EXECUTIVE
-
-  @@schema("public")
-}
-
-model InsurancePlan {
-  id                  Int                @id @default(autoincrement())
-  uuid                String             @unique @default(uuid())
-  totalPrice          Float
-  name                String
-  company             InsuranceCompany   @relation(fields: [companyId], references: [id])
-  companyId           Int
-  description         String?
-  sumInsured          Float
-  deductible          Float
-  coInsurance         Float
-  coInsuranceCap      Float?
-  hospitalTier        HospitalTier
-  medicalFeeSchedule  MedicalFeeSchedule
-  additionalClauses   Json
-  benefits            Json
-  customizableOptions Json
-  status              PlanStatus         @default(ACTIVE)
-  createdAt           DateTime           @default(now())
-  updatedAt           DateTime           @updatedAt
-  quotes              Quote[]
-  isRecommended       Boolean            @default(false)
-
-  @@schema("public")
-}
-
 enum PlanType {
   ESENCIAL
   PROTEGIDO
   BLINDADO
 
+  @@schema("public")
+}
+
+model InsurancePlan {
+  id             String           @id @default(uuid())
+  name           String
+  company        InsuranceCompany @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId      String
+  sumInsured     Float
+  coInsurance    Float
+  coInsuranceCap Float?
+  status         PlanStatus       @default(ACTIVE)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  quotes         Quote[]
+  isRecommended  Boolean          @default(false)
+  prices         Json
+
+  @@unique([name, companyId])
   @@schema("public")
 }
 
@@ -150,39 +133,38 @@ enum ProspectStatus {
 }
 
 model Prospect {
-  id              Int            @id @default(autoincrement())
-  uuid            String         @unique @default(uuid())
-  name            String
-  gender          String
-  age             Int?
-  postalCode      String
-  protectWho      String
-  whatsapp        String
-  email           String
-  isVerified      Boolean        @default(false)
-  status          ProspectStatus @default(NEW)
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  additionalInfo  Json?
-  user            User?          @relation(fields: [userId], references: [id])
-  userId          Int?
-  quotes          Quote[]
-  lastContactDate DateTime?
+  id               String           @id @default(uuid())
+  name             String
+  gender           String
+  age              Int?
+  postalCode       String
+  protectWho       String
+  whatsapp         String
+  email            String
+  isVerified       Boolean          @default(false)
+  status           ProspectStatus   @default(NEW)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  additionalInfo   Json?
+  user             User?            @relation(fields: [userId], references: [id])
+  userId           String?
+  quotes           Quote[]
+  lastContactDate  DateTime?
   medicalHistories MedicalHistory[]
+
   @@schema("public")
 }
+
 model MedicalHistory {
-  id          Int       @id @default(autoincrement())
-  uuid        String    @unique @default(uuid())
-  responses   Json      
-  prospect    Prospect   @relation(fields: [prospectId], references: [id])
-  prospectId  Int        
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id         String   @id @default(uuid())
+  responses  Json
+  prospect   Prospect @relation(fields: [prospectId], references: [id])
+  prospectId String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@schema("public")
 }
-
 
 enum QuoteStatus {
   DRAFT
@@ -197,12 +179,11 @@ enum QuoteStatus {
 }
 
 model Quote {
-  id             Int             @id @default(autoincrement())
-  uuid           String          @unique @default(uuid())
+  id             String          @id @default(uuid())
   prospect       Prospect        @relation(fields: [prospectId], references: [id])
-  prospectId     Int
+  prospectId     String
   plan           InsurancePlan   @relation(fields: [planId], references: [id])
-  planId         Int
+  planId         String
   customizations Json?
   totalPrice     Float
   status         QuoteStatus     @default(DRAFT)
@@ -215,11 +196,10 @@ model Quote {
 }
 
 model TrackingNumber {
-  id           Int      @id @default(autoincrement())
-  uuid         String   @unique @default(uuid())
+  id           String   @id @default(uuid())
   number       String   @unique
   quote        Quote    @relation(fields: [quoteId], references: [id])
-  quoteId      Int      @unique
+  quoteId      String   @unique
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   lastActivity DateTime @default(now())

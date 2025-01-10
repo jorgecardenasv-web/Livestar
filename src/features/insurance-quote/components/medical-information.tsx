@@ -1,4 +1,5 @@
 "use client";
+
 import HealthConditionForm from "./HealtConditionForm";
 import RadioGroup from "./RadioGrup";
 import {
@@ -7,16 +8,17 @@ import {
   Question,
   RadioOption,
 } from "../types";
-import { Divider } from "@tremor/react";
+
 import { Plus, X } from "lucide-react";
 import { FormData } from "../schemas/form-schema";
+import { Separator } from "@/shared/components/ui/separator";
 
 interface MedicalInformationProps {
   forms: any[];
   setForms: React.Dispatch<React.SetStateAction<any[]>>;
   questions: Question[];
   formFamily: FormData;
-  errors: { [key: string]: string }; // Aquí recibimos los errores como props
+  errors: { [key: string]: string };
 }
 
 export const MedicalInformation: React.FC<MedicalInformationProps> = ({
@@ -66,7 +68,6 @@ export const MedicalInformation: React.FC<MedicalInformationProps> = ({
   };
   const addHealthCondition = (personaIndex: number) => {
     const { protectWho, childrenCount } = formFamily;
-    console.log(protectWho);
     let maxConditions = 1;
 
     switch (protectWho) {
@@ -192,7 +193,7 @@ export const MedicalInformation: React.FC<MedicalInformationProps> = ({
                         indexform={index}
                         errors={errors}
                       />
-                      <Divider />
+                      <Separator />
                     </>
                   )
                 )}

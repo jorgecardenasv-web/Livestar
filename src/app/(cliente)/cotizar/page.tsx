@@ -1,8 +1,7 @@
 import { HeaderSecondary } from "@/shared/components/layout/header-secondary";
-import { InsuranceFlow } from "@/features/storytelling/components/insurance-flow";
 import { ModalStorytellingActions } from "@/features/storytelling/components/modal-storytelling-actions";
 import { InsuranceStorytelling } from "@/features/storytelling/components";
-import { getInsurancePlans } from "@/features/insurance-plans/loaders/get-insurance-companies";
+import { getPlans } from "@/features/insurance-plans/loaders/get-plans";
 
 export interface InsuranceQuoteData {
   company: string;
@@ -18,7 +17,7 @@ export interface InsuranceQuoteData {
 }
 
 export default async function QuoteSummaryPage() {
-  const plans = await getInsurancePlans();
+  const { plans } = await getPlans();
 
   return (
     <>

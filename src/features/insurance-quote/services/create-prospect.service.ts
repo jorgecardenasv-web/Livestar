@@ -13,7 +13,7 @@ export const createProspectService = async (
     email,
     ...additionalInfo
   }: FormData,
-  advisorId: number
+  advisorId: string
 ) => {
   if (!advisorId) {
     throw new Error("No hay asesores disponibles para asignar al prospecto.");

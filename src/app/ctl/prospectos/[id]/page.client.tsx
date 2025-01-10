@@ -4,7 +4,7 @@ import { ContactInfoSection } from "@/features/insurance-quote/components/contac
 import { PersonalInfoSection } from "@/features/insurance-quote/components/personal-info-section";
 import { useGetQuoteForm } from "@/features/insurance-quote/hooks/use-get-quote-form";
 import { updateProspect } from "@/features/prospects/actions/update-prospect";
-import { Card } from "@tremor/react";
+import { Card, CardContent } from "@/shared/components/ui/card";
 
 export function ProspectClientPage({ prospect }: { prospect: any }) {
   const {
@@ -21,21 +21,25 @@ export function ProspectClientPage({ prospect }: { prospect: any }) {
     <form action={updateUserWithId}>
       <div className="space-y-10">
         <Card className="bg-white dark:bg-zinc-800">
-          <PersonalInfoSection
-            formData={formData}
-            errors={errors}
-            handleInputChange={handleInputChange}
-            handleChildChange={handleChildChange}
-            handleProtectedPersonChange={handleProtectedPersonChange}
-          />
+          <CardContent>
+            <PersonalInfoSection
+              formData={formData}
+              errors={errors}
+              handleInputChange={handleInputChange}
+              handleChildChange={handleChildChange}
+              handleProtectedPersonChange={handleProtectedPersonChange}
+            />
+          </CardContent>
         </Card>
 
         <Card className="bg-white dark:bg-zinc-800">
-          <ContactInfoSection
-            formData={formData}
-            errors={errors}
-            handleInputChange={handleInputChange}
-          />
+          <CardContent>
+            <ContactInfoSection
+              formData={formData}
+              errors={errors}
+              handleInputChange={handleInputChange}
+            />
+          </CardContent>
         </Card>
       </div>
       <div className="flex justify-end">

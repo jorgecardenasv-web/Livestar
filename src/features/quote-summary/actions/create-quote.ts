@@ -1,6 +1,5 @@
 "use server";
 
-import { getInsuranceState } from "@/features/insurance-plans/actions/insurance-actions";
 import { cookies } from "next/headers";
 import {
   createQuoteService,
@@ -9,6 +8,7 @@ import {
 import { createTrackingNumberService } from "../services/create-traking.service";
 import { getProspectByIdService } from "@/features/prospects/services/get-prospect-by-id.service";
 import { redirect } from "next/navigation";
+import { getInsuranceState } from "@/features/insurance-plans/loaders/get-insurance-status";
 
 export async function handleContractNow() {
   const { selectedPlan } = await getInsuranceState();
@@ -16,8 +16,6 @@ export async function handleContractNow() {
 
   const prospectJson = cookieStore.get("prospect")?.value;
   const prospect = prospectJson ? JSON.parse(prospectJson) : {};
-  console.log("prospecto", prospect);
-  console.log("plan", selectedPlan);
 
   if (!prospect.id || !selectedPlan.id) {
     console.error("Datos insuficientes para crear el quote.");
@@ -25,7 +23,6 @@ export async function handleContractNow() {
   }
   const prospectData = await getProspectByIdService(prospect.id);
   const planData = await getPlanByUuid(selectedPlan.id);
-  console.log(prospectData);
   if (prospectData && planData) {
     const quoteData = {
       prospectId: prospectData.id,
@@ -38,8 +35,6 @@ export async function handleContractNow() {
     const quote = await createQuoteService(quoteData);
 
     await createTrackingNumberService({ quoteId: quote.id });
-
-    console.log("Quote y Tracking Number creados con éxito");
     redirect("/finalizar-cotizacion");
   }
 }

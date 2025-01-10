@@ -42,8 +42,8 @@ export const SigninForm = () => {
             />
             {state?.error && <p className="text-red-500">{state.error}</p>}
             <SubmitButton
-              textStatic="Iniciar sesión"
-              textPending="Iniciando sesión..."
+              label="Iniciar sesión"
+              labelPending="Iniciando sesión..."
               className="w-full"
             />
           </form>

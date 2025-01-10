@@ -30,12 +30,12 @@ export const ListSessions = ({ sessions }: { sessions: Session[] }) => {
   );
 
   const getRoleBadge = (role: User["role"]) => {
-    switch (role) {
-      case "ADMIN":
-        return <Badge variant="default">{role}</Badge>;
-      case "ADVISOR":
-        return <Badge variant="outline">{role}</Badge>;
-    }
+    const badges = {
+      ADMIN: <Badge>{role}</Badge>,
+      ADVISOR: <Badge variant="outline">{role}</Badge>,
+    };
+
+    return badges[role];
   };
 
   return (

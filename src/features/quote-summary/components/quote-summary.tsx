@@ -4,7 +4,7 @@ import { Shield, DollarSign, Percent, Heart, ArrowLeft } from "lucide-react";
 import { ContractForm } from "./confirm-form";
 import { InfoCard } from "./info-card";
 import { Button } from "@/shared/components/ui/button";
-import { deleteSelectedPlan } from "@/features/insurance-plans/actions/insurance-actions";
+import { deleteSelectedPlan } from "@/features/insurance-plans/actions/add-cookies";
 
 export const QuoteSummary: React.FC<InsuranceQuoteData> = ({
   coInsurance,

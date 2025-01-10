@@ -14,8 +14,7 @@ import {
 } from "@/shared/components/ui/popover";
 import { Label } from "./label";
 
-// Props para manejar datos del formulario
-interface DatePickerDemoProps {
+interface DatePickerProps {
   value?: Date;
   title: string;
   placeholder?: string;
@@ -23,13 +22,13 @@ interface DatePickerDemoProps {
   error?: string;
 }
 
-export function DatePickerDemo({
+export function DatePicker({
   value,
   title,
-  placeholder = "Pick a date",
+  placeholder = "Selecciona una fecha",
   onValueChange,
   error,
-}: DatePickerDemoProps) {
+}: DatePickerProps) {
   return (
     <div className="grid w-full items-center gap-1.5">
       <Label htmlFor={title} className={`mt-4`}>

@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 
 interface CreateTrackingNumberInput {
-  quoteId: number;
+  quoteId: string;
 }
 
 export async function createTrackingNumberService({

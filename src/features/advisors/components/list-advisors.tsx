@@ -40,22 +40,17 @@ export const ListAdvisors: FC<ListAdvisorsProps> = ({ advisors }) => {
             <TableCell>{advisor.email}</TableCell>
             <TableCell>
               {advisor.status === UserStatus.ACTIVE ? (
-                <Badge color="success">Activo</Badge>
+                <Badge variant="success">Activo</Badge>
               ) : (
-                <Badge color="destructive">Inactivo</Badge>
+                <Badge variant="destructive">Inactivo</Badge>
               )}
             </TableCell>
             <TableCell className="flex gap-1">
-              <Button
-                color="blue"
-                variant="secondary"
-                onClick={() => openEditAdvisorModal(advisor)}
-              >
+              <Button onClick={() => openEditAdvisorModal(advisor)}>
                 <Pencil size={20} />
               </Button>
               <Button
-                color="red"
-                variant="secondary"
+                variant="destructive"
                 onClick={() => openDeleteAdvisorModal(advisor)}
               >
                 <Trash2 size={20} />

@@ -11,9 +11,6 @@ export const useProspectActions = () => {
     useModalStore();
   const { showNotification } = useNotificationStore();
 
-  const [selectedStatus, setSelectedStatus] = useState<string>("");
-  const [selectedAdvisor, setSelectedAdvisor] = useState<string>("");
-
   const updateUserWithId = changeStatusAndAdvisor.bind(
     null,
     modalProps.prospect?.id
@@ -25,13 +22,6 @@ export const useProspectActions = () => {
       userId: "",
     },
   });
-
-  useEffect(() => {
-    if (modalProps.prospect) {
-      setSelectedStatus(modalProps.prospect.status);
-      setSelectedAdvisor(modalProps.prospect.user.uuid);
-    }
-  }, [modalProps]);
 
   useEffect(() => {
     if (state?.errors === null) {
@@ -58,12 +48,6 @@ export const useProspectActions = () => {
     handleCancel,
     closeModal,
     formAction,
-
-    // Edit Prospect
-    setSelectedStatus,
-    selectedStatus,
-    setSelectedAdvisor,
-    selectedAdvisor,
 
     // Edit prospect
     openEditProspectModal,

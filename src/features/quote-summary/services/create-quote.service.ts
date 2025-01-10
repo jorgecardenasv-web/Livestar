@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 interface CreateQuoteInput {
-  prospectId: number;
-  planId: number;
+  prospectId: string;
+  planId: string;
   customizations?: any;
   totalPrice: number;
   expirationDate?: Date;
@@ -26,17 +26,17 @@ export async function createQuoteService({
   return quote;
 }
 
-export async function getPlanByUuid(uuid: string) {
+export async function getPlanByUuid(id: string) {
   try {
     const plan = await prisma.insurancePlan.findUnique({
-      where: { uuid },
+      where: { id },
       include: {
         company: true,
       },
     });
 
     if (!plan) {
-      throw new Error(`No se encontró un plan con el uuid: ${uuid}`);
+      throw new Error(`No se encontró un plan con el uuid: ${id}`);
     }
 
     return plan;

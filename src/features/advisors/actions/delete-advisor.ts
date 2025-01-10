@@ -10,7 +10,7 @@ export const deleteAdvisor = async (advisorId: string): Promise<boolean> => {
       await reassignProspectService(advisorId);
 
       await prisma.user.delete({
-        where: { uuid: advisorId },
+        where: { id: advisorId },
       });
     });
     revalidatePath(`${prefix}/asesores`);
