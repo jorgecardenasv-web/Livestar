@@ -28,7 +28,7 @@ export async function createQuoteService({
 
 export async function getPlanByUuid(id: string) {
   try {
-    const plan = await prisma.insurancePlan.findUnique({
+    const plan = await prisma.plan.findUnique({
       where: { id },
       include: {
         company: true,

@@ -1,21 +1,8 @@
-import {
-  InsuranceCompany,
-  InsuranceCompany as InsuranceCompanyPrisma,
-  InsurancePlan as InsurancePlanPrisma,
-} from "@prisma/client";
+import { Insurance, Plan as PlanPrisma } from "@prisma/client";
+import { Plan } from "../types/plan";
 
-export interface InsurancePlanTransformer extends InsurancePlanPrisma {
-  company: InsuranceCompany;
-}
-
-export const InsuranceCompanyTransformer = (
-  insuranceCompany: InsuranceCompanyPrisma
-) => {
-  return insuranceCompany
+export const InsuranceCompanyTransformer = (insuranceCompany: Insurance) => {
+  return insuranceCompany;
 };
 
-export const InsurancePlanTransformer = (
-  plan: InsurancePlanTransformer
-) => {
-  return plan;
-};
+export const InsurancePlanTransformer = (plan: Plan) => plan;

@@ -47,7 +47,7 @@ export const PlansList = ({ plans, companyLogos }: PlansListProps) => {
             {plans.map((plan) => (
               <TableRow key={plan.id} className="cursor-pointer">
                 <TableCell onClick={() => push(`${prefix}/planes/${plan.id}`)}>
-                  {plan.name}
+                  {plan.planType.name}
                 </TableCell>
                 <TableCell onClick={() => push(`${prefix}/planes/${plan.id}`)}>
                   <Avatar>

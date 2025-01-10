@@ -20,14 +20,14 @@ import {
 import { Button } from "@/shared/components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";
 import { useInsuranceActions } from "../../hooks/use-insurance-actions";
+import { getImage } from "@/shared/loaders/get-image";
 
 interface ListInsuranceProps {
   insurances: Insurance[];
 }
 
 export const ListInsurance: FC<ListInsuranceProps> = ({ insurances }) => {
-  const { openDeleteInsuranceModal } =
-    useInsuranceActions();
+  const { openDeleteInsuranceModal } = useInsuranceActions();
   return (
     <Table>
       <TableHeader>
@@ -61,7 +61,10 @@ export const ListInsurance: FC<ListInsuranceProps> = ({ insurances }) => {
               {/* <Button onClick={() => openEditInsuranceModal(insurance)}>
                 <Pencil size={20} />
               </Button> */}
-              <Button variant="destructive" onClick={() => openDeleteInsuranceModal(insurance)}>
+              <Button
+                variant="destructive"
+                onClick={() => openDeleteInsuranceModal(insurance)}
+              >
                 <Trash2 size={20} />
               </Button>
             </TableCell>

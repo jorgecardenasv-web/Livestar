@@ -1,11 +1,11 @@
 import prisma from "@/lib/prisma";
-import { InsuranceCompany } from "@prisma/client";
+import { Insurance } from "@prisma/client";
 
 export const addInsuranceService = async ({
   name,
   logo,
-}: Pick<InsuranceCompany, "logo" | "name">): Promise<InsuranceCompany> => {
-  return await prisma.insuranceCompany.create({
+}: Pick<Insurance, "logo" | "name">): Promise<Insurance> => {
+  return await prisma.insurance.create({
     data: {
       name,
       logo,

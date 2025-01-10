@@ -1,14 +1,14 @@
-import { HeaderPlans } from "@/features/insurance-plans/components/header/header-plans";
-import { PlansList } from "@/features/insurance-plans/components/ui/list-plans";
+import { HeaderPlans } from "@/features/insurance-plans/components/headers/header-plans";
+import { PlansList } from "@/features/insurance-plans/components/tables/list-plans";
 import { Pagination } from "@/shared/components/pagination";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { getPlans } from "@/features/insurance-plans/loaders/get-plans";
-import { getCompanyLogos } from "@/features/insurance-plans/loaders/get-company-logos";
+import { getInsuranceLogosFromPlans } from "@/features/insurance-plans/loaders/get-company-logos";
 
 export default async function Planes() {
   const { plans, insurancesPerPage, totalPages, totalPlans } = await getPlans();
 
-  const companyLogos = await getCompanyLogos(plans);
+  const companyLogos = await getInsuranceLogosFromPlans(plans);
 
   return (
     <>

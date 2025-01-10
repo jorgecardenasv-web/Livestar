@@ -1,10 +1,10 @@
 import prisma from "@/lib/prisma";
-import { InsuranceCompany } from "@prisma/client";
+import { Insurance } from "@prisma/client";
 
 export const deleteInsuranceService = (
   id: string
-): Promise<InsuranceCompany> => {
-  return prisma.insuranceCompany.delete({
+): Promise<Insurance> => {
+  return prisma.insurance.delete({
     where: { id },
   });
 };

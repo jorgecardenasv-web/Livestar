@@ -1,9 +1,9 @@
 import { getInsuranceState } from "../../loaders/get-insurance-status";
 import { getProspect } from "../../loaders/get-prospect";
 import { calculateInsurancePrice } from "../../utils";
-import { InsuranceCard } from "../card/insurance-card";
-import { PaymentSelector } from "../selector/payment-selector";
-import { PlanSelector } from "../selector/plan-selector";
+import { InsuranceCard } from "../cards/insurance-card";
+import { PaymentSelector } from "../selectors/payment-selector";
+import { PlanSelector } from "../selectors/plan-selector";
 
 
 export async function InsurancePlans({

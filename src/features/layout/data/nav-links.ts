@@ -1,11 +1,12 @@
 import { prefix } from "@/shared/utils/constants";
 import {
-  ContactIcon,
-  LayoutDashboardIcon,
-  KeyIcon,
-  UsersIcon,
-  NotepadTextIcon,
-  BriefcaseMedicalIcon,
+  Contact,
+  LayoutDashboard,
+  Key,
+  Users,
+  NotepadText,
+  BriefcaseMedical,
+  Tag,
 } from "lucide-react";
 
 export interface NavLiks {
@@ -19,43 +20,43 @@ export const navLinks: NavLiks[] = [
   {
     name: "Panel",
     href: `${prefix}/panel`,
-    icon: LayoutDashboardIcon,
+    icon: LayoutDashboard,
     roles: ["ADMIN", "ADVISOR"],
   },
   {
     name: "Asesores",
     href: `${prefix}/asesores`,
-    icon: ContactIcon,
+    icon: Contact,
     roles: ["ADMIN"],
   },
   {
     name: "Prospectos",
     href: `${prefix}/prospectos`,
-    icon: UsersIcon,
+    icon: Users,
     roles: ["ADMIN", "ADVISOR"],
   },
   {
     name: "Aseguradoras",
     href: `${prefix}/aseguradoras`,
-    icon: BriefcaseMedicalIcon,
+    icon: BriefcaseMedical,
     roles: ["ADMIN"],
   },
   {
     name: "Planes",
     href: `${prefix}/planes`,
-    icon: NotepadTextIcon,
+    icon: NotepadText,
     roles: ["ADMIN"],
   },
   {
     name: "Tipo de planes",
-    href: `${prefix}/planes`,
-    icon: NotepadTextIcon,
+    href: `${prefix}/planes/tipo-de-planes`,
+    icon: Tag,
     roles: ["ADMIN"],
   },
   {
     name: "Sesiones",
     href: `${prefix}/sesiones`,
-    icon: KeyIcon,
+    icon: Key,
     roles: ["ADMIN"],
   },
 ];

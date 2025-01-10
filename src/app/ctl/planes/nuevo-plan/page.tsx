@@ -1,16 +1,14 @@
-import InsurancePlanForm from "@/features/insurance-plans/components/form/insurance-plan-form";
-import { HeaderPlan } from "@/features/insurance-plans/components/header/header-plan";
-import { ModalPlanActions } from "@/features/insurance-plans/components/ui/modal-plan-actions";
+import { InsurancePlanForm } from "@/features/insurance-plans/components/forms/insurance-plan-form";
 import { getInsuranceCompany } from "@/features/insurance-plans/loaders/get-insurance-companies";
+import { getPlanTypes } from "@/features/insurance-plans/loaders/get-plan-types";
 
-export default async function NewPlan () {
-  const insuranceCompanies = await getInsuranceCompany()
-  
+export default async function NuevoPlan() {
+  const insurances = await getInsuranceCompany();
+  const planTypes = await getPlanTypes();
+
   return (
     <>
-      <HeaderPlan />
-      <InsurancePlanForm insuranceCompanies={insuranceCompanies} />
-      <ModalPlanActions />
+      <InsurancePlanForm insurances={insurances} planTypes={planTypes} />
     </>
-  )
+  );
 }

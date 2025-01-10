@@ -19,29 +19,6 @@ interface CustomizableOptions {
   coInsuranceOptions: number[];
 }
 
-interface InsurancePlan {
-  id: number;
-  uuid: string;
-  name: string;
-  companyId: number;
-  description: string;
-  sumInsured: number;
-  deductible: number;
-  coInsurance: number;
-  coInsuranceCap: number;
-  hospitalTier: "BASIC" | string;
-  medicalFeeSchedule: "BASIC" | string;
-  additionalClauses: AdditionalClauses;
-  benefits: Benefits;
-  customizableOptions: CustomizableOptions;
-  status: "ACTIVE" | string;
-  createdAt: Date;
-  updatedAt: Date;
-  totalPrice: number;
-}
-
-
-
 export interface InsurancePriceResult {
   coverage_fee: number;
   individualPrices: {
@@ -67,21 +44,21 @@ export interface PriceTable {
 
 export interface Child {
   age: number;
-  gender: 'mujer' | 'hombre';
+  gender: "mujer" | "hombre";
 }
 
 export interface FamiliaAdditionalInfo {
   children: Child[];
   partnerAge: number;
   childrenCount: number;
-  partnerGender: 'mujer' | 'hombre';
+  partnerGender: "mujer" | "hombre";
 }
 
 export interface InsuranceData {
   id: string;
   postalCode: string;
   age: number;
-  gender?: 'mujer' | 'hombre';
+  gender?: "mujer" | "hombre";
   additionalInfo: FamiliaAdditionalInfo;
-  protectWho: 'familia'; 
+  protectWho: "familia";
 }
