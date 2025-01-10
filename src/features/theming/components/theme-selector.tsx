@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Sun, Moon, Monitor } from "lucide-react";
+import { Sun, Moon, Monitor, ChevronDown } from "lucide-react";
 import { useThemeSelector } from "../hooks/use-theme-selector";
 
 import { Button } from "@/shared/components/ui/button";
@@ -33,15 +33,15 @@ export const ThemeSelector: React.FC = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="w-full h-[48px] justify-between dark:bg-background-subtle">
+        <Button variant="outline" className="w-full h-14 justify-between dark:bg-background-subtle">
           <div className="flex items-center space-x-2">
             {React.createElement(selectedOption.icon, {
               size: 20,
               className: "text-primary",
             })}
-            <span className="hidden md:inline">{selectedOption.label}</span>
+            <span>{selectedOption.label}</span>
           </div>
-          <span className="sr-only">Cambiar tema</span>
+          <ChevronDown size={20}/>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
