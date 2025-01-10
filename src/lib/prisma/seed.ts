@@ -1,8 +1,9 @@
 import { Role, UserStatus } from "@prisma/client";
 import { hash } from "bcrypt";
 import {
-  insuranceCompanies,
-  insurancePlans,
+  insurances,
+  plans,
+  planTypes,
 } from "../../features/insurance-plans/data/insurance-data";
 import { faker } from "@faker-js/faker/locale/es_MX";
 import prisma from ".";
@@ -14,8 +15,9 @@ async function main() {
   const hashedAdvisorPassword = await hash(advisorPassword, 10);
 
   await prisma.user.deleteMany();
-  await prisma.insuranceCompany.deleteMany();
-  await prisma.insurancePlan.deleteMany();
+  await prisma.insurance.deleteMany();
+  await prisma.plan.deleteMany();
+  await prisma.planType.deleteMany();
 
   await prisma.user.create({
     data: {
@@ -63,13 +65,18 @@ async function main() {
 
   await createRandomUsers(9);
 
-  await prisma.insuranceCompany.createMany({
-    data: insuranceCompanies,
+  await prisma.insurance.createMany({
+    data: insurances,
     skipDuplicates: true,
   });
 
-  await prisma.insurancePlan.createMany({
-    data: insurancePlans,
+  await prisma.planType.createMany({
+    data: planTypes,
+    skipDuplicates: true,
+  });
+
+  await prisma.plan.createMany({
+    data: plans,
     skipDuplicates: true,
   });
 

@@ -1,5 +1,5 @@
 import { ZodError } from "zod";
-import { FormError } from "../types/types";
+import { FormError } from "../types";
 
 export const simplifyZodErrors = <T>(errors: ZodError<T>): FormError => {
   const simplifiedErrors: FormError = {};

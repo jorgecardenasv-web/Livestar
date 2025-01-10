@@ -9,6 +9,17 @@ datasource db {
   schemas  = ["public", "auth"]
 }
 
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@schema("auth")
+}
+
 enum UserStatus {
   ACTIVE
   INACTIVE
@@ -17,13 +28,9 @@ enum UserStatus {
   @@schema("auth")
 }
 
-model Session {
-  id        String   @id @default(uuid())
-  userId    String
-  active    Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+enum Role {
+  ADMIN
+  ADVISOR
 
   @@schema("auth")
 }
@@ -45,14 +52,7 @@ model User {
   @@schema("auth")
 }
 
-enum Role {
-  ADMIN
-  ADVISOR
-
-  @@schema("auth")
-}
-
-enum CompanyStatus {
+enum InsuranceStatus {
   ACTIVE
   INACTIVE
   PENDING_REVIEW
@@ -61,25 +61,33 @@ enum CompanyStatus {
   @@schema("public")
 }
 
-model InsuranceCompany {
+model Insurance {
   id          String          @id @default(uuid())
   name        String          @unique
   logo        String
   description String?
-  status      CompanyStatus   @default(ACTIVE)
+  status      InsuranceStatus @default(ACTIVE)
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
-  plans       InsurancePlan[]
+  plans       Plan[]
 
   @@schema("public")
 }
 
-model HospitalLevel {
-  id          String   @id @default(uuid())
-  name        String
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+enum PlanTypeStatus {
+  ACTIVE
+  INACTIVE
+
+  @@schema("public")
+}
+
+model PlanType {
+  id        String         @id @default(uuid())
+  name      String
+  status    PlanTypeStatus @default(ACTIVE)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  Plan      Plan[]
 
   @@schema("public")
 }
@@ -93,30 +101,23 @@ enum PlanStatus {
   @@schema("public")
 }
 
-enum PlanType {
-  ESENCIAL
-  PROTEGIDO
-  BLINDADO
-
-  @@schema("public")
-}
-
-model InsurancePlan {
-  id             String           @id @default(uuid())
-  name           String
-  company        InsuranceCompany @relation(fields: [companyId], references: [id], onDelete: Cascade)
+model Plan {
+  id             String     @id @default(uuid())
+  planType       PlanType   @relation(fields: [planTypeId], references: [id], onDelete: Cascade)
+  planTypeId     String
+  company        Insurance  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId      String
   sumInsured     Float
   coInsurance    Float
   coInsuranceCap Float?
-  status         PlanStatus       @default(ACTIVE)
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  status         PlanStatus @default(ACTIVE)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
   quotes         Quote[]
-  isRecommended  Boolean          @default(false)
+  isRecommended  Boolean    @default(false)
   prices         Json
 
-  @@unique([name, companyId])
+  @@unique([planTypeId, companyId])
   @@schema("public")
 }
 
@@ -182,7 +183,7 @@ model Quote {
   id             String          @id @default(uuid())
   prospect       Prospect        @relation(fields: [prospectId], references: [id])
   prospectId     String
-  plan           InsurancePlan   @relation(fields: [planId], references: [id])
+  plan           Plan            @relation(fields: [planId], references: [id])
   planId         String
   customizations Json?
   totalPrice     Float

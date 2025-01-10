@@ -1,21 +1,21 @@
 import prisma from "@/lib/prisma";
 import { whereFilterBuilder } from "@/shared/utils/where-filter-builder";
-import { InsuranceCompany, InsurancePlan } from "@prisma/client";
+import { Insurance, Plan } from "@prisma/client";
 
 export const GetPlansService = async ({
   page = 1,
   whereOptions,
 }: {
   page?: number;
-  whereOptions?: InsurancePlan;
+  whereOptions?: Plan;
 }) => {
   const pageSize = 5;
   const skip = (page - 1) * pageSize;
 
-  const where = whereFilterBuilder<InsuranceCompany>(whereOptions || {});
+  const where = whereFilterBuilder<Insurance>(whereOptions || {});
 
   const [plans, totalPlans] = await Promise.all([
-    prisma.insurancePlan.findMany({
+    prisma.plan.findMany({
       take: pageSize,
       skip: skip,
       orderBy: {
@@ -24,9 +24,10 @@ export const GetPlansService = async ({
       where,
       include: {
         company: true,
+        planType: true,
       }
     }),
-    prisma.insurancePlan.count(),
+    prisma.plan.count(),
   ]);
 
   const totalPages = Math.ceil(totalPlans / pageSize);

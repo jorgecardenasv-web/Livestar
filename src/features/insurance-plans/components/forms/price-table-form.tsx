@@ -17,7 +17,7 @@ import {
 } from "@/shared/components/ui/table";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
-import { PriceInput } from "../ui/price-input";
+import { PriceInput } from "../inputs/price-input";
 import { usePriceTable } from "../../hooks/use-price-table";
 import { Separator } from "@/shared/components/ui/separator";
 

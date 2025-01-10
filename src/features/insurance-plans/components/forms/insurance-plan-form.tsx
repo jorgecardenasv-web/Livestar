@@ -10,27 +10,26 @@ import { SelectInput } from "@/shared/components/ui/select-input";
 import { useInsurancePlanForm } from "../../hooks/use-insurance-plan-form";
 import { useEffect } from "react";
 import { usePriceTable } from "../../hooks/use-price-table";
+import { PlanType } from "@prisma/client";
 
-interface InsuranceCompany {
+interface Insurance {
   id: string;
   name: string;
 }
 
 interface Props {
-  insuranceCompanies: InsuranceCompany[];
-  insurancePlan?: any;
+  insurances: Insurance[];
+  planTypes: PlanType[];
+  plan?: any;
 }
 
-export default function InsurancePlanForm({
-  insuranceCompanies,
-  insurancePlan,
-}: Props) {
+export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
   const { handleSubmit } = useInsurancePlanForm(addPlan);
   const { setPrices } = usePriceTable();
 
   useEffect(() => {
-    if (insurancePlan?.prices.length > 0) {
-      setPrices(insurancePlan?.prices);
+    if (plan?.prices.length > 0) {
+      setPrices(plan?.prices);
     }
   }, []);
 
@@ -41,32 +40,22 @@ export default function InsurancePlanForm({
           <SelectInput
             name="name"
             label="Nombre del Plan"
-            options={[
-              {
-                label: "Plan básico",
-                value: "Plan Básico",
-              },
-              {
-                label: "Plan Intermedio",
-                value: "Plan Intermedio",
-              },
-              {
-                label: "Plan Plus",
-                value: "Plan Plus",
-              },
-            ]}
-            defaultValue={insurancePlan?.name}
+            options={planTypes.map((planType) => ({
+              label: planType.name,
+              value: planType.id,
+            }))}
+            defaultValue={plan?.planType?.id}
             required
           />
 
           <SelectInput
             name="companyId"
             label="Compañía"
-            options={insuranceCompanies.map((insuranceCompany) => ({
-              label: insuranceCompany.name,
-              value: insuranceCompany.id,
+            options={insurances.map((insurance) => ({
+              label: insurance.name,
+              value: insurance.id,
             }))}
-            defaultValue={insurancePlan?.company.id}
+            defaultValue={plan?.company.id}
             required
           />
 
@@ -76,7 +65,7 @@ export default function InsurancePlanForm({
             type="number"
             icon={<DollarSign className="w-4 h-4 text-gray-500" />}
             placeholder="Ingrese suma asegurada"
-            defaultValue={insurancePlan?.sumInsured}
+            defaultValue={plan?.sumInsured}
             required
           />
 
@@ -88,7 +77,7 @@ export default function InsurancePlanForm({
             step="0.01"
             min="0"
             max="1"
-            defaultValue={insurancePlan?.coInsurance}
+            defaultValue={plan?.coInsurance}
             placeholder="Ej: 0.10"
             required
           />
@@ -99,7 +88,7 @@ export default function InsurancePlanForm({
             type="number"
             icon={<DollarSign className="w-4 h-4 text-gray-500" />}
             placeholder="Ingrese tope de coaseguro"
-            defaultValue={insurancePlan?.coInsuranceCap}
+            defaultValue={plan?.coInsuranceCap}
           />
         </CardContent>
       </Card>
@@ -111,4 +100,4 @@ export default function InsurancePlanForm({
       </Button>
     </form>
   );
-}
+};

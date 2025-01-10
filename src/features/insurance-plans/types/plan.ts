@@ -1,5 +1,6 @@
-import { InsuranceCompany, InsurancePlan } from "@prisma/client";
+import { Insurance, Plan as PlanPrisma, PlanType } from "@prisma/client";
 
-export interface Plan extends Pick<InsurancePlan, "id" | "status" | "createdAt" | "name"> {
-  company: InsuranceCompany
+export interface Plan extends Pick<PlanPrisma, "id" | "status" | "createdAt" | "planTypeId"> {
+  company: Insurance
+  planType: PlanType
 }

@@ -9,6 +9,11 @@ export const getInsurancePlanById = async (id: string) => {
 
   return {
     ...insurancePlan,
-    prices: jsonPricesToFlatPrices(insurancePlan.prices as Record<string, Record<string, Record<string, number>>>),
-  }
+    prices: jsonPricesToFlatPrices(
+      insurancePlan.prices as Record<
+        string,
+        Record<string, Record<string, number>>
+      >
+    ),
+  };
 };

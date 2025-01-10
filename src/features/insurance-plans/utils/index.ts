@@ -20,17 +20,11 @@ export const flatPricesToJsonPrices = (
     },
     {} as Record<string, Record<string, Record<string, number>>>
   );
-}
+};
 
 export function jsonPricesToFlatPrices(
   jsonPrices: Record<string, Record<string, Record<string, number>>>
 ): PriceData[] {
-  console.log(
-    Object.entries(jsonPrices).map(([age, genderPrices]) => {
-      console.log(genderPrices);
-    })
-  );
-
   return Object.entries(jsonPrices).map(([age, genderPrices]) => ({
     age: parseInt(age),
     monthlyPriceMale: genderPrices.hombre.mensual,
@@ -46,25 +40,27 @@ export function calculateInsurancePrice(
   paymentType: string
 ): InsurancePriceResult {
   let totalPrice = 0;
-  let individualPrices: InsurancePriceResult['individualPrices'] = {
+  let individualPrices: InsurancePriceResult["individualPrices"] = {
     main: 0,
-    children: []
+    children: [],
   };
 
-  function getPriceForPerson(age: number, gender: 'mujer' | 'hombre'): number {
+  function getPriceForPerson(age: number, gender: "mujer" | "hombre"): number {
     if (age >= 0 && age <= 64) {
       const ageKey = age.toString();
       if (priceTable[ageKey] && priceTable[ageKey][gender]) {
-        return priceTable[ageKey][gender][paymentType.toLowerCase() as 'anual' | 'mensual'];
+        return priceTable[ageKey][gender][
+          paymentType.toLowerCase() as "anual" | "mensual"
+        ];
       }
     }
     return 0;
   }
 
-  individualPrices.main = getPriceForPerson(data.age, data.gender || 'hombre');
+  individualPrices.main = getPriceForPerson(data.age, data.gender || "hombre");
   totalPrice += individualPrices.main;
 
-  if (data.protectWho === 'familia') {
+  if (data.protectWho === "familia") {
     if (data.additionalInfo?.partnerAge) {
       individualPrices.partner = getPriceForPerson(
         data.additionalInfo.partnerAge,
@@ -74,7 +70,7 @@ export function calculateInsurancePrice(
     }
 
     if (data.additionalInfo?.children) {
-      individualPrices.children = data.additionalInfo.children.map(child => {
+      individualPrices.children = data.additionalInfo.children.map((child) => {
         const childPrice = getPriceForPerson(child.age, child.gender);
         totalPrice += childPrice;
         return childPrice;
@@ -84,6 +80,6 @@ export function calculateInsurancePrice(
 
   return {
     coverage_fee: totalPrice,
-    individualPrices
+    individualPrices,
   };
 }

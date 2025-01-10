@@ -12,6 +12,6 @@ export const notificationMessages: NotificationMessage = {
   general: "Error al editar al asesor.",
 };
 
-export const getErrorMessage = (type: string) => {
+export const getNotificationMessage = (type: string) => {
   return notificationMessages[type] ?? "Error desconocido.";
 };

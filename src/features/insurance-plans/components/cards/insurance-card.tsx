@@ -9,7 +9,7 @@ import { handleInterestClick } from "../../actions/add-cookies";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { getProspect } from "../../loaders/get-prospect";
 import { PriceTable } from "../../types";
-import { getImage } from "../../loaders/get-image";
+import { getImage } from "../../../../shared/loaders/get-image";
 
 interface InsuranceCardProps {
   company: InsuranceCompany;
