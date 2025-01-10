@@ -1,4 +1,4 @@
-import '../styles/animated-circles.css';
+import '../../styles/animated-circles.css';
 
 export const AnimatedCircles: React.FC = () => {
   return (

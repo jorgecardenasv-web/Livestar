@@ -3,14 +3,14 @@ import { InsuranceCard } from "../cards/insurance-card";
 import { PaymentSelector } from "../selectors/payment-selector";
 import { PlanSelector } from "../selectors/plan-selector";
 
-export const InsurancePlans = async ({
-  insurancePlans,
-}: {
-  insurancePlans: any[];
-}) => {
+export const Plans = async ({ plans }: { plans: any[] }) => {
   const { activePlanType, activePaymentType } = await getInsuranceState();
   const planTypes = ["Plan Básico", "Plan Intermedio", "Plan Plus"];
   const paymentTypes = ["Mensual", "Anual"];
+
+  const hibridPlans = plans.filter(
+    (plan) => !planTypes.includes(plan.planType.name)
+  );
 
   return (
     <div className="mx-auto px-4 py-2 space-y-4 m-8">
@@ -22,8 +22,9 @@ export const InsurancePlans = async ({
         />
       </div>
       <div className="grid grid-flow-row md:grid-flow-col justify-center lg:auto-cols-max gap-2 items-end">
-        {insurancePlans.map((plan, index) => {
-          const activePlan = plan.name === activePlanType ? plan : null;
+        {plans.map((plan, index) => {
+          const activePlan =
+            plan.planType.name === activePlanType ? plan : null;
 
           return (
             activePlan && (
@@ -35,6 +36,17 @@ export const InsurancePlans = async ({
                 isRecommended={index === 0}
               />
             )
+          );
+        })}
+        {hibridPlans.map((plan, index) => {
+          return (
+            <InsuranceCard
+              key={`${plan.company.name}-${activePlanType}`}
+              company={plan.company}
+              plan={plan}
+              paymentType={activePaymentType}
+              isRecommended={plan.isRecommended}
+            />
           );
         })}
       </div>

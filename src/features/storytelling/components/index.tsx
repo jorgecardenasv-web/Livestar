@@ -1,4 +1,4 @@
-import { InsurancePlans } from "@/features/insurance-plans/components/main/insurance-plans";
+import { Plans } from "@/features/insurance-plans/components/main/insurance-plans";
 import { InsuranceFlow } from "./insurance-flow";
 import { QuoteSummary } from "@/features/quote-summary/components/main/quote-summary";
 import { getProspect } from "@/features/insurance-plans/loaders/get-prospect";
@@ -14,7 +14,7 @@ export const InsuranceStorytelling = async ({ plans }: { plans: any[] }) => {
   return (
     <>
       {hasProspect && !hasSelectedPlan ? (
-        <InsurancePlans insurancePlans={plans} />
+        <Plans plans={plans} />
       ) : hasSelectedPlan ? (
         <QuoteSummary {...selectedPlan} />
       ) : (
