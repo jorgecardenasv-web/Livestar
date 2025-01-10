@@ -1,7 +1,8 @@
 'use client'
 
 import { useEffect } from 'react'
-import { checkSession } from '../services/verify-session.service'
+import { checkSession } from '../../services/verify-session.service'
+
 
 export function SessionValidator() {
   useEffect(() => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParamsBuilder } from "../hooks/use-search-params-builder";
+import { useSearchParamsBuilder } from "../../hooks/use-search-params-builder";
 import {
   Select,
   SelectContent,
@@ -8,8 +8,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
-import { SelectInput } from "./ui/select-input";
+} from "../ui/select";
 
 interface StatusOption {
   value: string;

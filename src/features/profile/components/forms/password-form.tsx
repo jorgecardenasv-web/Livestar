@@ -2,7 +2,7 @@
 
 import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { useFormState } from "react-dom";
-import { updatePassword } from "../actions/update-password";
+import { updatePassword } from "../../actions/update-password";
 import { useEffect, useRef } from "react";
 import { useNotificationStore } from "@/features/notification/store/notification-store";
 import { PasswordInput } from "@/shared/components/ui/password-input";

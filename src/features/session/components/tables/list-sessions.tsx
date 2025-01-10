@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Session } from "../types/session";
+import { Session } from "../../types/session";
 import { User } from "@prisma/client";
 import { formatDate } from "@/shared/utils";
-import { invalidateSession } from "../actions/invalidate-session";
+import { invalidateSession } from "../../actions/invalidate-session";
 import { UsersIcon } from "lucide-react";
 import { Badge } from "@/shared/components/ui/badge";
 import { Card, CardContent } from "@/shared/components/ui/card";

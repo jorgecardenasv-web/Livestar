@@ -1,10 +1,10 @@
 "use client";
 
 import { Search } from "lucide-react";
-import { useSearchParamsBuilder } from "../hooks/use-search-params-builder";
 import { useDebouncedCallback } from "use-debounce";
-import { TextInput } from "./ui/text-input";
 import { FC } from "react";
+import { useSearchParamsBuilder } from "@/shared/hooks/use-search-params-builder";
+import { TextInput } from "../ui/text-input";
 
 interface SearchBarProps {
   label: string;

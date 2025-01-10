@@ -1,7 +1,7 @@
 import { getAdvisors } from "@/features/advisors/loaders/get-advisors";
 import { Pagination } from "@/shared/components/pagination/pagination";
 import { ModalAdvisorActions } from "@/features/advisors/components/modals/modal-advisor-actions";
-import { SelectFilter } from "@/shared/components/select-filter";
+import { SelectFilter } from "@/shared/components/selectors/select-filter";
 import { UserStatus } from "@prisma/client";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { HeaderAdvisors } from "@/features/advisors/components/headers/header-advisors";

@@ -1,7 +1,7 @@
 "use client";
 
 import { SubmitButton } from "@/shared/components/ui/submit-button";
-import { updateProfile } from "../actions/update-profile";
+import { updateProfile } from "../../actions/update-profile";
 import { useFormState } from "react-dom";
 import { useEffect } from "react";
 import { useNotificationStore } from "@/features/notification/store/notification-store";
