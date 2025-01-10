@@ -6,7 +6,7 @@ import Experience from "@/assets/home/experience.svg";
 import Calculator from "@/assets/home/calculator.svg";
 import Wallet from "@/assets/home/Wallet.svg";
 import { MedicalExpenseCard } from "../cards/medical-card";
-import { AnimatedCircles } from "../animated-cicle";
+import { AnimatedCircles } from "../ui/animated-cicle";
 
 export const MedicalExpenses = () => {
   return (

@@ -1,3 +1,5 @@
+"use server";
+
 import { getSession } from "@/lib/iron-session/get-session";
 import { getCurrentUserService } from "../services/get-current-user.service";
 

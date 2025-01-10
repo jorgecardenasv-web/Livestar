@@ -7,12 +7,9 @@ import { useInsuranceForm } from "../../hooks/use-insurance-form";
 import { deleteInsurance } from "../../actions/delete-insurance";
 
 export const DeleteInsuranceForm = () => {
-  const {
-    handleCancel,
-    modalProps: { insurance },
-  } = useInsuranceActions();
+  const { handleCancel, modalProps: insurance } = useInsuranceActions();
 
-  const { handleDeleteInsurance } = useInsuranceForm(deleteInsurance);
+  const { formAction } = useInsuranceForm(deleteInsurance);
 
   return (
     <>
@@ -41,13 +38,14 @@ export const DeleteInsuranceForm = () => {
       </Callout>
 
       <div className="mt-8 w-full flex flex-row gap-2">
-        <SubmitButton
-          label="Eliminar"
-          labelPending="Eliminando..."
-          color="red"
-          className="flex-1"
-          onClick={() => handleDeleteInsurance(insurance.id)}
-        />
+        <form action={formAction}>
+          <SubmitButton
+            label="Eliminar"
+            labelPending="Eliminando..."
+            color="red"
+            className="flex-1"
+          />
+        </form>
         <Button
           variant="outline"
           type="button"

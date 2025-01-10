@@ -1,0 +1,27 @@
+import prisma from "@/lib/prisma";
+import bcrypt from "bcrypt";
+import { User } from "@prisma/client";
+
+export const createAdvisorService = async (
+  email: string,
+  password: string,
+  name: string
+): Promise<User | null> => {
+  try {
+    const hashedPassword: string = await bcrypt.hash(password, 10);
+
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        name,
+        role: "ADVISOR",
+      },
+    });
+
+    return user;
+  } catch (error: any) {
+    console.error(error);
+    return null;
+  }
+};

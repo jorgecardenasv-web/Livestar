@@ -2,7 +2,7 @@ import { HeaderInsurance } from "@/features/insurance/components/header/header-i
 import { ModalInsuranceActions } from "@/features/insurance/components/modal/modal-insurance-actions";
 import { ListInsurance } from "@/features/insurance/components/table/list-insurance";
 import { getInsurance } from "@/features/insurance/loaders/get-insurance";
-import { Pagination } from "@/shared/components/pagination";
+import { Pagination } from "@/shared/components/pagination/pagination";
 import { Card, CardContent } from "@/shared/components/ui/card";
 
 export default async function Aseguradoras() {

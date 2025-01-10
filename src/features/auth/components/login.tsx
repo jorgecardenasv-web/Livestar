@@ -1,18 +1,13 @@
 "use client";
 
-import { useFormState } from "react-dom";
-import { signin } from "../actions/signin";
+import { login } from "../actions/login";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { TextInput } from "@/shared/components/ui/text-input";
 import { PasswordInput } from "@/shared/components/ui/password-input";
+import { useLoginForm } from "../hooks/use-login-form";
 
-export const SigninForm = () => {
-  const [state, formAction] = useFormState(signin, {
-    errors: {
-      email: "",
-      password: "",
-    },
-  });
+export const LoginForm = () => {
+  const { state, formAction } = useLoginForm(login);
 
   return (
     <>
@@ -21,7 +16,7 @@ export const SigninForm = () => {
           <h3 className="text-center text-3xl font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
             Iniciar sesión
           </h3>
-          
+
           <form action={formAction} className="mt-6 space-y-4">
             <TextInput
               label="Correo electrónico"
@@ -30,7 +25,7 @@ export const SigninForm = () => {
               name="email"
               autoComplete="email"
               placeholder="escribe tu correo electrónico"
-              error={state?.errors?.email || ""}
+              error={state?.inputErrors?.email || ""}
             />
             <PasswordInput
               label="Contraseña"
@@ -38,16 +33,15 @@ export const SigninForm = () => {
               name="password"
               autoComplete="current-password"
               placeholder="Escribe tu contraseña"
-              error={state?.errors?.password || ""}
+              error={state?.inputErrors?.password || ""}
             />
-            {state?.error && <p className="text-red-500">{state.error}</p>}
+            {!state?.success && <p className="text-red-500">{state.message}</p>}
             <SubmitButton
               label="Iniciar sesión"
               labelPending="Iniciando sesión..."
               className="w-full"
             />
           </form>
-
         </div>
       </div>
     </>

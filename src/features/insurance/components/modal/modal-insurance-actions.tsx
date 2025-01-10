@@ -2,7 +2,7 @@
 
 import { Modal } from "@/shared/components/ui/modal";
 import { useInsuranceActions } from "../../hooks/use-insurance-actions";
-import { AddInsuranceForm } from "../form/add-insurence-form";
+import { CreateInsuranceForm } from "../form/create-insurence-form";
 import { DeleteInsuranceForm } from "../form/delete-insurance-form";
 
 export const ModalInsuranceActions = () => {
@@ -10,13 +10,13 @@ export const ModalInsuranceActions = () => {
 
   return (
     <>
-      {isOpen && modalType === "addInsurance" && (
+      {isOpen && modalType === "createInsurance" && (
         <Modal
           title="Crear Nueva Aseguradora"
           description="Escribe la información requerida para crear una nueva aseguradora."
           size="lg"
         >
-          <AddInsuranceForm />
+          <CreateInsuranceForm />
         </Modal>
       )}
 

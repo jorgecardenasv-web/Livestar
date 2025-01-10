@@ -1,8 +1,8 @@
 import { useNotificationStore } from "@/features/notification/store/notification-store";
 import { useModalStore } from "@/shared/store/modal-store";
 import { useFormState } from "react-dom";
-import { useEffect, useState } from "react";
-import { getErrorMessage } from "@/shared/utils";
+import { useEffect } from "react";
+import { getNotificationMessage } from "@/shared/utils";
 import { Prospect } from "../types/prospect";
 import { changeStatusAndAdvisor } from "../actions/change-status-and-advisor";
 
@@ -26,7 +26,7 @@ export const useProspectActions = () => {
   useEffect(() => {
     if (state?.errors === null) {
       closeModal();
-      showNotification(getErrorMessage(modalType ?? ""), "success");
+      showNotification(getNotificationMessage(modalType ?? ""), "success");
     }
   }, [state?.errors, closeModal, showNotification, modalType]);
 
@@ -36,8 +36,7 @@ export const useProspectActions = () => {
   const openEditProspectModal = (prospect: Prospect) =>
     openModal("editProspect", { prospect });
 
-  const openXlsxModal = () =>
-    openModal("createXlsx");
+  const openXlsxModal = () => openModal("createXlsx");
 
   return {
     // General Actions

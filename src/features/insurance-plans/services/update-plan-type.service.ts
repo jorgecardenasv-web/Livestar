@@ -1,9 +1,6 @@
 import prisma from "@/lib/prisma";
 
-export const editPlanTypeService = (planTypeId: string, formData: any) => {
-
-  console.log(planTypeId, formData);
-  
+export const updatePlanTypeService = (planTypeId: string, formData: any) => {
   return prisma.planType.update({
     where: {
       id: planTypeId,

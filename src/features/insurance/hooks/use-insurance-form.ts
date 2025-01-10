@@ -3,31 +3,34 @@ import { useFormState } from "react-dom";
 
 import { useNotificationStore } from "@/features/notification/store/notification-store";
 import { useModalStore } from "@/shared/store/modal-store";
-import { getErrorMessage } from "@/shared/utils";
+import { getNotificationMessage } from "@/shared/utils";
+import { FormState } from "@/shared/types";
 
-export const useInsuranceForm = (action: any) => {
-  const { closeModal, modalType } = useModalStore();
+export const useInsuranceForm = (
+  serverAction: (id: string, prevState: any, formData: FormData) => Promise<FormState>
+) => {
+  const { closeModal, modalType, modalProps } = useModalStore();
   const { showNotification } = useNotificationStore();
 
-  const [state, formAction] = useFormState(action, {
-    errors: {
-      name: "",
-      logo: "",
-    },
+  const bodedServerAction = serverAction.bind(null, modalProps.id);
+
+  const [state, formAction] = useFormState(bodedServerAction, {
+    message: "",
+    success: false,
   });
 
   useEffect(() => {
-    if (!state.errors) {
+    if (state.success) {
       closeModal();
-      showNotification(getErrorMessage(modalType ?? ""), "success");
+      showNotification(state.message, "success");
     }
-  }, [state?.errors, closeModal, showNotification, modalType]);
+  }, [state?.success, state.message, closeModal, showNotification, modalType]);
 
   const handleDeleteInsurance = async (id: string): Promise<void> => {
-    await action(id);
+    await serverAction.bind(null, id);
     closeModal();
 
-    return showNotification(getErrorMessage("deleteAdvisor"), "success");
+    return showNotification(getNotificationMessage("deleteAdvisor"), "success");
   };
 
   return {

@@ -1,9 +1,8 @@
-import { UsersList } from "@/features/dashboard/components/list-users";
-import { getUsers } from "@/features/dashboard/actions/get-users";
-import { CardExample } from "@/features/dashboard/components/card";
-import { Pagination } from "@/shared/components/pagination";
+
+import { UsersList } from "@/features/dashboard/components/tables/list-users";
+import { getUsers } from "@/features/dashboard/loaders/get-users";
+import { Pagination } from "@/shared/components/pagination/pagination";
 import { Card, CardContent } from "@/shared/components/ui/card";
-// XLSX require "r"
 
 export default async function Dashboard({
   searchParams,

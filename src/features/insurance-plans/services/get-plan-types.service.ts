@@ -1,5 +1,5 @@
-import prisma from "@/lib/prisma"
+import prisma from "@/lib/prisma";
 
 export const getPlanTypesSirvice = () => {
-  return prisma.planType.findMany()
-}
+  return prisma.planType.findMany();
+};

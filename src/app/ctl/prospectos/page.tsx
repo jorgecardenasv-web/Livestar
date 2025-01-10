@@ -1,13 +1,13 @@
-import { HeaderProspects } from "@/features/prospects/components/header-prospect";
-import { ListProspects } from "@/features/prospects/components/list-prospects";
-import { ModalProspectActions } from "@/features/prospects/components/modal-prospect-actions";
+import { HeaderProspects } from "@/features/prospects/components/headers/header-prospect";
 import { getAdvisors } from "@/features/prospects/loaders/get-advisors";
 import { getProspects } from "@/features/prospects/loaders/get-prospects";
 import { getCurrentUser } from "@/features/session/loaders/get-current-user";
 import { Prospect } from "@prisma/client";
-import { FilterSetion } from "@/features/prospects/components/filter-section";
+import { FilterSetion } from "@/features/prospects/components/sections/filter-section";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Separator } from "@/shared/components/ui/separator";
+import { ListProspects } from "@/features/prospects/components/tables/list-prospects";
+import { ModalProspectActions } from "@/features/prospects/components/modals/modal-prospect-actions";
 
 const isVerifiedMap: { [key: string]: boolean | undefined } = {
   true: true,

@@ -5,7 +5,7 @@ import { Hero } from "@/features/home/components/sections/hero";
 import { MedicalExpenses } from "@/features/home/components/sections/medical-expenses";
 import { Quotes } from "@/features/home/components/sections/quotes";
 import { SuccessStory } from "@/features/home/components/sections/success-story";
-import { ScrollAnimatedComponent } from "@/shared/components/scroll-animated";
+import { ScrollAnimatedComponent } from "@/shared/components/ui/scroll-animated";
 
 export default function Home() {
   return (

@@ -3,7 +3,7 @@
 import { DollarSign, Percent } from "lucide-react";
 import { TextInput } from "@/shared/components/ui/text-input";
 import { PriceTableForm } from "./price-table-form";
-import { addPlan } from "../../actions/add-plan";
+import { createPlan } from "../../actions/create-plan";
 import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { SelectInput } from "@/shared/components/ui/select-input";
@@ -24,7 +24,7 @@ interface Props {
 }
 
 export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
-  const { handleSubmit } = useInsurancePlanForm(addPlan);
+  const { handleSubmit } = useInsurancePlanForm(createPlan);
   const { setPrices } = usePriceTable();
 
   useEffect(() => {

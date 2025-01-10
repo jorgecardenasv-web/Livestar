@@ -1,11 +1,11 @@
 import prisma from "@/lib/prisma";
 
-export const createSessionService = async (user: any) => {
+export const createSessionService = async (userId: string) => {
   return await prisma.session.create({
     data: {
       user: {
         connect: {
-          id: user.id,
+          id: userId,
         },
       },
     },

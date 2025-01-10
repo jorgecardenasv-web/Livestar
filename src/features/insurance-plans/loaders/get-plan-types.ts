@@ -1,5 +1,3 @@
-import { getPlanTypesSirvice } from "../services/get-plan-types.service"
+import { getPlanTypesSirvice } from "../services/get-plan-types.service";
 
-export const getPlanTypes = async () => {
-  return getPlanTypesSirvice()
-}
+export const getPlanTypes = async () => getPlanTypesSirvice();

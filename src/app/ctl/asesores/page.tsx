@@ -1,11 +1,11 @@
-import { HeaderAdvisors } from "@/features/advisors/components/header-advisors";
-import { getAdvisors } from "@/features/advisors/actions/get-advisors";
-import { ListAdvisors } from "@/features/advisors/components/list-advisors";
-import { Pagination } from "@/shared/components/pagination";
-import { ModalAdvisorActions } from "@/features/advisors/components/modal-advisor-actions";
+import { getAdvisors } from "@/features/advisors/loaders/get-advisors";
+import { Pagination } from "@/shared/components/pagination/pagination";
+import { ModalAdvisorActions } from "@/features/advisors/components/modals/modal-advisor-actions";
 import { SelectFilter } from "@/shared/components/select-filter";
 import { UserStatus } from "@prisma/client";
 import { Card, CardContent } from "@/shared/components/ui/card";
+import { HeaderAdvisors } from "@/features/advisors/components/headers/header-advisors";
+import { ListAdvisors } from "@/features/advisors/components/tables/list-advisors";
 
 const statusOptions = [
   { value: "todos", label: "Todos" },

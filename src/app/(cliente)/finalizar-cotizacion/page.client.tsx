@@ -1,13 +1,14 @@
 "use client";
-import { ContactInfoSection } from "@/features/insurance-quote/components/contact-info-section";
-import { MedicalInformation } from "@/features/insurance-quote/components/medical-information";
-import { PersonalInfoSection } from "@/features/insurance-quote/components/personal-info-section";
+
 import { useGetQuoteForm } from "@/features/insurance-quote/hooks/use-get-quote-form";
 import { useState } from "react";
 import { FormDataMedical, Question } from "@/features/insurance-quote/types";
-import { actionCreateMedicalHistory } from "@/features/insurance-quote/actions/create-medical-history";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Separator } from "@/shared/components/ui/separator";
+import { createMedicalHistory } from "@/features/insurance-quote/actions/create-medical-history";
+import { ContactInfoSection } from "@/features/insurance-quote/components/sections/contact-info-section";
+import { MedicalInformationForm } from "@/features/insurance-quote/components/forms/medical-information-form";
+import { PersonalInfoSection } from "@/features/insurance-quote/components/sections/personal-info-section";
 
 const questions: Question[] = [
   {
@@ -131,11 +132,11 @@ export default function QuoteFinalizationClientPage({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     // Validar los formularios antes de enviar
     setIsSubmitting(true);
     const validationErrors = validateHealthConditions();
-    
+
     if (Object.keys(validationErrors).length > 0) {
       // Si hay errores, actualizar el estado de errores y no enviar el formulario
       setForms((prevForms) => [...prevForms]); // Trigger re-render
@@ -143,7 +144,7 @@ export default function QuoteFinalizationClientPage({
     }
 
     // Si no hay errores, se envía el formulario
-    actionCreateMedicalHistory(forms);
+    createMedicalHistory(forms);
   };
 
   return (
@@ -169,7 +170,7 @@ export default function QuoteFinalizationClientPage({
 
             <Separator />
 
-            <MedicalInformation
+            <MedicalInformationForm
               forms={forms}
               setForms={setForms}
               questions={questions}

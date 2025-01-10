@@ -5,9 +5,7 @@ import { cookies } from "next/headers";
 import { getProspectByIdService } from "@/features/prospects/services/get-prospect-by-id.service";
 import { FormDataMedical } from "../types";
 
-export const actionCreateMedicalHistory = async (
-  formMedical: FormDataMedical[]
-) => {
+export const createMedicalHistory = async (formMedical: FormDataMedical[]) => {
   const cookieStore = cookies();
   const prospectJson = cookieStore.get("prospect")?.value;
   const prospect = prospectJson ? JSON.parse(prospectJson) : {};
@@ -15,5 +13,4 @@ export const actionCreateMedicalHistory = async (
 
   if (prospectData)
     await createMedicalHistoryService(formMedical, prospectData?.id);
-
 };

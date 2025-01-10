@@ -1,7 +1,6 @@
 import React from "react";
 import { CreditCard, Calendar } from "lucide-react";
-import { setActivePaymentType } from "../../actions/add-cookies";
-
+import { setActivePaymentType } from "../../actions/set-cookies";
 
 interface PaymentSelectorProps {
   paymentTypes: string[];

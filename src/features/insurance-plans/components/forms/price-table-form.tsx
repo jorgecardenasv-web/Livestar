@@ -1,12 +1,7 @@
 "use client";
 
 import { Upload } from "lucide-react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@/shared/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import {
   Table,
   TableBody,
@@ -44,77 +39,77 @@ export const PriceTableForm: React.FC = () => {
         </CardTitle>
       </CardHeader>
       <Separator />
-        <div
-          className="rounded p-4"
-          style={{
-            maxHeight: "500px",
-            overflowY: "auto",
-          }}
-        >
-          {prices.length > 0 ? (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[100px] text-center">Edad</TableHead>
-                  <TableHead colSpan={2} className="text-center">
-                    Mensual
-                  </TableHead>
-                  <TableHead colSpan={2} className="text-center">
-                    Anual
-                  </TableHead>
+      <div
+        className="rounded p-4"
+        style={{
+          maxHeight: "500px",
+          overflowY: "auto",
+        }}
+      >
+        {prices.length > 0 ? (
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px] text-center">Edad</TableHead>
+                <TableHead colSpan={2} className="text-center">
+                  Mensual
+                </TableHead>
+                <TableHead colSpan={2} className="text-center">
+                  Anual
+                </TableHead>
+              </TableRow>
+              <TableRow>
+                <TableHead></TableHead>
+                <TableHead className="text-center">Hombre</TableHead>
+                <TableHead className="text-center">Mujer</TableHead>
+                <TableHead className="text-center">Hombre</TableHead>
+                <TableHead className="text-center">Mujer</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {prices.map((row) => (
+                <TableRow key={row.age}>
+                  <TableCell className="text-center">{row.age}</TableCell>
+                  <TableCell>
+                    <PriceInput
+                      value={row.monthlyPriceMale.toString()}
+                      onChange={(value) =>
+                        handlePriceChange(row.age, "monthlyPriceMale", value)
+                      }
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <PriceInput
+                      value={row.monthlyPriceFemale.toString()}
+                      onChange={(value) =>
+                        handlePriceChange(row.age, "monthlyPriceFemale", value)
+                      }
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <PriceInput
+                      value={row.annualPriceMale.toString()}
+                      onChange={(value) =>
+                        handlePriceChange(row.age, "annualPriceMale", value)
+                      }
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <PriceInput
+                      value={row.annualPriceFemale.toString()}
+                      onChange={(value) =>
+                        handlePriceChange(row.age, "annualPriceFemale", value)
+                      }
+                    />
+                  </TableCell>
                 </TableRow>
-                <TableRow>
-                  <TableHead></TableHead>
-                  <TableHead className="text-center">Hombre</TableHead>
-                  <TableHead className="text-center">Mujer</TableHead>
-                  <TableHead className="text-center">Hombre</TableHead>
-                  <TableHead className="text-center">Mujer</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {prices.map((row) => (
-                  <TableRow key={row.age}>
-                    <TableCell className="text-center">{row.age}</TableCell>
-                    <TableCell>
-                      <PriceInput
-                        value={row.monthlyPriceMale.toString()}
-                        onChange={(value) =>
-                          handlePriceChange(row.age, "monthlyPriceMale", value)
-                        }
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <PriceInput
-                        value={row.monthlyPriceFemale.toString()}
-                        onChange={(value) =>
-                          handlePriceChange(row.age, "monthlyPriceFemale", value)
-                        }
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <PriceInput
-                        value={row.annualPriceMale.toString()}
-                        onChange={(value) =>
-                          handlePriceChange(row.age, "annualPriceMale", value)
-                        }
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <PriceInput
-                        value={row.annualPriceFemale.toString()}
-                        onChange={(value) =>
-                          handlePriceChange(row.age, "annualPriceFemale", value)
-                        }
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          ) : (
-            <div className="p-4 text-center">No hay datos para mostrar</div>
-          )}
-        </div>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <div className="p-4 text-center">No hay datos para mostrar</div>
+        )}
+      </div>
     </Card>
   );
 };

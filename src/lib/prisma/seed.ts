@@ -47,6 +47,7 @@ async function main() {
     for (let i = 1; i <= count; i++) {
       const firstName = faker.person.firstName();
       const lastName = faker.person.lastName();
+      const email = faker.internet.email();
       const fullName = `${firstName} ${lastName}`;
 
       console.log(`Creando usuario ${i}: ${fullName}`);
@@ -54,7 +55,7 @@ async function main() {
       await prisma.user.create({
         data: {
           name: fullName,
-          email: `${firstName.toLowerCase()}_${lastName}}@example.com`,
+          email,
           password: hashedAdvisorPassword,
           role: Role.ADVISOR,
           status: getRandomStatus(),

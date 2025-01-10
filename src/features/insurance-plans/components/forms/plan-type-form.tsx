@@ -5,7 +5,7 @@ import { usePlanTypeActions } from "../../hooks/use-plan-type-actions";
 import { TextInput } from "@/shared/components/ui/text-input";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { usePlanTypeForm } from "../../hooks/use-plan-type-form";
-import { updatePlanType } from "../../actions/edit-plan-type";
+import { updatePlanType } from "../../actions/update-plan-type";
 
 export const PlanTypeForm = () => {
   const { modalProps } = usePlanTypeActions();

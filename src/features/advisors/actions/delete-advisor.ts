@@ -1,10 +1,11 @@
 "use server";
 import { reassignProspectService } from "@/features/insurance-quote/services/reassign-prospect.service";
 import prisma from "@/lib/prisma";
+import { FormState } from "@/shared/types";
 import { prefix } from "@/shared/utils/constants";
 import { revalidatePath } from "next/cache";
 
-export const deleteAdvisor = async (advisorId: string): Promise<boolean> => {
+export const deleteAdvisor = async (advisorId: string): Promise<FormState> => {
   try {
     await prisma.$transaction(async (prisma) => {
       await reassignProspectService(advisorId);
@@ -14,9 +15,15 @@ export const deleteAdvisor = async (advisorId: string): Promise<boolean> => {
       });
     });
     revalidatePath(`${prefix}/asesores`);
-    return true;
+    return {
+      success: true,
+      message: "¡Asesor borrado exitosamente!",
+    };
   } catch (error) {
     console.error(error);
-    return false;
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : "Error desconocido",
+    };
   }
 };

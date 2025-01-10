@@ -5,7 +5,7 @@ import Ahorro from "@/assets/home/Ahorro.png";
 import vehiculos from "@/assets/home/vehiculos.png";
 import { QuoteCard } from "../cards/quote-card";
 import { useModalStore } from "@/shared/store/modal-store";
-import { ModalQuotesAction } from "../modal-quotes-actions";
+import { ModalQuotesAction } from "../modals/modal-quotes-actions";
 
 export const Quotes = () => {
   const { openModal } = useModalStore();

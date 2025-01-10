@@ -1,9 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { BriefcaseMedical } from "lucide-react";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";
-import Link from "next/link";
 import { prefix } from "@/shared/utils/constants";
 
 export const HeaderPlans = () => {

@@ -18,9 +18,8 @@ import {
   AvatarImage,
 } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
-import { Pencil, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { useInsuranceActions } from "../../hooks/use-insurance-actions";
-import { getImage } from "@/shared/loaders/get-image";
 
 interface ListInsuranceProps {
   insurances: Insurance[];

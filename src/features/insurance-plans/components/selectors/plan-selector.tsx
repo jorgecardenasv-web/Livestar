@@ -1,6 +1,5 @@
 import { Shield, ShieldCheck, ShieldAlert } from "lucide-react";
-import { setActivePlanType } from "../../actions/add-cookies";
-
+import { setActivePlanType } from "../../actions/set-cookies";
 
 interface PlanSelectorProps {
   planTypes: string[];

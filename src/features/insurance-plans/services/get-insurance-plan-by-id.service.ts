@@ -7,7 +7,7 @@ export const getInsurancePlanByIdService = async (id: string) => {
     },
     include: {
       company: true,
-      planType: true
-    }
+      planType: true,
+    },
   });
 };

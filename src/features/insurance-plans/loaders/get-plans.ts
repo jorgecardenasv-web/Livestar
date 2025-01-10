@@ -1,4 +1,3 @@
-
 import { GetPlansService } from "../services/get-plans.service";
 import { InsurancePlanTransformer } from "../transformers/insurance-plan";
 

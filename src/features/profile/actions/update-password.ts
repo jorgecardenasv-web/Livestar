@@ -5,7 +5,7 @@ import { simplifyZodErrors } from "@/shared/utils";
 import { compare, hash } from "bcrypt";
 import { AuthService } from "@/shared/services/find-user.service";
 import { getSession } from "@/lib/iron-session/get-session";
-import { updatePasswordService } from "../services/index.services";
+import { updatePasswordService } from "../services/update-password.service";
 
 export const updatePassword = async (prevState: any, formData: FormData) => {
   const session = await getSession();

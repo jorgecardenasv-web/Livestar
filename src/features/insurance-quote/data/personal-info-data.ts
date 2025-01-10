@@ -7,7 +7,7 @@ export const genderOptions = [
     label: "Mujer",
     value: "mujer",
   },
-]
+];
 
 export const whoOptions = [
   {
@@ -38,7 +38,7 @@ export const whoOptions = [
     label: "Otro(s)",
     value: "otros",
   },
-]
+];
 
 export const eventTypeOptions = [
   {
@@ -57,4 +57,4 @@ export const eventTypeOptions = [
     label: "Estético",
     value: "estetico",
   },
-]
+];

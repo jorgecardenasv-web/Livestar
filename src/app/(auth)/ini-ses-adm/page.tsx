@@ -1,9 +1,9 @@
-import { SigninForm } from "@/features/auth/components/login";
+import { LoginForm } from "@/features/auth/components/login";
 
 export default function SignIn() {
   return (
-   <div className='flex h-screen items-center justify-center'>
-      <SigninForm />
-   </div>
-  )
+    <div className="flex h-screen items-center justify-center">
+      <LoginForm />
+    </div>
+  );
 }

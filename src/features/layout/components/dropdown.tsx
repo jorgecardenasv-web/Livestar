@@ -8,7 +8,7 @@ import {
   UserCircle,
   PenIcon as UserPen,
 } from "lucide-react";
-import { signout } from "@/features/auth/actions/signout";
+import { logout } from "@/features/auth/actions/logout";
 import { prefix } from "@/shared/utils/constants";
 import {
   DropdownMenu,
@@ -51,7 +51,7 @@ export const Dropdown: React.FC<DropdownProps> = ({ label }) => {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <form action={signout}>
+          <form action={logout}>
             <button className="flex items-center space-x-2 w-full text-left">
               <PowerIcon size={20} />
               <span>Cerrar sesión</span>

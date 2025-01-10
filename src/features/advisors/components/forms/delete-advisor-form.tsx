@@ -6,13 +6,15 @@ import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { Callout } from "@/shared/components/ui/callout";
 import { Button } from "@/shared/components/ui/button";
 import { Badge } from "@/shared/components/ui/badge";
+import { useAdvisorForm } from "../../hooks/use-advisor-form";
 
 export const DeleteAdvisorForm = () => {
   const {
     handleCancel,
-    handleDeleteAdvisor,
     modalProps: { advisor },
-  } = useAdvisorActions(deleteAdvisor);
+  } = useAdvisorActions();
+
+  const { handleDeleteAdvisor } = useAdvisorForm(deleteAdvisor);
 
   return (
     <>

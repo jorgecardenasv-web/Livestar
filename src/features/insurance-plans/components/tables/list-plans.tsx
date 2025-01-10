@@ -18,7 +18,7 @@ import {
   AvatarImage,
 } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
-import { Trash2 } from 'lucide-react';
+import { Trash2 } from "lucide-react";
 import { prefix } from "@/shared/utils/constants";
 import { useRouter } from "next/navigation";
 
@@ -89,4 +89,3 @@ export const PlansList = ({ plans, companyLogos }: PlansListProps) => {
     </div>
   );
 };
-

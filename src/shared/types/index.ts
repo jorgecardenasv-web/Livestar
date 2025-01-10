@@ -5,4 +5,5 @@ export interface FormError {
 export type FormState = {
   message: string;
   success: boolean;
+  inputErrors?: Record<string, string>;
 };

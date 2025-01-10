@@ -1,5 +1,6 @@
+"use server";
+
 import { getSessionsService } from "../services/get-sessions.service";
 
-export const getSessions = async (currentSessionId: string) => {
-  return await getSessionsService({ currentSessionId });
-};
+export const getSessions = async (currentSessionId: string) =>
+  getSessionsService({ currentSessionId });

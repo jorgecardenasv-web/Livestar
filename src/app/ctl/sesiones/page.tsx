@@ -1,5 +1,6 @@
-import { HeaderSessions } from "@/features/session/components/header-sessions";
-import { ListSessions } from "@/features/session/components/list-sessions";
+import { HeaderSessions } from "@/features/session/components/headers/header-sessions";
+import { ListSessions } from "@/features/session/components/tables/list-sessions";
+
 import { getSessions } from "@/features/session/loaders/get-sessions";
 import { getSession } from "@/lib/iron-session/get-session";
 

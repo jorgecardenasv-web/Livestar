@@ -1,6 +1,6 @@
+import prisma from "@/lib/prisma";
 import { compare } from "bcrypt";
 import { authenticadedUser } from "../transformers/authenticaded-user";
-import prisma from "@/lib/prisma";
 
 export const verifyCredentialsService = async (
   email: string,
