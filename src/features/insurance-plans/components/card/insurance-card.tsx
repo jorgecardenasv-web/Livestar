@@ -3,10 +3,12 @@ import {
   InsuranceCompany,
   InsurancePlan,
 } from "../../../../shared/types/insurance";
-import { calculateTotalPrice } from "../../utils";
-import { Shield, DollarSign, Percent, Heart, Check } from "lucide-react";
+import { calculateInsurancePrice } from "../../utils";
+import { Shield, Percent, Heart } from "lucide-react";
 import { handleInterestClick } from "../../actions/add-cookies";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
+import { getProspect } from "../../loaders/get-prospect";
+import { PriceTable } from "../../types";
 import { getImage } from "../../loaders/get-image";
 
 interface InsuranceCardProps {
@@ -22,7 +24,10 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   paymentType,
   isRecommended,
 }) => {
-  const coverage_fee = calculateTotalPrice(10, paymentType);
+  const propect = await getProspect();
+  const prices: PriceTable = plan.prices as unknown as PriceTable || {}
+  const { coverage_fee } = calculateInsurancePrice(propect, prices, paymentType);
+  
   const imageName = company.logo.split("/").pop();
   const logoSrc = imageName ? await getImage(imageName) : "";
 

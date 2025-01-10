@@ -8,6 +8,7 @@ import {
   AlertTitle,
 } from "@/shared/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { SubmitButton } from "@/shared/components/ui/submit-button";
 
 export const ContractForm = () => {
   const [isConfirmed, setIsConfirmed] = useState(false);
@@ -51,13 +52,13 @@ export const ContractForm = () => {
         </AlertDescription>
       </Alert>
 
-      <button
-        type="submit"
+      <SubmitButton
+        label="Contratar ahora"
+        labelPending="Generando confirmación..."
+        className="w-full"
+        size="lg"
         disabled={!isConfirmed}
-        className="w-full bg-[#223E99] text-white py-3 rounded font-bold text-base sm:text-lg hover:bg-primary transition duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed"
-      >
-        Contratar ahora
-      </button>
+      />
     </form>
   );
 };

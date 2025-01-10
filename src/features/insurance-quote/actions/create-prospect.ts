@@ -21,6 +21,7 @@ export const createProspect = async (formData: any) => {
       id: prospect.id,
       postalCode: prospect.postalCode,
       age: prospect.age,
+      gender: prospect.gender,
       additionalInfo: prospect.additionalInfo,
       protectWho: prospect.protectWho,
     })

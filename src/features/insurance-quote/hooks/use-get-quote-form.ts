@@ -46,6 +46,9 @@ export const useGetQuoteForm = (initialState?: any) => {
     setFormData((prev: any) => {
       const updatedData = { ...prev, [field]: value };
 
+      console.log(updatedData)
+      
+
       if (field === "childrenCount" && !Number.isNaN(value)) {
         const count = typeof value === "number" ? value : 0;
 
