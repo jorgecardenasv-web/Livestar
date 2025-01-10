@@ -7,6 +7,7 @@ import { calculateTotalPrice } from "../../utils";
 import { Shield, DollarSign, Percent, Heart, Check } from "lucide-react";
 import { handleInterestClick } from "../../actions/add-cookies";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
+import { getImage } from "../../loaders/get-image";
 
 interface InsuranceCardProps {
   company: InsuranceCompany;
@@ -15,14 +16,16 @@ interface InsuranceCardProps {
   isRecommended: boolean;
 }
 
-export const InsuranceCard: React.FC<InsuranceCardProps> = ({
+export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   company,
   plan,
   paymentType,
   isRecommended,
 }) => {
   const coverage_fee = calculateTotalPrice(10, paymentType);
-  
+  const imageName = company.logo.split("/").pop();
+  const logoSrc = imageName ? await getImage(imageName) : "";
+
   return (
     <div
       className={`bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${
@@ -37,7 +40,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = ({
       <div className="p-6">
         <div className="flex flex-col items-center mb-6">
           <Image
-            src={company.logo}
+            src={logoSrc}
             width={128}
             height={128}
             alt={company.name}
@@ -47,10 +50,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = ({
             <p className="text-sm text-sky-600 font-semibold uppercase mb-1">
               {paymentType === "Mensual" ? "Pago mensual" : "Pago anual"}
             </p>
-            <p className="text-3xl font-bold text-[#223E99]">
-              $
-              {coverage_fee}
-            </p>
+            <p className="text-3xl font-bold text-[#223E99]">${coverage_fee}</p>
           </div>
         </div>
 
@@ -58,7 +58,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = ({
           <InfoItem
             icon={<Shield className="w-5 h-5" />}
             title="Suma asegurada"
-            value={`$${(plan.sumInsured / 1000000)} MILLONES`}
+            value={`$${plan.sumInsured / 1000000} MILLONES`}
           />
           {/* <InfoItem
             icon={<DollarSign className="w-5 h-5" />}
@@ -77,17 +77,12 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = ({
           />
         </div>
 
-
         <form action={handleInterestClick}>
           <input type="hidden" name="company" value={company.name} />
           <input type="hidden" name="companyLogo" value={company.logo} />
           <input type="hidden" name="plan" value={plan.name} />
           <input type="hidden" name="paymentType" value={paymentType} />
-          <input
-            type="hidden"
-            name="sumInsured"
-            value={plan.sumInsured}
-          />
+          <input type="hidden" name="sumInsured" value={plan.sumInsured} />
           {/* <input
             type="hidden"
             name="deductible"

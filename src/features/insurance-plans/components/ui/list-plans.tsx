@@ -18,11 +18,16 @@ import {
   AvatarImage,
 } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Trash2 } from 'lucide-react';
 import { prefix } from "@/shared/utils/constants";
 import { useRouter } from "next/navigation";
 
-export const PlansList = ({ plans }: { plans: Plan[] }) => {
+interface PlansListProps {
+  plans: Plan[];
+  companyLogos: { [key: string]: string };
+}
+
+export const PlansList = ({ plans, companyLogos }: PlansListProps) => {
   const { push } = useRouter();
 
   return (
@@ -46,7 +51,7 @@ export const PlansList = ({ plans }: { plans: Plan[] }) => {
                 </TableCell>
                 <TableCell onClick={() => push(`${prefix}/planes/${plan.id}`)}>
                   <Avatar>
-                    <AvatarImage src={plan.company.logo} />
+                    <AvatarImage src={companyLogos[plan.id]} />
                     <AvatarFallback>{plan.company.name}</AvatarFallback>
                   </Avatar>
                 </TableCell>
@@ -64,12 +69,12 @@ export const PlansList = ({ plans }: { plans: Plan[] }) => {
                   className="flex gap-1"
                   onClick={() => push(`${prefix}/planes/${plan.id}`)}
                 >
-                  {/* <Button onClick={() => openEditInsuranceModal(insurance)}>
-                <Pencil size={20} />
-              </Button> */}
                   <Button
                     variant="destructive"
-                    onClick={() => console.log(plan)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      console.log(plan);
+                    }}
                   >
                     <Trash2 size={20} />
                   </Button>
@@ -84,3 +89,4 @@ export const PlansList = ({ plans }: { plans: Plan[] }) => {
     </div>
   );
 };
+

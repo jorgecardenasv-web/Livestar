@@ -1,25 +1,24 @@
-import { NextResponse, type NextRequest } from "next/server";
+'use server'
+
 import { getAllProspectsByDateService } from "@/features/prospects/services/get-prospects.service";
 import { prospectTransformer } from "@/features/prospects/transformers/prospect-transformer";
+import * as XLSX from 'xlsx';
 
 const formatToISO = (date: string) => {
   return new Date(date).toISOString().split(".")[0] + "Z";
 };
 
-export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const startDate = searchParams.get("startDate") as string;
-  const endDate = searchParams.get("endDate") as string;
-
+export async function generateReport(startDate: string, endDate: string) {
   const prospects = await getAllProspectsByDateService({
     startDate: formatToISO(startDate),
     endDate: formatToISO(endDate),
   });
-  const prospectTranformed = prospects.map((prospect) =>
+
+  const prospectTransformed = prospects.map((prospect) =>
     prospectTransformer(prospect as any)
   );
 
-  const mapedProspect = prospectTranformed?.map((prospect) => ({
+  const mappedProspects = prospectTransformed?.map((prospect) => ({
     Id: prospect.id,
     Nombre: prospect.name,
     Email: prospect.email,
@@ -28,5 +27,17 @@ export async function GET(request: NextRequest) {
     "Fecha de creación": prospect.createdAt,
   }));
 
-  return NextResponse.json(mapedProspect);
+  // Crear el libro de Excel
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.json_to_sheet(mappedProspects);
+  XLSX.utils.book_append_sheet(wb, ws, "Prospectos");
+
+  // Generar el archivo Excel
+  const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
+
+  // Convertir el buffer a Base64
+  const base64 = Buffer.from(excelBuffer).toString('base64');
+
+  return base64;
 }
+
