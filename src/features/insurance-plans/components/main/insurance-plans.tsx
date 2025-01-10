@@ -1,20 +1,17 @@
-import { InsuranceCard } from "../card/insurance-card";
-import { PlanSelector } from "../selector/plan-selector";
-import { PaymentSelector } from "../selector/payment-selector";
 import { getInsuranceState } from "../../loaders/get-insurance-status";
-import { getProspect } from "../../loaders/get-prospect";
+import { InsuranceCard } from "../card/insurance-card";
+import { PaymentSelector } from "../selector/payment-selector";
+import { PlanSelector } from "../selector/plan-selector";
 
-export const InsurancePlans = async ({
+
+export async function InsurancePlans({
   insurancePlans,
 }: {
   insurancePlans: any[];
-}) => {
+}) {
   const { activePlanType, activePaymentType } = await getInsuranceState();
-  const prospect = await getProspect();
 
-  console.log(prospect);
-
-  const planTypes = ["Plan Básico", "Plan Intermedio", "Plan Plus"];
+  const planTypes = ["Esencial", "Protegido", "Blindado"];
   const paymentTypes = ["Mensual", "Anual"];
 
   return (
@@ -26,20 +23,22 @@ export const InsurancePlans = async ({
           activePaymentType={activePaymentType}
         />
       </div>
-      <div className="grid grid-flow-col justify-center md:auto-cols-max gap-2 items-end">
-        {insurancePlans.map((plan) => {
+      <div className="grid grid-flow-row md:grid-flow-col justify-center lg:auto-cols-max gap-2 items-end">
+        {insurancePlans.map((plan, index) => {
           const activePlan = plan.name === activePlanType ? plan : null;
-          return activePlan && (
-            <InsuranceCard
-              key={`${plan.company.name}-${activePlanType}`}
-              company={plan.company}
-              plan={activePlan}
-              paymentType={activePaymentType}
-              isRecommended={plan.isRecommended}
-            />
-          )
+          return (
+            activePlan && (
+              <InsuranceCard
+                key={`${plan.company.name}-${activePlanType}`}
+                company={plan.company}
+                plan={activePlan}
+                paymentType={activePaymentType}
+                isRecommended={index === 0}
+              />
+            )
+          );
         })}
       </div>
     </div>
   );
-};
+}

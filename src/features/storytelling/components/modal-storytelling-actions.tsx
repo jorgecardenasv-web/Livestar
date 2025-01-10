@@ -11,11 +11,12 @@ export const ModalStorytellingActions: FC = () => {
 
   return (
     <>
+
       {isOpen && modalType === "formQuote" && (
         <Modal
           title=""
           size="3xl"
-        >
+          >
           <GetQuoteForm prospect={modalProps.prospect} />
         </Modal>
       )}
