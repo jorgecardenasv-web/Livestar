@@ -1,4 +1,5 @@
 "use server";
+
 import { createMedicalHistoryService } from "../services/create-medical-history.service";
 import { cookies } from "next/headers";
 import { getProspectByIdService } from "@/features/prospects/services/get-prospect-by-id.service";
@@ -14,4 +15,5 @@ export const actionCreateMedicalHistory = async (
 
   if (prospectData)
     await createMedicalHistoryService(formMedical, prospectData?.id);
+
 };

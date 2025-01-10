@@ -1,4 +1,6 @@
 import { getInsuranceState } from "../../loaders/get-insurance-status";
+import { getProspect } from "../../loaders/get-prospect";
+import { calculateInsurancePrice } from "../../utils";
 import { InsuranceCard } from "../card/insurance-card";
 import { PaymentSelector } from "../selector/payment-selector";
 import { PlanSelector } from "../selector/plan-selector";
@@ -10,9 +12,9 @@ export async function InsurancePlans({
   insurancePlans: any[];
 }) {
   const { activePlanType, activePaymentType } = await getInsuranceState();
-
-  const planTypes = ["Esencial", "Protegido", "Blindado"];
+  const planTypes = ["Plan Básico", "Plan Intermedio", "Plan Plus"];
   const paymentTypes = ["Mensual", "Anual"];
+  
 
   return (
     <div className="mx-auto px-4 py-2 space-y-4 m-8">
@@ -26,6 +28,7 @@ export async function InsurancePlans({
       <div className="grid grid-flow-row md:grid-flow-col justify-center lg:auto-cols-max gap-2 items-end">
         {insurancePlans.map((plan, index) => {
           const activePlan = plan.name === activePlanType ? plan : null;
+          
           return (
             activePlan && (
               <InsuranceCard

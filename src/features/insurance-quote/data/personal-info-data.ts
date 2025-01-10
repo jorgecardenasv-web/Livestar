@@ -19,6 +19,10 @@ export const whoOptions = [
     value: "mi_pareja_y_yo",
   },
   {
+    label: "Mi familia",
+    value: "familia",
+  },
+  {
     label: "Mis hijos y yo",
     value: "mis_hijos_y_yo",
   },

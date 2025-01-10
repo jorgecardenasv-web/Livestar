@@ -161,12 +161,13 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                       >
                         <TextInput
                           label="Edad"
+                          type="number"
                           id={`childAge${index}`}
                           name={`childAge${index}`}
                           placeholder="Edad"
                           value={formData.children?.[index]?.age ?? 0}
                           onChange={(e) =>
-                            handleChildChange(index, "age", e.target.value)
+                            handleChildChange(index, "age", Number(e.target.value))
                           }
                           error={errors[`children.${index}.age`]}
                           className="w-full"
