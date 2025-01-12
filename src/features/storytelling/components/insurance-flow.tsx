@@ -15,9 +15,9 @@ export function InsuranceFlow() {
   const progress = ((step + 1) / steps.length) * 100;
 
   return (
-    <div className="bg-gradient-to-b from-white to-blue-50 py-12 px-4">
+    <div className="bg-gradient-to-b from-white to-blue-50 pb-10 px-4">
     <Card className="max-w-6xl mx-auto bg-white">
-      <CardContent className="pt-6">
+      <CardContent className="pt-4">
         {/* Progress Bar */}
         <div className="w-2/3 mx-auto bg-gray-100 h-2 rounded-full mb-8">
           <motion.div

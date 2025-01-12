@@ -45,7 +45,7 @@ export const Hero = () => {
         />
       </div>
 
-      <div className="relative max-w-7xl mx-auto z-10 flex flex-col justify-center items-center min-h-screen px-4 pt-24 lg:pt-0">
+      <div className="relative max-w-7xl mx-auto z-10 flex flex-col justify-center items-center min-h-screen px-4 pt-28 lg:pt-0">
         <div className="w-full flex flex-col lg:flex-row items-center justify-end gap-8">
           <div className="text-center lg:text-right lg:max-w-3xl">
             <h1 className="text-7xl font-bold text-white mb-6">

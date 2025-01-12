@@ -1,118 +1,155 @@
-import React from "react";
-import Image from "next/image";
-import Link from "next/link";
-import Logo from "@/assets/shared/livestar_logo_horizontal_blanco.svg";
-import * as NavigationMenu from "@radix-ui/react-navigation-menu";
-import { CaretDownIcon } from "@radix-ui/react-icons";
-import { Car, HeartPulse, Hospital, Hotel, House } from "lucide-react";
+"use client"
+
+import React, { useState } from "react"
+import Image from "next/image"
+import Link from "next/link"
+import Logo from "@/assets/shared/livestar_logo_horizontal_blanco.svg"
+import { Car, HeartPulse, Hospital, Hotel, HomeIcon as House, Menu, ChevronDown, X } from 'lucide-react'
+import { Sheet, SheetContent, SheetTrigger } from "@/shared/components/ui/sheet"
 
 export const Navbar = () => {
-  return (
-    <div className="hidden md:flex lg:flex items-center text-white md:justify-start lg:justify-between md:gap-x-20 lg:gap-x-80">
-  <Link href="/" className="flex-shrink-0">
-    <Image
-      src={Logo}
-      alt="Logo Principal"
-      width={200}
-      height={58}
-      className="md:w-[180px] lg:w-[238px]"
-    />
-  </Link>
-  <div className="flex-grow">
-    <NavigationMenu.Root>
-      <NavigationMenu.List className="flex gap-x-4 md:gap-x-6 lg:gap-x-10 text-base sm:text-lg md:text-sm lg:text-xl items-center font-bold">
-        <NavigationMenu.Item>
-          <NavigationMenu.Trigger className="px-3 md:px-2 lg:px-5 py-1 md:py-1 lg:py-3 bg-white text-[#223E99] rounded hover:bg-[#223E99] hover:text-white transition duration-300">
-            Cotizadores
-          </NavigationMenu.Trigger>
-        </NavigationMenu.Item>
-        <NavigationMenu.Item>
-          <NavigationMenu.Trigger className="group select-none items-center font-bold flex hover:text-[#00BFFF] transition duration-300">
-            Seguros
-            <CaretDownIcon
-              className="relative top-px text-violet10 transition-transform duration-[250] ease-in group-data-[state=open]:-rotate-180"
-              aria-hidden
-            />
-          </NavigationMenu.Trigger>
-          <NavigationMenu.Content className="mt-2 absolute bg-white text-[#223E99] shadow-lg rounded-lg py-2 w-48 z-10">
-            <ul className="list-none p-0">
-              <li>
-                <NavigationMenu.Link
-                  asChild
-                  className="block px-4 py-2 hover:bg-[#00BFFF] hover:text-white transition duration-300 rounded"
-                >
-                  <Link className="flex" href="https://livestar.mx/seguros/vida/">
-                    <HeartPulse className="mr-2" />
-                    Vida
-                  </Link>
-                </NavigationMenu.Link>
-              </li>
-              <li>
-                <NavigationMenu.Link
-                  asChild
-                  className="block px-4 py-2 hover:bg-[#00BFFF] hover:text-white transition duration-300 rounded"
-                >
-                  <Link className="flex" href="https://livestar.mx/seguros/gastos-medicos/">
-                    <Hospital className="mr-2" />
-                    Gastos Médicos
-                  </Link>
-                </NavigationMenu.Link>
-              </li>
-              <li>
-                <NavigationMenu.Link
-                  asChild
-                  className="block px-4 py-2 hover:bg-[#00BFFF] hover:text-white transition duration-300 rounded"
-                >
-                  <Link className="flex" href="https://livestar.mx/seguros/vehiculos/">
-                    <Car className="mr-2" />
-                    Vehículos
-                  </Link>
-                </NavigationMenu.Link>
-              </li>
-              <li>
-                <NavigationMenu.Link
-                  asChild
-                  className="block px-4 py-2 hover:bg-[#00BFFF] hover:text-white transition duration-300 rounded"
-                >
-                  <Link className="flex" href="https://livestar.mx/seguros/empresas/">
-                    <Hotel className="mr-2" />
-                    Empresas
-                  </Link>
-                </NavigationMenu.Link>
-              </li>
-              <li>
-                <NavigationMenu.Link
-                  asChild
-                  className="block px-4 py-2 hover:bg-[#00BFFF] hover:text-white transition duration-300 rounded"
-                >
-                  <Link className="flex" href="https://livestar.mx/seguros/hogar/">
-                    <House className="mr-2" />
-                    Hogar
-                  </Link>
-                </NavigationMenu.Link>
-              </li>
-            </ul>
-          </NavigationMenu.Content>
-        </NavigationMenu.Item>
-        <NavigationMenu.Item>
-          <NavigationMenu.Link asChild className="hover:text-[#00BFFF] transition duration-300">
-            <Link href="https://livestar.mx/nosotros/">Nosotros</Link>
-          </NavigationMenu.Link>
-        </NavigationMenu.Item>
-        <NavigationMenu.Item>
-          <NavigationMenu.Link asChild className="hover:text-[#00BFFF] transition duration-300">
-            <Link href="https://livestar.mx/contacto/">Contacto</Link>
-          </NavigationMenu.Link>
-        </NavigationMenu.Item>
-        <NavigationMenu.Item>
-          <NavigationMenu.Link asChild className="hover:text-[#00BFFF] transition duration-300">
-            <Link href="https://livestar.mx/en-confianza/">En confianza</Link>
-          </NavigationMenu.Link>
-        </NavigationMenu.Item>
-      </NavigationMenu.List>
-    </NavigationMenu.Root>
-  </div>
-</div>
+  const [showDropdown, setShowDropdown] = useState(false)
 
-  );
-};
+  return (
+    <nav className="text-white pt-5 md:pt-8">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex justify-between items-center h-20">
+          {/* Logo */}
+          <Link href="/" className="flex-shrink-0">
+            <Image
+              src={Logo}
+              alt="Logo Principal"
+              width={200}
+              height={58}
+              className="w-[180px] md:w-[200px] lg:w-[238px]"
+            />
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            <button className="px-6 py-2 bg-white text-[#223E99] rounded-md hover:bg-opacity-90 transition-colors font-medium">
+              Cotizadores
+            </button>
+            
+            <div className="relative group">
+              <button className="flex items-center space-x-1 text-white hover:text-gray-200 transition-colors font-medium">
+                <span>Seguros</span>
+                <ChevronDown className="w-4 h-4" />
+              </button>
+              
+              {/* Dropdown Menu */}
+              <div className="absolute left-0 mt-2 w-60 bg-[#223E99] rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="py-2">
+                  <Link href="https://livestar.mx/seguros/vida/" className="flex items-center px-4 py-2 hover:bg-[#00BFFF] transition-colors">
+                    <HeartPulse className="w-5 h-5 mr-2" />
+                    <span>Vida</span>
+                  </Link>
+                  <Link href="https://livestar.mx/seguros/gastos-medicos/" className="flex items-center px-4 py-2 hover:bg-[#00BFFF] transition-colors">
+                    <Hospital className="w-5 h-5 mr-2" />
+                    <span>Gastos Médicos</span>
+                  </Link>
+                  <Link href="https://livestar.mx/seguros/vehiculos/" className="flex items-center px-4 py-2 hover:bg-[#00BFFF] transition-colors">
+                    <Car className="w-5 h-5 mr-2" />
+                    <span>Vehículos</span>
+                  </Link>
+                  <Link href="https://livestar.mx/seguros/empresas/" className="flex items-center px-4 py-2 hover:bg-[#00BFFF] transition-colors">
+                    <Hotel className="w-5 h-5 mr-2" />
+                    <span>Empresas</span>
+                  </Link>
+                  <Link href="https://livestar.mx/seguros/hogar/" className="flex items-center px-4 py-2 hover:bg-[#00BFFF] transition-colors">
+                    <House className="w-5 h-5 mr-2" />
+                    <span>Hogar</span>
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            <Link href="https://livestar.mx/nosotros/" className="text-white hover:text-gray-200 transition-colors font-medium">
+              Nosotros
+            </Link>
+            <Link href="https://livestar.mx/contacto/" className="text-white hover:text-gray-200 transition-colors font-medium">
+              Contacto
+            </Link>
+            <Link href="https://livestar.mx/en-confianza/" className="text-white hover:text-gray-200 transition-colors font-medium">
+              En confianza
+            </Link>
+          </div>
+
+          {/* Mobile menu button */}
+          <Sheet>
+            <SheetTrigger asChild>
+              <button className="md:hidden p-2 rounded-md hover:bg-[#00BFFF] transition-colors">
+                <Menu className="h-6 w-6" />
+              </button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[300px] sm:w-[400px] bg-[#223E99] text-white p-0">
+              <nav className="flex flex-col h-full">
+                <div className="p-4 border-b border-white/10">
+                  <Image
+                    src={Logo}
+                    alt="Logo Principal"
+                    width={200}
+                    height={58}
+                    className="w-[180px]"
+                  />
+                </div>
+                <div className="flex-grow overflow-y-auto">
+                  <div className="px-4 py-6 space-y-6">
+                    <button className="w-full text-left px-3 py-2 bg-white text-[#223E99] rounded-md font-medium">
+                      Cotizadores
+                    </button>
+                    
+                    <div>
+                      <button
+                        onClick={() => setShowDropdown(!showDropdown)}
+                        className="w-full flex items-center justify-between px-3 py-2 text-white hover:text-gray-200 transition-colors font-medium"
+                      >
+                        <span>Seguros</span>
+                        <ChevronDown className={`w-4 h-4 transform transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
+                      </button>
+                      
+                      {showDropdown && (
+                        <div className="mt-2 pl-4 space-y-2">
+                          <Link href="https://livestar.mx/seguros/vida/" className="flex items-center px-3 py-2 text-white hover:text-gray-200 transition-colors">
+                            <HeartPulse className="w-5 h-5 mr-2" />
+                            <span>Vida</span>
+                          </Link>
+                          <Link href="https://livestar.mx/seguros/gastos-medicos/" className="flex items-center px-3 py-2 text-white hover:text-gray-200 transition-colors">
+                            <Hospital className="w-5 h-5 mr-2" />
+                            <span>Gastos Médicos</span>
+                          </Link>
+                          <Link href="https://livestar.mx/seguros/vehiculos/" className="flex items-center px-3 py-2 text-white hover:text-gray-200 transition-colors">
+                            <Car className="w-5 h-5 mr-2" />
+                            <span>Vehículos</span>
+                          </Link>
+                          <Link href="https://livestar.mx/seguros/empresas/" className="flex items-center px-3 py-2 text-white hover:text-gray-200 transition-colors">
+                            <Hotel className="w-5 h-5 mr-2" />
+                            <span>Empresas</span>
+                          </Link>
+                          <Link href="https://livestar.mx/seguros/hogar/" className="flex items-center px-3 py-2 text-white hover:text-gray-200 transition-colors">
+                            <House className="w-5 h-5 mr-2" />
+                            <span>Hogar</span>
+                          </Link>
+                        </div>
+                      )}
+                    </div>
+
+                    <Link href="https://livestar.mx/nosotros/" className="block px-3 py-2 text-white hover:text-gray-200 transition-colors font-medium">
+                      Nosotros
+                    </Link>
+                    <Link href="https://livestar.mx/contacto/" className="block px-3 py-2 text-white hover:text-gray-200 transition-colors font-medium">
+                      Contacto
+                    </Link>
+                    <Link href="https://livestar.mx/en-confianza/" className="block px-3 py-2 text-white hover:text-gray-200 transition-colors font-medium">
+                      En confianza
+                    </Link>
+                  </div>
+                </div>
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
+      </div>
+    </nav>
+  )
+}
