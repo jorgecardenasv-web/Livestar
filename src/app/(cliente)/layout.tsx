@@ -1,5 +1,5 @@
 import { LightModeLayout } from "@/features/layout/layouts/light-layout";
-import { FooterComponent } from "@/shared/components/layout/footer_secondary";
+import { Footer } from "@/shared/components/layout/footer";
 
 export default function LandingLayout({
   children,
@@ -9,7 +9,7 @@ export default function LandingLayout({
   return (
     <LightModeLayout>
       {children}
-      <FooterComponent />
+      <Footer />
     </LightModeLayout>
   );
 }

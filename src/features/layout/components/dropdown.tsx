@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { FC } from "react";
 import Link from "next/link";
 import {
   ChevronDown,
@@ -22,29 +22,29 @@ interface DropdownProps {
   label?: string;
 }
 
-export const Dropdown: React.FC<DropdownProps> = ({ label }) => {
+export const Dropdown: FC<DropdownProps> = ({ label }) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
           className="w-full h-14 justify-between dark:bg-background-subtle border border-primary"
         >
           <div className="flex items-center space-x-2">
             <UserCircle size={20} className="text-sky-600 dark:text-primary" />
-            <span className="hidden md:inline">{label}</span>
+            <span>{label}</span>
           </div>
-          <ChevronDown size={20} className="hidden md:inline" />
+          <ChevronDown size={20} />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
         className="min-w-[var(--radix-dropdown-menu-trigger-width)]"
       >
-        <DropdownMenuItem>
+        <DropdownMenuItem className="flex items-center space-x-2 cursor-pointer px-3 py-2">
           <Link
             href={`${prefix}/perfil`}
-            className="flex items-center space-x-2"
+            className="flex items-center space-x-2 w-full"
           >
             <UserPen size={20} />
             <span>Mi Perfil</span>

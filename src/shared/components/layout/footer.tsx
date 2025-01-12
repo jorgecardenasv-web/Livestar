@@ -1,73 +1,86 @@
-import Image from "next/image";
-import React from "react";
+"use client";
+
+import Link from "next/link";
+import { Facebook, Instagram, Twitter } from "lucide-react";
+
 import Logo from "@/assets/shared/Logo.svg";
+import Image from "next/image";
 
-export const FooterPage = () => {
+export function Footer() {
   return (
-    <footer className="w-full h-auto flex flex-col md:flex-row justify-evenly items-center md:items-start pt-10 mt-5 pb-10">
-      <div className="icon-container mb-4 md:mb-0">
-        <Image src={Logo} width={257} height={158} alt={"Logo empresa"} />
-      </div>
-      <div className="mb-4 md:mb-0 text-[#008AED] w-64 grid place-content-center font-normal">
-        <p>Plaza Concentro</p>
-        <p>Av Vallarta Pte. No. 6503</p>
-        <p>Local B5-5A</p>
-        <p>Ciudad Granja, 45010</p>
-        <p>Zapopan, Jal, México</p>
-      </div>
-      <div className="mb-4 md:mb-0">
-        <ul className="list-disc leading-7 text-lg">
-          <li className="text-[#223E99] font-bold">Seguros</li>
-          <li className="ml-4 text-[#223E99] font-bold">
-            Simulador Seguro de Vida
-          </li>
-          <li className="text-[#223E99] font-bold">Cotizadores</li>
-          <li className="text-[#223E99] font-bold">Nosotros</li>
-          <li className="text-[#223E99] font-bold">Contacto</li>
-          <li className="text-[#223E99] font-bold">En confianza</li>
-        </ul>
-      </div>
-
-      <div className="flex flex-col gap-4 mb-5 w-full md:w-[400px]">
-        <div className="w-[250px] mx-auto md:mx-0">
-          <p className="text-lg font-bold text-[#008AED]">
-            La información es valiosa. Síguenos en redes y mantente actualizado
-            de la mano de nuestros expertos.
-          </p>
+    <footer className="bg-gradient-to-r text-[#666666] pt-2 pb-4 border-t border-[#666666]/15">
+      <div className="container mx-auto px-4 pt-5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="flex flex-col items-center md:items-start">
+            <Image src={Logo} width={257} height={158} alt={"Logo empresa"} />
+          </div>
+          <div className="flex flex-col items-center md:items-start">
+            <h3 className="font-semibold text-lg mb-4">Enlaces Rápidos</h3>
+            <nav className="flex flex-col space-y-2">
+              <Link href="#" className="transition-colors">
+                Seguros
+              </Link>
+              <Link href="#" className="transition-colors">
+                Simulador Seguro de Vida
+              </Link>
+              <Link href="#" className="transition-colors">
+                Cotizadores
+              </Link>
+              <Link href="#" className="transition-colors">
+                Nosotros
+              </Link>
+              <Link href="#" className="transition-colors">
+                Contacto
+              </Link>
+              <Link href="#" className="transition-colors">
+                En confianza
+              </Link>
+              <Link href="/aviso-de-Privacidad" className="transition-colors">
+                Aviso de Privacidad
+              </Link>
+            </nav>
+          </div>
+          <div className="flex flex-col items-center md:items-start text-[#666666]">
+            <h3 className="font-semibold text-lg mb-4">Contáctanos</h3>
+            <address className="not-italic text-sm">
+              Plaza Concentro
+              <br />
+              Av Vallarta Pte. No. 6503
+              <br />
+              Local B5-5A
+              <br />
+              Ciudad Granja, 45010
+              <br />
+              Zapopan, Jal, México
+            </address>
+            <div className="mt-4 space-y-2">
+              <p className="text-sm">contacto@livestar.mx</p>
+              <p className="text-sm">(33) 3110 1122</p>
+              <p className="text-sm">(33) 1810 1118</p>
+            </div>
+          </div>
         </div>
-
-        <div className="flex flex-row justify-around md:flex-col gap-5">
-          <ul className="leading-7 text-lg text-center md:text-left">
-            <li className="text-[#223E99] underline">
-              <a href="#">Facebook</a>
-            </li>
-            <li className="text-[#223E99] underline">
-              <a href="#">TikTok</a>
-            </li>
-            <li className="text-[#223E99] underline">
-              <a href="#">Instagram</a>
-            </li>
-          </ul>
-
-          <ul className="text-lg text-center md:text-left">
-            <li>
-              <a href="mailto:contacto@livestar.mx" className="text-[#223E99] ">
-                contacto@livestar.mx
-              </a>
-            </li>
-            <li>
-              <a href="tel:+523331101122" className="text-[#223E99] ">
-                (33) 3110 1122
-              </a>
-            </li>
-            <li>
-              <a href="tel:+523318101118" className="text-[#223E99] ">
-                (33) 1810 1118
-              </a>
-            </li>
-          </ul>
+        <div className="mt-8 pt-4 border-t border-[#666666]/15 flex justify-between items-center">
+          <p className="text-sm">
+            © {new Date().getFullYear()} Livestar. Todos los derechos
+            reservados.
+          </p>
+          <div className="flex space-x-4">
+            <Link href="#" className="transition-colors">
+              <Facebook size={24} />
+              <span className="sr-only">Facebook</span>
+            </Link>
+            <Link href="#" className="transition-colors">
+              <Instagram size={24} />
+              <span className="sr-only">Instagram</span>
+            </Link>
+            <Link href="#" className="transition-colors">
+              <Twitter size={24} />
+              <span className="sr-only">Twitter</span>
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
   );
-};
+}

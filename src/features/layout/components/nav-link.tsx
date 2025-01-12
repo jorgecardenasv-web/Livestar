@@ -9,7 +9,7 @@ export default function NavLinks({ userRole }: { userRole?: string | null }) {
   const pathname = usePathname();
 
   return (
-    <>
+    <div className="flex flex-col w-full space-y-4 md:space-y-2">
       {navLinks
         .filter((link) => link.roles.includes(userRole!))
         .map((link) => {
@@ -20,7 +20,7 @@ export default function NavLinks({ userRole }: { userRole?: string | null }) {
               key={link.name}
               href={link.href}
               className={cn(
-                "flex h-[48px] grow items-center justify-center gap-2 rounded p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3",
+                "flex h-[48px] grow items-center gap-2 rounded p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3",
                 "transition-colors duration-200 ease-in-out",
                 "ring-1 ring-border",
                 {
@@ -32,10 +32,10 @@ export default function NavLinks({ userRole }: { userRole?: string | null }) {
               )}
             >
               <LinkIcon className="h-5 w-5" />
-              <span className="hidden md:inline">{link.name}</span>
+              <span>{link.name}</span>
             </Link>
           );
         })}
-    </>
+    </div>
   );
 }
