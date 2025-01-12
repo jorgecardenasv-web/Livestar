@@ -1,7 +1,7 @@
 "use client";
 
-import { ContactInfoSection } from "@/features/insurance-quote/components/contact-info-section";
-import { PersonalInfoSection } from "@/features/insurance-quote/components/personal-info-section";
+import { ContactInfoSection } from "@/features/insurance-quote/components/sections/contact-info-section";
+import { PersonalInfoSection } from "@/features/insurance-quote/components/sections/personal-info-section";
 import { useGetQuoteForm } from "@/features/insurance-quote/hooks/use-get-quote-form";
 import { updateProspect } from "@/features/prospects/actions/update-prospect";
 import { Card, CardContent } from "@/shared/components/ui/card";

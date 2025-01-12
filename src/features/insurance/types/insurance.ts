@@ -1,6 +1,6 @@
-import { InsuranceCompany } from "@prisma/client";
+import { Insurance as InsurancePrisma } from "@prisma/client";
 
 export interface Insurance
-  extends Pick<InsuranceCompany, "logo" | "name" | "createdAt" | "status"> {
+  extends Pick<InsurancePrisma, "logo" | "name" | "createdAt" | "status"> {
   id: string;
 }
