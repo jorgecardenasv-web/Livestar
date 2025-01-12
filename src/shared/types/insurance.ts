@@ -1,15 +1,17 @@
 import {
-  InsuranceCompany as InsuranceCompanyPrisma,
-  InsurancePlan as InsurancePlanPrisma,
+  Insurance as InsurancePrisma,
+  Plan as PlanPrisma,
+  PlanType,
 } from "@prisma/client";
 
-export interface InsuranceCompany
-  extends Omit<InsuranceCompanyPrisma, "id" | "uuid"> {
+export interface Insurance
+  extends Omit<InsurancePrisma, "id" | "uuid"> {
   id: string;
 }
 
-export interface InsurancePlan
-  extends Omit<InsurancePlanPrisma, "id" | "uuid"> {
+export interface Plan
+  extends Omit<PlanPrisma, "id" | "uuid"> {
   id: string;
-  company: InsuranceCompany;
+  company: Insurance;
+  planType: PlanType;
 }

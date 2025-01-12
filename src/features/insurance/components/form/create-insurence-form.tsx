@@ -11,14 +11,14 @@ export const CreateInsuranceForm = () => {
 
   return (
     <form action={formAction} className="space-y-4">
-      <ImageInput name="logo" label="Logo" error={state?.errors?.logo} />
+      <ImageInput name="logo" label="Logo" error={state?.inputErrors?.logo} />
 
       <TextInput
         type="text"
         name="name"
         label="Nombre de la aseguradora"
         placeholder="Escribe el nombre de la aseguradora"
-        error={state?.errors?.name}
+        error={state?.inputErrors?.name}
       />
 
       <SubmitButton

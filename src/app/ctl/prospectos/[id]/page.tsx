@@ -2,10 +2,9 @@ import { getProspectById } from "@/features/prospects/loaders/get-prospect-by-id
 import { ProspectClientPage } from "./page.client";
 import { Breadcrumbs } from "@/shared/components/layout/breadcrumbs";
 import { prefix } from "@/shared/utils/constants";
-import { ProspectActions } from "@/features/prospects/components/prospect-actions";
 import { Prospect } from "@/features/prospects/types/prospect";
-import { ModalProspectActions } from "@/features/prospects/components/modal-prospect-actions";
 import { getAdvisors } from "@/features/prospects/loaders/get-advisors";
+import { ModalProspectActions } from "@/features/prospects/components/modals/modal-prospect-actions";
 
 export default async function ProspectPage({
   params: { id },
@@ -27,7 +26,6 @@ export default async function ProspectPage({
             },
           ]}
         />
-        <ProspectActions prospect={prospect as Prospect} />
       </div>
       <ProspectClientPage prospect={prospect} />
       <ModalProspectActions advisors={advisors} />

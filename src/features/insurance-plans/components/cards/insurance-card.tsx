@@ -1,7 +1,7 @@
 import Image from "next/image";
 import {
-  InsuranceCompany,
-  InsurancePlan,
+  Insurance,
+  Plan,
 } from "../../../../shared/types/insurance";
 import { calculateInsurancePrice } from "../../utils";
 import { Shield, Percent, Heart } from "lucide-react";
@@ -12,8 +12,8 @@ import { PriceTable } from "../../types";
 import { getImage } from "../../../../shared/loaders/get-image";
 
 interface InsuranceCardProps {
-  company: InsuranceCompany;
-  plan: InsurancePlan;
+  company: Insurance;
+  plan: Plan;
   paymentType: string;
   isRecommended: boolean;
 }
@@ -85,7 +85,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
         <form action={handleInterestClick}>
           <input type="hidden" name="company" value={company.name} />
           <input type="hidden" name="companyLogo" value={company.logo} />
-          <input type="hidden" name="plan" value={plan.name} />
+          <input type="hidden" name="plan" value={plan.planType.name} />
           <input type="hidden" name="paymentType" value={paymentType} />
           <input type="hidden" name="sumInsured" value={plan.sumInsured} />
           {/* <input
