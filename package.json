@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "vercel build --prod && vercel deploy --prebuilt --prod",
+    "deploy:preview": "vercel build && vercel deploy --prebuilt"
   },
   "dependencies": {
     "@headlessui/react": "^2.1.8",
@@ -68,7 +70,8 @@
     "prisma": "^6.2.1",
     "tailwindcss": "^3.4.11",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "vercel": "^39.2.6"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} src/lib/prisma/seed.ts"
