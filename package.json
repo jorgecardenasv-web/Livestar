@@ -4,15 +4,16 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "vercel build --prod && vercel deploy --prebuilt --prod",
+    "deploy:preview": "vercel build && vercel deploy --prebuilt"
   },
   "dependencies": {
     "@headlessui/react": "^2.1.8",
     "@headlessui/tailwindcss": "^0.2.1",
-    "@prisma/client": "^5.20.0",
-    "@prisma/extension-accelerate": "^1.2.0",
+    "@prisma/client": "^6.2.1",
     "@radix-ui/react-avatar": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.4",
     "@radix-ui/react-dropdown-menu": "^2.1.4",
@@ -60,15 +61,17 @@
     "@types/nodemailer": "^6.4.16",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
+    "dotenv-cli": "^8.0.0",
     "eslint": "^8.57.0",
     "eslint-config-next": "14.2.10",
     "jsonwebtoken": "^9.0.2",
     "postcss": "^8.4.45",
     "prettier": "^3.3.3",
-    "prisma": "^5.19.1",
+    "prisma": "^6.2.1",
     "tailwindcss": "^3.4.11",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "vercel": "^39.2.6"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} src/lib/prisma/seed.ts"
