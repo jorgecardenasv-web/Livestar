@@ -1,16 +1,12 @@
 FROM node:20-alpine AS base
 
-RUN apk add openssl3
-
 WORKDIR /app
 
-COPY package.json package-lock.json* ./
+COPY package*.json ./
 
-RUN npm install
+RUN npm ci
 
 COPY . .
-
-RUN npx prisma generate
 
 RUN npm run build
 
@@ -18,16 +14,14 @@ FROM node:20-alpine AS production
 
 WORKDIR /app
 
-COPY --from=base /app/package.json ./
-COPY --from=base /app/package-lock.json ./
-COPY --from=base /app/.next ./.next
+COPY --from=base /app/next.config.js ./
+
 COPY --from=base /app/public ./public
-COPY --from=base /app/prisma ./prisma
 
-RUN npm install --only=production
+COPY --from=base /app/.next ./.next
 
-RUN npx prisma generate
+COPY --from=base /app/node_modules ./node_modules
 
-EXPOSE 3000
+COPY --from=base /app/package*.json ./
 
 CMD ["npm", "start"]
