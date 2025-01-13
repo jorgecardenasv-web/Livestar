@@ -1,4 +1,6 @@
-FROM node:20 AS base
+FROM node:20-alpine AS base
+
+RUN apk add openssl3
 
 WORKDIR /app
 
@@ -12,7 +14,7 @@ RUN npx prisma generate
 
 RUN npm run build
 
-FROM node:20 AS production
+FROM node:20-alpine AS production
 
 WORKDIR /app
 
