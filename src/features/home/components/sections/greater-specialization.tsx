@@ -4,19 +4,8 @@ import GreaterSpecializationMobile from "@/assets/home/bg_greater-specialization
 
 export const GreaterSpecialization = () => {
   return (
-    <section className="relative w-full h-screen md:h-96 text-white my-12">
-      <div className="absolute inset-0">
-        <Image
-          src={GreaterSpecializationMobile}
-          alt="Success Story Mobile"
-          fill
-          sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-cover lg:hidden"
-          priority
-        />
-      </div>
-
-      <div className="max-w-7xl mx-auto grid text-center place-content-center px-4 sm:px-6 lg:px-8 absolute inset-0 md:h-full text-[#666]">
+    <section className="w-full h-72 md:h-96 text-white mb-8">
+      <div className="max-w-7xl mx-auto grid text-center place-content-center px-4 sm:px-6 lg:px-8 md:h-full text-[#666]">
         <h2 className="text-4xl font-bold text-wrap text-gradiant">
           ¿NECESITAS MAYOR ESPECIALIZACIÓN?
         </h2>

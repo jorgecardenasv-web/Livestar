@@ -21,7 +21,7 @@ export const Plans = async ({ plans }: { plans: any[] }) => {
           activePaymentType={activePaymentType}
         />
       </div>
-      <div className="grid grid-flow-row md:grid-flow-col justify-center lg:auto-cols-max gap-2 items-end">
+      <div className="w-11/12 mx-auto flex-col gap-4 xl:grid xl:grid-flow-col justify-center lg:auto-cols-max items-end">
         {plans.map((plan, index) => {
           const activePlan =
             plan.planType.name === activePlanType ? plan : null;

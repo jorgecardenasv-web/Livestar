@@ -46,28 +46,28 @@ export const Conceptos = () => {
         {concepts.map(({ title, description, icon }) => (
           <div
             key={title}
-            className="border bg-white rounded shadow-md overflow-hidden transition-all duration-300 sm:hover:shadow-xl relative group w-52 h-auto md:h-60"
+            className="border bg-white rounded shadow-md overflow-hidden transition-all duration-300 lg:hover:shadow-xl relative group w-72 md:w-52 h-auto lg:h-64"
           >
-            <div className="absolute inset-0 bg-gradient-to-b from-[#008AED] to-[#004E87] opacity-0 sm:group-hover:opacity-70 transition-opacity duration-300 z-10"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-[#008AED] to-[#004E87] opacity-0 lg:group-hover:opacity-70 transition-opacity duration-300 z-10"></div>
 
-            <div className="flex flex-col items-center sm:justify-center h-full p-6 relative z-20">
-              <div className="transition-all duration-300 transform sm:group-hover:-translate-y-[60%] flex flex-col items-center">
-                <div className="w-28 h-28 group-hover:hidden bg-blue-100 rounded-full flex items-center justify-center mb-1 transition-transform duration-300">
+            <div className="flex flex-col items-center lg:justify-center h-full p-6 relative z-20">
+              <div className="transition-all duration-300 transform lg:group-hover:-translate-y-[60%] flex flex-col items-center">
+                <div className="w-28 h-28 lg:group-hover:hidden bg-blue-100 rounded-full flex items-center justify-center mb-1 transition-transform duration-300">
                   {icon}
                 </div>
-                <p className="text-xl font-bold text-gray-600 sm:group-hover:hidden transition-colors duration-300">
+                <p className="text-xl font-bold text-gray-600 lg:group-hover:hidden transition-colors duration-300">
                   {title}
                 </p>
               </div>
 
-              <div className="mt-4 text-center text-gray-600 sm:opacity-0 sm:group-hover:opacity-100 transition-all duration-300 sm:absolute sm:left-6 sm:right-6">
-                <p className="text-gray-800 sm:text-white mb-3 leading-6 text-balance">
+              <div className="mt-4 text-center text-gray-600 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-300 lg:absolute left-6 right-6">
+                <p className="text-gray-800 lg:text-white mb-3 leading-6 text-balance">
                   {description}
                 </p>
               </div>
             </div>
 
-            <div className="absolute top-0 -right-2.5 w-10 h-10 overflow-hidden transition-opacity duration-300 sm:group-hover:opacity-0">
+            <div className="absolute top-0 -right-2.5 w-10 h-10 overflow-hidden transition-opacity duration-300 lg:group-hover:opacity-0">
               <div className="absolute top-0 right-0 w-6 h-6 bg-primary rotate-45 transform origin-bottom-left"></div>
               <div className="absolute top-0 right-0 w-10 h-10">
                 <div className="absolute top-[1px] -right-[1px] w-4 h-4 bg-white rounded-full animate-ping"></div>

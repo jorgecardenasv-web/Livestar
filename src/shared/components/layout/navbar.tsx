@@ -21,7 +21,7 @@ export const Navbar = () => {
               alt="Logo Principal"
               width={200}
               height={58}
-              className="w-[180px] md:w-[200px] lg:w-[238px]"
+              className="w-[180px] lg:w-[238px] md:pr-4"
             />
           </Link>
 
@@ -64,7 +64,7 @@ export const Navbar = () => {
               </div>
             </div>
 
-            <Link href="https://livestar.mx/nosotros/" className="text-white hover:text-gray-200 transition-colors font-medium">
+            <Link href="https://livestar.mx/nosotros/" className="text-border text-white hover:text-gray-200 transition-colors font-medium">
               Nosotros
             </Link>
             <Link href="https://livestar.mx/contacto/" className="text-white hover:text-gray-200 transition-colors font-medium">

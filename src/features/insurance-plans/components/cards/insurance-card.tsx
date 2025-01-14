@@ -4,7 +4,7 @@ import {
   Plan,
 } from "../../../../shared/types/insurance";
 import { calculateInsurancePrice } from "../../utils";
-import { Shield, Percent, Heart } from "lucide-react";
+import { Shield, Percent, Heart, DollarSign } from "lucide-react";
 import { handleInterestClick } from "../../actions/set-cookies";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { getProspect } from "../../loaders/get-prospect";
@@ -65,11 +65,14 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             title="Suma asegurada"
             value={`$${plan.sumInsured / 1000000} MILLONES`}
           />
-          {/* <InfoItem
+          {/* ------------------ DEDUCIBLE ----------------- */}
+          
+          <InfoItem
             icon={<DollarSign className="w-5 h-5" />}
             title="Deducible"
-            value={`$${plan.deductible}`}
-          /> */}
+            value={`$${plan.planType.name !== "Hibrido" ? 1000 : 0}`}
+          />
+          {/* ---------------------------------------------- */}
           <InfoItem
             icon={<Percent className="w-5 h-5" />}
             title="Coaseguro"
