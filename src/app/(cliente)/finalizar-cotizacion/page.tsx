@@ -1,7 +1,7 @@
 import { HeaderSecondary } from "@/shared/components/layout/header-secondary";
 import { getProspect } from "@/features/insurance-plans/loaders/get-prospect";
 import { getProspectById } from "@/features/prospects/loaders/get-prospect-by-id";
-import QuoteFinalizationClientPage from "./page.client";
+import { QuoteFinalizationForm } from "@/features/quote/form/quote-finalization-form";
 
 export default async function QuoteFinalizationPage() {
   const propsectCookie = await getProspect();
@@ -11,7 +11,7 @@ export default async function QuoteFinalizationPage() {
     <>
       <HeaderSecondary />
       <div className="py-14 px-5">
-        <QuoteFinalizationClientPage prospect={prospect} />
+        <QuoteFinalizationForm prospect={prospect} />
       </div>
     </>
   );
