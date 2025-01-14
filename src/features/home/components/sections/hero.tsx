@@ -12,7 +12,7 @@ export const Hero = () => {
     <div className="relative w-full min-h-screen">
       <div className="absolute inset-0">
         <Image
-          src={HeroImageMobile}
+          src={HeroImageDesktop}
           alt="Hero Mobile"
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
@@ -48,10 +48,10 @@ export const Hero = () => {
       <div className="relative max-w-7xl mx-auto z-10 flex flex-col justify-center items-center min-h-screen px-4 pt-28 lg:pt-0">
         <div className="w-full flex flex-col lg:flex-row items-center justify-end gap-8">
           <div className="text-center lg:text-right lg:max-w-3xl">
-            <h1 className="text-7xl font-bold text-white mb-6">
+            <h1 className="text-6xl font-bold text-white m-6">
               ¡Protege tu salud y la de tu familia hoy!
             </h1>
-            <p className="text-xl text-white/90 mb-8">
+            <p className="text-2xl text-white/90 mb-8">
               Obtén una cotización rápida y sin compromiso ahora mismo y asegura
               tu bienestar y el de los que más amas.
             </p>

@@ -4,7 +4,7 @@ import { Navbar } from "./navbar";
 
 export const HeaderSecondary = () => {
   return (
-    <header className="relative w-full h-40 text-white">
+    <header className="relative w-full h-40 md:h-56 lg:h-72 text-white">
       <Image
         src={HeaderDecorator}
         alt="Header Decorator"
