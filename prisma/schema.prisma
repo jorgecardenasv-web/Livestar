@@ -102,22 +102,34 @@ enum PlanStatus {
 }
 
 model Plan {
-  id             String     @id @default(uuid())
-  planType       PlanType   @relation(fields: [planTypeId], references: [id], onDelete: Cascade)
+  id             String       @id @default(uuid())
+  planType       PlanType     @relation(fields: [planTypeId], references: [id], onDelete: Cascade)
   planTypeId     String
-  company        Insurance  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  company        Insurance    @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId      String
   sumInsured     Float
   coInsurance    Float
   coInsuranceCap Float?
-  status         PlanStatus @default(ACTIVE)
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
+  status         PlanStatus   @default(ACTIVE)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
   quotes         Quote[]
-  isRecommended  Boolean    @default(false)
+  isRecommended  Boolean      @default(false)
   prices         Json
+  deductibles    Deductible[]
 
   @@unique([planTypeId, companyId])
+  @@schema("public")
+}
+
+model Deductible {
+  id            String @id @default(uuid())
+  plan          Plan   @relation(fields: [planId], references: [id])
+  planId        String
+  hospitalLevel String
+  amount        Float
+  option        Json[]
+
   @@schema("public")
 }
 

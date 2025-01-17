@@ -1,10 +1,13 @@
+"use client";
 import Image from "next/image";
 import { InsuranceQuoteData } from "@/app/(cliente)/cotizar/page";
 import { Shield, DollarSign, Percent, Heart, ArrowLeft } from "lucide-react";
 import { ContractForm } from "../forms/confirm-form";
 import { InfoCard } from "../cards/info-card";
 import { deleteSelectedPlan } from "@/features/insurance-plans/actions/set-cookies";
-import { FC } from "react";
+import { FC, useState } from "react";
+import { Button } from "@/shared/components/ui/button";
+import MultipleDeductibleModal from "../modals/MultipleDeductibleModal";
 
 export const QuoteSummary: FC<InsuranceQuoteData> = ({
   coInsurance,
@@ -18,6 +21,16 @@ export const QuoteSummary: FC<InsuranceQuoteData> = ({
   paymentType,
   id,
 }) => {
+  const isMultiple = true;
+  const [isModalOpen, setModalOpen] = useState(false);
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
   const isPriceMonthly = paymentType === "Mensual";
   return (
     <div className="max-w-4xl mx-auto p-4 sm:p-6 rounded-3xl shadow-lg border m-8">
@@ -68,11 +81,41 @@ export const QuoteSummary: FC<InsuranceQuoteData> = ({
           title="Suma asegurada"
           value={`$${sumInsured}`}
         />
-        <InfoCard
-          icon={<DollarSign className="w-4 h-4 sm:w-5 sm:h-5" />}
-          title="Deducible"
-          value={`$${deductible}`}
-        />
+        {/* -------------------------------------------------------------------- */}
+        <div className="flex justify-between">
+          <InfoCard
+            icon={<DollarSign className="w-4 h-4 sm:w-5 sm:h-5" />}
+            title="Deducible"
+            value={`${isMultiple ? `desde $${deductible}` : `$${deductible}`}`}
+            useHtml={isMultiple}
+            htmlElement={
+              <div className="pl-8 mb-6">
+                {isMultiple && (
+                  <Button
+                    className="w-52"
+                    size="sm"
+                    onClick={handleOpenModal}
+                    disabled={false}
+                  >
+                    Detalles
+                  </Button>
+                )}
+              </div>
+            }
+          />
+          {isModalOpen && (
+            <MultipleDeductibleModal
+              isOpen={isModalOpen}
+              onClose={handleCloseModal}
+              title="¿Cuáles serán los gastos en caso de accidente o padecimiento?"
+            >
+              Si llegaras a tener un padecimiento o accidente, podrás acudir a
+              un hospital de cualquier nivel y tu participación sería de acuerdo
+              a tu elección:
+            </MultipleDeductibleModal>
+          )}
+        </div>
+        {/* -------------------------------------------------------------------- */}
         <InfoCard
           icon={<Percent className="w-4 h-4 sm:w-5 sm:h-5" />}
           title="Coaseguro"
