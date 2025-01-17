@@ -70,7 +70,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
           <InfoItem
             icon={<DollarSign className="w-5 h-5" />}
             title="Deducible"
-            value={`$${plan.planType.name !== "Hibrido" ? 1000 : 0}`}
+            value={`${true ? "DESDE" : ""} $${plan.planType.name !== "Hibrido" ? 1000 : 0}`}
           />
           {/* ---------------------------------------------- */}
           <InfoItem
