@@ -3,17 +3,8 @@ import { FormData } from "../schemas/form-schema";
 import { prospectTransformer } from "@/features/prospects/transformers/prospect-transformer";
 
 export const createProspectService = async (
-  {
-    name,
-    gender,
-    age,
-    postalCode,
-    protectWho,
-    whatsapp,
-    email,
-    ...additionalInfo
-  }: FormData,
-  advisorId: string
+  data: FormData,
+  advisorId: string = ""
 ) => {
   if (!advisorId) {
     throw new Error("No hay asesores disponibles para asignar al prospecto.");
@@ -22,14 +13,7 @@ export const createProspectService = async (
   const prospect = await prisma.$transaction(async (prisma) => {
     const createdProspect = await prisma.prospect.create({
       data: {
-        name,
-        gender,
-        age,
-        postalCode,
-        protectWho,
-        whatsapp,
-        email,
-        additionalInfo,
+        ...data,
         user: { connect: { id: advisorId! } },
       },
     });

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { z } from "zod";
 import { FormData, buildSchema } from "../schemas/form-schema";
-import { createProspect } from "../actions/create-prospect";
+import { createProspect } from "@/features/prospects/actions/create-prospect";
 import { useModalStore } from "@/shared/store/modal-store";
 
 export const useGetQuoteForm = (initialState?: any) => {

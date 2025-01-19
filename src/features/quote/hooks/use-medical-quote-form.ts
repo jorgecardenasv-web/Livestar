@@ -1,7 +1,6 @@
-// useMedicalQuoteForm.ts
 import { useState, useCallback, useMemo } from "react";
-import { FormDataMedical, Question, HealthCondition } from "@/features/insurance-quote/types";
-import { createMedicalHistory } from "@/features/insurance-quote/actions/create-medical-history";
+import { FormDataMedical, Question, HealthCondition } from "@/features/quote/types";
+import { createMedicalHistory } from "@/features/quote/actions/create-medical-history";
 
 export const INITIAL_HEALTH_CONDITION: HealthCondition = {
   hospitalizado: "No",
@@ -48,7 +47,6 @@ export const useMedicalQuoteForm = ({
         const errorKey = (field: string) => 
           `question-${questionIndex}-condition-${conditionIndex}-${field}`;
 
-        // Required field validations
         const requiredFields = {
           nombrePadecimiento: "El nombre del padecimiento es requerido.",
           tipoEvento: "El tipo de evento es requerido.",
@@ -62,7 +60,6 @@ export const useMedicalQuoteForm = ({
           }
         });
 
-        // Conditional validations
         if (healthCondition.complicacion === "Sí" && !healthCondition.detalleComplicacion?.trim()) {
           newErrors[errorKey("detalleComplicacion")] = "Debe especificar la complicación.";
         }
@@ -82,7 +79,7 @@ export const useMedicalQuoteForm = ({
     
     const validationErrors = validateHealthConditions();
     if (Object.keys(validationErrors).length > 0) {
-      setForms(prevForms => [...prevForms]); // Trigger re-render
+      setForms(prevForms => [...prevForms]);
       return;
     }
 
