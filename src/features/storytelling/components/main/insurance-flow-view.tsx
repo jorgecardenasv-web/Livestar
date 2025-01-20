@@ -5,8 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ArrowLeft } from "lucide-react";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";
-import { steps } from "./data/steps";
-import { useStorytelling } from "../hooks/use-storytelling";
+import { steps } from "../data/steps";
+import { useStorytelling } from "../../hooks/use-storytelling";
 
 export function InsuranceFlow() {
   const [step, setStep] = useState(0);

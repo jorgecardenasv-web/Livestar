@@ -1,15 +1,14 @@
 "use client";
 
-import { useGetQuoteForm } from "@/features/insurance-quote/hooks/use-get-quote-form";
-import { Question } from "@/features/insurance-quote/types";
+import { useGetQuoteForm } from "../../hooks/use-get-quote-form";
+import { Question } from "../../types";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Separator } from "@/shared/components/ui/separator";
-import { ContactInfoSection } from "@/features/insurance-quote/components/sections/contact-info-section";
-import { MedicalInformationForm } from "@/features/insurance-quote/components/forms/medical-information-form";
-import { PersonalInfoSection } from "@/features/insurance-quote/components/sections/personal-info-section";
+import { ContactInfoSection } from "../sections/contact-info-section";
+import { MedicalInformationForm } from "../forms/medical-information-form";
+import { PersonalInfoSection } from "../sections/personal-info-section";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
-import { useMedicalQuoteForm } from "../hooks/use-medical-quote-form";
-
+import { useMedicalQuoteForm } from "../../hooks/use-medical-quote-form";
 
 const QUESTIONS: Question[] = [
   {

@@ -10,7 +10,6 @@ interface CreateQuoteInput {
 export async function createQuoteService({
   prospectId,
   planId,
-  customizations = {},
   totalPrice,
   expirationDate,
 }: CreateQuoteInput) {
@@ -18,7 +17,6 @@ export async function createQuoteService({
     data: {
       prospectId,
       planId,
-      customizations,
       totalPrice,
       expirationDate,
     },
@@ -32,6 +30,7 @@ export async function getPlanByUuid(id: string) {
       where: { id },
       include: {
         company: true,
+        planType: true,
       },
     });
 

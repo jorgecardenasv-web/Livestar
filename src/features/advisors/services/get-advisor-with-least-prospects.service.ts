@@ -13,11 +13,13 @@ export const getAdvisorWithLeastProspectsService = async () => {
     },
     select: {
       id: true,
+      email: true,
+      name: true,
     },
   });
 
   if (newAdvisor) {
-    return newAdvisor.id;
+    return newAdvisor;
   }
 
   const nextAdvisor = await prisma.user.findFirst({
@@ -28,8 +30,10 @@ export const getAdvisorWithLeastProspectsService = async () => {
     orderBy: [{ lastProspectAssigned: "asc" }, { createdAt: "asc" }],
     select: {
       id: true,
+      email: true,
+      name: true,
     },
   });
 
-  return nextAdvisor?.id ?? null;
+  return nextAdvisor ?? null;
 };
