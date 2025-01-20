@@ -19,9 +19,11 @@ export const InfoCard = ({
         {icon}
       </div>
       <div>
-        <p className="text-xs text-sky-600 font-semibold uppercase">{title}</p>
-        <div className="flex">
-        <p className="text-base sm:text-lg font-bold text-[#223E99]">{value}</p>
+        <div className="flex items-center">
+          <div>
+            <p className="text-xs text-sky-600 font-semibold uppercase">{title}</p>
+            <p className="text-base sm:text-lg font-bold text-[#223E99]">{value}</p>
+          </div>
         {useHtml && (<span>{htmlElement}</span>)}
         </div>
       </div>

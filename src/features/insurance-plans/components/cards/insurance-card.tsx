@@ -1,8 +1,5 @@
 import Image from "next/image";
-import {
-  Insurance,
-  Plan,
-} from "../../../../shared/types/insurance";
+import { Insurance, Plan } from "../../../../shared/types/insurance";
 import { calculateInsurancePrice } from "../../utils";
 import { Shield, Percent, Heart, DollarSign } from "lucide-react";
 import { handleInterestClick } from "../../actions/set-cookies";
@@ -10,6 +7,7 @@ import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { getProspect } from "../../loaders/get-prospect";
 import { PriceTable } from "../../types";
 import { getImage } from "../../../../shared/loaders/get-image";
+import { getPlans } from "../../loaders/get-plans";
 
 interface InsuranceCardProps {
   company: Insurance;
@@ -25,9 +23,28 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   isRecommended,
 }) => {
   const propect = await getProspect();
-  const prices: PriceTable = plan.prices as unknown as PriceTable || {}
-  const { coverage_fee } = calculateInsurancePrice(propect, prices, paymentType);
-  
+  const deducibles = Array.isArray(plan.deductibles)
+  ? plan.deductibles
+  : [plan.deductibles];
+
+  const isMultiple = deducibles.length > 0;
+  const minor =
+    deducibles.filter((d) => typeof d.amount === "number").map((d) => d.amount)
+      .length > 0
+      ? Math.min(
+          ...deducibles
+            .filter((d) => typeof d.amount === "number")
+            .map((d) => d.amount)
+        )
+      : 0;
+
+  const prices: PriceTable = (plan.prices as unknown as PriceTable) || {};
+  const { coverage_fee } = calculateInsurancePrice(
+    propect,
+    prices,
+    paymentType
+  );
+
   const imageName = company.logo.split("/").pop();
   const logoSrc = imageName ? await getImage(imageName) : "";
 
@@ -66,11 +83,13 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             value={`$${plan.sumInsured / 1000000} MILLONES`}
           />
           {/* ------------------ DEDUCIBLE ----------------- */}
-          
+
           <InfoItem
             icon={<DollarSign className="w-5 h-5" />}
             title="Deducible"
-            value={`${true ? "DESDE" : ""} $${plan.planType.name !== "Hibrido" ? 1000 : 0}`}
+            value={`${isMultiple ? "DESDE" : ""} $${
+              plan.planType.name !== "Hibrido" ? minor : 0
+            }`}
           />
           {/* ---------------------------------------------- */}
           <InfoItem
@@ -91,11 +110,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
           <input type="hidden" name="plan" value={plan.planType.name} />
           <input type="hidden" name="paymentType" value={paymentType} />
           <input type="hidden" name="sumInsured" value={plan.sumInsured} />
-          {/* <input
-            type="hidden"
-            name="deductible"
-            value={plan.deductible}
-          /> */}
+          <input type="hidden" name="deductible" value={minor} />
           <input
             type="hidden"
             name="coInsurance"
@@ -112,6 +127,8 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             value={coverage_fee.toLocaleString()}
           />
           <input type="hidden" name="id" value={plan.id} />
+          <input type="hidden" name="isMultipleString" value={isMultiple.toString()} />
+          <input type="hidden" name="deductiblesJson" value={JSON.stringify(deducibles)} />
           <SubmitButton
             type="submit"
             label="Me interesa"

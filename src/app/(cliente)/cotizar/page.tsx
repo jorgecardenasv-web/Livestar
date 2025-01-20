@@ -14,6 +14,8 @@ export interface InsuranceQuoteData {
   coInsuranceCap: string;
   coverage_fee: string;
   id: string;
+  isMultipleString?: string;
+  deductiblesJson?: string;
 }
 
 export default async function QuoteSummaryPage() {

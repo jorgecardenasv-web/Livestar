@@ -20,8 +20,10 @@ export const QuoteSummary: FC<InsuranceQuoteData> = ({
   plan,
   paymentType,
   id,
+  isMultipleString,
+  deductiblesJson
 }) => {
-  const isMultiple = true;
+  const isMultiple = isMultipleString === 'true' ? true : false;
   const [isModalOpen, setModalOpen] = useState(false);
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -89,15 +91,15 @@ export const QuoteSummary: FC<InsuranceQuoteData> = ({
             value={`${isMultiple ? `desde $${deductible}` : `$${deductible}`}`}
             useHtml={isMultiple}
             htmlElement={
-              <div className="pl-8 mb-6">
+              <div className="pl-8">
                 {isMultiple && (
                   <Button
-                    className="w-52"
+                    className="w-56"
                     size="sm"
                     onClick={handleOpenModal}
                     disabled={false}
                   >
-                    Detalles
+                    DETALLES
                   </Button>
                 )}
               </div>
@@ -108,6 +110,7 @@ export const QuoteSummary: FC<InsuranceQuoteData> = ({
               isOpen={isModalOpen}
               onClose={handleCloseModal}
               title="¿Cuáles serán los gastos en caso de accidente o padecimiento?"
+              deductiblesJson={deductiblesJson || ""}
             >
               Si llegaras a tener un padecimiento o accidente, podrás acudir a
               un hospital de cualquier nivel y tu participación sería de acuerdo
