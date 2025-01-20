@@ -1,4 +1,5 @@
 import {
+  Deductible,
   Insurance as InsurancePrisma,
   Plan as PlanPrisma,
   PlanType,
@@ -14,4 +15,5 @@ export interface Plan
   id: string;
   company: Insurance;
   planType: PlanType;
+  deductibles: Deductible
 }
