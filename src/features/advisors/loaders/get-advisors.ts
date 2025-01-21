@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { advisorTransformer } from "../transformers/advisor-transformer";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 
 export const getAdvisors = async ({
   page = 1,
