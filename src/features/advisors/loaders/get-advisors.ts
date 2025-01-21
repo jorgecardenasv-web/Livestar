@@ -2,7 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { advisorTransformer } from "../transformers/advisor-transformer";
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 
 export const getAdvisors = async ({
   page = 1,
@@ -14,7 +14,7 @@ export const getAdvisors = async ({
   const pageSize = 5;
   const skip = (page - 1) * pageSize;
 
-  const whereClause: any = { role: "ADVISOR" };
+  const whereClause: any = { role: "ASESOR" };
   if (status) {
     whereClause.status = status;
   }
