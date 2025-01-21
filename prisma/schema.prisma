@@ -9,180 +9,193 @@ datasource db {
   schemas  = ["public", "auth"]
 }
 
-enum UserStatus {
-  ACTIVE
-  INACTIVE
-  SUSPENDED
-  
-  @@schema("auth")
-}
-
 model Session {
-  id           String      @id @default(uuid())
-  userId       Int
-  expires      DateTime
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id        String   @id @default(uuid()) @db.Uuid
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@schema("auth")
 }
 
-model User {
-  id        Int        @id @default(autoincrement())
-  uuid      String     @unique @default(uuid())
-  name      String
-  email     String     @unique
-  password  String
-  role      Role
-  status    UserStatus @default(ACTIVE)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  prospects Prospect[]
-  sessions  Session[]
+enum UserStatus {
+  ACTIVO
+  INACTIVO
 
   @@schema("auth")
 }
 
 enum Role {
   ADMIN
-  ADVISOR
+  ASESOR
 
   @@schema("auth")
 }
 
-enum CompanyStatus {
-  ACTIVE
-  INACTIVE
-  PENDING_REVIEW
-  BLACKLISTED
+model User {
+  id                   String     @id @default(uuid()) @db.Uuid
+  name                 String
+  email                String     @unique
+  password             String
+  role                 Role
+  status               UserStatus @default(ACTIVO)
+  isNewAdvisor         Boolean    @default(true)
+  lastProspectAssigned DateTime?
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime   @updatedAt
+  prospects            Prospect[]
+  sessions             Session[]
+
+  @@schema("auth")
+}
+
+enum InsuranceStatus {
+  ACTIVO
+  INACTIVO
 
   @@schema("public")
 }
 
-model InsuranceCompany {
-  id          Int             @id @default(autoincrement())
-  uuid        String          @unique @default(uuid())
-  name        String
-  logo        String?
+model Insurance {
+  id          String          @id @default(uuid()) @db.Uuid
+  name        String          @unique
+  logo        String
   description String?
-  status      CompanyStatus   @default(ACTIVE)
+  status      InsuranceStatus @default(ACTIVO)
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
-  plans       InsurancePlan[]
+  plans       Plan[]
+
+  @@schema("public")
+}
+
+enum PlanTypeStatus {
+  ACTIVO
+  INACTIVO
+
+  @@schema("public")
+}
+
+model PlanType {
+  id        String         @id @default(uuid()) @db.Uuid
+  name      String
+  status    PlanTypeStatus @default(ACTIVO)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  Plan      Plan[]
 
   @@schema("public")
 }
 
 enum PlanStatus {
-  ACTIVE
-  INACTIVE
-  DRAFT
-  DISCONTINUED
+  ACTIVO
+  INACTIVO
 
   @@schema("public")
 }
 
-model InsurancePlan {
-  id                  Int              @id @default(autoincrement())
-  uuid                String           @unique @default(uuid())
-  name                String
-  company             InsuranceCompany @relation(fields: [companyId], references: [id])
-  companyId           Int
-  description         String?
-  sumInsured          Float?
-  deductible          Float?
-  coInsurance         Float?
-  coInsuranceCap      Float?
-  benefits            Json
-  customizableOptions Json
-  status              PlanStatus       @default(ACTIVE)
-  createdAt           DateTime         @default(now())
-  updatedAt           DateTime         @updatedAt
-  quotes              Quote[]
+model Plan {
+  id             String       @id @default(uuid()) @db.Uuid
+  planType       PlanType     @relation(fields: [planTypeId], references: [id], onDelete: Cascade)
+  planTypeId     String       @db.Uuid
+  company        Insurance    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId      String       @db.Uuid
+  sumInsured     Float
+  coInsurance    Float
+  coInsuranceCap Float?
+  status         PlanStatus   @default(ACTIVO)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  quotes         Quote[]
+  isRecommended  Boolean      @default(false)
+  prices         Json
+  deductibles    Deductible[]
 
+  @@unique([planTypeId, companyId])
   @@schema("public")
 }
 
-enum ProspectStatus {
-  NEW
-  CONTACTED
-  QUALIFIED
-  QUOTED
-  CONVERTED
-  LOST
-  INACTIVE
+model Deductible {
+  id            String @id @default(uuid()) @db.Uuid
+  plan          Plan   @relation(fields: [planId], references: [id])
+  planId        String @db.Uuid
+  hospitalLevel String
+  amount        Float
+  option        Json[]
 
   @@schema("public")
 }
 
 model Prospect {
-  id              Int              @id @default(autoincrement())
-  uuid            String           @unique @default(uuid())
-  name            String
-  email           String
-  dateOfBirth     DateTime?
-  postalCode      String?
-  assignedAdvisor User?            @relation(fields: [advisorId], references: [id])
-  advisorId       Int?
-  status          ProspectStatus   @default(NEW)
-  additionalInfo  Json?
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-  quotes          Quote[]
-  trackingNumbers TrackingNumber[]
+  id               String           @id @default(uuid()) @db.Uuid
+  name             String
+  gender           String
+  age              Int?
+  postalCode       String
+  protectWho       String
+  whatsapp         String
+  email            String
+  isVerified        Boolean          @default(false)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  additionalInfo   Json?
+  user             User?            @relation(fields: [userId], references: [id])
+  userId           String?          @db.Uuid
+  quotes           Quote[]
+  lastContactDate  DateTime?
+  medicalHistories MedicalHistory[]
+
+  @@schema("public")
+}
+
+model MedicalHistory {
+  id         String   @id @default(uuid()) @db.Uuid
+  responses  Json
+  prospect   Prospect @relation(fields: [prospectId], references: [id])
+  prospectId String   @db.Uuid
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
   @@schema("public")
 }
 
 enum QuoteStatus {
-  DRAFT
-  SENT
-  ACCEPTED
-  REJECTED
-  EXPIRED
-  REVISED
+  NUEVO
+  CONTACTADO
+  EN_PROGRESO
+  CERRADO
 
   @@schema("public")
 }
 
 model Quote {
-  id             Int             @id @default(autoincrement())
-  uuid           String          @unique @default(uuid())
+  id             String          @id @default(uuid()) @db.Uuid
   prospect       Prospect        @relation(fields: [prospectId], references: [id])
-  prospectId     Int
-  plan           InsurancePlan   @relation(fields: [planId], references: [id])
-  planId         Int
+  prospectId     String          @db.Uuid
+  plan           Plan            @relation(fields: [planId], references: [id])
+  planId         String          @db.Uuid
   customizations Json?
-  totalPrice     Float?
-  status         QuoteStatus     @default(DRAFT)
+  totalPrice     Float
+  status         QuoteStatus     @default(NUEVO)
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   trackingNumber TrackingNumber?
-
-  @@schema("public")
-}
-
-enum TrackingNumberStatus {
-  ACTIVE
-  CLOSED
-  EXPIRED
-  CANCELLED
+  expirationDate DateTime?
 
   @@schema("public")
 }
 
 model TrackingNumber {
-  id         Int                  @id @default(autoincrement())
-  uuid       String               @unique @default(uuid())
-  number     String               @unique
-  prospect   Prospect             @relation(fields: [prospectId], references: [id])
-  prospectId Int
-  quote      Quote?               @relation(fields: [quoteId], references: [id])
-  quoteId    Int?                 @unique
-  status     TrackingNumberStatus @default(ACTIVE)
-  createdAt  DateTime             @default(now())
-  updatedAt  DateTime             @updatedAt
+  id           String   @id @default(uuid()) @db.Uuid
+  number       String   @unique
+  quote        Quote    @relation(fields: [quoteId], references: [id])
+  quoteId      String   @db.Uuid @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  lastActivity DateTime @default(now())
+  activityLog  Json?
 
   @@schema("public")
 }

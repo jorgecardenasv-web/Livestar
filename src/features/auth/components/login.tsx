@@ -1,17 +1,13 @@
 "use client";
 
-import { TextInput } from "@tremor/react";
-import { useFormState } from "react-dom";
-import { authenticate } from "../actions/signin";
-import { SubmitButton } from "@/shared/components/submit-button";
+import { login } from "../actions/login";
+import { SubmitButton } from "@/shared/components/ui/submit-button";
+import { TextInput } from "@/shared/components/ui/text-input";
+import { PasswordInput } from "@/shared/components/ui/password-input";
+import { useLoginForm } from "../hooks/use-login-form";
 
-export const SigninForm = () => {
-  const [state, formAction] = useFormState(authenticate, {
-    errors: {
-      email: "",
-      password: "",
-    },
-  });
+export const LoginForm = () => {
+  const { state, formAction } = useLoginForm(login);
 
   return (
     <>
@@ -20,47 +16,30 @@ export const SigninForm = () => {
           <h3 className="text-center text-3xl font-semibold text-tremor-content-strong dark:text-dark-tremor-content-strong">
             Iniciar sesión
           </h3>
+
           <form action={formAction} className="mt-6 space-y-4">
-            <div>
-              <label
-                htmlFor="email"
-                className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong"
-              >
-                Correo electrónico
-              </label>
-              <TextInput
-                type="email"
-                id="email"
-                name="email"
-                autoComplete="email"
-                placeholder="Ingrese su correo electrónico"
-              />
-              <span className="text-sm text-red-500">
-                {state?.errors?.email}
-              </span>
-            </div>
-            <div>
-              <label
-                htmlFor="password"
-                className="text-tremor-default font-medium text-tremor-content-strong dark:text-dark-tremor-content-strong"
-              >
-                Contraseña
-              </label>
-              <TextInput
-                type="password"
-                id="password"
-                name="password"
-                autoComplete="current-password"
-                placeholder="Ingrese su contraseña"
-              />
-              <span className="text-sm text-red-600">
-                {state?.errors?.password && state.errors.password}
-              </span>
-            </div>
-            {state?.error && <p className="text-red-500">{state.error}</p>}
+            <TextInput
+              label="Correo electrónico"
+              type="email"
+              id="email"
+              name="email"
+              autoComplete="email"
+              placeholder="escribe tu correo electrónico"
+              error={state?.inputErrors?.email || ""}
+            />
+            <PasswordInput
+              label="Contraseña"
+              id="password"
+              name="password"
+              autoComplete="current-password"
+              placeholder="Escribe tu contraseña"
+              error={state?.inputErrors?.password || ""}
+            />
+            {!state?.success && <p className="text-red-500">{state.message}</p>}
             <SubmitButton
-              textStatic="Iniciar sesión"
-              textPending="Iniciando sesión..."
+              label="Iniciar sesión"
+              labelPending="Iniciando sesión..."
+              className="w-full"
             />
           </form>
         </div>

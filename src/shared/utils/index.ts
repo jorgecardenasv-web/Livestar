@@ -4,13 +4,17 @@ export * from "./format-date";
 
 export function simplifyZodErrors<T>(errors: ZodError<T>): FormError {
   const simplifiedErrors: FormError = {};
-  errors.issues.forEach((key) => {
+
+  errors.issues.forEach((key: any) => {
     simplifiedErrors[key.path[0]] = key.message;
   });
+
   return simplifiedErrors;
 }
 
 export const isServer = () => typeof window === "undefined";
+
 export * from "./notification-message";
 export * from "./simplify-zod-errors";
 export * from "./pagination";
+export * from "./parsed-form-data-age";

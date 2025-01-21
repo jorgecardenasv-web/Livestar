@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import clsx from "clsx";
+import { cn } from "@/shared/utils/cn";
 import { navLinks } from "../data/nav-links";
 
-export default function NavLinks({ userRole }: { userRole?: string }) {
+export default function NavLinks({ userRole }: { userRole?: string | null }) {
   const pathname = usePathname();
 
   return (
-    <>
+    <div className="flex flex-col w-full space-y-4 md:space-y-2">
       {navLinks
         .filter((link) => link.roles.includes(userRole!))
         .map((link) => {
@@ -19,21 +19,23 @@ export default function NavLinks({ userRole }: { userRole?: string }) {
             <Link
               key={link.name}
               href={link.href}
-              className={clsx(
-                "flex h-[48px] grow items-center justify-center gap-2 rounded-md p-3 text-sm font-medium dark:font-normal md:flex-none md:justify-start md:p-2 md:px-3",
+              className={cn(
+                "flex h-[48px] grow items-center gap-2 rounded p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3",
+                "transition-colors duration-200 ease-in-out",
+                "ring-1 ring-border",
                 {
-                  "bg-tremor-brand-muted text-tremor-brand-emphasis dark:bg-dark-tremor-brand-subtle dark:text-dark-tremor-brand-emphasis":
+                  "bg-sky-100 text-sky-600 dark:bg-sky-800 dark:text-white":
                     isActive,
-                  "bg-tremor-background-default dark:bg-dark-tremor-background-subtle ring-1 ring-tremor-border dark:ring-dark-tremor-border hover:bg-tremor-brand-muted hover:text-tremor-brand-emphasis dark:hover:bg-dark-tremor-brand-subtle dark:hover:text-dark-tremor-brand-emphasis":
+                  "bg-background hover:bg-sky-100 hover:text-sky-600 dark:hover:bg-sky-800 dark:hover:text-white dark:bg-background-subtle dark:text-foreground dark:hover:bg-primary dark:hover:text-primary-foreground":
                     !isActive,
                 }
               )}
             >
-              <LinkIcon className="w-6" />
-              <p className="hidden md:block">{link.name}</p>
+              <LinkIcon className="h-5 w-5" />
+              <span>{link.name}</span>
             </Link>
           );
         })}
-    </>
+    </div>
   );
 }

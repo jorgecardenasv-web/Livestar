@@ -1,11 +1,27 @@
 import { Header } from "../components/header";
 import { Sidebar } from "../components/sidebar";
+import { MobileMenu } from "../components/mobile-menu";
+import { Card, CardContent } from "@/shared/components/ui/card";
+import Link from "next/link";
+import { prefix } from "@/shared/utils/constants";
 
 export const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="flex h-screen flex-col md:flex-row overflow-hidden">
-      <div className="lg:w-64 flex-shrink-0">
+      <div className="md:w-72 flex-shrink-0 hidden md:block">
         <Sidebar />
+      </div>
+
+      <div className="flex gap-4 items-center md:hidden p-4">
+        <MobileMenu />
+        <Link
+          className="flex h-14 w-full items-center rounded bg-primary p-4"
+          href={`${prefix}/panel`}
+        >
+          <div className="w-32 text-white md:w-40">
+            <h2 className="text-3xl font-bold">Livestar</h2>
+          </div>
+        </Link>
       </div>
       <div className="flex flex-col flex-grow overflow-hidden">
         <div className="flex-shrink-0 p-2 md:p-4">

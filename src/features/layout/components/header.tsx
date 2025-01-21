@@ -1,12 +1,18 @@
-import { getServerSession } from "@/features/auth/services/auth";
+import { getSession } from "@/lib/iron-session/get-session";
 import { HeaderClient } from "./header.client";
+import { Card, CardContent } from "@/shared/components/ui/card";
 
 export const Header = async () => {
-  const session = await getServerSession();
+  const session = await getSession();
 
   return (
-    <header className="hidden md:block shadow-sm ring-1 ring-tremor-border dark:ring-dark-tremor-border rounded-md bg-tremor-background dark:bg-dark-tremor-background-subtle p-4">
-      <HeaderClient label={session?.user?.name || "Usuario"} />
+    <header className="hidden md:block">
+      <Card>
+        <CardContent className="flex flex-row items-center justify-between gap-2 p-4">
+          <div className="flex-wrap"></div>
+          <HeaderClient label={session.user.name} />
+        </CardContent>
+      </Card>
     </header>
   );
 };

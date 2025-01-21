@@ -1,10 +1,29 @@
-export const whereFilterBuilder = <T>(filtersOptions: any): any => {
+export type FilterOptions = Record<string, any>;
+
+export const whereFilterBuilder = <T>(filtersOptions: FilterOptions) => {
   const where: any = {};
 
-  Object.keys(filtersOptions).forEach((key) => {
-    if (!filtersOptions[key as keyof T]) return;
-    where[key] = filtersOptions[key as keyof T];
+  Object.entries(filtersOptions).forEach(([key, value]) => {
+    if (value !== null && value !== undefined && value !== "") {
+      where[key] = value;
+    }
   });
 
   return where;
+};
+
+export const textSearchFilterBuilder = (
+  searchTerm: string,
+  fields: string[]
+): any => {
+  if (!searchTerm) return {};
+
+  return {
+    OR: fields.map((field) => ({
+      [field]: {
+        contains: searchTerm,
+        mode: "insensitive",
+      },
+    })),
+  };
 };

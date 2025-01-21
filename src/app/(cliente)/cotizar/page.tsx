@@ -1,0 +1,31 @@
+import { HeaderSecondary } from "@/shared/components/layout/header-secondary";
+import { ModalStorytellingActions } from "@/features/storytelling/components/modals/modal-storytelling-actions";
+import { InsuranceStorytelling } from "@/features/storytelling/components/container/storytelling";
+import { getPlans } from "@/features/insurance-plans/loaders/get-plans";
+
+export interface InsuranceQuoteData {
+  company: string;
+  companyLogo: string;
+  plan: string;
+  paymentType: string;
+  sumInsured: string;
+  deductible: string;
+  coInsurance: string;
+  coInsuranceCap: string;
+  coverage_fee: string;
+  id: string;
+  isMultipleString?: string;
+  deductiblesJson?: string;
+}
+
+export default async function QuoteSummaryPage() {
+  const { plans } = await getPlans();
+  
+  return (
+    <>
+      <HeaderSecondary />
+      <InsuranceStorytelling plans={plans} />
+      <ModalStorytellingActions />
+    </>
+  );
+}
