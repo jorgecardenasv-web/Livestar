@@ -3,8 +3,8 @@ import prisma from "@/lib/prisma";
 export const getAdvisorWithLeastProspectsService = async () => {
   const newAdvisor = await prisma.user.findFirst({
     where: {
-      role: "ADVISOR",
-      status: "ACTIVE",
+      role: "ASESOR",
+      status: "ACTIVO",
       isNewAdvisor: true,
       lastProspectAssigned: null,
     },
@@ -24,8 +24,8 @@ export const getAdvisorWithLeastProspectsService = async () => {
 
   const nextAdvisor = await prisma.user.findFirst({
     where: {
-      role: "ADVISOR",
-      status: "ACTIVE",
+      role: "ASESOR",
+      status: "ACTIVO",
     },
     orderBy: [{ lastProspectAssigned: "asc" }, { createdAt: "asc" }],
     select: {

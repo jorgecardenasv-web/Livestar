@@ -9,8 +9,8 @@ import { ListAdvisors } from "@/features/advisors/components/tables/list-advisor
 
 const statusOptions = [
   { value: "todos", label: "Todos" },
-  { value: UserStatus.ACTIVE, label: "Activo" },
-  { value: UserStatus.INACTIVE, label: "Inactivo" },
+  { value: UserStatus.ACTIVO, label: "Activo" },
+  { value: UserStatus.INACTIVO, label: "Inactivo" },
 ];
 
 export default async function Advisors({

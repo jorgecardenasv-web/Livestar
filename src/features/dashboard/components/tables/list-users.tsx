@@ -16,14 +16,14 @@ import { User } from "../../types/user";
 
 const statusOptions = [
   { value: "", label: "Todos" },
-  { value: UserStatus.ACTIVE, label: "Activo" },
-  { value: UserStatus.INACTIVE, label: "Inactivo" },
+  { value: UserStatus.ACTIVO, label: "Activo" },
+  { value: UserStatus.INACTIVO, label: "Inactivo" },
 ];
 
 const rolOptions = [
   { value: "", label: "Todos" },
   { value: Role.ADMIN, label: "Admin" },
-  { value: Role.ADVISOR, label: "Asesor" },
+  { value: Role.ASESOR, label: "Asesor" },
 ];
 
 export const UsersList = ({ users }: { users: User[] }) => {
@@ -49,7 +49,7 @@ export const UsersList = ({ users }: { users: User[] }) => {
                   .slice(1)
                   .toLowerCase()}`}</TableCell>
                 <TableCell>
-                  {user.status === UserStatus.ACTIVE ? (
+                  {user.status === UserStatus.ACTIVO ? (
                     <Badge variant="success">Activo</Badge>
                   ) : (
                     <Badge variant="destructive">Inactivo</Badge>

@@ -1,5 +1,6 @@
 "use server";
-import { reassignProspectService } from "@/features/insurance-quote/services/reassign-prospect.service";
+
+import { reassignProspectService } from "@/features/quote/services/reassign-prospect.service";
 import prisma from "@/lib/prisma";
 import { FormState } from "@/shared/types";
 import { prefix } from "@/shared/utils/constants";

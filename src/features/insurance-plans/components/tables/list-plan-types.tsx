@@ -38,7 +38,7 @@ export const ListPlanTypes = ({ planTypes }: ListPlansProps) => {
               <TableRow key={planType.id} className="cursor-pointer">
                 <TableCell>{planType.name}</TableCell>
                 <TableCell>
-                  {planType.status === PlanStatus.ACTIVE ? (
+                  {planType.status === PlanStatus.ACTIVO ? (
                     <Badge variant="success">Activo</Badge>
                   ) : (
                     <Badge variant="destructive">Inactivo</Badge>

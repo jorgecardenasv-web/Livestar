@@ -20,7 +20,6 @@ export const prospectTransformer = (prospect: ProspectPayload): Prospect => {
     protectWho: prospect.protectWho,
     whatsapp: prospect.whatsapp,
     userId: prospect.userId,
-    status: prospect.status,
     lastContactDate: prospect.lastContactDate,
     user: prospect.user,
   };
