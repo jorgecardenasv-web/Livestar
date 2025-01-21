@@ -47,24 +47,24 @@ export async function handleContractNow() {
     const quote = await createQuoteService(quoteData);
     await createTrackingNumberService({ quoteId: quote.id });
 
-    await sendProspectEmail({
-      prospectName: prospect.name,
-      insuranceName: planData.company.name,
-      planName: planData.planType.name,
-      quotes: [quote],
-      totalPrice: parseFloat(selectedPlan.coverage_fee),
-      contactNumber: process.env.CONTACT_NUMBER!,
-      logoUrl: planData.company.logo,
-      prospectEmail: prospect.email
-    });
+    // await sendProspectEmail({
+    //   prospectName: prospect.name,
+    //   insuranceName: planData.company.name,
+    //   planName: planData.planType.name,
+    //   quotes: [quote],
+    //   totalPrice: parseFloat(selectedPlan.coverage_fee),
+    //   contactNumber: process.env.CONTACT_NUMBER!,
+    //   logoUrl: planData.company.logo,
+    //   prospectEmail: prospect.email
+    // });
 
-    await sendAdvisorEmail({
-      advisorName: advisor.name,
-      prospectName: prospect.name,
-      prospectEmail: prospect.email,
-      selectedPlan: `${planData.company.name} - ${planData.planType.name}`,
-      emailAdvisor: advisor.email
-    });
+    // await sendAdvisorEmail({
+    //   advisorName: advisor.name,
+    //   prospectName: prospect.name,
+    //   prospectEmail: "ulises.vargas@yocontigo-it.com",
+    //   selectedPlan: `${planData.company.name} - ${planData.planType.name}`,
+    //   emailAdvisor: advisor.email
+    // });
 
     redirect("/finalizar-cotizacion");
   } catch (error) {

@@ -1,12 +1,11 @@
 import { Role, UserStatus } from "@prisma/client";
 import { hash } from "bcrypt";
-import {
-  insurances,
-  plans,
-  planTypes,
-} from "../../features/insurance-plans/data/insurance-data";
 import { faker } from "@faker-js/faker/locale/es_MX";
 import prisma from ".";
+import { insurances } from "./data/insurance.data";
+import { planTypes } from "./data/planType.data";
+import { plans } from "./data/plan.data";
+import { deductibles } from "./data/deductible.data";
 
 async function main() {
   const adminPassword = "AdminPass123";
@@ -14,74 +13,117 @@ async function main() {
   const hashedAdminPassword = await hash(adminPassword, 10);
   const hashedAdvisorPassword = await hash(advisorPassword, 10);
 
-  await prisma.user.deleteMany();
-  await prisma.insurance.deleteMany();
+  // Se limpian todos los datos existentes
+  await prisma.quote.deleteMany();
+  await prisma.prospect.deleteMany();
+  await prisma.deductible.deleteMany();
   await prisma.plan.deleteMany();
   await prisma.planType.deleteMany();
+  await prisma.insurance.deleteMany();
+  await prisma.user.deleteMany();
 
+  // Se crea un usuario administrador
   await prisma.user.create({
     data: {
       name: "Administrador",
       email: "admin@example.com",
       password: hashedAdminPassword,
       role: Role.ADMIN,
-      status: UserStatus.ACTIVE,
+      status: UserStatus.ACTIVO,
     },
   });
 
-  await prisma.user.create({
-    data: {
-      name: "Asesor",
-      email: "advisor@example.com",
-      password: hashedAdvisorPassword,
-      role: Role.ADVISOR,
-      status: UserStatus.ACTIVE,
-    },
+  // Se crean usuarios de asesores
+  const advisors = await Promise.all([
+    prisma.user.create({
+      data: {
+        name: "Asesor Principal",
+        email: "advisor@example.com",
+        password: hashedAdvisorPassword,
+        role: Role.ASESOR,
+        status: UserStatus.ACTIVO,
+      },
+    }),
+    ...Array(5)
+      .fill(null)
+      .map(async () => {
+        const firstName = faker.person.firstName();
+        const lastName = faker.person.lastName();
+        return prisma.user.create({
+          data: {
+            name: `${firstName} ${lastName}`,
+            email: faker.internet.email({ firstName, lastName }),
+            password: hashedAdvisorPassword,
+            role: Role.ASESOR,
+            status: UserStatus.ACTIVO,
+          },
+        });
+      }),
+  ]);
+
+  // Se crean las aseguradoras, tipos de planes, planes y deducibles
+  await prisma.insurance.createMany({ data: insurances, skipDuplicates: true });
+  await prisma.planType.createMany({ data: planTypes, skipDuplicates: true });
+  await prisma.plan.createMany({ data: plans, skipDuplicates: true });
+  await prisma.deductible.createMany({
+    data: deductibles,
+    skipDuplicates: true,
   });
 
-  function getRandomStatus() {
-    return Math.random() < 0.5 ? UserStatus.ACTIVE : UserStatus.INACTIVE;
-  }
+  // se crean los prospectos y se asignan a los asesores
+  const activeAdvisors = advisors.filter(
+    (advisor) => advisor.status === UserStatus.ACTIVO
+  );
 
-  async function createRandomUsers(count: number) {
-    for (let i = 1; i <= count; i++) {
-      const firstName = faker.person.firstName();
-      const lastName = faker.person.lastName();
-      const email = faker.internet.email();
-      const fullName = `${firstName} ${lastName}`;
+  const prospects = await Promise.all(
+    Array(10)
+      .fill(null)
+      .map(async (_, index) => {
+        const advisor = activeAdvisors[index % activeAdvisors.length];
 
-      console.log(`Creando usuario ${i}: ${fullName}`);
+        return prisma.prospect.create({
+          data: {
+            id: faker.string.uuid(),
+            name: faker.person.fullName(),
+            gender: Math.random() > 0.5 ? "hombre" : "mujer",
+            age: faker.number.int({ min: 18, max: 64 }),
+            postalCode: faker.location.zipCode(),
+            protectWho: "solo_yo",
+            whatsapp: faker.phone.number(),
+            email: faker.internet.email(),
+            isVerified: false,
+            additionalInfo: {},
+            userId: advisor.id,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        });
+      })
+  );
 
-      await prisma.user.create({
+  // Se crean las cotizaciones de los prospectos
+  await Promise.all(
+    prospects.slice(0, 5).map((prospect) =>
+      prisma.quote.create({
         data: {
-          name: fullName,
-          email,
-          password: hashedAdvisorPassword,
-          role: Role.ADVISOR,
-          status: getRandomStatus(),
+          id: faker.string.uuid(),
+          prospectId: prospect.id,
+          planId: plans[Math.floor(Math.random() * plans.length)].id!,
+          customizations: {},
+          totalPrice: faker.number.float({
+            min: 1000,
+            max: 5000,
+            fractionDigits: 2,
+          }),
+          status: "NUEVO",
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
-      });
-    }
-  }
+      })
+    )
+  );
 
-  await createRandomUsers(9);
-
-  await prisma.insurance.createMany({
-    data: insurances,
-    skipDuplicates: true,
-  });
-
-  await prisma.planType.createMany({
-    data: planTypes,
-    skipDuplicates: true,
-  });
-
-  await prisma.plan.createMany({
-    data: plans,
-    skipDuplicates: true,
-  });
-
-  console.log("El seed se completó con éxito");
+  console.log("Seed completed successfully");
 }
 
 main()
