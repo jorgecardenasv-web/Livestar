@@ -38,26 +38,28 @@ export const QuoteCard = ({
       </h3>
     </div>
 
-    {/* Contenido visible en sm: y md: */}
-    <div className="mt-4 text-center text-gray-600 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-300 lg:absolute lg:bottom-6 lg:left-6 lg:right-6">
-      <p className="text-gray-800 lg:text-white mb-3 text-sm">
-        {description}
-      </p>
-      <span className="mt-2 inline-flex items-center justify-center w-full lg:w-auto text-blue-500 lg:text-white transition-colors duration-300 lg:bg-white lg:bg-opacity-20 hover:bg-opacity-10 px-4 py-2 rounded">
-        Ver más
-        <ArrowRight className="ml-2 w-4 h-4" />
-      </span>
-    </div>
-  </div>
+     {/* Contenido visible en sm: y md: */}
+     <div className="mt-4 text-center text-gray-600 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-300 lg:absolute lg:bottom-6 lg:left-6 lg:right-6">
+       <p className="text-gray-800 lg:text-white mb-3 text-sm">
+         {description}
+       </p>
+          {/* TODO: Eliminar primer span y descomentar el segundo cuando se tengan los videos a mostrar */}
+          <span className="mt-2 inline-flex items-center justify-center w-full lg:w-auto "></span>
+          {/* <span className="mt-2 inline-flex items-center justify-center w-full lg:w-auto text-blue-500 lg:text-white transition-colors duration-300 lg:bg-white lg:bg-opacity-20 hover:bg-opacity-10 px-4 py-2 rounded">
+            Ver más
+            <ArrowRight className="ml-2 w-4 h-4" />
+          </span> */}
+        </div>
+      </div>
 
-  {/* Elementos decorativos con hover solo en lg */}
-  <div className="absolute top-0 -right-2.5 w-20 h-20 overflow-hidden transition-opacity duration-300 lg:group-hover:opacity-0">
-    <div className="absolute top-0 right-0 w-8 h-8 bg-blue-500 rotate-45 transform origin-bottom-left"></div>
-    <div className="absolute top-0 right-0 w-20 h-20">
-      <div className="absolute top-[2px] -right-[2px] w-6 h-6 bg-white rounded-full animate-ping"></div>
-      <div className="absolute top-[2px] -right-[2px] w-6 h-6 bg-white rounded-full"></div>
+    {/* Elementos decorativos con hover solo en lg */}
+    <div className="absolute top-0 -right-2.5 w-20 h-20 overflow-hidden transition-opacity duration-300 lg:group-hover:opacity-0">
+      <div className="absolute top-0 right-0 w-8 h-8 bg-blue-500 rotate-45 transform origin-bottom-left"></div>
+      <div className="absolute top-0 right-0 w-20 h-20">
+        <div className="absolute top-[2px] -right-[2px] w-6 h-6 bg-white rounded-full animate-ping"></div>
+        <div className="absolute top-[2px] -right-[2px] w-6 h-6 bg-white rounded-full"></div>
+      </div>
     </div>
-  </div>
-</button>
+  </button>
   );
 };
