@@ -13,7 +13,7 @@ export const updateAdvisorService = async (
       },
       data: {
         name,
-        status: status === "1" ? "ACTIVE" : "INACTIVE",
+        status: status === "1" ? "ACTIVO" : "INACTIVO",
         email,
       },
     });

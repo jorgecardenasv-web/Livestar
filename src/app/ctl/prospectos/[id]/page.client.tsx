@@ -1,9 +1,10 @@
 "use client";
 
-import { ContactInfoSection } from "@/features/insurance-quote/components/sections/contact-info-section";
-import { PersonalInfoSection } from "@/features/insurance-quote/components/sections/personal-info-section";
-import { useGetQuoteForm } from "@/features/insurance-quote/hooks/use-get-quote-form";
+
 import { updateProspect } from "@/features/prospects/actions/update-prospect";
+import { ContactInfoSection } from "@/features/quote/components/sections/contact-info-section";
+import { PersonalInfoSection } from "@/features/quote/components/sections/personal-info-section";
+import { useGetQuoteForm } from "@/features/quote/hooks/use-get-quote-form";
 import { Card, CardContent } from "@/shared/components/ui/card";
 
 export function ProspectClientPage({ prospect }: { prospect: any }) {

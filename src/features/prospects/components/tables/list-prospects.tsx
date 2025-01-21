@@ -32,7 +32,6 @@ export const ListProspects = ({ prospects }: { prospects: Prospect[] }) => {
               <TableHead>Correo electrónico</TableHead>
               <TableHead>Verificación</TableHead>
               <TableHead>Fecha de creación</TableHead>
-              <TableHead>Estado</TableHead>
               <TableHead>Asesor asignado</TableHead>
               <TableHead>Acciones</TableHead>
             </TableRow>
@@ -67,11 +66,6 @@ export const ListProspects = ({ prospects }: { prospects: Prospect[] }) => {
                   onClick={() => push(`${prefix}/prospectos/${prospect.id}`)}
                 >
                   {formatDate(prospect.createdAt)}
-                </TableCell>
-                <TableCell
-                  onClick={() => push(`${prefix}/prospectos/${prospect.id}`)}
-                >
-                  <Badge color="blue">{prospect.status}</Badge>
                 </TableCell>
                 <TableCell
                   onClick={() => push(`${prefix}/prospectos/${prospect.id}`)}

@@ -30,7 +30,7 @@ export const DeleteAdvisorForm = () => {
         <div className="flex flex-row items-center gap-2 mb-1">
           <p>Status:</p>
           <p>
-            {advisor.status === UserStatus.ACTIVE ? (
+            {advisor.status === UserStatus.ACTIVO ? (
               <Badge variant="success">Activo</Badge>
             ) : (
               <Badge variant="destructive">Inactivo</Badge>

@@ -3,7 +3,6 @@
 import { z } from "zod";
 import { simplifyZodErrors } from "@/shared/utils";
 import { changeStatusAndAdvisorService } from "../services/change-status-and-advisor.service";
-import { ProspectStatus } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 const ChangeStatusAndAdvisorSchema = z.object({
@@ -18,7 +17,7 @@ export const changeStatusAndAdvisor = async (
   formData: FormData
 ) => {
   const advisorId = formData.get("userId") as string;
-  const status = formData.get("status") as ProspectStatus;
+  const status = formData.get("status");
 
   const zodResult = ChangeStatusAndAdvisorSchema.safeParse({
     prospectId,
@@ -36,7 +35,6 @@ export const changeStatusAndAdvisor = async (
   const prospect = await changeStatusAndAdvisorService({
     prospectId,
     advisorId,
-    status,
   });
 
   if (!prospect) {

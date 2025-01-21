@@ -56,7 +56,7 @@ export const PlansList = ({ plans, companyLogos }: PlansListProps) => {
                   </Avatar>
                 </TableCell>
                 <TableCell onClick={() => push(`${prefix}/planes/${plan.id}`)}>
-                  {plan.status === PlanStatus.ACTIVE ? (
+                  {plan.status === PlanStatus.ACTIVO ? (
                     <Badge variant="success">Activo</Badge>
                   ) : (
                     <Badge variant="destructive">Inactivo</Badge>

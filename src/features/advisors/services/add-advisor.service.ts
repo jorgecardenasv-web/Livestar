@@ -15,7 +15,7 @@ export const createAdvisorService = async (
         email,
         password: hashedPassword,
         name,
-        role: "ADVISOR",
+        role: "ASESOR",
       },
     });
 

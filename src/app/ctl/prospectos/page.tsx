@@ -27,7 +27,7 @@ export default async function ProspectsPage({
   const user = await getCurrentUser();
 
   const prospects = await getProspects({
-    advisorId: user?.role === "ADVISOR" ? user?.id : undefined,
+    advisorId: user?.role === "ASESOR" ? user?.id : undefined,
     page: Number(searchParams?.page || 1),
     isVerified: isVerifiedMap[String(searchParams?.isVerified)],
     query: searchParams?.query || "",

@@ -46,7 +46,7 @@ export const UpdateAdvisorForm = () => {
         ]}
         label="Estatus"
         name="status"
-        defaultValue={advisor?.status === UserStatus.ACTIVE ? "1" : "2"}
+        defaultValue={advisor?.status === UserStatus.ACTIVO ? "1" : "2"}
         required
       />
 

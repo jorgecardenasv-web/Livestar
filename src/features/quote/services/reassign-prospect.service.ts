@@ -9,17 +9,17 @@ export const reassignProspectService = async (advisorId: string) => {
   });
 
   for (const prospect of prospectsToReassign) {
-    const nextAdvisorId = await getAdvisorWithLeastProspectsService();
-    if (nextAdvisorId) {
+    const nextAdvisor = await getAdvisorWithLeastProspectsService();
+    if (nextAdvisor) {
       await prisma.prospect.update({
         where: { id: prospect.id },
         data: {
-          userId: nextAdvisorId,
+          userId: nextAdvisor?.id,
         },
       });
 
       await prisma.user.update({
-        where: { id: nextAdvisorId },
+        where: { id: nextAdvisor.id },
         data: {
           lastProspectAssigned: new Date(),
           isNewAdvisor: false,

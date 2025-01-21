@@ -19,7 +19,7 @@ import {
 import { Button } from "@/shared/components/ui/button";
 
 export const ListSessions = ({ sessions }: { sessions: Session[] }) => {
-  const [filter, setFilter] = useState<"ALL" | "ADMIN" | "ADVISOR">("ALL");
+  const [filter, setFilter] = useState<"ALL" | "ADMIN" | "ASESOR">("ALL");
 
   const handleCloseSession = (sessionId: string) => {
     invalidateSession(sessionId);
@@ -32,7 +32,7 @@ export const ListSessions = ({ sessions }: { sessions: Session[] }) => {
   const getRoleBadge = (role: User["role"]) => {
     const badges = {
       ADMIN: <Badge>{role}</Badge>,
-      ADVISOR: <Badge variant="outline">{role}</Badge>,
+      ASESOR: <Badge variant="outline">{role}</Badge>,
     };
 
     return badges[role];

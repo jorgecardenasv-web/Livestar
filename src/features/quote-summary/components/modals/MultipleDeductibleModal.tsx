@@ -72,7 +72,7 @@ export default function MultipleDeductibleModal({
             <TableBody>
               {uniqueDeductibles.map((deductible: any) => {
                 return (
-                  <TableRow>
+                  <TableRow key={deductible.id}>
                     <TableCell className="flex justify-center">
                       <div className="bg-sky-100 px-3 py-1.5 rounded-lg text-sky-600">
                         {deductible.hospitalLevel}

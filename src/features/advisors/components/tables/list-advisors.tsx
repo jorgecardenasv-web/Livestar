@@ -41,7 +41,7 @@ export const ListAdvisors: FC<ListAdvisorsProps> = ({ advisors }) => {
             <TableCell>{advisor.name}</TableCell>
             <TableCell>{advisor.email}</TableCell>
             <TableCell>
-              {advisor.status === UserStatus.ACTIVE ? (
+              {advisor.status === UserStatus.ACTIVO ? (
                 <Badge variant="success">Activo</Badge>
               ) : (
                 <Badge variant="destructive">Inactivo</Badge>
