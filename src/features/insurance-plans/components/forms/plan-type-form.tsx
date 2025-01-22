@@ -26,11 +26,11 @@ export const PlanTypeForm = () => {
         defaultValue={modalProps?.status}
         options={[
           {
-            value: "ACTIVE",
+            value: "ACTIVO",
             label: "Activo",
           },
           {
-            value: "INACTIVE",
+            value: "INACTIVO",
             label: "Inactivo",
           },
         ]}

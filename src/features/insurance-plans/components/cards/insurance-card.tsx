@@ -24,8 +24,8 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 }) => {
   const propect = await getProspect();
   const deducibles = Array.isArray(plan.deductibles)
-  ? plan.deductibles
-  : [plan.deductibles];
+    ? plan.deductibles
+    : [plan.deductibles];
 
   const isMultiple = deducibles.length > 0;
   const minor =
@@ -127,8 +127,16 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             value={coverage_fee.toLocaleString()}
           />
           <input type="hidden" name="id" value={plan.id} />
-          <input type="hidden" name="isMultipleString" value={isMultiple.toString()} />
-          <input type="hidden" name="deductiblesJson" value={JSON.stringify(deducibles)} />
+          <input
+            type="hidden"
+            name="isMultipleString"
+            value={isMultiple.toString()}
+          />
+          <input
+            type="hidden"
+            name="deductiblesJson"
+            value={JSON.stringify(deducibles)}
+          />
           <SubmitButton
             type="submit"
             label="Me interesa"

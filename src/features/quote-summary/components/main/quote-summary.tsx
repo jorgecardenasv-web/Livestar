@@ -16,14 +16,14 @@ export const QuoteSummary: FC<InsuranceQuoteData> = ({
   deductible,
   sumInsured,
   company,
-  companyLogo,
+  imgCompanyLogo,
   plan,
   paymentType,
   id,
   isMultipleString,
-  deductiblesJson
+  deductiblesJson,
 }) => {
-  const isMultiple = isMultipleString === 'true' ? true : false;
+  const isMultiple = isMultipleString === "true" ? true : false;
   const [isModalOpen, setModalOpen] = useState(false);
   const handleOpenModal = () => {
     setModalOpen(true);
@@ -48,7 +48,7 @@ export const QuoteSummary: FC<InsuranceQuoteData> = ({
           </h2>
         </div>
         <Image
-          src={companyLogo}
+          src={imgCompanyLogo}
           width={60}
           height={60}
           className="h-10 sm:h-12 w-auto object-contain"
@@ -130,7 +130,11 @@ export const QuoteSummary: FC<InsuranceQuoteData> = ({
           value={`$${coInsuranceCap}`}
         />
       </div>
-
+      <div className="flex justify-center">
+        <Button className="w-56 mt-2" size="sm" disabled={false}>
+          MÁS INFORMACIÓN
+        </Button>
+      </div>
       <ContractForm />
     </div>
   );

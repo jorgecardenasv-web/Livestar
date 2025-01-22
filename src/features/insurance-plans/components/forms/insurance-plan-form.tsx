@@ -1,11 +1,11 @@
 "use client";
 
-import { DollarSign, Percent } from "lucide-react";
+import { DollarSign, Percent, Upload } from "lucide-react";
 import { TextInput } from "@/shared/components/ui/text-input";
 import { PriceTableForm } from "./price-table-form";
 import { createPlan } from "../../actions/create-plan";
 import { Button } from "@/shared/components/ui/button";
-import { Card, CardContent } from "@/shared/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/shared/components/ui/card";
 import { SelectInput } from "@/shared/components/ui/select-input";
 import { useInsurancePlanForm } from "../../hooks/use-insurance-plan-form";
 import { useEffect, useState } from "react";
@@ -19,6 +19,7 @@ import {
   TableHead,
   TableBody,
 } from "@/shared/components/ui/table";
+import { Input } from "@/shared/components/ui/input";
 
 interface Insurance {
   id: string;
@@ -226,7 +227,7 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
               label=""
               type="number"
               icon={<DollarSign className="w-4 h-4 text-gray-500" />}
-              placeholder=" Ingrese Deducible"
+              placeholder=" Ingrese deducible"
               defaultValue={plan?.coInsuranceCap}
             />
           </div>
@@ -236,6 +237,25 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
       {/* ------------------------------------------------------ */}
 
       <PriceTableForm />
+
+      <Card className="w-full">
+        <CardHeader>
+          <span>
+            Adjunta PDF con detalles del plan en caso de ser necesario
+          </span>
+          <div className="relative">
+            <Input
+              type="file"
+              accept=".pdf"
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            />
+            <Button className="flex items-center gap-2">
+              <Upload className="h-4 w-4" />
+              Importar PDF
+            </Button>
+          </div>
+        </CardHeader>
+      </Card>
 
       <Button className="w-full" type="submit">
         Crear Plan
