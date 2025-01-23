@@ -4,6 +4,7 @@ import { Pagination } from "@/shared/components/pagination/pagination";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { getPlans } from "@/features/insurance-plans/loaders/get-plans";
 import { getInsuranceLogosFromPlans } from "@/features/insurance-plans/loaders/get-company-logos";
+import { ModalPlanActions } from "@/features/insurance-plans/components/modals/modal-plan-actions";
 
 export default async function Planes() {
   const { plans, insurancesPerPage, totalPages, totalPlans } = await getPlans();
@@ -24,6 +25,7 @@ export default async function Planes() {
           />
         </CardContent>
       </Card>
+      <ModalPlanActions />
     </>
   );
 }

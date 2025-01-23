@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useInsurancePlanStore } from "../store/insurance-plan-store";
 
 export interface PriceData {
@@ -15,6 +15,7 @@ const MONTHS_IN_YEAR = 12;
 
 export const usePriceTable = () => {
   const { prices, setPrices } = useInsurancePlanStore();
+  const [isMultiple, setIsMultiple] = useState(false);
 
   const calculateMonthly = useCallback((annual: string): number => {
     const value = parseFloat(annual);
@@ -132,5 +133,7 @@ export const usePriceTable = () => {
     handlePriceChange,
     handleFileUpload,
     setPrices,
+    setIsMultiple,
+    isMultiple,
   };
 };

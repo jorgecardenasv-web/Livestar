@@ -80,8 +80,7 @@ export default function Component() {
         ¿Cómo se cubre un siniestro en la vida real?
       </h2>
       <h4 className="text-center text-sm sm:text-base text-gray-500 mb-6 sm:mb-8">
-        Imagina que sufres una emergencia médica y los gastos ascienden a
-        $300,000.
+        Imagina que sufres una emergencia médica y los gastos ascienden a $300,000.
       </h4>
       <div className="mb-6 sm:mb-8 w-full">
         <div className="flex justify-center mb-6 sm:mb-12">
@@ -123,8 +122,8 @@ export default function Component() {
             <div className="text-center leading-6 sm:leading-8 w-full sm:w-80">
               <p className="text-gray-600">
                 Si tu coaseguro, por ejemplo, es del 10%, cubrirías $28,000 y la
-                aseguradora se encargaría de lo demás hasta más de $100,000,000
-                de pesos de acuerdo a la suma asegurada contratada.
+                aseguradora se encargaría de lo demás hasta más de $100,000,000 de
+                pesos de acuerdo a la suma asegurada contratada.
               </p>
             </div>
           )}
@@ -146,7 +145,7 @@ export default function Component() {
                     <div
                       className={`grid grid-cols-2 rounded overflow-hidden cursor-pointer items-center ${getHighlightStyle(
                         index
-                      )} ${getBGStyle(index)} ${
+                      )} ${
                         row.special === "sky"
                           ? "bg-primary text-white"
                           : row.special === "blue"
@@ -162,9 +161,13 @@ export default function Component() {
                           <CircleHelp className="ml-2 text-gray-400" />
                         )}
                       </div>
-                      <div className={`p-2 text-right ${row.valueColor || ""}`}>
-                        {row.value}
-                      </div>
+                      <div
+                      className={`p-2 text-right ${
+                        row.valueColor || ""
+                      }`}
+                    >
+                      {row.value}
+                    </div>
                     </div>
                   </TooltipTrigger>
                   {getTooltipMessage() && (
@@ -179,5 +182,6 @@ export default function Component() {
         </div>
       </div>
     </div>
+    
   );
 }

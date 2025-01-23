@@ -7,7 +7,7 @@ import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { usePlanTypeForm } from "../../hooks/use-plan-type-form";
 import { updatePlanType } from "../../actions/update-plan-type";
 
-export const PlanTypeForm = () => {
+export const UpdatePlanTypeForm = () => {
   const { modalProps } = usePlanTypeActions();
   const { formAction } = usePlanTypeForm(updatePlanType);
 

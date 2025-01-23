@@ -25,7 +25,9 @@ export default function Home() {
           <MedicalExpenses />
         </ScrollAnimatedComponent>
         <ScrollAnimatedComponent>
-          <SuccessStory />
+          {/* TODO: Añadir informacion para cobertura medica */}
+          {/* <SuccessStory /> */}
+          <div></div>
         </ScrollAnimatedComponent>
         <ScrollAnimatedComponent>
           <GreaterSpecialization />

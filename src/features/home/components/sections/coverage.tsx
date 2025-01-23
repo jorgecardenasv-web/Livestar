@@ -33,6 +33,7 @@ export const Coverage = () => {
             Protege tus finanzas, tu salud y la de tu familia contra accidentes
             y enfermedades.
           </p>
+          {/* TODO: Añadir call to action faltante (definir con el equipo de livestar)
           <button className="w-52 relative bg-transparent hover:bg-[#223E99] hover:text-white border-0 px-4 py-2 rounded overflow-hidden transition-colors duration-300">
             <span className="relative z-10 font-semibold text-lg">Ver más</span>
             <span
@@ -48,7 +49,7 @@ export const Coverage = () => {
                 maskComposite: "exclude",
               }}
             />
-          </button>
+          </button> */}
         </div>
       </div>
     </section>

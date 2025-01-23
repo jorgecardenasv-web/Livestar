@@ -21,6 +21,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Trash2 } from "lucide-react";
 import { prefix } from "@/shared/utils/constants";
 import { useRouter } from "next/navigation";
+import { usePlanTypeActions } from "../../hooks/use-plan-type-actions";
 
 interface PlansListProps {
   plans: Plan[];
@@ -29,6 +30,7 @@ interface PlansListProps {
 
 export const PlansList = ({ plans, companyLogos }: PlansListProps) => {
   const { push } = useRouter();
+  const { openDeletePlanModal } = usePlanTypeActions();
 
   return (
     <div className="w-full">
@@ -67,14 +69,10 @@ export const PlansList = ({ plans, companyLogos }: PlansListProps) => {
                 </TableCell>
                 <TableCell
                   className="flex gap-1"
-                  onClick={() => push(`${prefix}/planes/${plan.id}`)}
                 >
                   <Button
                     variant="destructive"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      console.log(plan);
-                    }}
+                    onClick={() => openDeletePlanModal(plan)}
                   >
                     <Trash2 size={20} />
                   </Button>
