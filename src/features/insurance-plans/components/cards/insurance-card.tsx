@@ -23,20 +23,11 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   isRecommended,
 }) => {
   const propect = await getProspect();
-  const deducibles = Array.isArray(plan.deductibles)
-    ? plan.deductibles
-    : [plan.deductibles];
-
-  const isMultiple = deducibles.length > 0;
-  const minor =
-    deducibles.filter((d) => typeof d.amount === "number").map((d) => d.amount)
-      .length > 0
-      ? Math.min(
-          ...deducibles
-            .filter((d) => typeof d.amount === "number")
-            .map((d) => d.amount)
-        )
-      : 0;
+  const { deductibles } = plan;
+  const isMultiple = plan.deductibles["default"] ? false : true;
+  const minor = plan.deductibles["default"]
+    ? plan.deductibles["default"]
+    : getMinimumValue(plan.deductibles);
 
   const prices: PriceTable = (plan.prices as unknown as PriceTable) || {};
   const { coverage_fee } = calculateInsurancePrice(
@@ -135,7 +126,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
           <input
             type="hidden"
             name="deductiblesJson"
-            value={JSON.stringify(deducibles)}
+            value={JSON.stringify(deductibles)}
           />
           <SubmitButton
             type="submit"
@@ -166,3 +157,12 @@ const InfoItem = ({
     </div>
   </div>
 );
+
+function getMinimumValue(
+  opciones: Record<string, Record<string, number>>
+): number {
+  const valores = Object.values(opciones).flatMap((opcion) =>
+    Object.values(opcion)
+  );
+  return Math.min(...valores);
+}
