@@ -145,7 +145,7 @@ export default function Component() {
                     <div
                       className={`grid grid-cols-2 rounded overflow-hidden cursor-pointer items-center ${getHighlightStyle(
                         index
-                      )} ${
+                      )} ${getBGStyle(index)} ${
                         row.special === "sky"
                           ? "bg-primary text-white"
                           : row.special === "blue"
