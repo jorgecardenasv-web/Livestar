@@ -16,7 +16,6 @@ async function main() {
   // Se limpian todos los datos existentes
   await prisma.quote.deleteMany();
   await prisma.prospect.deleteMany();
-  await prisma.deductible.deleteMany();
   await prisma.plan.deleteMany();
   await prisma.planType.deleteMany();
   await prisma.insurance.deleteMany();
@@ -65,10 +64,6 @@ async function main() {
   await prisma.insurance.createMany({ data: insurances, skipDuplicates: true });
   await prisma.planType.createMany({ data: planTypes, skipDuplicates: true });
   await prisma.plan.createMany({ data: plans, skipDuplicates: true });
-  await prisma.deductible.createMany({
-    data: deductibles,
-    skipDuplicates: true,
-  });
 
   // se crean los prospectos y se asignan a los asesores
   const activeAdvisors = advisors.filter(

@@ -4,8 +4,13 @@ import { getSession } from "@/lib/iron-session/get-session";
 import { prefix } from "@/shared/utils/constants";
 
 const routeRoles: { [key: string]: string[] } = {
-  "/ctl/panel": ["ADMIN", "ADVISOR"],
+  "/ctl/prospectos": ["ADMIN", "ADVISOR"],
   "/ctl/asesores": ["ADMIN"],
+  "/ctl/aseguradoras": ["ADMIN"],
+  "/ctl/planes": ["ADMIN"],
+  "/ctl/planes/tipo-de-planes": ["ADMIN"],
+  "/ctl/sesiones": ["ADMIN"],
+  "/ctl/planes/nuevo-plan": ["ADMIN"],
 };
 
 const publicPaths = [
@@ -35,7 +40,9 @@ export async function middleware(request: NextRequest) {
     const allowedRoles = routeRoles[path];
 
     if (allowedRoles && !allowedRoles.includes(userRole)) {
-      return NextResponse.redirect(new URL(`${prefix}/panel`, request.url));
+      return NextResponse.redirect(
+        new URL(`${prefix}/prospectos`, request.url)
+      );
     }
   }
 

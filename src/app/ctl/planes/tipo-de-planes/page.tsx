@@ -2,7 +2,7 @@ import { ListPlanTypes } from "@/features/insurance-plans/components/tables/list
 import { getPlanTypes } from "@/features/insurance-plans/loaders/get-plan-types";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { HeaderPlanType } from "@/features/insurance-plans/components/headers/header-plan";
-import { ModalPlanTypeActions } from "@/features/insurance-plans/components/modals/modal-plan-actions";
+import { ModalPlanTypeActions } from "@/features/insurance-plans/components/modals/modal-plan-type-actions";
 
 export default async function TipoDePlanes() {
   const planTypes = await getPlanTypes();

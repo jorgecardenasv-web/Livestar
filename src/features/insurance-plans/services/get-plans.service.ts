@@ -25,8 +25,7 @@ export const GetPlansService = async ({
       include: {
         company: true,
         planType: true,
-        deductibles: true,
-        quotes: true
+        quotes: true,
       },
     }),
     prisma.plan.count(),

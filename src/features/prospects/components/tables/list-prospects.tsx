@@ -30,7 +30,6 @@ export const ListProspects = ({ prospects }: { prospects: Prospect[] }) => {
             <TableRow>
               <TableHead>Nombre</TableHead>
               <TableHead>Correo electrónico</TableHead>
-              <TableHead>Verificación</TableHead>
               <TableHead>Fecha de creación</TableHead>
               <TableHead>Asesor asignado</TableHead>
               <TableHead>Acciones</TableHead>
@@ -52,15 +51,6 @@ export const ListProspects = ({ prospects }: { prospects: Prospect[] }) => {
                   onClick={() => push(`${prefix}/prospectos/${prospect.id}`)}
                 >
                   {prospect.email}
-                </TableCell>
-                <TableCell
-                  onClick={() => push(`${prefix}/prospectos/${prospect.id}`)}
-                >
-                  {prospect.isVerified ? (
-                    <Badge variant="success">Verificado</Badge>
-                  ) : (
-                    <Badge variant="destructive">No verificado</Badge>
-                  )}
                 </TableCell>
                 <TableCell
                   onClick={() => push(`${prefix}/prospectos/${prospect.id}`)}

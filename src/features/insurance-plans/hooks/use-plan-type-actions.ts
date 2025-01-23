@@ -9,6 +9,7 @@ export const usePlanTypeActions = () => {
   const openEditPlanTypeModal = (planType: PlanType) =>
     openModal("editPlanType", planType);
 
+  const openDeletePlanModal = (plan: any) => openModal("deletePlan", plan);
   const handleCancel = () => closeModal();
 
   return {
@@ -17,6 +18,7 @@ export const usePlanTypeActions = () => {
     modalProps,
     openAddPlanTypeModal,
     openEditPlanTypeModal,
+    openDeletePlanModal,
     handleCancel,
   };
 };
