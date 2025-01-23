@@ -1,15 +1,18 @@
 import prisma from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 
-export const createPlanService = async (payload: any) => {
-  const { companyId, ...insurancePlanPayload } = payload;
+export const createPlanService = async (data: any) => {
+  console.log(data);
 
-  return prisma.$transaction(async (tx) => {
-    const insurancePlan = await tx.plan.create({
-      data: {
-        ...insurancePlanPayload,
-        companyId,
-      },
+  try {
+    const newPlan = await prisma.plan.create({
+      data,
     });
-    return insurancePlan;
-  });
+
+    return newPlan;
+  } catch (error) {
+    console.log({ error });
+
+    return error;
+  }
 };

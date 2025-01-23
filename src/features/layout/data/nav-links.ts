@@ -18,12 +18,6 @@ export interface NavLiks {
 
 export const navLinks: NavLiks[] = [
   {
-    name: "Panel",
-    href: `${prefix}/panel`,
-    icon: LayoutDashboard,
-    roles: ["ADMIN", "ADVISOR"],
-  },
-  {
     name: "Asesores",
     href: `${prefix}/asesores`,
     icon: Contact,

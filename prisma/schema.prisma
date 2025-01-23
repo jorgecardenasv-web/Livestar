@@ -97,34 +97,23 @@ enum PlanStatus {
 }
 
 model Plan {
-  id             String       @id @default(uuid()) @db.Uuid
-  planType       PlanType     @relation(fields: [planTypeId], references: [id], onDelete: Cascade)
-  planTypeId     String       @db.Uuid
-  company        Insurance    @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  companyId      String       @db.Uuid
+  id             String     @id @default(uuid()) @db.Uuid
+  planType       PlanType   @relation(fields: [planTypeId], references: [id], onDelete: Cascade)
+  planTypeId     String     @db.Uuid
+  company        Insurance  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId      String     @db.Uuid
   sumInsured     Float
   coInsurance    Float
   coInsuranceCap Float?
-  status         PlanStatus   @default(ACTIVO)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  status         PlanStatus @default(ACTIVO)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
   quotes         Quote[]
-  isRecommended  Boolean      @default(false)
+  isRecommended  Boolean    @default(false)
   prices         Json
-  deductibles    Deductible[]
+  deductibles    Json
 
   @@unique([planTypeId, companyId])
-  @@schema("public")
-}
-
-model Deductible {
-  id            String @id @default(uuid()) @db.Uuid
-  plan          Plan   @relation(fields: [planId], references: [id])
-  planId        String @db.Uuid
-  hospitalLevel String
-  amount        Float
-  option        Json[]
-
   @@schema("public")
 }
 
@@ -137,7 +126,7 @@ model Prospect {
   protectWho       String
   whatsapp         String
   email            String
-  isVerified        Boolean          @default(false)
+  isVerified       Boolean          @default(false)
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
   additionalInfo   Json?
@@ -191,7 +180,7 @@ model TrackingNumber {
   id           String   @id @default(uuid()) @db.Uuid
   number       String   @unique
   quote        Quote    @relation(fields: [quoteId], references: [id])
-  quoteId      String   @db.Uuid @unique
+  quoteId      String   @unique @db.Uuid
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   lastActivity DateTime @default(now())

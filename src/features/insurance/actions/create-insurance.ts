@@ -32,7 +32,7 @@ export async function createInsurance(
 
     await createInsuranceService({
       name,
-      logo: `/api/images/${filename}`,
+      logo: `${filename}`,
     });
 
     revalidatePath("/ctl/aseguradoras");

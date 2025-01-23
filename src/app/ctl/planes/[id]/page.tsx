@@ -1,4 +1,4 @@
-import { InsurancePlanForm } from "@/features/insurance-plans/components/forms/insurance-plan-form";
+import { InsurancePlanForm } from "@/features/insurance-plans/components/forms/plan-form";
 import { getInsuranceCompany } from "@/features/insurance-plans/loaders/get-insurance-companies";
 import { getInsurancePlanById } from "@/features/insurance-plans/loaders/get-insurance-plan-by-id";
 import { getPlanTypes } from "@/features/insurance-plans/loaders/get-plan-types";
