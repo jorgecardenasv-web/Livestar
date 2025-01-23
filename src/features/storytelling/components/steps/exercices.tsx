@@ -1,17 +1,13 @@
 "use client";
 
-import {
-  Tabs,
-  TabsList,
-  TabsTrigger,
-} from "@/shared/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/shared/components/ui/tooltip"; // Importa Tooltip de ShadCN
-import { CircleHelp } from "lucide-react"; // Importa el icono de Heroicons
+} from "@/shared/components/ui/tooltip";
+import { CircleHelp } from "lucide-react";
 import { useState } from "react";
 
 const rows = [
@@ -53,17 +49,18 @@ export default function Component() {
   const getBGStyle = (index: number) => {
     if (
       (selectedOption === "deducible" && index === 1) ||
-      (selectedOption === "coaseguro" && (index === 3 || index === 4))
+      (selectedOption === "coaseguro" && (index === 3 || index === 4)) ||
+      selectedOption === "total"
     ) {
-      return "border-2 border-red-600";
+      return "";
     }
-    return "";
+    return "opacity-20";
   };
 
   const showQuestionIcon = (index: number) => {
     return (
-      (selectedOption === "deducible" && index === 1) || // Icono para deducible
-      (selectedOption === "coaseguro" && (index === 3 || index === 4)) // Icono para coaseguro
+      (selectedOption === "deducible" && index === 1) ||
+      (selectedOption === "coaseguro" && (index === 3 || index === 4))
     );
   };
 
@@ -148,7 +145,7 @@ export default function Component() {
                     <div
                       className={`grid grid-cols-2 rounded overflow-hidden cursor-pointer items-center ${getHighlightStyle(
                         index
-                      )} ${
+                      )} ${getBGStyle(index)} ${
                         row.special === "sky"
                           ? "bg-primary text-white"
                           : row.special === "blue"

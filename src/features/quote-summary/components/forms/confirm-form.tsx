@@ -14,7 +14,7 @@ export const ContractForm = () => {
   const [isConfirmed, setIsConfirmed] = useState(false);
 
   return (
-    <form className="mt-10" action={handleContractNow}>
+    <form className="mt-5" action={handleContractNow}>
       <Alert variant="default" className="mb-4">
         <AlertCircle className="h-4 w-4" color="black" />
         <AlertTitle>Aviso</AlertTitle>

@@ -23,8 +23,8 @@ export async function getInsuranceState() {
   };
 
   const selectedPlan = selectedPlanJson
-    ? parseAndFormatPlan(selectedPlanJson)
-    : {};
+  ? parseAndFormatPlan(selectedPlanJson)
+  : {};
 
   return {
     activePlanType: cookieStore.get("activePlanType")?.value || "Plan Básico",
