@@ -90,7 +90,6 @@ export default function MultipleDeductibleModal({
                 </TableRow>
               ))}
             </TableBody>
-            ;
           </Table>
         </Card>
         <button

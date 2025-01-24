@@ -48,7 +48,7 @@ export default function Component() {
 
   const getBGStyle = (index: number) => {
     if (
-      (selectedOption === "deducible" && index === 1) ||
+      (selectedOption === "deducible" && (index === 0 || index === 1 || index === 2)) ||
       (selectedOption === "coaseguro" && (index === 3 || index === 4)) ||
       selectedOption === "total"
     ) {
