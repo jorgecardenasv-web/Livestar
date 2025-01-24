@@ -26,22 +26,26 @@ export default function MultipleDeductibleModal({
 }: ModalProps) {
   if (!isOpen) return null;
   const rawDeductibles = JSON.parse(deductiblesJson);
-  const uniqueDeductibles = rawDeductibles.reduce((acc: any[], deductible: any) => {
-    const options = deductible.option[0];
-    const group = {
-      hospitalLevel: deductible.hospitalLevel,
-      lessThan45: options.final === 45 ? deductible.amount : null,
-      over45: options.final === 999 ? deductible.amount : null,
-    };
-    const existingGroup = acc.find(item => item.hospitalLevel === group.hospitalLevel);
-    if (existingGroup) {
-      existingGroup.lessThan45 = existingGroup.lessThan45 || group.lessThan45;
-      existingGroup.over45 = existingGroup.over45 || group.over45;
-    } else {
-      acc.push(group);
-    }
-    return acc;
-  }, []);
+
+  const transformedData = Object.entries(rawDeductibles).reduce(
+    (acc: any[], [key, values]: [string, any]) => {
+      Object.entries(values).forEach(([hospitalLevel, amount]) => {
+        const existingGroup = acc.find(
+          (item) => item.hospitalLevel === hospitalLevel
+        );
+        if (existingGroup) {
+          existingGroup[key] = amount;
+        } else {
+          acc.push({
+            hospitalLevel,
+            [key]: amount,
+          });
+        }
+      });
+      return acc;
+    },
+    []
+  );
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -70,23 +74,21 @@ export default function MultipleDeductibleModal({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {uniqueDeductibles.map((deductible: any) => {
-                return (
-                  <TableRow key={deductible.id}>
-                    <TableCell className="flex justify-center">
-                      <div className="bg-sky-100 px-3 py-1.5 rounded-lg text-sky-600">
-                        {deductible.hospitalLevel}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-xl font-bold text-[#223E99]">
-                      ${deductible.lessThan45}
-                    </TableCell>
-                    <TableCell className="text-xl font-bold text-[#223E99]">
-                    ${deductible.over45}
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+              {transformedData.map((deductible: any) => (
+                <TableRow key={deductible.hospitalLevel}>
+                  <TableCell className="flex justify-center">
+                    <div className="bg-sky-100 px-3 py-1.5 rounded-lg text-sky-600">
+                      {deductible.hospitalLevel}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-xl font-bold text-[#223E99]">
+                    ${deductible.opcion_2 || "N/A"}
+                  </TableCell>
+                  <TableCell className="text-xl font-bold text-[#223E99]">
+                    ${deductible.opcion_4 || "N/A"}
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </Card>

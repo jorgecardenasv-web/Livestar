@@ -8,6 +8,11 @@ const priceDataSchema = z.object({
   annualPriceFemale: z.string().transform((val) => Number(val)),
 });
 
+const deductibleSchema = z
+.string()
+.optional()
+.transform((val) => (val ? Number(val) : undefined));
+
 export const createPlanSchema = z
   .object({
     planTypeId: z.string(),
@@ -17,42 +22,15 @@ export const createPlanSchema = z
     coInsuranceCap: z.string().transform((val) => Number(val)),
     prices: z.string(),
     isMultiple: z.string().transform((val) => val === "true"),
-    "deducible.default": z
-      .string()
-      .optional()
-      .transform((val) => (val ? Number(val) : undefined)),
-    "deducible.opcion_2.A": z
-      .string()
-      .optional()
-      .transform((val) => (val ? Number(val) : undefined)),
-    "deducible.opcion_2.B": z
-      .string()
-      .optional()
-      .transform((val) => (val ? Number(val) : undefined)),
-    "deducible.opcion_2.C": z
-      .string()
-      .optional()
-      .transform((val) => (val ? Number(val) : undefined)),
-    "deducible.opcion_2.D": z
-      .string()
-      .optional()
-      .transform((val) => (val ? Number(val) : undefined)),
-    "deducible.opcion_4.A": z
-      .string()
-      .optional()
-      .transform((val) => (val ? Number(val) : undefined)),
-    "deducible.opcion_4.B": z
-      .string()
-      .optional()
-      .transform((val) => (val ? Number(val) : undefined)),
-    "deducible.opcion_4.C": z
-      .string()
-      .optional()
-      .transform((val) => (val ? Number(val) : undefined)),
-    "deducible.opcion_4.D": z
-      .string()
-      .optional()
-      .transform((val) => (val ? Number(val) : undefined)),
+    "deducible.default": deductibleSchema,
+    "deducible.opcion_2.A": deductibleSchema,
+    "deducible.opcion_2.B": deductibleSchema,
+    "deducible.opcion_2.C": deductibleSchema,
+    "deducible.opcion_2.D": deductibleSchema,
+    "deducible.opcion_4.A": deductibleSchema,
+    "deducible.opcion_4.B": deductibleSchema,
+    "deducible.opcion_4.C": deductibleSchema,
+    "deducible.opcion_4.D": deductibleSchema,
   })
   .transform((data) => {
     // Transformación final para estructurar el objeto deducible

@@ -5,7 +5,7 @@ import { getPlans } from "@/features/insurance-plans/loaders/get-plans";
 
 export interface InsuranceQuoteData {
   company: string;
-  companyLogo: string;
+  imgCompanyLogo: string;
   plan: string;
   paymentType: string;
   sumInsured: string;
@@ -20,7 +20,7 @@ export interface InsuranceQuoteData {
 
 export default async function QuoteSummaryPage() {
   const { plans } = await getPlans();
-  
+
   return (
     <>
       <HeaderSecondary />
