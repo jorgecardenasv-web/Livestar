@@ -33,7 +33,7 @@ export const Plans = async ({ plans }: { plans: any[] }) => {
                 company={plan.company}
                 plan={activePlan}
                 paymentType={activePaymentType}
-                isRecommended={index === 0}
+                isRecommended={plan.isRecommended}
               />
             )
           );

@@ -42,7 +42,7 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
     }
     // Inicializar isMultiple basado en la estructura del deducible
     if (plan?.deductibles) {
-      setIsMultiple(!plan.deductibles.default);
+      setIsMultiple(!(plan.deductibles.default >= 0));
     }
   }, [plan]);
 
@@ -130,7 +130,7 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {['A', 'B', 'C', 'D'].map((nivel) => (
+                {["A", "B", "C", "D"].map((nivel) => (
                   <TableRow key={nivel}>
                     <TableCell className="font-medium text-left whitespace-nowrap">
                       Nivel Hospitalario {nivel}
@@ -140,7 +140,9 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
                         <TextInput
                           name={`deducible.opcion_2.${nivel}`}
                           type="number"
-                          icon={<DollarSign className="w-4 h-4 text-gray-500" />}
+                          icon={
+                            <DollarSign className="w-4 h-4 text-gray-500" />
+                          }
                           placeholder="Ingrese deducible"
                           defaultValue={plan?.deductibles?.opcion_2?.[nivel]}
                           className="w-full"
@@ -152,7 +154,9 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
                         <TextInput
                           name={`deducible.opcion_4.${nivel}`}
                           type="number"
-                          icon={<DollarSign className="w-4 h-4 text-gray-500" />}
+                          icon={
+                            <DollarSign className="w-4 h-4 text-gray-500" />
+                          }
                           placeholder="Ingrese deducible"
                           defaultValue={plan?.deductibles?.opcion_4?.[nivel]}
                           className="w-full"
@@ -185,7 +189,8 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
       <SubmitButton
         label="Crear Plan"
         labelPending="creando..."
-        className="w-full" type="submit"
+        className="w-full"
+        type="submit"
       />
     </form>
   );
