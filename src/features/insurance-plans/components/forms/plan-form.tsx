@@ -8,7 +8,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { SelectInput } from "@/shared/components/ui/select-input";
 import { useInsurancePlanForm } from "../../hooks/use-insurance-plan-form";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePriceTable } from "../../hooks/use-price-table";
 import { PlanType } from "@prisma/client";
 import {
@@ -20,6 +20,7 @@ import {
   TableBody,
 } from "@/shared/components/ui/table";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
+import { PriceTableHDIForm } from "./price-table-hdi-form";
 
 interface Insurance {
   id: string;
@@ -35,6 +36,7 @@ interface Props {
 export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
   const { handleSubmit } = useInsurancePlanForm(createPlan);
   const { setPrices, setIsMultiple, isMultiple } = usePriceTable();
+  const [isHDI, setIsHDI] = useState(false);
 
   useEffect(() => {
     if (plan?.prices.length > 0) {
@@ -46,6 +48,22 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
     }
   }, [plan]);
 
+
+  const planTypeOptions = useMemo(() => planTypes.map((planType) => ({
+    label: planType.name,
+    value: planType.id,
+  })), [planTypes]);
+
+  const insurancesOptions = useMemo(() => insurances.map((insurance) => {
+    if (insurance.name === 'HDI') {
+      setIsHDI(true);
+    }
+    return {
+      label: insurance.name,
+      value: insurance.id,
+    };
+  }), [insurances]);
+
   return (
     <form action={handleSubmit} className="mx-auto space-y-6 w-full">
       <Card>
@@ -53,10 +71,7 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
           <SelectInput
             name="planTypeId"
             label="Nombre del Plan"
-            options={planTypes.map((planType) => ({
-              label: planType.name,
-              value: planType.id,
-            }))}
+            options={planTypeOptions}
             defaultValue={plan?.planType?.id}
             required
           />
@@ -64,10 +79,7 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
           <SelectInput
             name="companyId"
             label="Compañía"
-            options={insurances.map((insurance) => ({
-              label: insurance.name,
-              value: insurance.id,
-            }))}
+            options={insurancesOptions}
             defaultValue={plan?.company.id}
             required
           />
@@ -180,7 +192,7 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
 
       {/* ------------------------------------------------------ */}
 
-      <PriceTableForm />
+      <PriceTableHDIForm />
 
       <SubmitButton
         label="Crear Plan"
