@@ -20,14 +20,17 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
     };
   }
 
-  const { prices, isMultiple, ...rest } = data;
+  const { planTypeId, prices, isMultiple, ...rest } = data;
+  const isRecommended =
+    planTypeId === "0276029a-fd32-4af3-b513-97c50b1adb94" ? true : false;
 
   const planData = {
     ...rest,
     prices: prices ? flatPricesToJsonPrices(JSON.parse(prices)) : {},
+    planTypeId: planTypeId,
+    isRecommended: isRecommended,
   };
 
   await createPlanService(planData);
-
   redirect(`${prefix}/planes`);
 };

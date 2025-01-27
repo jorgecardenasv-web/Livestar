@@ -63,7 +63,7 @@ export const QuoteSummary: FC<InsuranceQuoteData> = ({
               Total {isPriceMonthly ? "Mensual" : "Anual"}
             </p>
             <p className="text-3xl sm:text-4xl font-bold text-[#223E99]">
-              ${coverage_fee}
+              ${coverage_fee.toLocaleString()}
             </p>
           </div>
           <div className="text-center sm:text-right">

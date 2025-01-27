@@ -58,6 +58,7 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
               value: planType.id,
             }))}
             defaultValue={plan?.planType?.id}
+            onValueChange={(e) => console.log(e)}
             required
           />
 
