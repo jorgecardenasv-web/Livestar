@@ -3,7 +3,7 @@
 import { prefix } from "@/shared/utils/constants";
 import { createPlanService } from "../services/create-plan.service";
 import { redirect } from "next/navigation";
-import { flatPricesToJsonPrices } from "../utils";
+import { flatPricesToJsonPrices, flatPricesToJsonPricesHDI } from "../utils";
 import { createPlanSchema } from "../schema/create-plan.schema";
 import { FormState } from "@/shared/types";
 import { simplifyZodErrors } from "@/shared/utils";
@@ -20,12 +20,20 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
     };
   }
 
-  const { prices, isMultiple, ...rest } = data;
+  const { prices, isMultiple, isHDI, ...rest } = data;
+
+  console.log("data", JSON.parse(prices));
 
   const planData = {
     ...rest,
-    prices: prices ? flatPricesToJsonPrices(JSON.parse(prices)) : {},
+    prices: prices
+      ? !isHDI
+        ? flatPricesToJsonPrices(JSON.parse(prices))
+        : flatPricesToJsonPricesHDI(JSON.parse(prices))
+      : {},
   };
+
+  console.log("planData", planData);
 
   await createPlanService(planData);
 

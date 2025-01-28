@@ -1,41 +1,21 @@
 import { useCallback, useState } from "react";
 import { PriceDataHDI } from "../types";
 
-export const usePriceTableHDI = () => {
-  // Estado para almacenar los precios por edad
-  const [prices, setPrices] = useState<PriceDataHDI[]>([]);
-
-  // Función para calcular el precio anual basado en el precio mensual
-  const calculateAnnual = useCallback((monthly: string): number => {
-    const value = parseFloat(monthly);
-    return isNaN(value) ? 0 : value * 12; // Si el valor no es un número, devuelve 0
-  }, []);
-
-  // Función para calcular el precio mensual basado en el precio anual
-  const calculateMonthly = useCallback((annual: string): number => {
-    const value = parseFloat(annual);
-    return isNaN(value) ? 0 : value / 12; // Si el valor no es un número, devuelve 0
-  }, []);
-
+export const usePriceTableHDIForm = (
+  prices: PriceDataHDI[],
+  setPrices: (prices: PriceDataHDI[]) => void
+) => {
   // Función para manejar cambios en los precios
-  const handlePriceChange = useCallback(
-    (age: number, field: keyof PriceDataHDI, value: string) => {
-      setPrices((prevPrices) => {
-        // Mapea los precios existentes y actualiza el valor correspondiente
-        const updatedPrices = prevPrices.map((price) => {
-          if (price.age === age) {
-            return {
-              ...price,
-              [field]: value === "" ? 0 : parseFloat(value), // Convierte vacíos en 0
-            };
-          }
-          return price;
-        });
-        return updatedPrices;
-      });
-    },
-    []
-  );
+  const handlePriceChange = (
+    age: number,
+    field: keyof PriceDataHDI,
+    value: string
+  ) => {
+    const updatedPrices = prices.map((price) =>
+      price.age === age ? { ...price, [field]: parseFloat(value) || 0 } : price
+    );
+    setPrices(updatedPrices);
+  };
 
   // Función para cargar y procesar un archivo Excel
   const handleFileUpload = useCallback(

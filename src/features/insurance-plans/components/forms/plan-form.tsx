@@ -4,12 +4,10 @@ import { DollarSign, Percent } from "lucide-react";
 import { TextInput } from "@/shared/components/ui/text-input";
 import { PriceTableForm } from "./price-table-form";
 import { createPlan } from "../../actions/create-plan";
-import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { SelectInput } from "@/shared/components/ui/select-input";
 import { useInsurancePlanForm } from "../../hooks/use-insurance-plan-form";
 import { useEffect, useMemo, useState } from "react";
-import { usePriceTable } from "../../hooks/use-price-table";
 import { PlanType } from "@prisma/client";
 import {
   TableCell,
@@ -34,35 +32,38 @@ interface Props {
 }
 
 export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
-  const { handleSubmit } = useInsurancePlanForm(createPlan);
-  const { setPrices, setIsMultiple, isMultiple } = usePriceTable();
-  const [isHDI, setIsHDI] = useState(false);
+  const { prices, setPrices, isMultiple, setIsMultiple, handleSubmit, isHDI, setIsHDI } = useInsurancePlanForm(createPlan);
 
   useEffect(() => {
     if (plan?.prices.length > 0) {
-      setPrices(plan?.prices);
+      setPrices(plan.prices);
     }
-    // Inicializar isMultiple basado en la estructura del deducible
     if (plan?.deductibles) {
       setIsMultiple(!plan.deductibles.default);
     }
-  }, [plan]);
+  }, [plan, setPrices, setIsMultiple]);
 
+  const planTypeOptions = useMemo(
+    () =>
+      planTypes.map((planType) => ({
+        label: planType.name,
+        value: planType.id,
+      })),
+    [planTypes]
+  );
 
-  const planTypeOptions = useMemo(() => planTypes.map((planType) => ({
-    label: planType.name,
-    value: planType.id,
-  })), [planTypes]);
-
-  const insurancesOptions = useMemo(() => insurances.map((insurance) => {
-    if (insurance.name === 'HDI') {
-      setIsHDI(true);
-    }
-    return {
-      label: insurance.name,
-      value: insurance.id,
-    };
-  }), [insurances]);
+  const insurancesOptions = useMemo(() => {
+    const options = insurances.map((insurance) => {
+      if (insurance.name === "HDI") {
+        setIsHDI(true);
+      }
+      return {
+        label: insurance.name,
+        value: insurance.id,
+      };
+    });
+    return options;
+  }, [insurances]);
 
   return (
     <form action={handleSubmit} className="mx-auto space-y-6 w-full">
@@ -192,7 +193,31 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
 
       {/* ------------------------------------------------------ */}
 
-      <PriceTableHDIForm />
+      <Card>
+        <CardContent className="space-y-2 p-6">
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="confirmation"
+              checked={isHDI}
+              onChange={(e) => {
+                setIsHDI(e.target.checked);
+                setPrices([]);
+              }}
+              className="h-5 w-5 text-[#223E99] focus:ring-[#223E99] border-gray-300 rounded"
+            />
+            <label htmlFor="confirmation">
+              ¿Es HDI?
+            </label>
+          </div>
+
+          {isHDI ? (
+            <PriceTableHDIForm prices={prices} setPrices={setPrices} />
+          ) : (
+            <PriceTableForm prices={prices} setPrices={setPrices} />
+          )}
+        </CardContent>
+      </Card>
 
       <SubmitButton
         label="Crear Plan"
