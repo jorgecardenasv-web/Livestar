@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { PriceDataHDI } from "../types";
 
 export const usePriceTableHDIForm = (

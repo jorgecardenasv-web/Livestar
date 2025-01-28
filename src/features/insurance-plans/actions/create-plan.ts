@@ -28,9 +28,9 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
   const planData = {
     ...rest,
     prices: prices
-      ? !isHDI
-        ? flatPricesToJsonPrices(JSON.parse(prices))
-        : flatPricesToJsonPricesHDI(JSON.parse(prices))
+      ? (!isHDI
+          ? flatPricesToJsonPrices(JSON.parse(prices))
+          : flatPricesToJsonPricesHDI(JSON.parse(prices)))
       : {},
     planTypeId: planTypeId,
     isRecommended: isRecommended,
