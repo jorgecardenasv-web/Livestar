@@ -1,9 +1,7 @@
-
 import { SelectInput } from "@/shared/components/ui/select-input";
 import { TextInput } from "@/shared/components/ui/text-input";
 import { genderOptions, whoOptions } from "../../data/personal-info-data";
 import { FormData } from "../../schemas/form-schema";
-
 
 interface PersonalInfoSectionProps {
   formData: FormData;
@@ -60,12 +58,18 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         />
 
         <TextInput
-          type="number"
+          type="text"
           label="Mi código postal es"
           name="postalCode"
           placeholder="Ej: 04000"
           value={formData.postalCode}
-          onChange={(e) => handleInputChange("postalCode", e.target.value)}
+          onChange={(e) => {
+            let value = e.target.value;
+            value = value.replace(/\D/g, "");
+            if (value.length <= 5) {
+              handleInputChange("postalCode", value);
+            }
+          }}
           className="w-full"
           error={errors.postalCode || ""}
         />

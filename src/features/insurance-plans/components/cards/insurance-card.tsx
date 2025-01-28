@@ -7,7 +7,6 @@ import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { getProspect } from "../../loaders/get-prospect";
 import { PriceTable } from "../../types";
 import { getImage } from "../../../../shared/loaders/get-image";
-import { getPlans } from "../../loaders/get-plans";
 
 interface InsuranceCardProps {
   company: Insurance;
@@ -16,22 +15,32 @@ interface InsuranceCardProps {
   isRecommended: boolean;
 }
 
+interface Deductibles {
+  default?: number | null;
+  opcion_2?: { A: number; B: number; C: number; D: number };
+  opcion_4?: { A: number; B: number; C: number; D: number };
+}
+
 export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   company,
   plan,
   paymentType,
   isRecommended,
 }) => {
-  const propect = await getProspect();
-  const { deductibles } = plan;
-  const isMultiple = plan.deductibles["default"] ? false : true;
-  const minor = plan.deductibles["default"]
-    ? plan.deductibles["default"]
-    : getMinimumValue(plan.deductibles);
+  const prospect = await getProspect();
+  const deductibles: Deductibles = plan.deductibles;
+
+  const isMultiple = deductibles["default"]
+    ? (deductibles["default"] >= 0 ? false : true)
+    : true;
+
+  const minor = deductibles["default"]
+    ? deductibles["default"]
+    : getMinimumValue(plan.deductibles, prospect.age);
 
   const prices: PriceTable = (plan.prices as unknown as PriceTable) || {};
   const { coverage_fee } = calculateInsurancePrice(
-    propect,
+    prospect,
     prices,
     paymentType
   );
@@ -42,7 +51,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   return (
     <div
       className={`bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${
-        isRecommended ? "ring-4 ring-[#00a5e3]" : ""
+        isRecommended ? "ring-4 ring-[#00a5e3] " : ""
       }`}
     >
       {isRecommended && (
@@ -63,7 +72,9 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             <p className="text-sm text-sky-600 font-semibold uppercase mb-1">
               {paymentType === "Mensual" ? "Pago mensual" : "Pago anual"}
             </p>
-            <p className="text-3xl font-bold text-[#223E99]">${coverage_fee}</p>
+            <p className="text-3xl font-bold text-[#223E99]">
+              ${coverage_fee.toLocaleString()}
+            </p>
           </div>
         </div>
 
@@ -71,16 +82,13 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
           <InfoItem
             icon={<Shield className="w-5 h-5" />}
             title="Suma asegurada"
-            value={`$${plan.sumInsured / 1000000} MILLONES`}
+            value={`$${(plan.sumInsured / 1000000).toLocaleString()} MILLONES`}
           />
           {/* ------------------ DEDUCIBLE ----------------- */}
-
           <InfoItem
             icon={<DollarSign className="w-5 h-5" />}
             title="Deducible"
-            value={`${isMultiple ? "DESDE" : ""} $${
-              plan.planType.name !== "Hibrido" ? minor : 0
-            }`}
+            value={`${isMultiple ? "DESDE" : ""} $${minor.toLocaleString()}`}
           />
           {/* ---------------------------------------------- */}
           <InfoItem
@@ -91,7 +99,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
           <InfoItem
             icon={<Heart className="w-5 h-5" />}
             title="Tope coaseguro"
-            value={`$${plan.coInsuranceCap}`}
+            value={`$${plan.coInsuranceCap?.toLocaleString()}`}
           />
         </div>
 
@@ -159,10 +167,10 @@ const InfoItem = ({
 );
 
 function getMinimumValue(
-  opciones: Record<string, Record<string, number>>
+  options: Record<string, Record<string, number>>,
+  age: number
 ): number {
-  const valores = Object.values(opciones).flatMap((opcion) =>
-    Object.values(opcion)
-  );
-  return Math.min(...valores);
+  const option = age < 45 ? options.opcion_2 : options.opcion_4;
+  const valores = Object.values(option).flat();
+  return valores.length > 0 ? Math.min(...valores) : 0;
 }

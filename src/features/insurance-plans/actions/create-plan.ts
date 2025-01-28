@@ -20,9 +20,10 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
     };
   }
 
-  const { prices, isMultiple, isHDI, ...rest } = data;
+  const { planTypeId, prices, isMultiple, isHDI, ...rest } = data;
 
-  console.log("data", JSON.parse(prices));
+  const isRecommended =
+    planTypeId === "0276029a-fd32-4af3-b513-97c50b1adb94" ? true : false;
 
   const planData = {
     ...rest,
@@ -31,11 +32,10 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
         ? flatPricesToJsonPrices(JSON.parse(prices))
         : flatPricesToJsonPricesHDI(JSON.parse(prices))
       : {},
+    planTypeId: planTypeId,
+    isRecommended: isRecommended,
   };
 
-  console.log("planData", planData);
-
   await createPlanService(planData);
-
   redirect(`${prefix}/planes`);
 };

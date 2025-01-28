@@ -7,7 +7,7 @@ import { createPlan } from "../../actions/create-plan";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { SelectInput } from "@/shared/components/ui/select-input";
 import { useInsurancePlanForm } from "../../hooks/use-insurance-plan-form";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { PlanType } from "@prisma/client";
 import {
   TableCell,
@@ -39,7 +39,7 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
       setPrices(plan.prices);
     }
     if (plan?.deductibles) {
-      setIsMultiple(!plan.deductibles.default);
+      setIsMultiple(!(plan.deductibles.default >= 0));
     }
   }, [plan, setPrices, setIsMultiple]);
 
@@ -74,6 +74,7 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
             label="Nombre del Plan"
             options={planTypeOptions}
             defaultValue={plan?.planType?.id}
+            onValueChange={(e) => console.log(e)}
             required
           />
 
@@ -143,7 +144,7 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {['A', 'B', 'C', 'D'].map((nivel) => (
+                {["A", "B", "C", "D"].map((nivel) => (
                   <TableRow key={nivel}>
                     <TableCell className="font-medium text-left whitespace-nowrap">
                       Nivel Hospitalario {nivel}
@@ -153,7 +154,9 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
                         <TextInput
                           name={`deducible.opcion_2.${nivel}`}
                           type="number"
-                          icon={<DollarSign className="w-4 h-4 text-gray-500" />}
+                          icon={
+                            <DollarSign className="w-4 h-4 text-gray-500" />
+                          }
                           placeholder="Ingrese deducible"
                           defaultValue={plan?.deductibles?.opcion_2?.[nivel]}
                           className="w-full"
@@ -165,7 +168,9 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
                         <TextInput
                           name={`deducible.opcion_4.${nivel}`}
                           type="number"
-                          icon={<DollarSign className="w-4 h-4 text-gray-500" />}
+                          icon={
+                            <DollarSign className="w-4 h-4 text-gray-500" />
+                          }
                           placeholder="Ingrese deducible"
                           defaultValue={plan?.deductibles?.opcion_4?.[nivel]}
                           className="w-full"
@@ -222,7 +227,8 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
       <SubmitButton
         label="Crear Plan"
         labelPending="creando..."
-        className="w-full" type="submit"
+        className="w-full"
+        type="submit"
       />
     </form>
   );

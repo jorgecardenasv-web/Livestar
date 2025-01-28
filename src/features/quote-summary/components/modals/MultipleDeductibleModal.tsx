@@ -82,10 +82,10 @@ export default function MultipleDeductibleModal({
                     </div>
                   </TableCell>
                   <TableCell className="text-xl font-bold text-[#223E99]">
-                    ${deductible.opcion_2 || "N/A"}
+                    ${deductible.opcion_2.toLocaleString() || "N/A"}
                   </TableCell>
                   <TableCell className="text-xl font-bold text-[#223E99]">
-                    ${deductible.opcion_4 || "N/A"}
+                    ${deductible.opcion_4.toLocaleString() || "N/A"}
                   </TableCell>
                 </TableRow>
               ))}
