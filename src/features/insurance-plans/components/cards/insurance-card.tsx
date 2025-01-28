@@ -16,7 +16,7 @@ interface InsuranceCardProps {
 }
 
 interface Deductibles {
-  default?: null;
+  default?: number | null;
   opcion_2?: { A: number; B: number; C: number; D: number };
   opcion_4?: { A: number; B: number; C: number; D: number };
 }
@@ -31,9 +31,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   const deductibles: Deductibles = plan.deductibles;
 
   const isMultiple = deductibles["default"]
-    ? deductibles["default"] >= 0
-      ? false
-      : true
+    ? (deductibles["default"] >= 0 ? false : true)
     : true;
 
   const minor = deductibles["default"]

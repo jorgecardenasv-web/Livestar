@@ -4,11 +4,10 @@ import { DollarSign, Percent } from "lucide-react";
 import { TextInput } from "@/shared/components/ui/text-input";
 import { PriceTableForm } from "./price-table-form";
 import { createPlan } from "../../actions/create-plan";
-import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { SelectInput } from "@/shared/components/ui/select-input";
 import { useInsurancePlanForm } from "../../hooks/use-insurance-plan-form";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { usePriceTable } from "../../hooks/use-price-table";
 import { PlanType } from "@prisma/client";
 import {
