@@ -25,12 +25,19 @@ export const ContactInfoSection: React.FC<ContactInfoSectionProps> = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <TextInput
+          type="text"
           label="Mi whatsapp es"
           id="whatsapp"
           name="whatsapp"
           placeholder="Ej: 3312456789"
           value={formData.whatsapp}
-          onChange={(e) => handleInputChange("whatsapp", e.target.value)}
+          onChange={(e) => {
+            let value = e.target.value;
+            value = value.replace(/\D/g, "");
+            if (value.length <= 10) {
+              handleInputChange("whatsapp", value);
+            }
+          }}
           className="w-full"
           error={errors.whatsapp}
         />

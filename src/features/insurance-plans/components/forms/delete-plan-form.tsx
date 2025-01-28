@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { UserStatus } from "@prisma/client";
 
@@ -9,14 +9,13 @@ import { Badge } from "@/shared/components/ui/badge";
 import { usePlanActions } from "../../hooks/use-plan-actions";
 
 export const DeletePlanForm = () => {
-  const {
-    handleCancel,
-    modalProps: plan,
-    handleDeletePlan
-  } = usePlanActions();
+  const { handleCancel, modalProps: plan, handleDeletePlan } = usePlanActions();
 
   const formatCurrency = (value: number) =>
-    new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(value);
+    new Intl.NumberFormat("es-MX", {
+      style: "currency",
+      currency: "MXN",
+    }).format(value);
 
   return (
     <>
@@ -35,7 +34,7 @@ export const DeletePlanForm = () => {
         </div>
         <div className="flex flex-row items-center gap-2 mb-1">
           <p>Coaseguro:</p>
-          <p className="font-semibold">{(plan?.coInsurance * 100)}%</p>
+          <p className="font-semibold">{plan?.coInsurance * 100}%</p>
         </div>
         <div className="flex flex-row items-center gap-2 mb-1">
           <p>Status:</p>
