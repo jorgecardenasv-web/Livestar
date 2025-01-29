@@ -1,5 +1,10 @@
 import { PriceData } from "../hooks/use-price-table";
-import { InsuranceData, InsurancePriceResult, PriceTable } from "../types";
+import {
+  InsuranceData,
+  InsurancePriceResult,
+  PriceDataHDI,
+  PriceTable,
+} from "../types";
 
 export const flatPricesToJsonPrices = (
   prices: PriceData[]
@@ -22,6 +27,28 @@ export const flatPricesToJsonPrices = (
   );
 };
 
+export const flatPricesToJsonPricesHDI = (
+  prices: PriceDataHDI[]
+): Record<
+  string,
+  { anual: number; primerMes: number; segundoMesADoce: number }
+> => {
+  return prices.reduce(
+    (acc, price) => {
+      acc[price.age] = {
+        anual: price.annualPrice,
+        primerMes: price.monthlyPrice1,
+        segundoMesADoce: price.monthlyPrice2to12,
+      };
+      return acc;
+    },
+    {} as Record<
+      string,
+      { anual: number; primerMes: number; segundoMesADoce: number }
+    >
+  );
+};
+
 export function jsonPricesToFlatPrices(
   jsonPrices: Record<string, Record<string, Record<string, number>>>
 ): PriceData[] {
@@ -31,6 +58,20 @@ export function jsonPricesToFlatPrices(
     monthlyPriceFemale: genderPrices.mujer.mensual,
     annualPriceMale: genderPrices.hombre.anual,
     annualPriceFemale: genderPrices.mujer.anual,
+  }));
+}
+
+export function jsonPricesToFlatPricesHDI(
+  jsonPrices: Record<
+    string,
+    { anual: number; primerMes: number; segundoMesADoce: number }
+  >
+): PriceDataHDI[] {
+  return Object.entries(jsonPrices).map(([age, prices]) => ({
+    age: parseInt(age),
+    annualPrice: prices.anual,
+    monthlyPrice1: prices.primerMes,
+    monthlyPrice2to12: prices.segundoMesADoce,
   }));
 }
 

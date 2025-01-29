@@ -1,5 +1,4 @@
-import { useCallback, useState } from "react";
-import { useInsurancePlanStore } from "../store/insurance-plan-store";
+import { useCallback } from "react";
 
 export interface PriceData {
   age: number;
@@ -11,66 +10,20 @@ export interface PriceData {
 
 export type FieldType = keyof Omit<PriceData, "age">;
 
-const MONTHS_IN_YEAR = 12;
-
-export const usePriceTable = () => {
-  const { prices, setPrices } = useInsurancePlanStore();
-  const [isMultiple, setIsMultiple] = useState(false);
-
-  const calculateMonthly = useCallback((annual: string): number => {
-    const value = parseFloat(annual);
-    return isNaN(value) ? 0 : value / MONTHS_IN_YEAR;
-  }, []);
-
-  const calculateAnnual = useCallback((monthly: string): number => {
-    const value = parseFloat(monthly);
-    return isNaN(value) ? 0 : value * MONTHS_IN_YEAR;
-  }, []);
-
-  const handlePriceChange = useCallback(
-    (age: number, field: FieldType, value: string) => {
-      const fieldMap: Record<
-        FieldType,
-        { dependentField: FieldType; calculate: (val: string) => number }
-      > = {
-        monthlyPriceMale: {
-          dependentField: "annualPriceMale",
-          calculate: calculateAnnual,
-        },
-        monthlyPriceFemale: {
-          dependentField: "annualPriceFemale",
-          calculate: calculateAnnual,
-        },
-        annualPriceMale: {
-          dependentField: "monthlyPriceMale",
-          calculate: calculateMonthly,
-        },
-        annualPriceFemale: {
-          dependentField: "monthlyPriceFemale",
-          calculate: calculateMonthly,
-        },
-      };
-
-      const newPrices = prices.map((price) => {
-        if (price.age === age) {
-          const updatedPrice = { ...price, [field]: value };
-
-          const mapping = fieldMap[field];
-          if (mapping) {
-            updatedPrice[mapping.dependentField] = value
-              ? mapping.calculate(value)
-              : 0;
-          }
-
-          return updatedPrice;
-        }
-        return price;
-      });
-
-      setPrices(newPrices);
-    },
-    [calculateAnnual, calculateMonthly, prices, setPrices]
-  );
+export const usePriceTableForm = (
+  prices: PriceData[],
+  setPrices: (prices: PriceData[]) => void
+) => {
+  const handlePriceChange = (
+    age: number,
+    field: keyof PriceData,
+    value: string
+  ) => {
+    const updatedPrices = prices.map((price) =>
+      price.age === age ? { ...price, [field]: parseFloat(value) || 0 } : price
+    );
+    setPrices(updatedPrices);
+  };
 
   const handleFileUpload = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,8 +85,5 @@ export const usePriceTable = () => {
     prices,
     handlePriceChange,
     handleFileUpload,
-    setPrices,
-    setIsMultiple,
-    isMultiple,
   };
 };
