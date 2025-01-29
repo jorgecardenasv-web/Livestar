@@ -18,7 +18,7 @@ import {
   AvatarImage,
 } from "@/shared/components/ui/avatar";
 import { Button } from "@/shared/components/ui/button";
-import { Trash2 } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { useInsuranceActions } from "../../hooks/use-insurance-actions";
 
 interface ListInsuranceProps {
@@ -26,7 +26,8 @@ interface ListInsuranceProps {
 }
 
 export const ListInsurance: FC<ListInsuranceProps> = ({ insurances }) => {
-  const { openDeleteInsuranceModal } = useInsuranceActions();
+  const { openDeleteInsuranceModal, openEditInsuranceModal } =
+    useInsuranceActions();
   return (
     <Table>
       <TableHeader>
@@ -57,9 +58,9 @@ export const ListInsurance: FC<ListInsuranceProps> = ({ insurances }) => {
             </TableCell>
             <TableCell>{formatDate(insurance.createdAt)}</TableCell>
             <TableCell className="flex gap-1">
-              {/* <Button onClick={() => openEditInsuranceModal(insurance)}>
+              <Button onClick={() => openEditInsuranceModal(insurance)}>
                 <Pencil size={20} />
-              </Button> */}
+              </Button>
               <Button
                 variant="destructive"
                 onClick={() => openDeleteInsuranceModal(insurance)}

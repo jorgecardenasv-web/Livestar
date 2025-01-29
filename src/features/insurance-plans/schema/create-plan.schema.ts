@@ -9,9 +9,9 @@ const priceDataSchema = z.object({
 });
 
 const deductibleSchema = z
-.string()
-.optional()
-.transform((val) => (val ? Number(val) : undefined));
+  .string()
+  .optional()
+  .transform((val) => (val ? Number(val) : undefined));
 
 export const createPlanSchema = z
   .object({
@@ -31,6 +31,8 @@ export const createPlanSchema = z
     "deducible.opcion_4.B": deductibleSchema,
     "deducible.opcion_4.C": deductibleSchema,
     "deducible.opcion_4.D": deductibleSchema,
+    isUpdate: z.string().transform((val) => val === "true"),
+    planId: z.string(),
   })
   .transform((data) => {
     // Transformación final para estructurar el objeto deducible

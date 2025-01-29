@@ -32,6 +32,8 @@ interface Props {
 }
 
 export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
+  console.log("plan: ", plan?.id);
+  const isUpdateMode = plan ? true : false;
   const { handleSubmit } = useInsurancePlanForm(createPlan);
   const { setPrices, setIsMultiple, isMultiple } = usePriceTable();
 
@@ -105,7 +107,7 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
           />
         </CardContent>
       </Card>
-      {/* ------------------------------------------------------ */}
+      {/* ------------------------------------------------------------------------- */}
       <Card>
         <div className="ml-8 flex items-center space-x-2 my-4">
           <input
@@ -182,13 +184,22 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
         )}
       </Card>
 
-      {/* ------------------------------------------------------ */}
-
+      {/* ------------------------------------------------------------------------- */}
+      {isUpdateMode && (
+        <div>
+          <input
+            type="hidden"
+            name="isUpdate"
+            value={isUpdateMode.toString()}
+          />
+          <input type="hidden" name="planId" value={plan?.id} />
+        </div>
+      )}
       <PriceTableForm />
 
       <SubmitButton
-        label="Crear Plan"
-        labelPending="creando..."
+        label={`${!isUpdateMode ? "Crear Plan" : "Actualizar Plan"}`}
+        labelPending={`${!isUpdateMode ? "Creando..." : "Actualizando..."}`}
         className="w-full"
         type="submit"
       />
