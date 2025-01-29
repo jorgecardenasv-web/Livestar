@@ -61,6 +61,20 @@ export function jsonPricesToFlatPrices(
   }));
 }
 
+export function jsonPricesToFlatPricesHDI(
+  jsonPrices: Record<
+    string,
+    { anual: number; primerMes: number; segundoMesADoce: number }
+  >
+): PriceDataHDI[] {
+  return Object.entries(jsonPrices).map(([age, prices]) => ({
+    age: parseInt(age),
+    annualPrice: prices.anual,
+    monthlyPrice1: prices.primerMes,
+    monthlyPrice2to12: prices.segundoMesADoce,
+  }));
+}
+
 export function calculateInsurancePrice(
   data: InsuranceData,
   priceTable: PriceTable,

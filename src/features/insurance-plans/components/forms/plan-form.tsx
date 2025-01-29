@@ -41,6 +41,9 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
     if (plan?.deductibles) {
       setIsMultiple(!(plan.deductibles.default >= 0));
     }
+    if (plan.company.name.includes("HDI")) {
+      setIsHDI(true);
+    }
   }, [plan, setPrices, setIsMultiple]);
 
   const planTypeOptions = useMemo(
@@ -54,9 +57,6 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
 
   const insurancesOptions = useMemo(() => {
     const options = insurances.map((insurance) => {
-      if (insurance.name === "HDI") {
-        setIsHDI(true);
-      }
       return {
         label: insurance.name,
         value: insurance.id,
