@@ -41,7 +41,7 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
     if (plan?.deductibles) {
       setIsMultiple(!(plan.deductibles.default >= 0));
     }
-    if (plan.company.name.includes("HDI")) {
+    if (plan?.company.name.includes("HDI")) {
       setIsHDI(true);
     }
   }, [plan, setPrices, setIsMultiple]);
