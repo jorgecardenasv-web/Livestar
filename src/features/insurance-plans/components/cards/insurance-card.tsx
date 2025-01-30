@@ -28,10 +28,13 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   isRecommended,
 }) => {
   const prospect = await getProspect();
+  // console.log("prospect: ", prospect);
   const deductibles: Deductibles = plan.deductibles;
 
   const isMultiple = deductibles["default"]
-    ? (deductibles["default"] >= 0 ? false : true)
+    ? deductibles["default"] >= 0
+      ? false
+      : true
     : true;
 
   const minor = deductibles["default"]
@@ -39,11 +42,13 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
     : getMinimumValue(plan.deductibles, prospect.age);
 
   const prices: PriceTable = (plan.prices as unknown as PriceTable) || {};
-  const { coverage_fee } = calculateInsurancePrice(
+  const { coverage_fee, individualPrices } = calculateInsurancePrice(
     prospect,
     prices,
     paymentType
   );
+  console.log("individualPrices: --->", individualPrices);
+  console.log("coverage_fee: ", coverage_fee);
 
   const imageName = company.logo.split("/").pop();
   const logoSrc = imageName ? await getImage(imageName) : "";
@@ -69,8 +74,29 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             className="w-32 h-16 object-contain mb-4"
           />
           <div className="text-center">
-            <p className="text-sm text-sky-600 font-semibold uppercase mb-1">
+            <p className="text-sm text-sky-600 font-semibold uppercase mb-2">
               {paymentType === "Mensual" ? "Pago mensual" : "Pago anual"}
+            </p>
+            {Object.entries(individualPrices).map(([key, value], index) => {
+              const formattedValue = getFormattedValue(key, value);
+              return (
+                <div
+                  key={index}
+                  className={`${(getCustomKey(key) === "Hijo(s)" || getCustomKey(key) === "Padres") && formattedValue !== "$0" ? "space-x-4 justify-between" : "flex items-center space-x-4 justify-between"}`}
+                >
+                  {" "}
+                  <p className="text-xs text-sky-600 font-semibold uppercase flex-shrink-0">
+                    {" "}
+                    {getCustomKey(key)}
+                  </p>
+                  <p className="text-lg font-bold text-[#223E99]">
+                    {formattedValue}
+                  </p>
+                </div>
+              );
+            })}
+            <p className="text-sm text-sky-600 font-semibold uppercase mb-1 mt-2">
+              {paymentType === "Mensual" ? "Pago mensual" : "Pago anual"} Total
             </p>
             <p className="text-3xl font-bold text-[#223E99]">
               ${coverage_fee.toLocaleString()}
@@ -173,4 +199,42 @@ function getMinimumValue(
   const option = age < 45 ? options.opcion_2 : options.opcion_4;
   const valores = Object.values(option).flat();
   return valores.length > 0 ? Math.min(...valores) : 0;
+}
+
+function getFormattedValue(key: string, value: any) {
+  if (key === "parents" && Array.isArray(value)) {
+    if (value.length === 0) return "$0";
+    return value
+      .map((parent: any) => `${parent.name}: $${parent.price.toLocaleString()}`)
+      .join(" | ");
+  }
+
+  if (key === "children" && Array.isArray(value)) {
+    if (value.length === 0) return "$0";
+
+    if (value.length > 1) {
+      return value
+        .map((child, index) => {
+          return `Hijo ${index + 1}: $${child.toLocaleString()}`;
+        })
+        .join(" | ");
+    }
+    return `Hijo: $${value[0].toLocaleString()}`;
+  }
+
+  if (Array.isArray(value)) {
+    return value.join(", ").toLocaleString();
+  }
+
+  return `$${value.toLocaleString()}`;
+}
+
+function getCustomKey(key: string) {
+  const keyMapping: { [key: string]: string } = {
+    main: "Tú",
+    partner: "Pareja",
+    children: "Hijo(s)",
+    parents: "Padres",
+  };
+  return keyMapping[key] || key;
 }

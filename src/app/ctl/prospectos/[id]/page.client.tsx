@@ -1,11 +1,11 @@
 "use client";
 
-
 import { updateProspect } from "@/features/prospects/actions/update-prospect";
 import { ContactInfoSection } from "@/features/quote/components/sections/contact-info-section";
 import { PersonalInfoSection } from "@/features/quote/components/sections/personal-info-section";
 import { useGetQuoteForm } from "@/features/quote/hooks/use-get-quote-form";
 import { Card, CardContent } from "@/shared/components/ui/card";
+import { SubmitButton } from "@/shared/components/ui/submit-button";
 
 export function ProspectClientPage({ prospect }: { prospect: any }) {
   const {
@@ -43,13 +43,12 @@ export function ProspectClientPage({ prospect }: { prospect: any }) {
           </CardContent>
         </Card>
       </div>
-      <div className="flex justify-end">
-        <button
-          type="submit"
-          className="bg-primary text-white px-6 py-3 rounded font-bold text-lg hover:bg-primary-dark mt-10"
-        >
-          Guardar
-        </button>
+      <div className="flex justify-end mt-6">
+        <SubmitButton
+          label="Guardar"
+          className="h-14 text-xl"
+          labelPending="Guardando..."
+        />
       </div>
     </form>
   );

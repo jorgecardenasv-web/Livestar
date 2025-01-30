@@ -42,42 +42,94 @@ export function calculateInsurancePrice(
   let totalPrice = 0;
   let individualPrices: InsurancePriceResult["individualPrices"] = {
     main: 0,
+    partner: 0,
     children: [],
+    parents: [],
   };
 
   function getPriceForPerson(age: number, gender: "mujer" | "hombre"): number {
     if (age >= 0 && age <= 64) {
       const ageKey = age.toString();
-      if (priceTable[ageKey] && priceTable[ageKey][gender]) {
-        return priceTable[ageKey][gender][
+      return (
+        priceTable[ageKey]?.[gender]?.[
           paymentType.toLowerCase() as "anual" | "mensual"
-        ];
-      }
+        ] || 0
+      );
     }
     return 0;
   }
 
-  individualPrices.main = getPriceForPerson(data.age, data.gender || "hombre");
-  totalPrice += individualPrices.main;
+  // Si el seguro es solo para los padres
+  if (data.protectWho === "mis_padres") {
+    individualPrices.parents = [];
 
-  if (data.protectWho === "familia") {
-    if (data.additionalInfo?.partnerAge) {
-      individualPrices.partner = getPriceForPerson(
-        data.additionalInfo.partnerAge,
-        data.additionalInfo.partnerGender
-      );
-      totalPrice += individualPrices.partner;
+    if (data.additionalInfo?.dadAge) {
+      const dadPrice = getPriceForPerson(data.additionalInfo.dadAge, "hombre");
+      individualPrices.parents.push({
+        name: data.additionalInfo.dadName || "Padre",
+        price: dadPrice,
+      });
+      totalPrice += dadPrice;
     }
 
-    if (data.additionalInfo?.children) {
-      individualPrices.children = data.additionalInfo.children.map((child) => {
-        const childPrice = getPriceForPerson(child.age, child.gender);
-        totalPrice += childPrice;
-        return childPrice;
+    if (data.additionalInfo?.momAge) {
+      const momPrice = getPriceForPerson(data.additionalInfo.momAge, "mujer");
+      individualPrices.parents.push({
+        name: data.additionalInfo.momName || "Madre",
+        price: momPrice,
       });
+      totalPrice += momPrice;
     }
   }
+  // Si el seguro es solo para los hijos, excluimos al asegurado principal
+  else if (
+    data.protectWho === "solo_mis_hijos" &&
+    data.additionalInfo?.children
+  ) {
+    individualPrices.children = data.additionalInfo.children.map((child) => {
+      const childPrice = getPriceForPerson(child.age, child.gender);
+      totalPrice += childPrice;
+      return childPrice;
+    });
+  } else {
+    // Precio del asegurado principal
+    individualPrices.main = getPriceForPerson(
+      data.age,
+      data.gender || "hombre"
+    );
+    totalPrice += individualPrices.main;
 
+    const validProtectWhoOptions = [
+      "familia",
+      "mis_hijos_y_yo",
+      "mi_pareja_y_yo",
+    ];
+
+    if (validProtectWhoOptions.includes(data.protectWho)) {
+      // Precio de la pareja
+      if (
+        data.additionalInfo?.partnerAge &&
+        data.additionalInfo?.partnerGender
+      ) {
+        individualPrices.partner = getPriceForPerson(
+          data.additionalInfo.partnerAge,
+          data.additionalInfo.partnerGender
+        );
+        totalPrice += individualPrices.partner;
+      }
+
+      // Precio de los hijos
+      if (data.additionalInfo?.children) {
+        individualPrices.children = data.additionalInfo.children.map(
+          (child) => {
+            const childPrice = getPriceForPerson(child.age, child.gender);
+            totalPrice += childPrice;
+            return childPrice;
+          }
+        );
+      }
+    }
+  }
   return {
     coverage_fee: totalPrice,
     individualPrices,
