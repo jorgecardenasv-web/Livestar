@@ -11,7 +11,6 @@ import { useAdvisorForm } from "../../hooks/use-advisor-form";
 export const UpdateAdvisorForm = () => {
   const { handleCancel, modalProps: advisor } = useAdvisorActions();
 
-  // console.log("advisor: ", advisor);
   const { formAction, state } = useAdvisorForm(updateAdvisor);
 
   return (

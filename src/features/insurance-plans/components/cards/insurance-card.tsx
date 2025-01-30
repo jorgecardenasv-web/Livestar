@@ -28,7 +28,6 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   isRecommended,
 }) => {
   const prospect = await getProspect();
-  // console.log("prospect: ", prospect);
   const deductibles: Deductibles = plan.deductibles;
 
   const isMultiple = deductibles["default"]
@@ -47,8 +46,6 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
     prices,
     paymentType
   );
-  console.log("individualPrices: --->", individualPrices);
-  console.log("coverage_fee: ", coverage_fee);
 
   const imageName = company.logo.split("/").pop();
   const logoSrc = imageName ? await getImage(imageName) : "";

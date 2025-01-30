@@ -32,7 +32,6 @@ interface Props {
 }
 
 export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
-  console.log("plan: ", plan?.id);
   const isUpdateMode = plan ? true : false;
   const { prices, setPrices, isMultiple, setIsMultiple, handleSubmit, isHDI, setIsHDI } = useInsurancePlanForm(createPlan);
 
