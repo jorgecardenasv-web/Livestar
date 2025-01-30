@@ -37,7 +37,7 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
     isRecommended: isRecommended,
   };
 
-  await (isUpdate
+  await (isUpdate && planId
     ? updatePlanService(planData, planId)
     : createPlanService(planData));
   redirect(`${prefix}/planes`);
