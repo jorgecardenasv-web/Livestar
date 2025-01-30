@@ -7,6 +7,7 @@ import { flatPricesToJsonPrices, flatPricesToJsonPricesHDI } from "../utils";
 import { createPlanSchema } from "../schema/create-plan.schema";
 import { FormState } from "@/shared/types";
 import { simplifyZodErrors } from "@/shared/utils";
+import { updatePlanService } from "../services/update-plan.service";
 
 export const createPlan = async (formData: FormData): Promise<FormState> => {
   const rawFormData = Object.fromEntries(formData);
@@ -20,7 +21,7 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
     };
   }
 
-  const { planTypeId, prices, isMultiple, isHDI, ...rest } = data;
+  const { planTypeId, prices, isMultiple, planId, isUpdate, isHDI, ...rest } = data;
 
   const isRecommended =
     planTypeId === "0276029a-fd32-4af3-b513-97c50b1adb94" ? true : false;
@@ -36,6 +37,8 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
     isRecommended: isRecommended,
   };
 
-  await createPlanService(planData);
+  await (isUpdate
+    ? updatePlanService(planData, planId)
+    : createPlanService(planData));
   redirect(`${prefix}/planes`);
 };

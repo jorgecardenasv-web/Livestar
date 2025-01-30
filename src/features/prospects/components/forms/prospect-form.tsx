@@ -5,6 +5,7 @@ import { Advisor } from "@/features/advisors/types/advisor";
 import { statusProspects } from "../../data";
 import { Button } from "@/shared/components/ui/button";
 import { SelectInput } from "@/shared/components/ui/select-input";
+import { SubmitButton } from "@/shared/components/ui/submit-button";
 
 export const ProspectForm = ({ advisors }: { advisors: Advisor[] }) => {
   const { formAction, modalProps } = useProspectActions();
@@ -31,12 +32,14 @@ export const ProspectForm = ({ advisors }: { advisors: Advisor[] }) => {
         }))}
       />
 
-      <Button
-        type="submit"
-        className="w-full bg-primary text-white px-6 py-3 rounded font-bold text-lg mt-10"
-      >
-        Guardar
-      </Button>
+      <div className="flex justify-end mt-4">
+        <SubmitButton
+          type="submit"
+          label="Guardar"
+          className="h-12 w-full text-md"
+          labelPending="Guardando..."
+        />
+      </div>
     </form>
   );
 };

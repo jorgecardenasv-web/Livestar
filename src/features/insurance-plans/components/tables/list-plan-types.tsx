@@ -12,7 +12,7 @@ import {
 } from "@/shared/components/ui/table";
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
-import { Ellipsis } from "lucide-react";
+import { Ellipsis, Trash2 } from "lucide-react";
 import { usePlanTypeActions } from "../../hooks/use-plan-type-actions";
 
 interface ListPlansProps {
@@ -45,13 +45,20 @@ export const ListPlanTypes = ({ planTypes }: ListPlansProps) => {
                   )}
                 </TableCell>
                 <TableCell>{formatDate(planType.createdAt)}</TableCell>
-                <TableCell>
+                <TableCell className="flex gap-1">
                   <Button
                     variant="outline"
                     onClick={() => openEditPlanTypeModal(planType)}
                   >
                     <Ellipsis size={20} />
                   </Button>
+                  {/* ELIMINAR PLANTYPE */}
+                  {/* <Button
+                    variant="destructive"
+                    onClick={() => openDeletePlanType(planType)}
+                  >
+                    <Trash2 size={20} />
+                  </Button> */}
                 </TableCell>
               </TableRow>
             ))}

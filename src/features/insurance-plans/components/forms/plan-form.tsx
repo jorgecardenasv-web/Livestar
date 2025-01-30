@@ -32,6 +32,7 @@ interface Props {
 }
 
 export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
+  const isUpdateMode = plan ? true : false;
   const { prices, setPrices, isMultiple, setIsMultiple, handleSubmit, isHDI, setIsHDI } = useInsurancePlanForm(createPlan);
 
   useEffect(() => {
@@ -119,7 +120,7 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
           />
         </CardContent>
       </Card>
-      {/* ------------------------------------------------------ */}
+      {/* ------------------------------------------------------------------------- */}
       <Card>
         <div className="ml-8 flex items-center space-x-2 my-4">
           <input
@@ -196,8 +197,17 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
         )}
       </Card>
 
-      {/* ------------------------------------------------------ */}
-
+      {/* ------------------------------------------------------------------------- */}
+      {isUpdateMode && (
+        <div>
+          <input
+            type="hidden"
+            name="isUpdate"
+            value={isUpdateMode.toString()}
+          />
+          <input type="hidden" name="planId" value={plan?.id} />
+        </div>
+      )}
       <Card>
         <CardContent className="space-y-2 p-6">
           <div className="flex items-center space-x-2">
@@ -225,8 +235,8 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
       </Card>
 
       <SubmitButton
-        label="Crear Plan"
-        labelPending="creando..."
+        label={`${!isUpdateMode ? "Crear Plan" : "Actualizar Plan"}`}
+        labelPending={`${!isUpdateMode ? "Creando..." : "Actualizando..."}`}
         className="w-full"
         type="submit"
       />

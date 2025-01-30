@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { User } from "@prisma/client";
 
 export const updateAdvisorService = async (
+  advisorId: string,
   email: string,
   name: string,
   status: string
@@ -9,7 +10,7 @@ export const updateAdvisorService = async (
   try {
     const user = await prisma.user.update({
       where: {
-        email,
+        id: advisorId,
       },
       data: {
         name,

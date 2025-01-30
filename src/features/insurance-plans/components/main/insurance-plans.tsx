@@ -5,6 +5,7 @@ import { PlanSelector } from "../selectors/plan-selector";
 
 export const Plans = async ({ plans }: { plans: any[] }) => {
   const { activePlanType, activePaymentType } = await getInsuranceState();
+  // TODO-SOSA: Consulta a tabla planType y excluir el hibrido ( es especial )
   const planTypes = ["Plan Básico", "Plan Intermedio", "Plan Plus"];
   const paymentTypes = ["Mensual", "Anual"];
 

@@ -9,15 +9,13 @@ import { Button } from "@/shared/components/ui/button";
 import { useAdvisorForm } from "../../hooks/use-advisor-form";
 
 export const UpdateAdvisorForm = () => {
-  const {
-    handleCancel,
-    modalProps: advisor,
-  } = useAdvisorActions();
+  const { handleCancel, modalProps: advisor } = useAdvisorActions();
 
   const { formAction, state } = useAdvisorForm(updateAdvisor);
 
   return (
     <form action={formAction} className="mt-5 space-y-5">
+      <input type="hidden" name="advisorId" value={advisor.id} />
       <TextInput
         label="Nombre completo"
         placeholder="Escribe el nombre completo del asesor"

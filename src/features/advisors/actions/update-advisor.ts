@@ -12,6 +12,7 @@ export const updateAdvisor = async (
   formData: FormData
 ): Promise<FormState> => {
   try {
+    const advisorId: string = formData.get("advisorId") as string;
     const email: string = formData.get("email") as string;
     const name: string = formData.get("name") as string;
     const status: string = formData.get("status") as string;
@@ -30,7 +31,12 @@ export const updateAdvisor = async (
       };
     }
 
-    const user: User | null = await updateAdvisorService(email, name, status);
+    const user: User | null = await updateAdvisorService(
+      advisorId,
+      email,
+      name,
+      status
+    );
 
     if (!user) {
       return {
