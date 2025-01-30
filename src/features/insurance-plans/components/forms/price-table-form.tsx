@@ -13,11 +13,16 @@ import {
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { PriceInput } from "../inputs/price-input";
-import { usePriceTable } from "../../hooks/use-price-table";
 import { Separator } from "@/shared/components/ui/separator";
+import { PriceData, usePriceTableForm } from "../../hooks/use-price-table";
 
-export const PriceTableForm: React.FC = () => {
-  const { prices, handlePriceChange, handleFileUpload } = usePriceTable();
+interface PriceTableFormProps {
+  prices: PriceData[];
+  setPrices: (prices: PriceData[]) => void;
+}
+
+export const PriceTableForm: React.FC<PriceTableFormProps> = ({ prices, setPrices }) => {
+  const { handlePriceChange, handleFileUpload } = usePriceTableForm(prices, setPrices);
 
   return (
     <Card className="w-full">
@@ -72,7 +77,7 @@ export const PriceTableForm: React.FC = () => {
                   <TableCell className="text-center">{row.age}</TableCell>
                   <TableCell>
                     <PriceInput
-                      value={row.monthlyPriceMale.toString()}
+                      value={(row.monthlyPriceMale ?? 0).toString()}
                       onChange={(value) =>
                         handlePriceChange(row.age, "monthlyPriceMale", value)
                       }
@@ -80,7 +85,7 @@ export const PriceTableForm: React.FC = () => {
                   </TableCell>
                   <TableCell>
                     <PriceInput
-                      value={row.monthlyPriceFemale.toString()}
+                      value={(row.monthlyPriceFemale ?? 0).toString()}
                       onChange={(value) =>
                         handlePriceChange(row.age, "monthlyPriceFemale", value)
                       }
@@ -88,7 +93,7 @@ export const PriceTableForm: React.FC = () => {
                   </TableCell>
                   <TableCell>
                     <PriceInput
-                      value={row.annualPriceMale.toString()}
+                      value={(row.annualPriceMale ?? 0).toString()}
                       onChange={(value) =>
                         handlePriceChange(row.age, "annualPriceMale", value)
                       }
@@ -96,7 +101,7 @@ export const PriceTableForm: React.FC = () => {
                   </TableCell>
                   <TableCell>
                     <PriceInput
-                      value={row.annualPriceFemale.toString()}
+                      value={(row.annualPriceFemale ?? 0).toString()}
                       onChange={(value) =>
                         handlePriceChange(row.age, "annualPriceFemale", value)
                       }

@@ -72,3 +72,10 @@ export interface InsuranceData {
   additionalInfo: FamiliaAdditionalInfo;
   protectWho: string;
 }
+
+export interface PriceDataHDI {
+  age: number;
+  monthlyPrice1: number;
+  monthlyPrice2to12: number;
+  annualPrice: number;
+}

@@ -7,8 +7,7 @@ import { createPlan } from "../../actions/create-plan";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { SelectInput } from "@/shared/components/ui/select-input";
 import { useInsurancePlanForm } from "../../hooks/use-insurance-plan-form";
-import { useEffect } from "react";
-import { usePriceTable } from "../../hooks/use-price-table";
+import { useEffect, useMemo } from "react";
 import { PlanType } from "@prisma/client";
 import {
   TableCell,
@@ -19,6 +18,7 @@ import {
   TableBody,
 } from "@/shared/components/ui/table";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
+import { PriceTableHDIForm } from "./price-table-hdi-form";
 
 interface Insurance {
   id: string;
@@ -34,18 +34,38 @@ interface Props {
 export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
   console.log("plan: ", plan?.id);
   const isUpdateMode = plan ? true : false;
-  const { handleSubmit } = useInsurancePlanForm(createPlan);
-  const { setPrices, setIsMultiple, isMultiple } = usePriceTable();
+  const { prices, setPrices, isMultiple, setIsMultiple, handleSubmit, isHDI, setIsHDI } = useInsurancePlanForm(createPlan);
 
   useEffect(() => {
     if (plan?.prices.length > 0) {
-      setPrices(plan?.prices);
+      setPrices(plan.prices);
     }
-    // Inicializar isMultiple basado en la estructura del deducible
     if (plan?.deductibles) {
       setIsMultiple(!(plan.deductibles.default >= 0));
     }
-  }, [plan]);
+    if (plan?.company.name.includes("HDI")) {
+      setIsHDI(true);
+    }
+  }, [plan, setPrices, setIsMultiple]);
+
+  const planTypeOptions = useMemo(
+    () =>
+      planTypes.map((planType) => ({
+        label: planType.name,
+        value: planType.id,
+      })),
+    [planTypes]
+  );
+
+  const insurancesOptions = useMemo(() => {
+    const options = insurances.map((insurance) => {
+      return {
+        label: insurance.name,
+        value: insurance.id,
+      };
+    });
+    return options;
+  }, [insurances]);
 
   return (
     <form action={handleSubmit} className="mx-auto space-y-6 w-full">
@@ -54,10 +74,7 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
           <SelectInput
             name="planTypeId"
             label="Nombre del Plan"
-            options={planTypes.map((planType) => ({
-              label: planType.name,
-              value: planType.id,
-            }))}
+            options={planTypeOptions}
             defaultValue={plan?.planType?.id}
             onValueChange={(e) => console.log(e)}
             required
@@ -66,10 +83,7 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
           <SelectInput
             name="companyId"
             label="Compañía"
-            options={insurances.map((insurance) => ({
-              label: insurance.name,
-              value: insurance.id,
-            }))}
+            options={insurancesOptions}
             defaultValue={plan?.company.id}
             required
           />
@@ -195,7 +209,31 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
           <input type="hidden" name="planId" value={plan?.id} />
         </div>
       )}
-      <PriceTableForm />
+      <Card>
+        <CardContent className="space-y-2 p-6">
+          <div className="flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="confirmation"
+              checked={isHDI}
+              onChange={(e) => {
+                setIsHDI(e.target.checked);
+                setPrices([]);
+              }}
+              className="h-5 w-5 text-[#223E99] focus:ring-[#223E99] border-gray-300 rounded"
+            />
+            <label htmlFor="confirmation">
+              ¿Es HDI?
+            </label>
+          </div>
+
+          {isHDI ? (
+            <PriceTableHDIForm prices={prices} setPrices={setPrices} />
+          ) : (
+            <PriceTableForm prices={prices} setPrices={setPrices} />
+          )}
+        </CardContent>
+      </Card>
 
       <SubmitButton
         label={`${!isUpdateMode ? "Crear Plan" : "Actualizar Plan"}`}

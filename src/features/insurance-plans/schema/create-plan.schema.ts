@@ -1,13 +1,5 @@
 import { z } from "zod";
 
-const priceDataSchema = z.object({
-  age: z.string().transform((val) => Number(val)),
-  monthlyPriceMale: z.string().transform((val) => Number(val)),
-  monthlyPriceFemale: z.string().transform((val) => Number(val)),
-  annualPriceMale: z.string().transform((val) => Number(val)),
-  annualPriceFemale: z.string().transform((val) => Number(val)),
-});
-
 const deductibleSchema = z
   .string()
   .optional()
@@ -22,6 +14,7 @@ export const createPlanSchema = z
     coInsuranceCap: z.string().transform((val) => Number(val)),
     prices: z.string(),
     isMultiple: z.string().transform((val) => val === "true"),
+    isHDI: z.string().transform((val) => val === "true"),
     "deducible.default": deductibleSchema,
     "deducible.opcion_2.A": deductibleSchema,
     "deducible.opcion_2.B": deductibleSchema,

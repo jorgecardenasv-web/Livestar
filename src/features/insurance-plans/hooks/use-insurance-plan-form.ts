@@ -1,16 +1,19 @@
 import { FormState } from "@/shared/types";
-import { usePriceTable } from "./use-price-table";
 import { useModalStore } from "@/shared/store/modal-store";
+import { useState } from "react";
 
 export const useInsurancePlanForm = (
   serverAction: (formData: FormData) => Promise<FormState>
 ) => {
-  const { prices, isMultiple } = usePriceTable();
+  const [prices, setPrices] = useState<any[]>([]);
+  const [isMultiple, setIsMultiple] = useState<boolean>(false);
+  const [isHDI, setIsHDI] = useState(false);
   const { openModal } = useModalStore();
 
   const handleSubmit = async (formData: FormData) => {
     formData.append("prices", JSON.stringify(prices));
     formData.append("isMultiple", JSON.stringify(isMultiple));
+    formData.append("isHDI", JSON.stringify(isHDI));
     await serverAction(formData);
   };
 
@@ -18,7 +21,12 @@ export const useInsurancePlanForm = (
 
   return {
     handleSubmit,
-    prices: prices,
     openDeletePlanModal,
+    prices,
+    setPrices,
+    isMultiple,
+    setIsMultiple,
+    isHDI,
+    setIsHDI,
   };
 };
