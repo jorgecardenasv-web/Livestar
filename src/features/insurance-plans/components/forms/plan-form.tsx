@@ -33,7 +33,15 @@ interface Props {
 
 export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
   const isUpdateMode = plan ? true : false;
-  const { prices, setPrices, isMultiple, setIsMultiple, handleSubmit, isHDI, setIsHDI } = useInsurancePlanForm(createPlan);
+  const {
+    prices,
+    setPrices,
+    isMultiple,
+    setIsMultiple,
+    handleSubmit,
+    isHDI,
+    setIsHDI,
+  } = useInsurancePlanForm(createPlan);
 
   useEffect(() => {
     if (plan?.prices.length > 0) {
@@ -198,13 +206,9 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
       </Card>
 
       {/* ------------------------------------------------------------------------- */}
+      <input type="hidden" name="isUpdate" value={isUpdateMode.toString()} />
       {isUpdateMode && (
         <div>
-          <input
-            type="hidden"
-            name="isUpdate"
-            value={isUpdateMode.toString()}
-          />
           <input type="hidden" name="planId" value={plan?.id} />
         </div>
       )}
@@ -219,11 +223,10 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
                 setIsHDI(e.target.checked);
                 setPrices([]);
               }}
+              value={isHDI.toString()}
               className="h-5 w-5 text-[#223E99] focus:ring-[#223E99] border-gray-300 rounded"
             />
-            <label htmlFor="confirmation">
-              ¿Es HDI?
-            </label>
+            <label htmlFor="confirmation">¿Es HDI?</label>
           </div>
 
           {isHDI ? (

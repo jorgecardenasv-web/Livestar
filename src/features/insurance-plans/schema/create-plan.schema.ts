@@ -25,7 +25,7 @@ export const createPlanSchema = z
     "deducible.opcion_4.C": deductibleSchema,
     "deducible.opcion_4.D": deductibleSchema,
     isUpdate: z.string().transform((val) => val === "true"),
-    planId: z.string(),
+    planId: z.string().optional(),
   })
   .transform((data) => {
     // Transformación final para estructurar el objeto deducible
