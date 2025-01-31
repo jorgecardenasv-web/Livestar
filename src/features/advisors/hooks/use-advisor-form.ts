@@ -3,8 +3,6 @@ import { useModalStore } from "@/shared/store/modal-store";
 import { useFormState } from "react-dom";
 import { useEffect } from "react";
 import { deleteAdvisor } from "../actions/delete-advisor";
-import { Advisor } from "../types/advisor";
-import { getNotificationMessage } from "@/shared/utils";
 import { FormState } from "@/shared/types";
 
 export const useAdvisorForm = (
@@ -30,20 +28,8 @@ export const useAdvisorForm = (
     }
   }, [state.success, state.message, closeModal, showNotification, modalType]);
 
-  const handleDeleteAdvisor = async (id: string): Promise<void> => {
-    const { success, message } = await deleteAdvisor(id);
-    closeModal();
-
-    if (success) {
-      showNotification(message, "success");
-    } else if (message && !success) {
-      showNotification(message, "error");
-    }
-  };
-
   return {
     state,
     formAction,
-    handleDeleteAdvisor,
   };
 };

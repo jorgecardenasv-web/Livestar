@@ -9,7 +9,7 @@ import { Button } from "@/shared/components/ui/button";
 import { useAdvisorForm } from "../../hooks/use-advisor-form";
 
 export const UpdateAdvisorForm = () => {
-  const { handleCancel, modalProps: advisor } = useAdvisorActions();
+  const { handleCancel, advisor } = useAdvisorActions();
 
   const { formAction, state } = useAdvisorForm(updateAdvisor);
 

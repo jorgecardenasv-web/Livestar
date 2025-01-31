@@ -20,7 +20,6 @@ export const SidebarClient = ({ user }: { user?: AuthenticadedUser }) => {
         <NavLinks userRole={user?.role} />
         <div className="hidden h-auto w-full grow rounded dark:bg-background-subtle border md:block"></div>
         <div className="flex flex-row items-center space-x-2">
-          <ThemeSelector />
           <div className="md:hidden">
             <Dropdown />
           </div>

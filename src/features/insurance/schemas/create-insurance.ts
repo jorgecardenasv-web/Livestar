@@ -15,7 +15,8 @@ export const createInsuranceSchema = z.object({
           file.type
         ),
       {
-        message: "El archivo debe ser una imagen en formato JPG, JPEG, PNG o SVG.",
+        message:
+          "El archivo debe ser una imagen en formato JPG, JPEG, PNG o SVG.",
       }
     ),
 });

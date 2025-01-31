@@ -3,13 +3,29 @@ import { Callout } from "@/shared/components/ui/callout";
 import { Button } from "@/shared/components/ui/button";
 import { Badge } from "@/shared/components/ui/badge";
 import { useInsuranceActions } from "../../hooks/use-insurance-actions";
-import { useInsuranceForm } from "../../hooks/use-insurance-form";
 import { deleteInsurance } from "../../actions/delete-insurance";
+import { useFormState } from "react-dom";
+import { useEffect } from "react";
+import { useNotificationStore } from "@/features/notification/store/notification-store";
 
 export const DeleteInsuranceForm = () => {
-  const { handleCancel, modalProps: insurance } = useInsuranceActions();
+  const { handleCancel, insurance } = useInsuranceActions();
+  const { showNotification } = useNotificationStore();
 
-  const { formAction } = useInsuranceForm(deleteInsurance);
+  const deleteInsuranceWithId = deleteInsurance.bind(null, insurance.id);
+
+  const [state, formAction] = useFormState(deleteInsuranceWithId, {
+    success: false,
+    message: ""
+  })
+
+  useEffect(() => {
+    if (state.success) {
+      handleCancel();
+      showNotification(state.message, "success");
+    }
+  }, [state?.success, state.message, showNotification]);
+
 
   return (
     <>
@@ -38,12 +54,11 @@ export const DeleteInsuranceForm = () => {
       </Callout>
 
       <div className="mt-8 w-full flex flex-row gap-2">
-        <form action={formAction}>
+        <form action={formAction} className="flex-1">
           <SubmitButton
             label="Eliminar"
             labelPending="Eliminando..."
-            color="red"
-            className="flex-1"
+            className="w-full bg-destructive"
           />
         </form>
         <Button
@@ -55,6 +70,16 @@ export const DeleteInsuranceForm = () => {
           Cancelar
         </Button>
       </div>
+
+      {!state.success && state.message && (
+        <Callout
+          className="mt-4"
+          variant={"warning"}
+          icon={false}
+        >
+          {state.message}
+        </Callout>
+      )}
     </>
   );
 };

@@ -1,10 +1,15 @@
 import prisma from "@/lib/prisma";
+import { handlePrismaError } from "@/shared/errors/prisma";
 import { Insurance } from "@prisma/client";
 
-export const deleteInsuranceService = (
+export const deleteInsuranceService = async (
   id: string
 ): Promise<Insurance> => {
-  return prisma.insurance.delete({
-    where: { id },
-  });
+  try {
+    return await prisma.insurance.delete({
+      where: { id },
+    });
+  } catch (error) {
+    throw handlePrismaError(error);
+  }
 };

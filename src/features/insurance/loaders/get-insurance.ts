@@ -2,12 +2,13 @@
 
 import { getInsuranceService } from "../services/get-insurance.service";
 import { insuranceTransformer } from "../transformers/insurance-tranformer";
+import { Insurance } from "../types/insurance";
 
-export const getInsurance = async () => {
-  const response = await getInsuranceService({});
+export interface FilterOptions extends Insurance {
+  page: string;
+  query?: string;
+}
 
-  return {
-    ...response,
-    insurances: response.insurances.map(insuranceTransformer),
-  };
+export const getInsurance = async (filterOptions: FilterOptions) => {
+  return await getInsuranceService(filterOptions);
 };

@@ -1,9 +1,7 @@
 import { Insurance as InsurancePrisma } from "@prisma/client";
 import { Insurance } from "../types/insurance";
 
-export const insuranceTransformer = (
-  insurance: InsurancePrisma
-): Insurance => {
+export const insuranceTransformer = (insurance: InsurancePrisma): Insurance => {
   return {
     id: insurance.id,
     logo: insurance.logo,

@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { handlePrismaError } from "@/shared/errors/prisma";
 import { User } from "@prisma/client";
 
 export const updateAdvisorService = async (
@@ -21,7 +22,6 @@ export const updateAdvisorService = async (
 
     return user;
   } catch (error: any) {
-    console.error(error);
-    return null;
+    throw handlePrismaError(error);
   }
 };

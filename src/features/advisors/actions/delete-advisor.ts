@@ -2,11 +2,16 @@
 
 import { reassignProspectService } from "@/features/quote/services/reassign-prospect.service";
 import prisma from "@/lib/prisma";
+import { PrismaError } from "@/shared/errors/prisma";
 import { FormState } from "@/shared/types";
 import { prefix } from "@/shared/utils/constants";
 import { revalidatePath } from "next/cache";
 
-export const deleteAdvisor = async (advisorId: string): Promise<FormState> => {
+export const deleteAdvisor = async (
+  advisorId: string,
+  prevState: any,
+  formData: FormData
+): Promise<FormState> => {
   try {
     await prisma.$transaction(async (prisma) => {
       await reassignProspectService(advisorId);
@@ -15,16 +20,20 @@ export const deleteAdvisor = async (advisorId: string): Promise<FormState> => {
         where: { id: advisorId },
       });
     });
+
     revalidatePath(`${prefix}/asesores`);
+
     return {
       success: true,
       message: "¡Asesor borrado exitosamente!",
     };
   } catch (error) {
-    console.error(error);
     return {
       success: false,
-      message: error instanceof Error ? error.message : "Error desconocido",
+      message:
+        error instanceof PrismaError
+          ? error.message
+          : "Error al eliminar el asesor.",
     };
   }
 };

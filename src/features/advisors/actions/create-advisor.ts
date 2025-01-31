@@ -6,6 +6,7 @@ import { User } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { FormState } from "@/shared/types";
 import { createAdvisorService } from "../services/add-advisor.service";
+import { PrismaError } from "@/shared/errors/prisma";
 
 export const createAdvisor = async (
   prevState: any,
@@ -61,12 +62,12 @@ export const createAdvisor = async (
       message: "¡Asesor creado exitosamente!",
     };
   } catch (error) {
-    console.error("Error en addAdvisor:", error);
-
     return {
       success: false,
       message:
-        "Ha ocurrido un error inesperado. Por favor, inténtelo de nuevo más tarde.",
+        error instanceof PrismaError
+          ? error.message
+          : "Error al crear el asesor.",
     };
   }
 };

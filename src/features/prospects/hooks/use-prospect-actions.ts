@@ -4,37 +4,42 @@ import { useFormState } from "react-dom";
 import { useEffect } from "react";
 import { getNotificationMessage } from "@/shared/utils";
 import { Prospect } from "../types/prospect";
-import { changeStatusAndAdvisor } from "../actions/change-status-and-advisor";
+import { changeStatusAndAdvisor } from "../actions/change-advisor";
 
 export const useProspectActions = () => {
-  const { isOpen, openModal, closeModal, modalType, modalProps } =
-    useModalStore();
+  const {
+    isOpen,
+    openModal,
+    closeModal,
+    modalType,
+    modalProps: prospect,
+  } = useModalStore();
   const { showNotification } = useNotificationStore();
 
-  const updateUserWithId = changeStatusAndAdvisor.bind(
-    null,
-    modalProps.prospect?.id
-  );
+  const updateUserWithId = changeStatusAndAdvisor.bind(null, prospect?.id);
 
   const [state, formAction] = useFormState(updateUserWithId, {
-    errors: {
-      status: "",
-      userId: "",
-    },
+    message: "",
+    inputErrors: {},
+    success: false,
   });
 
   useEffect(() => {
-    if (state?.errors === null) {
+    if (state.success) {
       closeModal();
       showNotification(getNotificationMessage(modalType ?? ""), "success");
     }
-  }, [state?.errors, closeModal, showNotification, modalType]);
+
+    if (!state.success && state.message) {
+      console.error(state.message);
+    }
+  }, [state?.success, state.message, closeModal, showNotification, modalType]);
 
   const handleCancel = () => closeModal();
 
   // Edit prospect
   const openEditProspectModal = (prospect: Prospect) =>
-    openModal("editProspect", { prospect });
+    openModal("editProspect", prospect);
 
   const openXlsxModal = () => openModal("createXlsx");
 
@@ -43,7 +48,7 @@ export const useProspectActions = () => {
     state,
     isOpen,
     modalType,
-    modalProps,
+    prospect,
     handleCancel,
     closeModal,
     formAction,

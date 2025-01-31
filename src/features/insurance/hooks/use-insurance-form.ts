@@ -7,7 +7,11 @@ import { getNotificationMessage } from "@/shared/utils";
 import { FormState } from "@/shared/types";
 
 export const useInsuranceForm = (
-  serverAction: (id: string, prevState: any, formData: FormData) => Promise<FormState>
+  serverAction: (
+    id: string,
+    prevState: any,
+    formData: FormData
+  ) => Promise<FormState>
 ) => {
   const { closeModal, modalType, modalProps } = useModalStore();
   const { showNotification } = useNotificationStore();

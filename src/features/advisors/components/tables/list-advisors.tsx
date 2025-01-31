@@ -1,10 +1,4 @@
-"use client";
-import { FC } from "react";
-
-
 import { UserStatus } from "@prisma/client";
-import { Pencil, Trash2 } from "lucide-react";
-
 import {
   Table,
   TableBody,
@@ -14,53 +8,86 @@ import {
   TableRow,
 } from "@/shared/components/ui/table";
 import { Badge } from "@/shared/components/ui/badge";
-import { Button } from "@/shared/components/ui/button";
 import { Advisor } from "../../types/advisor";
-import { useAdvisorActions } from "../../hooks/use-advisor-actions";
+import { getAdvisors } from "../../loaders/get-advisors";
+import { SearchBar } from "@/shared/components/inputs/search-bar";
+import { DropdownActions } from "../acciones/dropdown-actions";
+import { TableFilters } from "@/shared/components/tables/table-filters";
+import { filters } from "../../data/table-filters.data";
+import { Pagination } from "@/shared/components/pagination/pagination";
+import { Params } from "@/app/ctl/asesores/page";
 
-interface ListAdvisorsProps {
-  advisors: Advisor[];
-}
+export const ListAdvisors = async ({ params }: {
+  params: Params
+}) => {
+  const { data } =
+    await getAdvisors(params);
 
-export const ListAdvisors: FC<ListAdvisorsProps> = ({ advisors }) => {
-  const { openDeleteAdvisorModal, openEditAdvisorModal } = useAdvisorActions();
+  const {
+    items,
+    itemsPerPage,
+    totalItems,
+    totalPages,
+    currentPage,
+  } = data;
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Nombre</TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Acciones</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {advisors.map((advisor: Advisor) => (
-          <TableRow key={advisor.id}>
-            <TableCell>{advisor.name}</TableCell>
-            <TableCell>{advisor.email}</TableCell>
-            <TableCell>
-              {advisor.status === UserStatus.ACTIVO ? (
-                <Badge variant="success">Activo</Badge>
-              ) : (
-                <Badge variant="destructive">Inactivo</Badge>
-              )}
-            </TableCell>
-            <TableCell className="flex gap-1">
-              <Button onClick={() => openEditAdvisorModal(advisor)}>
-                <Pencil size={20} />
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={() => openDeleteAdvisorModal(advisor)}
-              >
-                <Trash2 size={20} />
-              </Button>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <div className="w-full space-y-4">
+      <div className="flex items-center py-2">
+        <SearchBar placeholder="Buscar prospectos por nombre, correo electrónico" />
+        <TableFilters filters={filters} />
+      </div>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Nombre</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Acciones</TableHead>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {items.length > 0 ? (
+              items.map((advisor: Advisor) => (
+                <TableRow key={advisor.id}>
+                  <TableCell>{advisor.name}</TableCell>
+                  <TableCell>{advisor.email}</TableCell>
+                  <TableCell>
+                    {advisor.status === UserStatus.ACTIVO ? (
+                      <Badge variant="success">Activo</Badge>
+                    ) : (
+                      <Badge variant="destructive">Inactivo</Badge>
+                    )}
+                  </TableCell>
+                  <TableCell className="flex gap-1">
+                    <DropdownActions
+                      advisor={advisor}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={5}
+                  className="h-24 text-center"
+                >
+                  No hay prospectos disponibles
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <Pagination
+        itemName="Asesor"
+        itemsPerPage={itemsPerPage}
+        totalItems={totalItems}
+        totalPages={totalPages}
+        currentPage={currentPage}
+      />
+    </div>
   );
 };

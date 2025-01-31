@@ -1,8 +1,8 @@
-'use server'
+"use server";
 
-import { getAllProspectsByDateService } from "@/features/prospects/services/get-prospects.service";
+import { getAllProspectsByDateService } from "@/features/prospects/services/get-all-prospects-by-date.service";
 import { prospectTransformer } from "@/features/prospects/transformers/prospect-transformer";
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
 
 const formatToISO = (date: string) => {
   return new Date(date).toISOString().split(".")[0] + "Z";
@@ -33,11 +33,10 @@ export async function generateReport(startDate: string, endDate: string) {
   XLSX.utils.book_append_sheet(wb, ws, "Prospectos");
 
   // Generar el archivo Excel
-  const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
+  const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "buffer" });
 
   // Convertir el buffer a Base64
-  const base64 = Buffer.from(excelBuffer).toString('base64');
+  const base64 = Buffer.from(excelBuffer).toString("base64");
 
   return base64;
 }
-

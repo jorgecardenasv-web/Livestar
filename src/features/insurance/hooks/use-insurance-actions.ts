@@ -3,8 +3,13 @@ import { Insurance } from "../types/insurance";
 import { insurances } from "@/lib/prisma/data/insurance.data";
 
 export const useInsuranceActions = () => {
-  const { openModal, closeModal, isOpen, modalProps, modalType } =
-    useModalStore();
+  const {
+    openModal,
+    closeModal,
+    isOpen,
+    modalProps: insurance,
+    modalType,
+  } = useModalStore();
 
   // Función para abrir el modal de agregar aseguradora
   const openAddInsuranceModal = () => openModal("createInsurance");
@@ -23,7 +28,7 @@ export const useInsuranceActions = () => {
   return {
     // Estados
     isOpen,
-    modalProps,
+    insurance,
     modalType,
 
     // Acciones

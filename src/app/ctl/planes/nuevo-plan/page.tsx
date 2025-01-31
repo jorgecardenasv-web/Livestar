@@ -1,14 +1,17 @@
-import { InsurancePlanForm } from "@/features/insurance-plans/components/forms/plan-form";
-import { getInsuranceCompany } from "@/features/insurance-plans/loaders/get-insurance-companies";
-import { getPlanTypes } from "@/features/insurance-plans/loaders/get-plan-types";
+import { InsurancePlanForm } from "@/features/plans/components/forms/plan/plan-form";
+import { getInsuranceCompany } from "@/features/plans/loaders/get-insurance-companies";
+import { getPlanTypes } from "@/features/plans/loaders/get-plan-types";
 
 export default async function NuevoPlan() {
   const insurances = await getInsuranceCompany();
-  const planTypes = await getPlanTypes();
+  const { data: { items } } = await getPlanTypes({
+    page: "1",
+    offset: "100",
+  });
 
   return (
     <>
-      <InsurancePlanForm insurances={insurances} planTypes={planTypes} />
+      <InsurancePlanForm insurances={insurances} planTypes={items} />
     </>
   );
 }

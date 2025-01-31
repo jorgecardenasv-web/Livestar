@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { Prospect } from "@prisma/client";
+import { handlePrismaError } from "@/shared/errors/prisma";
 
 export const updateProspectService = async (
   prospectId: string,
@@ -14,19 +14,23 @@ export const updateProspectService = async (
     ...additionalInfo
   }: any
 ) => {
-  return await prisma.prospect.update({
-    where: {
-      id: prospectId,
-    },
-    data: {
-      name,
-      gender,
-      age,
-      postalCode,
-      protectWho,
-      whatsapp,
-      email,
-      additionalInfo,
-    },
-  });
+  try {
+    return await prisma.prospect.update({
+      where: {
+        id: prospectId,
+      },
+      data: {
+        name,
+        gender,
+        age,
+        postalCode,
+        protectWho,
+        whatsapp,
+        email,
+        additionalInfo,
+      },
+    });
+  } catch (error) {
+    throw handlePrismaError(error);
+  }
 };

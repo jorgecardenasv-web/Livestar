@@ -2,21 +2,25 @@
 
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { getInsuranceState } from "@/features/insurance-plans/loaders/get-insurance-status";
+import { getInsuranceState } from "@/features/plans/loaders/get-insurance-status";
 import { createProspectService } from "@/features/quote/services/create-prospect.service";
 import { getAdvisorWithLeastProspectsService } from "@/features/advisors/services/get-advisor-with-least-prospects.service";
-import { createQuoteService, getPlanByUuid } from "../services/create-quote.service";
+import {
+  createQuoteService,
+  getPlanByUuid,
+} from "../services/create-quote.service";
 import { createTrackingNumberService } from "../services/create-traking.service";
-import { sendAdvisorEmail, sendProspectEmail } from "@/lib/nodemailer/services/send-email.service";
+import { PrismaError } from "@/shared/errors/prisma";
+import { FormState } from "@/shared/types";
 
-export async function handleContractNow() {
+export async function CreateContract(): Promise<FormState> {
   try {
     const { selectedPlan } = await getInsuranceState();
     const cookieStore = cookies();
-    
+
     const prospectJson = cookieStore.get("prospect")?.value;
     const prospect = prospectJson ? JSON.parse(prospectJson) : {};
-    
+
     const advisor = await getAdvisorWithLeastProspectsService();
     if (!advisor) throw new Error("No advisor available");
 
@@ -32,17 +36,16 @@ export async function handleContractNow() {
       id: newProspect.id,
     };
 
-    cookies().set(
-      "prospect",
-      JSON.stringify(newCookieProspect)
-    );
-    
+    cookies().set("prospect", JSON.stringify(newCookieProspect));
+
     const quoteData = {
       prospectId: newProspect.id,
       planId: planData.id,
       totalPrice: parseFloat(selectedPlan.coverage_fee),
       expirationDate: new Date(),
     };
+
+    console.log("quoteData", quoteData);
 
     const quote = await createQuoteService(quoteData);
     await createTrackingNumberService({ quoteId: quote.id });
@@ -65,10 +68,14 @@ export async function handleContractNow() {
     //   selectedPlan: `${planData.company.name} - ${planData.planType.name}`,
     //   emailAdvisor: advisor.email
     // });
-
-    redirect("/finalizar-cotizacion");
   } catch (error) {
-    console.error('Error en handleContractNow:', error);
-    throw error;
+    return {
+      success: false,
+      message:
+        error instanceof PrismaError
+          ? error.message
+          : "Error al crear la cotización.",
+    };
   }
+  redirect("/finalizar-cotizacion");
 }

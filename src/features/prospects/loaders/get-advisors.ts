@@ -2,9 +2,9 @@ import { getAdvisorsService } from "@/features/advisors/services/get-advisors.se
 import { Advisor } from "@/features/advisors/types/advisor";
 
 export const getAdvisors = async (): Promise<Advisor[]> => {
-  const advisors = await getAdvisorsService();
+  const { data } = await getAdvisorsService({});
 
-  return advisors.map((advisor) => ({
+  return data.items.map((advisor) => ({
     ...advisor,
     id: advisor.id,
   }));

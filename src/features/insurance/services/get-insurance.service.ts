@@ -1,39 +1,59 @@
 import prisma from "@/lib/prisma";
+import { GetAllResponse } from "@/shared/types";
 import {
-  whereFilterBuilder,
+  filterOptionsToWhere,
+  textSearchFilterBuilder,
 } from "@/shared/utils/where-filter-builder";
-import { Insurance } from "@prisma/client";
+import { FilterOptions } from "../loaders/get-insurance";
+import { insuranceTransformer } from "../transformers/insurance-tranformer";
+import { Insurance } from "../types/insurance";
+import { Insurance as InsurancePrisma } from "@prisma/client";
+import { getImage } from "@/shared/services/get-image.service";
+import { handlePrismaError } from "@/shared/errors/prisma";
 
 export const getInsuranceService = async ({
-  page = 1,
-  whereOptions,
-}: {
-  page?: number;
-  whereOptions?: Insurance;
-}) => {
-  const pageSize = 5;
-  const skip = (page - 1) * pageSize;
+  page = "1",
+  query,
+  ...filtersWithoutQuery
+}: FilterOptions): Promise<GetAllResponse<Insurance>> => {
+  try {
+    const pageSize = 10;
+    const skip = (Number(page) - 1) * pageSize;
 
-  const where = whereFilterBuilder<Insurance>(whereOptions || {});
+    const where = filterOptionsToWhere<InsurancePrisma>(filtersWithoutQuery);
 
-  const [insurances, totalInsurances] = await Promise.all([
-    prisma.insurance.findMany({
-      take: pageSize,
-      skip: skip,
-      orderBy: {
-        createdAt: "desc",
+    const whereText = query
+      ? textSearchFilterBuilder(query, ["name"])
+      : undefined;
+
+    const [insurances, totalInsurances] = await Promise.all([
+      prisma.insurance.findMany({
+        take: pageSize,
+        skip: skip,
+        orderBy: {
+          createdAt: "desc",
+        },
+        where: {
+          ...where,
+          ...whereText,
+        },
+      }),
+      prisma.insurance.count(),
+    ]);
+
+    const totalPages = Math.ceil(totalInsurances / pageSize);
+
+    return {
+      success: true,
+      data: {
+        items: insurances,
+        totalPages,
+        totalItems: totalInsurances,
+        itemsPerPage: pageSize,
+        currentPage: Number(page),
       },
-      where,
-    }),
-    prisma.insurance.count(),
-  ]);
-
-  const totalPages = Math.ceil(totalInsurances / pageSize);
-
-  return {
-    insurances,
-    totalPages,
-    totalInsurances,
-    insurancesPerPage: pageSize,
-  };
+    };
+  } catch (error) {
+    throw handlePrismaError(error);
+  }
 };

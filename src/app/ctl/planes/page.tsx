@@ -1,31 +1,36 @@
-import { HeaderPlans } from "@/features/insurance-plans/components/headers/header-plans";
-import { PlansList } from "@/features/insurance-plans/components/tables/list-plans";
-import { Pagination } from "@/shared/components/pagination/pagination";
+import { HeaderPlans } from "@/features/plans/components/headers/header-plans";
+import { PlansList } from "@/features/plans/components/tables/list-plans";
 import { Card, CardContent } from "@/shared/components/ui/card";
-import { getPlans } from "@/features/insurance-plans/loaders/get-plans";
-import { getInsuranceLogosFromPlans } from "@/features/insurance-plans/loaders/get-company-logos";
-import { ModalPlanActions } from "@/features/insurance-plans/components/modals/modal-plan-actions";
+import { ModalPlanActions } from "@/features/plans/components/modals/modal-plan-actions";
+import { Suspense } from "react";
+import { TableSkeleton } from "@/shared/components/skeletons/table-skeleton";
+import { Plan } from "@/shared/types/insurance";
 
-export default async function Planes() {
-  const { plans, insurancesPerPage, totalPages, totalPlans } = await getPlans();
+export interface Params extends Plan {
+  page: string;
+  query?: string;
+}
 
-  const companyLogos = await getInsuranceLogosFromPlans(plans);
-
+export default function Planes({
+  searchParams
+}: {
+  searchParams: Params;
+}) {
   return (
     <>
-      <HeaderPlans />
-      <Card>
-        <CardContent className="space-y-6 p-6">
-          <PlansList plans={plans} companyLogos={companyLogos} />
-          <Pagination
-            totalPages={totalPages}
-            totalItems={totalPlans}
-            itemsPerPage={insurancesPerPage}
-            itemName="Aseguradora"
-          />
-        </CardContent>
-      </Card>
-      <ModalPlanActions />
+      <div className="flex-1 rounded-xl bg-muted/50 p-5 space-y-6">
+        <HeaderPlans />
+      </div>
+      <div className="flex-1 rounded-xl bg-muted/50 p-5 space-y-6">
+        <Card>
+          <CardContent className="space-y-6 p-6">
+            <Suspense fallback={<TableSkeleton />}>
+              <PlansList params={searchParams} />
+            </Suspense>
+          </CardContent>
+        </Card>
+        <ModalPlanActions />
+      </div>
     </>
   );
 }

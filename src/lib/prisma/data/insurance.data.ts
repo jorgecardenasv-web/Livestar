@@ -11,7 +11,7 @@ export const insurances: Prisma.InsuranceCreateManyInput[] = [
     updatedAt: new Date(),
   },
   {
-    id: "523e4567-e89b-12d3-a456-426614174004",
+    id: "975a629c-c2c0-4fd4-b92c-aacfee8cb164",
     name: "GNP Seguros",
     logo: "gnp.svg",
     description: "Innovación en seguros de salud",
@@ -20,7 +20,7 @@ export const insurances: Prisma.InsuranceCreateManyInput[] = [
     updatedAt: new Date(),
   },
   {
-    id: "39dabe22-8595-47fe-b4b3-8e80175d7669",
+    id: "f1647fe3-40d6-4446-814b-c1916a2ae982",
     name: "HDI Seguros",
     logo: "bupa-hdi.svg",
     description: "Compañía líder en seguros de salud",

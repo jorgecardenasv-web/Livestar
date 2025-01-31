@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { ArrowLeft, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export const PaginationArrow = ({

@@ -1,16 +1,21 @@
 import prisma from "@/lib/prisma";
+import { handlePrismaError } from "@/shared/errors/prisma";
 
 export const createSessionService = async (userId: string) => {
-  return await prisma.session.create({
-    data: {
-      user: {
-        connect: {
-          id: userId,
+  try {
+    return await prisma.session.create({
+      data: {
+        user: {
+          connect: {
+            id: userId,
+          },
         },
       },
-    },
-    include: {
-      user: true,
-    },
-  });
+      include: {
+        user: true,
+      },
+    });
+  } catch (error) {
+    throw handlePrismaError(error);
+  }
 };

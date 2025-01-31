@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { FormDataMedical } from "../types";
+import { handlePrismaError } from "@/shared/errors/prisma";
 
 export async function createMedicalHistoryService(
   formMedical: FormDataMedical[],
@@ -7,7 +8,7 @@ export async function createMedicalHistoryService(
 ) {
   try {
     const responses = JSON.parse(JSON.stringify(formMedical));
-    const medicalHistory = await prisma.medicalHistory.create({
+    return await prisma.medicalHistory.create({
       data: {
         responses,
         prospect: {
@@ -15,9 +16,7 @@ export async function createMedicalHistoryService(
         },
       },
     });
-    return medicalHistory;
   } catch (error) {
-    console.error("Error al crear el historial médico:", error);
-    throw error;
+    throw handlePrismaError(error);
   }
 }

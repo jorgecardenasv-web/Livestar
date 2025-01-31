@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import bcrypt from "bcrypt";
 import { User } from "@prisma/client";
+import { handlePrismaError } from "@/shared/errors/prisma";
 
 export const createAdvisorService = async (
   email: string,
@@ -21,7 +22,6 @@ export const createAdvisorService = async (
 
     return user;
   } catch (error: any) {
-    console.error(error);
-    return null;
+    throw handlePrismaError(error);
   }
 };
