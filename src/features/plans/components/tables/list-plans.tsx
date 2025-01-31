@@ -21,6 +21,7 @@ import { SearchBar } from "@/shared/components/inputs/search-bar";
 import { DropdownActions } from "../acciones/plan-dropdown-actions";
 import { TableFilters } from "@/shared/components/tables/table-filters";
 import { filters } from "../../data/table-filters.data";
+import { getImage } from "@/shared/services/get-image.service";
 
 export const PlansList = async ({ params }: { params: Params }) => {
   const { data: {
@@ -51,34 +52,37 @@ export const PlansList = async ({ params }: { params: Params }) => {
 
           <TableBody>
             {items.length > 0 ? (
-              items.map((plan) => (
-                <TableRow key={plan.id} className="cursor-pointer">
-                  <TableCell>
-                    {plan.planType.name}
-                  </TableCell>
-                  <TableCell>
-                    <Avatar>
-                      <AvatarImage src={plan.company.logo} />
-                      <AvatarFallback>{plan.company.name}</AvatarFallback>
-                    </Avatar>
-                  </TableCell>
-                  <TableCell>
-                    {plan.status === PlanStatus.ACTIVO ? (
-                      <Badge variant="success">Activo</Badge>
-                    ) : (
-                      <Badge variant="destructive">Inactivo</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {formatDate(plan.createdAt)}
-                  </TableCell>
-                  <TableCell
-                    className="flex gap-1"
-                  >
-                    <DropdownActions plan={plan} />
-                  </TableCell>
-                </TableRow>
-              ))
+              items.map(async (plan) => {
+                const logo = await getImage(plan.company.logo);
+                return (
+                  <TableRow key={plan.id} className="cursor-pointer">
+                    <TableCell>
+                      {plan.planType.name}
+                    </TableCell>
+                    <TableCell>
+                      <Avatar>
+                        <AvatarImage src={logo?.base64} />
+                        <AvatarFallback>{plan.company.name}</AvatarFallback>
+                      </Avatar>
+                    </TableCell>
+                    <TableCell>
+                      {plan.status === PlanStatus.ACTIVO ? (
+                        <Badge variant="success">Activo</Badge>
+                      ) : (
+                        <Badge variant="destructive">Inactivo</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {formatDate(plan.createdAt)}
+                    </TableCell>
+                    <TableCell
+                      className="flex gap-1"
+                    >
+                      <DropdownActions plan={plan} />
+                    </TableCell>
+                  </TableRow>
+                )
+              })
             ) : (
               <TableRow>
                 <TableCell

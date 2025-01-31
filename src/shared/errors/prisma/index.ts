@@ -55,6 +55,8 @@ export class PrismaError extends Error {
 }
 
 export const handlePrismaError = (error: any) => {
+  console.log("error", error);
+
   const errorCode = error?.code || "DEFAULT";
   const errorMessage =
     clientPrismaErrors[errorCode] || clientPrismaErrors.DEFAULT;

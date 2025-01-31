@@ -54,15 +54,7 @@ export const GetPlansService = async ({
   return {
     success: true,
     data: {
-      items: await Promise.all(
-        plans.map(async (plan) => ({
-          ...plan,
-          company: {
-            ...plan.company,
-            logo: await getImage(plan.company.logo),
-          },
-        }))
-      ),
+      items: plans,
       totalPages,
       totalItems: totalPlans,
       itemsPerPage: pageSize,

@@ -13,7 +13,8 @@ export const logout = async (): Promise<FormState> => {
     if (session) {
       await deleteSessionService(session.sessionId!);
     }
-    redirect("/ini-ses-adm");
+
+    session.destroy();
   } catch (error) {
     return {
       success: false,
@@ -23,4 +24,5 @@ export const logout = async (): Promise<FormState> => {
           : "Error al cerrar sesión.",
     };
   }
+  redirect("/ini-ses-adm");
 };
