@@ -9,14 +9,18 @@ export default async function NewPlan({
   params: { id: string };
 }) {
   const insuranceCompanies = await getInsuranceCompany();
-  const planTypes = await getPlanTypes()
+  const { data: {
+    items
+  } } = await getPlanTypes({
+    page: "",
+  })
   const insurancePlan = await getInsurancePlanById(id);
 
   return (
     <div className="w-full">
       <InsurancePlanForm
         plan={insurancePlan}
-        planTypes={planTypes}
+        planTypes={items}
         insurances={insuranceCompanies}
       />
     </div>

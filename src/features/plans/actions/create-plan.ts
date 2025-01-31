@@ -9,6 +9,7 @@ import { FormState } from "@/shared/types";
 import { simplifyZodErrors } from "@/shared/utils";
 import { updatePlanService } from "../services/update/update-plan.service";
 import { PrismaError } from "@/shared/errors/prisma";
+import { revalidatePath } from "next/cache";
 
 export const createPlan = async (formData: FormData): Promise<FormState> => {
   try {
@@ -43,6 +44,9 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
     await (isUpdate && planId
       ? updatePlanService(planData, planId)
       : createPlanService(planData));
+
+    revalidatePath(`${prefix}/planes`);
+    revalidatePath(`${prefix}/planes/${planId}`);
     redirect(`${prefix}/planes`);
   } catch (error) {
     return {

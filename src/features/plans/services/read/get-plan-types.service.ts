@@ -7,13 +7,13 @@ import { PlanType } from "@prisma/client";
 import { GetAllResponse } from "@/shared/types";
 import { FilterOptions } from "../../loaders/get-plan-types";
 
-export const getPlanTypesSirvice = async ({
+export const getPlanTypesService = async ({
   page = "1",
   query,
   ...filterOptions
 }: FilterOptions): Promise<GetAllResponse<PlanType>> => {
   const pageSize = 10;
-  const skip = (Number(page) - 1) * pageSize;
+  const skip = page ? (Number(page) - 1) * pageSize : undefined;
 
   const where = filterOptionsToWhere<PlanType>(filterOptions);
 

@@ -14,7 +14,9 @@ async function main() {
   const hashedAdvisorPassword = await hash(advisorPassword, 10);
 
   // Se limpian todos los datos existentes
+  await prisma.trackingNumber.deleteMany();
   await prisma.quote.deleteMany();
+  await prisma.medicalHistory.deleteMany();
   await prisma.prospect.deleteMany();
   await prisma.plan.deleteMany();
   await prisma.planType.deleteMany();
