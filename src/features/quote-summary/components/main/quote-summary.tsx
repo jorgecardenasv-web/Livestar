@@ -9,7 +9,7 @@ import { FC, useState } from "react";
 import { Button } from "@/shared/components/ui/button";
 import MultipleDeductibleModal from "../modals/MultipleDeductibleModal";
 
-export const QuoteSummary: FC<InsuranceQuoteData> = ({
+export const QuoteSummary: FC<InsuranceQuoteData & { imgCompanyLogo: { base64: string } }> = ({
   coInsurance,
   coInsuranceCap,
   coverage_fee,
@@ -48,7 +48,7 @@ export const QuoteSummary: FC<InsuranceQuoteData> = ({
           </h2>
         </div>
         <Image
-          src={imgCompanyLogo}
+          src={imgCompanyLogo.base64}
           width={60}
           height={60}
           className="h-10 sm:h-12 w-auto object-contain"

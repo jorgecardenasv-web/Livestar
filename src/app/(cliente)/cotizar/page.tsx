@@ -19,12 +19,15 @@ export interface InsuranceQuoteData {
 }
 
 export default async function QuoteSummaryPage() {
-  const { plans } = await getPlans();
+  const { data: { items } } = await getPlans({
+    page: "1",
+    offset: "100",
+  });
 
   return (
     <>
       <HeaderSecondary />
-      <InsuranceStorytelling plans={plans} />
+      <InsuranceStorytelling plans={items} />
       <ModalStorytellingActions />
     </>
   );

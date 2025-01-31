@@ -11,8 +11,9 @@ import {
 } from "../services/create-quote.service";
 import { createTrackingNumberService } from "../services/create-traking.service";
 import { PrismaError } from "@/shared/errors/prisma";
+import { FormState } from "@/shared/types";
 
-export async function handleContractNow() {
+export async function CreateContract(): Promise<FormState> {
   try {
     const { selectedPlan } = await getInsuranceState();
     const cookieStore = cookies();
@@ -44,6 +45,8 @@ export async function handleContractNow() {
       expirationDate: new Date(),
     };
 
+    console.log("quoteData", quoteData);
+
     const quote = await createQuoteService(quoteData);
     await createTrackingNumberService({ quoteId: quote.id });
 
@@ -65,8 +68,6 @@ export async function handleContractNow() {
     //   selectedPlan: `${planData.company.name} - ${planData.planType.name}`,
     //   emailAdvisor: advisor.email
     // });
-
-    redirect("/finalizar-cotizacion");
   } catch (error) {
     return {
       success: false,
@@ -76,4 +77,5 @@ export async function handleContractNow() {
           : "Error al crear la cotización.",
     };
   }
+  redirect("/finalizar-cotizacion");
 }

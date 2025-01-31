@@ -12,9 +12,10 @@ import { getImage } from "@/shared/services/get-image.service";
 export const GetPlansService = async ({
   page = "1",
   query,
+  offset = "10",
   ...whereOptions
 }: FilterOptions): Promise<GetAllResponse<Plan>> => {
-  const pageSize = 10;
+  const pageSize = Number(offset);
   const skip = (Number(page) - 1) * pageSize;
 
   const where =

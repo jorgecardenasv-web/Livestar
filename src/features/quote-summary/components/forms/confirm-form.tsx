@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { handleContractNow } from "../../actions/create-quote";
+import { CreateContract } from "../../actions/create-quote";
 import {
   Alert,
   AlertDescription,
@@ -9,12 +9,19 @@ import {
 } from "@/shared/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
+import { useFormState } from "react-dom";
+import { Callout } from "@/shared/components/ui/callout";
 
 export const ContractForm = () => {
   const [isConfirmed, setIsConfirmed] = useState(false);
 
+  const [state, formAction] = useFormState(CreateContract, {
+    message: "",
+    success: false
+  });
+
   return (
-    <form className="mt-5" action={handleContractNow}>
+    <form className="mt-5" action={formAction}>
       <Alert variant="default" className="mb-4">
         <AlertCircle className="h-4 w-4" color="black" />
         <AlertTitle>Aviso</AlertTitle>
@@ -59,6 +66,16 @@ export const ContractForm = () => {
         size="lg"
         disabled={!isConfirmed}
       />
+
+      {!state.success && state.message && (
+        <Callout
+          className="mt-4"
+          variant={"warning"}
+          icon={false}
+        >
+          {state.message}
+        </Callout>
+      )}
     </form>
   );
 };

@@ -47,8 +47,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
     paymentType
   );
 
-  const imageName = company.logo.split("/").pop();
-  const logoSrc = imageName ? await getImage(imageName) : "";
+  const logoSrc = company.logo ? await getImage(company.logo) : "";
 
   return (
     <div
@@ -63,7 +62,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
       <div className="p-6">
         <div className="flex flex-col items-center mb-6">
           <Image
-            src={logoSrc}
+            src={logoSrc ? logoSrc.base64 : '/fallback-image.png'}
             width={128}
             height={128}
             alt={company.name}

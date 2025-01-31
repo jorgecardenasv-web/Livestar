@@ -2,9 +2,10 @@ import { GetPlansService } from "../services/read/get-plans.service";
 import { InsurancePlanTransformer } from "../transformers/insurance-plan";
 import { Plan } from "../types/plan";
 
-export interface FilterOptions extends Plan {
+export interface FilterOptions extends Partial<Plan> {
   page: string;
   query?: string;
+  offset?: string;
 }
 
 export const getPlans = async (filterOptions: FilterOptions) => {
