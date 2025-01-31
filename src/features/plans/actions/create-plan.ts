@@ -44,10 +44,6 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
     await (isUpdate && planId
       ? updatePlanService(planData, planId)
       : createPlanService(planData));
-
-    revalidatePath(`${prefix}/planes`);
-    revalidatePath(`${prefix}/planes/${planId}`);
-    redirect(`${prefix}/planes`);
   } catch (error) {
     return {
       success: false,
@@ -57,4 +53,6 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
           : "Error al crear el plan.",
     };
   }
+  revalidatePath(`${prefix}/planes`);
+  redirect(`${prefix}/planes`);
 };

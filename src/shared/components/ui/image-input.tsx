@@ -5,11 +5,12 @@ import { Input } from "./input";
 import { Button } from "./button";
 import { X } from "lucide-react";
 import Image from "next/image";
+import { ImageResponse } from "@/shared/services/get-image.service";
 
 interface ImageInputProps {
   name: string;
   label: string;
-  defaultValue?: string;
+  defaultValue?: ImageResponse | string | null;
   error?: string;
 }
 
@@ -19,7 +20,22 @@ export const ImageInput = ({
   defaultValue,
   error,
 }: ImageInputProps) => {
-  const [preview, setPreview] = useState<string | null>(defaultValue || null);
+  const [preview, setPreview] = useState<string | null>(() => {
+    if (!defaultValue) {
+      return null;
+    }
+    if (typeof defaultValue === 'string') {
+      return defaultValue;
+    }
+    return defaultValue.base64;
+  });
+
+  const [filename, setFilename] = useState<string>(() => {
+    if (!defaultValue) return '';
+    if (typeof defaultValue === 'string') return '';
+    return defaultValue.filename;
+  });
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -28,6 +44,7 @@ export const ImageInput = ({
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result as string);
+        setFilename('');
       };
       reader.readAsDataURL(file);
     }
@@ -35,6 +52,7 @@ export const ImageInput = ({
 
   const handleRemove = () => {
     setPreview(null);
+    setFilename('');
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -75,6 +93,13 @@ export const ImageInput = ({
           className="hidden"
           ref={fileInputRef}
         />
+        {filename && (
+          <Input
+            type="hidden"
+            name={name}
+            value={filename}
+          />
+        )}
         <Button
           type="button"
           onClick={() => fileInputRef.current?.click()}

@@ -20,7 +20,7 @@ import { SearchBar } from "@/shared/components/inputs/search-bar";
 import { DropdownActions } from "../acciones/dropdown-actions";
 import { TableFilters } from "@/shared/components/tables/table-filters";
 import { filters } from "../../data/table-filters.data";
-
+import { getImage } from "@/shared/services/get-image.service";
 
 export const ListInsurance = async ({ params }: { params: Params }) => {
   const {
@@ -53,28 +53,31 @@ export const ListInsurance = async ({ params }: { params: Params }) => {
 
           <TableBody>
             {items.length > 0 ? (
-              items.map((insurance) => (
-                <TableRow key={insurance.id}>
-                  <TableCell>
-                    <Avatar>
-                      <AvatarImage src={insurance.logo} />
-                      <AvatarFallback>{insurance.name}</AvatarFallback>
-                    </Avatar>
-                  </TableCell>
-                  <TableCell>{insurance.name}</TableCell>
-                  <TableCell>
-                    {insurance.status ? (
-                      <Badge variant="success">Activo</Badge>
-                    ) : (
-                      <Badge variant="destructive">Inactivo</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>{formatDate(insurance.createdAt)}</TableCell>
-                  <TableCell className="flex gap-1">
-                    <DropdownActions insurance={insurance} />
-                  </TableCell>
-                </TableRow>
-              ))
+              items.map(async (insurance) => {
+                const logo = await getImage(insurance.logo);
+                return (
+                  <TableRow key={insurance.id}>
+                    <TableCell>
+                      <Avatar>
+                        <AvatarImage src={logo?.base64} />
+                        <AvatarFallback>{insurance.name}</AvatarFallback>
+                      </Avatar>
+                    </TableCell>
+                    <TableCell>{insurance.name}</TableCell>
+                    <TableCell>
+                      {insurance.status ? (
+                        <Badge variant="success">Activo</Badge>
+                      ) : (
+                        <Badge variant="destructive">Inactivo</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell>{formatDate(insurance.createdAt)}</TableCell>
+                    <TableCell className="flex gap-1">
+                      <DropdownActions insurance={insurance} />
+                    </TableCell>
+                  </TableRow>
+                )
+              })
             ) : (
               <TableRow>
                 <TableCell

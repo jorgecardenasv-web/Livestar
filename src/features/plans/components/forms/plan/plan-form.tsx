@@ -110,11 +110,11 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
             label="Coaseguro"
             type="number"
             icon={<Percent className="w-4 h-4 text-gray-500" />}
-            step="0.01"
+            step="1"
             min="0"
-            max="1"
+            max="100"
             defaultValue={plan?.coInsurance}
-            placeholder="Ej: 0.10"
+            placeholder="Ej: 20%"
             required
           />
 

@@ -10,9 +10,10 @@ import { FilterOptions } from "../../loaders/get-plan-types";
 export const getPlanTypesService = async ({
   page = "1",
   query,
+  offset = "10",
   ...filterOptions
 }: FilterOptions): Promise<GetAllResponse<PlanType>> => {
-  const pageSize = 10;
+  const pageSize = Number(offset);
   const skip = page ? (Number(page) - 1) * pageSize : undefined;
 
   const where = filterOptionsToWhere<PlanType>(filterOptions);

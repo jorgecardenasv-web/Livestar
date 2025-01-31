@@ -46,12 +46,7 @@ export const getInsuranceService = async ({
     return {
       success: true,
       data: {
-        items: await Promise.all(
-          insurances.map(insuranceTransformer).map(async (insurance) => ({
-            ...insurance,
-            logo: await getImage(insurance.logo),
-          }))
-        ),
+        items: insurances,
         totalPages,
         totalItems: totalInsurances,
         itemsPerPage: pageSize,

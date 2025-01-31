@@ -12,7 +12,8 @@ export default async function NewPlan({
   const { data: {
     items
   } } = await getPlanTypes({
-    page: "",
+    page: "1",
+    offset: "100",
   })
   const insurancePlan = await getInsurancePlanById(id);
 

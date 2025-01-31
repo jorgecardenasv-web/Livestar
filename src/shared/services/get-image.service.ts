@@ -1,7 +1,18 @@
+"use server";
+
 import fs from "fs/promises";
 import path from "path";
 
-export async function getImage(name: string): Promise<string> {
+export interface ImageResponse {
+  filename: string;
+  base64: string;
+}
+
+export async function getImage(name: string): Promise<ImageResponse | null> {
+  if (!name) {
+    return null;
+  }
+
   const filePath = path.join(process.cwd(), "src", "assets", "images", name);
 
   try {
@@ -22,9 +33,13 @@ export async function getImage(name: string): Promise<string> {
       contentTypes[ext as keyof typeof contentTypes] ||
       "application/octet-stream";
 
-    return `data:${contentType};base64,${base64}`;
+    return {
+      filename: name,
+      base64: `data:${contentType};base64,${base64}`,
+    };
   } catch (error) {
     console.error("Error reading file:", error);
-    return "";
+    console.error("File path attempted:", filePath);
+    return null;
   }
 }
