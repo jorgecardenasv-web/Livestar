@@ -14,13 +14,17 @@ export const ProfileForm = ({ user }: { user: AuthenticadedUser }) => {
     (state) => state.showNotification
   );
 
-  const [state, formAction] = useFormState(updateProfile, null);
+  const [state, formAction] = useFormState(updateProfile, {
+    message: "",
+    success: false,
+    inputErrors: {},
+  });
 
   useEffect(() => {
-    if (state?.result) {
+    if (state?.success) {
       showNotification("Perfil actualizado", "success");
     }
-  }, [state?.result, showNotification]);
+  }, [state?.success, showNotification]);
 
   return (
     <Card className="mx-auto dark:bg-zinc-800 dark:text-zinc-100 dark:ring-0 w-full">
@@ -46,7 +50,7 @@ export const ProfileForm = ({ user }: { user: AuthenticadedUser }) => {
             />
             {
               <span className="text-sm text-red-500">
-                {state?.errors?.name}
+                {state?.inputErrors?.name}
               </span>
             }
           </div>
@@ -65,7 +69,7 @@ export const ProfileForm = ({ user }: { user: AuthenticadedUser }) => {
               placeholder="Escribe tu correo electrónico."
               defaultValue={user?.email ?? ""}
             />
-            <span className="text-sm text-red-500">{state?.errors?.email}</span>
+            <span className="text-sm text-red-500">{state?.inputErrors?.email}</span>
           </div>
           <SubmitButton
             label="Actualizar información"

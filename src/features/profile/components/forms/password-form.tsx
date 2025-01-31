@@ -13,16 +13,20 @@ export const PasswordForm = () => {
     (state) => state.showNotification
   );
 
-  const [state, formAction] = useFormState(updatePassword, null);
+  const [state, formAction] = useFormState(updatePassword, {
+    success: false,
+    message: "",
+    inputErrors: {},
+  });
 
   const formRef = useRef<any>(null);
 
   useEffect(() => {
-    if (state?.result) {
+    if (state?.success) {
       showNotification("Contraseña actualizada", "success");
       formRef.current.reset();
     }
-  }, [showNotification, state?.result]);
+  }, [showNotification, state?.success]);
 
   return (
     <Card className="mx-auto dark:bg-zinc-800 dark:text-zinc-100 dark:ring-0 w-full">
@@ -44,7 +48,7 @@ export const PasswordForm = () => {
               placeholder="Escribe tu contraseña actual."
             />
             <span className="text-sm text-red-600">
-              {state?.errors?.currentPassword && state?.errors?.currentPassword}
+              {state?.inputErrors?.currentPassword && state?.inputErrors?.currentPassword}
             </span>
           </div>
           <div>
@@ -60,7 +64,7 @@ export const PasswordForm = () => {
               placeholder="Escribe tu nueva contraseña."
             />
             <span className="text-sm text-red-600">
-              {state?.errors?.newPassword && state?.errors?.newPassword}
+              {state?.inputErrors?.newPassword && state?.inputErrors?.newPassword}
             </span>
           </div>
           <div>
@@ -76,10 +80,10 @@ export const PasswordForm = () => {
               placeholder="Escribe de nuevo tu nueva contraseña."
             />
             <span className="text-sm text-red-600">
-              {state?.errors?.confirmPassword && state?.errors?.confirmPassword}
+              {state?.inputErrors?.confirmPassword && state?.inputErrors?.confirmPassword}
             </span>
           </div>
-          {state?.error && <p className="text-red-600">{state?.error}</p>}
+          {state?.message && <p className="text-red-600">{state?.message}</p>}
           <SubmitButton
             label="Cambiar contraseña"
             labelPending="Cambiando contraseña..."

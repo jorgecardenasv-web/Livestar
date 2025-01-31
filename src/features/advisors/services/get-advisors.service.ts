@@ -13,10 +13,11 @@ import { handlePrismaError } from "@/shared/errors/prisma";
 export const getAdvisorsService = async ({
   page = "1",
   query,
+  offset = "10",
   ...filtersWithoutQuery
 }: FilterOptions): Promise<GetAllResponse<Advisor>> => {
   try {
-    const pageSize = 10;
+    const pageSize = Number(offset);
     const skip = (Number(page) - 1) * pageSize;
 
     const where = filterOptionsToWhere<User>(filtersWithoutQuery);

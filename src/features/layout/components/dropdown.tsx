@@ -17,12 +17,19 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
 import { Button } from "@/shared/components/ui/button";
+import { useFormState } from "react-dom";
 
 interface DropdownProps {
   label?: string;
 }
 
 export const Dropdown: FC<DropdownProps> = ({ label }) => {
+
+  const [state, formAction] = useFormState(logout, {
+    success: false,
+    message: "",
+  });
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -51,7 +58,7 @@ export const Dropdown: FC<DropdownProps> = ({ label }) => {
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <form action={logout}>
+          <form action={formAction}>
             <button className="flex items-center space-x-2 w-full text-left">
               <PowerIcon size={20} />
               <span>Cerrar sesión</span>
