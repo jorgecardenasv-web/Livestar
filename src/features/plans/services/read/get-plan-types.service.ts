@@ -1,0 +1,53 @@
+import prisma from "@/lib/prisma";
+import {
+  filterOptionsToWhere,
+  textSearchFilterBuilder,
+} from "@/shared/utils/where-filter-builder";
+import { PlanType } from "@prisma/client";
+import { GetAllResponse } from "@/shared/types";
+import { FilterOptions } from "../../loaders/get-plan-types";
+
+export const getPlanTypesSirvice = async ({
+  page = "1",
+  query,
+  ...filterOptions
+}: FilterOptions): Promise<GetAllResponse<PlanType>> => {
+  const pageSize = 10;
+  const skip = (Number(page) - 1) * pageSize;
+
+  const where = filterOptionsToWhere<PlanType>(filterOptions);
+
+  const whereText = query
+    ? textSearchFilterBuilder(query, ["name"])
+    : undefined;
+
+  const [planTypes, count] = await Promise.all([
+    prisma.planType.findMany({
+      where: {
+        ...where,
+        ...whereText,
+      },
+      skip,
+      take: pageSize,
+    }),
+    prisma.planType.count({
+      where: {
+        ...where,
+        ...whereText,
+      },
+    }),
+  ]);
+
+  const totalPages = Math.ceil(count / pageSize);
+
+  return {
+    success: true,
+    data: {
+      items: planTypes,
+      totalItems: count,
+      totalPages,
+      itemsPerPage: pageSize,
+      currentPage: Number(page),
+    },
+  };
+};

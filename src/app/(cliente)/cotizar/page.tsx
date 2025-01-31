@@ -1,7 +1,7 @@
 import { HeaderSecondary } from "@/shared/components/layout/header-secondary";
 import { ModalStorytellingActions } from "@/features/storytelling/components/modals/modal-storytelling-actions";
 import { InsuranceStorytelling } from "@/features/storytelling/components/container/storytelling";
-import { getPlans } from "@/features/insurance-plans/loaders/get-plans";
+import { getPlans } from "@/features/plans/loaders/get-plans";
 
 export interface InsuranceQuoteData {
   company: string;

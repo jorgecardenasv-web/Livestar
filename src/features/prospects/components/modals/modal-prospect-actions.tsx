@@ -2,62 +2,15 @@
 
 import { Modal } from "@/shared/components/ui/modal";
 import { Advisor } from "@/features/advisors/types/advisor";
-import { useState } from "react";
 import { Button } from "@/shared/components/ui/button";
-import { DateRange } from "react-day-picker";
 import { DateRangePicker } from "@/shared/components/ui/data-range-picker";
 import { useProspectActions } from "../../hooks/use-prospect-actions";
-import { generateReport } from "../../actions/generate-report";
 import { ProspectForm } from "../forms/prospect-form";
+import { useReport } from "../../hooks/use-report";
 
 export const ModalProspectActions = ({ advisors }: { advisors: Advisor[] }) => {
-  const { isOpen, modalType, closeModal } = useProspectActions();
-
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: undefined,
-    to: undefined,
-  });
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleDateChange = (range: DateRange | undefined) => {
-    setDateRange(range);
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (dateRange?.from && dateRange?.to) {
-      setIsLoading(true);
-      try {
-        const base64Excel = await generateReport(
-          dateRange.from.toISOString(),
-          dateRange.to.toISOString()
-        );
-
-        const blob = new Blob([Buffer.from(base64Excel, "base64")], {
-          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        });
-
-        const url = window.URL.createObjectURL(blob);
-
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "Reporte_Prospectos.xlsx";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-
-        closeModal();
-      } catch (error) {
-        console.error("Error al generar el reporte:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    } else {
-      console.error("Por favor, selecciona un rango de fechas válido");
-    }
-  };
+  const { isOpen, modalType } = useProspectActions();
+  const { handleDateChange, handleSubmit, isLoading } = useReport();
 
   return (
     <>

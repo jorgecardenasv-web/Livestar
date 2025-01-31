@@ -2,7 +2,7 @@ import { Prospect as PrismaProspect, User } from "@prisma/client";
 import { Prospect } from "../types/prospect";
 
 interface ProspectPayload extends PrismaProspect {
-  user?: User
+  user?: User;
 }
 
 export const prospectTransformer = (prospect: ProspectPayload): Prospect => {

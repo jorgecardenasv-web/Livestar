@@ -6,7 +6,7 @@ import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { updateInsurance } from "../../actions/update-insurence";
 
 export const UpdateInsuranceForm = () => {
-  const { handleCancel, modalProps: insurance } = useInsuranceActions();
+  const { handleCancel, insurance } = useInsuranceActions();
   const { formAction, state } = useInsuranceForm(updateInsurance);
   const { logo, name } = insurance;
   return (

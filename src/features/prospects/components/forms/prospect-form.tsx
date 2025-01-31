@@ -8,11 +8,11 @@ import { SelectInput } from "@/shared/components/ui/select-input";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
 
 export const ProspectForm = ({ advisors }: { advisors: Advisor[] }) => {
-  const { formAction, modalProps } = useProspectActions();
+  const { formAction, prospect } = useProspectActions();
 
   return (
     <form className="space-y-4" action={formAction}>
-      <SelectInput
+      {/* <SelectInput
         label="Estado"
         name="status"
         defaultValue={modalProps?.prospect?.status}
@@ -20,12 +20,12 @@ export const ProspectForm = ({ advisors }: { advisors: Advisor[] }) => {
           value: datasource.value,
           label: datasource.name,
         }))}
-      />
+      /> */}
 
       <SelectInput
         label="Asesor asignado"
         name="userId"
-        defaultValue={modalProps?.prospect?.user?.uuid}
+        defaultValue={prospect?.user?.id}
         options={advisors.map((advisor) => ({
           value: advisor.id,
           label: advisor.name,

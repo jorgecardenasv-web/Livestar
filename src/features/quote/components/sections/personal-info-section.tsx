@@ -27,7 +27,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   handleProtectedPersonChange,
 }) => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 py-6">
       <div className="flex items-center space-x-4 mb-6">
         <span className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-xl">
           1
@@ -87,121 +87,121 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           formData.protectWho === "mis_hijos_y_yo" ||
           formData.protectWho === "solo_yo" ||
           formData.protectWho === "familia") && (
-          <TextInput
-            label="Yo tengo"
-            type="number"
-            name="age"
-            placeholder="Ej: 18"
-            value={formData.age}
-            onChange={(e) => handleInputChange("age", Number(e.target.value))}
-            className="w-full"
-            min={18}
-            max={100}
-            error={errors.age || ""}
-          />
-        )}
-
-        {(formData.protectWho === "mi_pareja_y_yo" ||
-          formData.protectWho === "familia") && (
-          <>
-            <SelectInput
-              options={genderOptions}
-              error={errors.partnerGender}
-              label="Género al nacer de mi pareja"
-              name="partnerGender"
-              value={formData.partnerGender}
-              onValueChange={(value) =>
-                handleInputChange("partnerGender", value)
-              }
-            />
             <TextInput
-              label="Mi pareja tiene"
+              label="Yo tengo"
               type="number"
-              id="partnerAge"
-              name="partnerAge"
+              name="age"
               placeholder="Ej: 18"
-              value={formData.partnerAge}
-              onChange={(e) =>
-                handleInputChange("partnerAge", Number(e.target.value))
-              }
+              value={formData.age}
+              onChange={(e) => handleInputChange("age", Number(e.target.value))}
               className="w-full"
               min={18}
               max={100}
-              error={errors.partnerAge}
+              error={errors.age || ""}
             />
-          </>
-        )}
+          )}
+
+        {(formData.protectWho === "mi_pareja_y_yo" ||
+          formData.protectWho === "familia") && (
+            <>
+              <SelectInput
+                options={genderOptions}
+                error={errors.partnerGender}
+                label="Género al nacer de mi pareja"
+                name="partnerGender"
+                value={formData.partnerGender}
+                onValueChange={(value) =>
+                  handleInputChange("partnerGender", value)
+                }
+              />
+              <TextInput
+                label="Mi pareja tiene"
+                type="number"
+                id="partnerAge"
+                name="partnerAge"
+                placeholder="Ej: 18"
+                value={formData.partnerAge}
+                onChange={(e) =>
+                  handleInputChange("partnerAge", Number(e.target.value))
+                }
+                className="w-full"
+                min={18}
+                max={100}
+                error={errors.partnerAge}
+              />
+            </>
+          )}
 
         {(formData.protectWho === "familia" ||
           formData.protectWho === "mis_hijos_y_yo" ||
           formData.protectWho === "solo_mis_hijos") && (
-          <>
-            <TextInput
-              label=" Número de hijos"
-              type="number"
-              id="childrenCount"
-              name="childrenCount"
-              placeholder="Nº de hijos"
-              value={formData.childrenCount}
-              onChange={(e) =>
-                handleInputChange("childrenCount", Number(e.target.value))
-              }
-              className="w-full"
-              min={1}
-              max={20}
-              error={errors.childrenCount}
-            />
-            {formData.childrenCount && formData.childrenCount > 0 && (
-              <div className="col-span-2">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
-                  {formData.childrenCount === 1
-                    ? "Datos de mi hijo"
-                    : `Datos de mis ${formData.childrenCount} hijos`}
-                </label>
-                <div className="space-y-4">
-                  {Array.from({ length: formData.childrenCount }).map(
-                    (_, index) => (
-                      <div
-                        key={index}
-                        className="grid grid-cols-1 md:grid-cols-2 gap-4"
-                      >
-                        <TextInput
-                          label="Edad"
-                          type="number"
-                          id={`childAge${index}`}
-                          name={`childAge${index}`}
-                          placeholder="Edad"
-                          value={formData.children?.[index]?.age ?? 0}
-                          onChange={(e) =>
-                            handleChildChange(
-                              index,
-                              "age",
-                              Number(e.target.value)
-                            )
-                          }
-                          error={errors[`children.${index}.age`]}
-                          className="w-full"
-                          min={0}
-                          max={25}
-                        />
-                        <SelectInput
-                          label="Género al nacer"
-                          name={`childGender${index}`}
-                          value={formData.children?.[index]?.gender ?? ""}
-                          onValueChange={(value) =>
-                            handleChildChange(index, "gender", value)
-                          }
-                          options={genderOptions}
-                          error={errors[`children.${index}.gender`]}
-                        />
-                      </div>
-                    )
-                  )}
+            <>
+              <TextInput
+                label=" Número de hijos"
+                type="number"
+                id="childrenCount"
+                name="childrenCount"
+                placeholder="Nº de hijos"
+                value={formData.childrenCount}
+                onChange={(e) =>
+                  handleInputChange("childrenCount", Number(e.target.value))
+                }
+                className="w-full"
+                min={1}
+                max={20}
+                error={errors.childrenCount}
+              />
+              {formData.childrenCount && formData.childrenCount > 0 && (
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
+                    {formData.childrenCount === 1
+                      ? "Datos de mi hijo"
+                      : `Datos de mis ${formData.childrenCount} hijos`}
+                  </label>
+                  <div className="space-y-4">
+                    {Array.from({ length: formData.childrenCount }).map(
+                      (_, index) => (
+                        <div
+                          key={index}
+                          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                        >
+                          <TextInput
+                            label="Edad"
+                            type="number"
+                            id={`childAge${index}`}
+                            name={`childAge${index}`}
+                            placeholder="Edad"
+                            value={formData.children?.[index]?.age ?? 0}
+                            onChange={(e) =>
+                              handleChildChange(
+                                index,
+                                "age",
+                                Number(e.target.value)
+                              )
+                            }
+                            error={errors[`children.${index}.age`]}
+                            className="w-full"
+                            min={0}
+                            max={25}
+                          />
+                          <SelectInput
+                            label="Género al nacer"
+                            name={`childGender${index}`}
+                            value={formData.children?.[index]?.gender ?? ""}
+                            onValueChange={(value) =>
+                              handleChildChange(index, "gender", value)
+                            }
+                            options={genderOptions}
+                            error={errors[`children.${index}.gender`]}
+                          />
+                        </div>
+                      )
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
-          </>
-        )}
+              )}
+            </>
+          )}
 
         {formData.protectWho === "otros" && (
           <>
@@ -322,16 +322,16 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 type="number"
                 name="dadAge"
                 placeholder="Edad de papá"
-                value={formData.daAge}
+                value={formData.dadAge}
                 onChange={(e) =>
                   handleInputChange("dadAge", Number(e.target.value))
                 }
-                error={errors.momAge}
+                error={errors.dadAge}
                 className="w-full"
                 min={18}
               />
               <TextInput
-                label="Edad de papá"
+                label="Edad de mamá"
                 type="number"
                 name="momAge"
                 placeholder="Edad de mamá"

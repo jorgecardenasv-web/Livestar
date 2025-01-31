@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
+
+
 import {
   Pagination as PaginationBase,
   PaginationContent,
@@ -10,8 +12,8 @@ import {
   PaginationLink,
   PaginationNext as PaginationNextBase,
   PaginationPrevious as PaginationPreviousBase,
-} from "@/shared/components/ui/pagination";
-import { pluralizeItemName } from "../../utils";
+} from "../ui/pagination";
+import { pluralizeItemName } from "./pluralize-item-name";
 
 const PaginationPrevious = ({
   children,
@@ -28,11 +30,13 @@ const PaginationNext = ({
 );
 
 export function Pagination({
+  currentPage,
   totalPages,
   totalItems,
   itemsPerPage,
   itemName,
 }: {
+  currentPage: number;
   totalPages: number;
   totalItems: number;
   itemsPerPage: number;
@@ -41,7 +45,6 @@ export function Pagination({
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
-  const currentPage = Number(searchParams.get("page") || 1);
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
@@ -67,7 +70,7 @@ export function Pagination({
   return (
     <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-4 px-4">
       <p className="text-sm text-muted-foreground flex flex-grow">
-        Mostrando {startItem} a {endItem} de {totalItems} {pluralizeItemName(totalItems, itemName)}
+        {`Mostrando ${startItem} a ${endItem} de ${totalItems} ${pluralizeItemName(totalItems, itemName)}`}
       </p>
       {shouldShowPagination && (
         <PaginationBase className="w-full sm:w-auto">

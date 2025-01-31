@@ -6,6 +6,7 @@ import { simplifyZodErrors } from "@/shared/utils";
 import { createInsuranceService } from "../services/create-insurance.service";
 import { revalidatePath } from "next/cache";
 import { FormState } from "@/shared/types";
+import { PrismaError } from "@/shared/errors/prisma";
 
 export async function createInsurance(
   id: string,
@@ -44,7 +45,10 @@ export async function createInsurance(
   } catch (error) {
     return {
       success: false,
-      message: error instanceof Error ? error.message : "Error inesperado.",
+      message:
+        error instanceof PrismaError
+          ? error.message
+          : "Error al crear la aseguradora.",
     };
   }
 }

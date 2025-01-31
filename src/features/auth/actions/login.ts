@@ -6,6 +6,9 @@ import { getSession } from "@/lib/iron-session/get-session";
 import { createSessionService } from "@/features/session/services/create-session.service";
 import { simplifyZodErrors } from "@/shared/utils";
 import { FormState } from "@/shared/types";
+import { redirect } from "next/navigation";
+import { prefix } from "@/shared/utils/constants";
+import { PrismaError } from "@/shared/errors/prisma";
 
 export const login = async (
   prevState: any,
@@ -54,16 +57,14 @@ export const login = async (
     session.sessionId = sessionDB.id;
 
     await session.save();
-
-    return {
-      success: true,
-      message: "¡Sesión iniciada exitosamente!",
-    };
   } catch (error) {
-    console.error(error);
     return {
       success: false,
-      message: "Error en la autenticación.",
+      message:
+        error instanceof PrismaError
+          ? error.message
+          : "Error al iniciar sesión.",
     };
   }
+  redirect(`${prefix}/prospectos`);
 };

@@ -1,30 +1,36 @@
 import { HeaderInsurance } from "@/features/insurance/components/header/header-insurance";
 import { ModalInsuranceActions } from "@/features/insurance/components/modal/modal-insurance-actions";
 import { ListInsurance } from "@/features/insurance/components/table/list-insurance";
-import { getInsurance } from "@/features/insurance/loaders/get-insurance";
-import { Pagination } from "@/shared/components/pagination/pagination";
+import { TableSkeleton } from "@/shared/components/skeletons/table-skeleton";
 import { Card, CardContent } from "@/shared/components/ui/card";
+import { Insurance } from "@prisma/client";
+import { Suspense } from "react";
 
-export default async function Aseguradoras() {
-  const { insurances, totalPages, insurancesPerPage, totalInsurances } =
-    await getInsurance();
+export interface Params extends Insurance {
+  page: string;
+  query?: string;
+}
 
+export default function Aseguradoras({
+  searchParams,
+}: {
+  searchParams: Params;
+}) {
   return (
     <>
-      <HeaderInsurance />
-      <Card>
-        <CardContent className="space-y-6 p-6">
-          <ListInsurance insurances={insurances} />
-          <Pagination
-            totalPages={totalPages}
-            totalItems={totalInsurances}
-            itemsPerPage={insurancesPerPage}
-            itemName="Aseguradora"
-          />
-        </CardContent>
-      </Card>
-
-      <ModalInsuranceActions />
+      <div className="flex-1 rounded-xl bg-muted/50 p-5 space-y-6">
+        <HeaderInsurance />
+      </div>
+      <div className="flex-1 rounded-xl bg-muted/50 p-5 space-y-6">
+        <Card>
+          <CardContent className="space-y-6 p-6">
+            <Suspense fallback={<TableSkeleton />}>
+              <ListInsurance params={searchParams} />
+            </Suspense>
+          </CardContent>
+        </Card>
+        <ModalInsuranceActions />
+      </div>
     </>
   );
 }

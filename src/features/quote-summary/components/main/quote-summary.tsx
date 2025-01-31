@@ -4,7 +4,7 @@ import { InsuranceQuoteData } from "@/app/(cliente)/cotizar/page";
 import { Shield, DollarSign, Percent, Heart, ArrowLeft } from "lucide-react";
 import { ContractForm } from "../forms/confirm-form";
 import { InfoCard } from "../cards/info-card";
-import { deleteSelectedPlan } from "@/features/insurance-plans/actions/set-cookies";
+import { deleteSelectedPlan } from "@/features/plans/actions/set-cookies";
 import { FC, useState } from "react";
 import { Button } from "@/shared/components/ui/button";
 import MultipleDeductibleModal from "../modals/MultipleDeductibleModal";

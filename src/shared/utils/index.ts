@@ -14,7 +14,12 @@ export function simplifyZodErrors<T>(errors: ZodError<T>): FormError {
 
 export const isServer = () => typeof window === "undefined";
 
+export const formatCurrency = (value: number) =>
+  new Intl.NumberFormat("es-MX", {
+    style: "currency",
+    currency: "MXN",
+  }).format(value);
+
 export * from "./notification-message";
 export * from "./simplify-zod-errors";
-export * from "./pagination";
 export * from "./parsed-form-data-age";

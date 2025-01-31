@@ -1,13 +1,12 @@
 "use server";
 
 import { saveImage } from "@/shared/services/upload-image.service";
-// import { updateInsuranceSchema } from "../schemas/update-insurance";
 import { simplifyZodErrors } from "@/shared/utils";
-// import { updateInsuranceService } from "../services/update-insurance.service";
 import { revalidatePath } from "next/cache";
 import { FormState } from "@/shared/types";
 import { updateInsuranceService } from "../services/update-insurence.service";
 import { createInsuranceSchema } from "../schemas/create-insurance";
+import { PrismaError } from "@/shared/errors/prisma";
 
 export async function updateInsurance(
   id: string,
@@ -42,7 +41,10 @@ export async function updateInsurance(
   } catch (error) {
     return {
       success: false,
-      message: error instanceof Error ? error.message : "Error inesperado.",
+      message:
+        error instanceof PrismaError
+          ? error.message
+          : "Error al actualizar la aseguradora.",
     };
   }
 }

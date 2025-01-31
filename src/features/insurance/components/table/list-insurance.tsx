@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Table,
   TableBody,
@@ -8,8 +6,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/components/ui/table";
-import { FC } from "react";
-import { Insurance } from "../../types/insurance";
 import { formatDate } from "@/shared/utils";
 import { Badge } from "@/shared/components/ui/badge";
 import {
@@ -17,60 +13,88 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/shared/components/ui/avatar";
-import { Button } from "@/shared/components/ui/button";
-import { Pencil, Trash2 } from "lucide-react";
-import { useInsuranceActions } from "../../hooks/use-insurance-actions";
+import { Params } from "@/app/ctl/aseguradoras/page";
+import { getInsurance } from "../../loaders/get-insurance";
+import { Pagination } from "@/shared/components/pagination/pagination";
+import { SearchBar } from "@/shared/components/inputs/search-bar";
+import { DropdownActions } from "../acciones/dropdown-actions";
+import { TableFilters } from "@/shared/components/tables/table-filters";
+import { filters } from "../../data/table-filters.data";
 
-interface ListInsuranceProps {
-  insurances: Insurance[];
-}
 
-export const ListInsurance: FC<ListInsuranceProps> = ({ insurances }) => {
-  const { openDeleteInsuranceModal, openEditInsuranceModal } =
-    useInsuranceActions();
+export const ListInsurance = async ({ params }: { params: Params }) => {
+  const {
+    data: {
+      currentPage,
+      items,
+      itemsPerPage,
+      totalItems,
+      totalPages
+    }
+  } = await getInsurance(params);
+
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Logo</TableHead>
-          <TableHead>Nombre</TableHead>
-          <TableHead>Estado</TableHead>
-          <TableHead>Fecha de creación</TableHead>
-          <TableHead>Acciones</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {insurances.map((insurance) => (
-          <TableRow key={insurance.id}>
-            <TableCell>
-              <Avatar>
-                <AvatarImage src={insurance.logo} />
-                <AvatarFallback>{insurance.name}</AvatarFallback>
-              </Avatar>
-            </TableCell>
-            <TableCell>{insurance.name}</TableCell>
-            <TableCell>
-              {insurance.status ? (
-                <Badge variant="success">Activo</Badge>
-              ) : (
-                <Badge variant="destructive">Inactivo</Badge>
-              )}
-            </TableCell>
-            <TableCell>{formatDate(insurance.createdAt)}</TableCell>
-            <TableCell className="flex gap-1">
-              <Button onClick={() => openEditInsuranceModal(insurance)}>
-                <Pencil size={20} />
-              </Button>
-              <Button
-                variant="destructive"
-                onClick={() => openDeleteInsuranceModal(insurance)}
-              >
-                <Trash2 size={20} />
-              </Button>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <div className="w-full space-y-4">
+      <div className="flex items-center py-2">
+        <SearchBar placeholder="Buscar aseguradora por nombre" />
+        <TableFilters filters={filters} />
+      </div>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Logo</TableHead>
+              <TableHead>Nombre</TableHead>
+              <TableHead>Estado</TableHead>
+              <TableHead>Fecha de creación</TableHead>
+              <TableHead>Acciones</TableHead>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {items.length > 0 ? (
+              items.map((insurance) => (
+                <TableRow key={insurance.id}>
+                  <TableCell>
+                    <Avatar>
+                      <AvatarImage src={insurance.logo} />
+                      <AvatarFallback>{insurance.name}</AvatarFallback>
+                    </Avatar>
+                  </TableCell>
+                  <TableCell>{insurance.name}</TableCell>
+                  <TableCell>
+                    {insurance.status ? (
+                      <Badge variant="success">Activo</Badge>
+                    ) : (
+                      <Badge variant="destructive">Inactivo</Badge>
+                    )}
+                  </TableCell>
+                  <TableCell>{formatDate(insurance.createdAt)}</TableCell>
+                  <TableCell className="flex gap-1">
+                    <DropdownActions insurance={insurance} />
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={5}
+                  className="h-24 text-center"
+                >
+                  No hay prospectos disponibles
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <Pagination
+        itemName="Aseguradora"
+        itemsPerPage={itemsPerPage}
+        totalItems={totalItems}
+        totalPages={totalPages}
+        currentPage={currentPage}
+      />
+    </div>
   );
 };

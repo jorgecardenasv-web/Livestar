@@ -31,12 +31,13 @@ const icons = {
 
 export interface CalloutProps
   extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof calloutVariants> {
+  VariantProps<typeof calloutVariants> {
   title?: string
+  icon?: boolean
 }
 
 const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
-  ({ className, variant, title, children, ...props }, ref) => {
+  ({ className, variant, title, children, icon = true, ...props }, ref) => {
     const Icon = icons[variant || "default"]
 
     return (
@@ -46,7 +47,7 @@ const Callout = React.forwardRef<HTMLDivElement, CalloutProps>(
         className={cn(calloutVariants({ variant }), className)}
         {...props}
       >
-        <Icon className="h-4 w-4" />
+        {icon && <Icon className="h-4 w-4" />}
         <div className="mb-1 font-medium leading-none tracking-tight">
           {title}
         </div>

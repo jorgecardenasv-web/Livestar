@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { editAdvisorSchema } from "../schemas/edit-advisor";
 import { updateAdvisorService } from "../services/update-advisor.service";
 import { FormState } from "@/shared/types";
+import { PrismaError } from "@/shared/errors/prisma";
 
 export const updateAdvisor = async (
   prevState: any,
@@ -51,10 +52,12 @@ export const updateAdvisor = async (
       message: "¡Asesor editado exitosamente!",
     };
   } catch (error) {
-    console.error(error);
     return {
       success: false,
-      message: error instanceof Error ? error.message : "Error desconocido",
+      message:
+        error instanceof PrismaError
+          ? error.message
+          : "Error al actualizar el asesor.",
     };
   }
 };

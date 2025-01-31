@@ -1,19 +1,61 @@
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export const useSearchParamsBuilder = (rowSearch: string) => {
+interface BuilderReturn {
+  handleSearchParams: (key: string, value: string) => void;
+  updateMultipleParams: (params: Record<string, string>) => void;
+  removeParam: (key: string) => void;
+  resetAllParams: () => void;
+  searchParams: URLSearchParams;
+}
+
+export function useSearchParamsBuilder(): BuilderReturn {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const { replace } = useRouter();
+  const router = useRouter();
 
-  const handleSearchParams = (value: string) => {
-    const params = new URLSearchParams(searchParams);
+  const handleSearchParams = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
     if (value && value !== "todos") {
-      params.set(rowSearch, value);
+      params.set(key, value);
     } else {
-      params.delete(rowSearch);
+      params.delete(key);
     }
-    replace(`${pathname}?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`);
   };
 
-  return { handleSearchParams, searchParams };
-};
+  const updateMultipleParams = (newParams: Record<string, string>) => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    Object.entries(newParams).forEach(([key, value]) => {
+      if (value && value !== "todos") {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    });
+
+    const queryString = params.toString();
+    const newPath = queryString ? `${pathname}?${queryString}` : pathname;
+    router.push(newPath);
+  };
+
+  const removeParam = (key: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete(key);
+    const queryString = params.toString();
+    const newPath = queryString ? `${pathname}?${queryString}` : pathname;
+    router.push(newPath);
+  };
+
+  const resetAllParams = () => {
+    router.push(pathname);
+  };
+
+  return {
+    handleSearchParams,
+    updateMultipleParams,
+    removeParam,
+    resetAllParams,
+    searchParams,
+  };
+}

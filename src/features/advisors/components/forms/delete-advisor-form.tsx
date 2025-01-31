@@ -6,15 +6,38 @@ import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { Callout } from "@/shared/components/ui/callout";
 import { Button } from "@/shared/components/ui/button";
 import { Badge } from "@/shared/components/ui/badge";
-import { useAdvisorForm } from "../../hooks/use-advisor-form";
+import { useFormState } from "react-dom";
+import { useEffect } from "react";
+import { useNotificationStore } from "@/features/notification/store/notification-store";
 
 export const DeleteAdvisorForm = () => {
   const {
     handleCancel,
-    modalProps: { advisor },
+    advisor,
+    closeModal,
   } = useAdvisorActions();
 
-  const { handleDeleteAdvisor } = useAdvisorForm(deleteAdvisor);
+  const { showNotification } = useNotificationStore();
+
+  const deleteAdvisorWithId = deleteAdvisor.bind(null, advisor?.id);
+
+  const [state, formAction] = useFormState(deleteAdvisorWithId, {
+    success: false,
+    message: "",
+  });
+
+  useEffect(() => {
+    if (state.success) {
+      closeModal();
+      showNotification(state.message, "success");
+    }
+
+    if (!state?.success && state?.message) {
+      closeModal();
+      showNotification(state.message, "error");
+    }
+  }, [state.success, state.message, closeModal, showNotification]);
+
 
   return (
     <>
@@ -42,15 +65,14 @@ export const DeleteAdvisorForm = () => {
           <p className="font-semibold">{advisor?.createdAt.toLocaleString()}</p>
         </div>
       </Callout>
-
       <div className="mt-8 w-full flex flex-row gap-2">
-        <SubmitButton
-          label="Eliminar"
-          color="red"
-          className="flex-1"
-          labelPending="Eliminando..."
-          onClick={() => handleDeleteAdvisor(advisor.id)}
-        />
+        <form action={formAction} className="flex-1">
+          <SubmitButton
+            label="Eliminar"
+            className="w-full"
+            labelPending="Eliminando..."
+          />
+        </form>
         <Button
           variant="outline"
           type="button"

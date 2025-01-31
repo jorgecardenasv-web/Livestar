@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { handlePrismaError } from "@/shared/errors/prisma";
 
 interface CreateTrackingNumberInput {
   quoteId: string;
@@ -7,13 +8,16 @@ interface CreateTrackingNumberInput {
 export async function createTrackingNumberService({
   quoteId,
 }: CreateTrackingNumberInput) {
-  const trackingNumber = await prisma.trackingNumber.create({
-    data: {
-      quoteId,
-      number: generateTrackingNumber(),
-    },
-  });
-  return trackingNumber;
+  try {
+    return await prisma.trackingNumber.create({
+      data: {
+        quoteId,
+        number: generateTrackingNumber(),
+      },
+    });
+  } catch (error) {
+    throw handlePrismaError(error);
+  }
 }
 
 function generateTrackingNumber() {

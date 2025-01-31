@@ -1,9 +1,9 @@
-import { Plans } from "@/features/insurance-plans/components/main/insurance-plans";
+import { Plans } from "@/features/plans/components/main/insurance-plans";
 import { InsuranceFlow } from "../main/insurance-flow-view";
 import { QuoteSummary } from "@/features/quote-summary/components/main/quote-summary";
-import { getProspect } from "@/features/insurance-plans/loaders/get-prospect";
-import { getInsuranceState } from "@/features/insurance-plans/loaders/get-insurance-status";
-import { getImage } from "@/shared/loaders/get-image";
+import { getProspect } from "@/features/plans/loaders/get-prospect";
+import { getInsuranceState } from "@/features/plans/loaders/get-insurance-status";
+import { getImage } from "@/shared/services/get-image.service";
 
 export const InsuranceStorytelling = async ({ plans }: { plans: any[] }) => {
   const prospect = await getProspect();
