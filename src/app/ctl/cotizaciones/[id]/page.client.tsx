@@ -11,14 +11,39 @@ import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
 
+const normalizeQuoteData = (quote: Quote) => {
+  const { prospect, protectWho } = quote;
+
+  const baseData = {
+    name: prospect?.name,
+    gender: prospect?.gender,
+    postalCode: prospect?.postalCode,
+    whatsapp: prospect?.whatsapp,
+    email: prospect?.email,
+    protectWho,
+  };
+
+  switch (protectWho) {
+    case "solo_yo":
+      return {
+        ...baseData,
+        age: prospect?.age,
+      };
+    default:
+      return baseData;
+  }
+};
+
 export function QuotePageClient({ quote }: { quote: Quote }) {
+  const normalizedData = normalizeQuoteData(quote);
+
   const {
     formData,
     errors,
     handleChildChange,
     handleInputChange,
     handleProtectedPersonChange,
-  } = useGetQuoteForm(quote);
+  } = useGetQuoteForm(normalizedData);
 
   const { showNotification } = useNotificationStore();
 
@@ -41,7 +66,7 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
 
   return (
     <form action={formAction}>
-      <div className="space-y-10">
+      <div className="space-y-6">
         <div className="flex-1 rounded-xl bg-muted/50 p-5 space-y-6">
           <Card>
             <CardContent>

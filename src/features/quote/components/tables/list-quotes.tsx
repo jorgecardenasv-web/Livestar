@@ -17,6 +17,8 @@ import { getCurrentUser } from "@/features/session/loaders/get-current-user";
 import { Params } from "@/app/ctl/cotizaciones/page";
 import { getQuotes } from "../../loaders/get-quotes.loader";
 import { Badge } from "@/shared/components/ui/badge";
+import { TableFilters } from "@/shared/components/tables/table-filters";
+import { filters } from "../../data";
 
 const quoteStatusVariants = {
   NUEVO: "default",
@@ -47,8 +49,8 @@ export const ListQuotes = async ({ params }: {
   return (
     <div className="w-full space-y-4">
       <div className="flex items-center py-2">
-        <SearchBar placeholder="Buscar prospectos por nombre, correo electrónico" />
-        {/* <TableFilters filters={filters} /> */}
+        <SearchBar placeholder="Buscar por nombre, correo electrónico, whatsapp..." />
+        <TableFilters filters={filters} />
       </div>
       <div className="rounded-md border">
         <Table>

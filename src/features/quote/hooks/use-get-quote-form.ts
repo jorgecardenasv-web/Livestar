@@ -6,16 +6,9 @@ import { useModalStore } from "@/shared/store/modal-store";
 
 export const useGetQuoteForm = (initialState?: any) => {
   const { openModal, closeModal } = useModalStore();
-  const [formData, setFormData] = useState<FormData>(
-    initialState || {
-      name: "",
-      gender: "",
-      postalCode: "",
-      protectWho: "",
-      whatsapp: "",
-      email: "",
-    }
-  );
+  const [formData, setFormData] = useState<FormData>(() => {
+    return initialState || {};
+  });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showContactInfo, setShowContactInfo] = useState(false);

@@ -34,7 +34,7 @@ export const DropdownActions = ({ quote }: { quote: Quote }) => {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="cursor-pointer"
-          onClick={() => push(`${prefix}/prospectos/${quote.id}`)}
+          onClick={() => push(`${prefix}/cotizaciones/${quote.id}`)}
         >
           Ver detalles
         </DropdownMenuItem>

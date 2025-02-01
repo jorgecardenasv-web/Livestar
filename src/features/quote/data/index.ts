@@ -1,3 +1,4 @@
+import { FilterConfig } from "@/shared/hooks/use-table-filters";
 import { QuoteStatus } from "@prisma/client";
 
 interface QuoteStatusOptions {
@@ -82,5 +83,14 @@ export const eventTypeOptions = [
   {
     label: "Estético",
     value: "estetico",
+  },
+];
+
+export const filters: FilterConfig[] = [
+  {
+    key: "status",
+    label: "Estado",
+    type: "radio",
+    options: quoteStatus,
   },
 ];

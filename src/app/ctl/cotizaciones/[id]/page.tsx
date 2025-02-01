@@ -5,7 +5,7 @@ import { getAdvisors } from "@/features/prospects/loaders/get-advisors";
 import { ModalQuoteActions } from "@/features/quote/components/modals/modal-quote-actions";
 import { getQuoteByIdLoader } from "@/features/quote/loaders/get-quote-by-id.loader";
 
-export default async function ProspectPage({
+export default async function QuotesPage({
   params: { id },
 }: {
   params: { id: string };
