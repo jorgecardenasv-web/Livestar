@@ -1,3 +1,29 @@
+import { QuoteStatus } from "@prisma/client";
+
+interface QuoteStatusOptions {
+  label: string;
+  value: QuoteStatus;
+}
+
+export const quoteStatus: QuoteStatusOptions[] = [
+  {
+    label: "Nuevo",
+    value: "NUEVO",
+  },
+  {
+    label: "Contactado",
+    value: "CONTACTADO",
+  },
+  {
+    label: "En progreso",
+    value: "EN_PROGRESO",
+  },
+  {
+    label: "Cerrado",
+    value: "CERRADO",
+  },
+];
+
 export const genderOptions = [
   {
     label: "Hombre",

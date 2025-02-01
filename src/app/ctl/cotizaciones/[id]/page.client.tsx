@@ -5,23 +5,24 @@ import { updateProspect } from "@/features/prospects/actions/update-prospect";
 import { ContactInfoSection } from "@/features/quote/components/sections/contact-info-section";
 import { PersonalInfoSection } from "@/features/quote/components/sections/personal-info-section";
 import { useGetQuoteForm } from "@/features/quote/hooks/use-get-quote-form";
+import { Quote } from "@/features/quote/types";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
 
-export function ProspectClientPage({ prospect }: { prospect: any }) {
+export function QuotePageClient({ quote }: { quote: Quote }) {
   const {
     formData,
     errors,
     handleChildChange,
     handleInputChange,
     handleProtectedPersonChange,
-  } = useGetQuoteForm(prospect);
+  } = useGetQuoteForm(quote);
 
   const { showNotification } = useNotificationStore();
 
-  const updateUserWithId = updateProspect.bind(null, prospect.id);
+  const updateUserWithId = updateProspect.bind(null, quote.id);
 
   const [state, formAction] = useFormState(updateUserWithId, {
     message: "",

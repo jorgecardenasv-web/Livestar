@@ -2,21 +2,20 @@ import { useNotificationStore } from "@/features/notification/store/notification
 import { useModalStore } from "@/shared/store/modal-store";
 import { useFormState } from "react-dom";
 import { useEffect } from "react";
-import { getNotificationMessage } from "@/shared/utils";
-import { Prospect } from "../types/prospect";
-import { changeStatusAndAdvisor } from "../actions/change-advisor";
+import { changeStatusAndAdvisor } from "../actions/change-advisor-and-status";
+import { Quote } from "@prisma/client";
 
-export const useProspectActions = () => {
+export const useQuoteActions = () => {
   const {
     isOpen,
     openModal,
     closeModal,
     modalType,
-    modalProps: prospect,
+    modalProps: quote,
   } = useModalStore();
   const { showNotification } = useNotificationStore();
 
-  const updateUserWithId = changeStatusAndAdvisor.bind(null, prospect?.id);
+  const updateUserWithId = changeStatusAndAdvisor.bind(null, quote?.id);
 
   const [state, formAction] = useFormState(updateUserWithId, {
     message: "",
@@ -27,7 +26,7 @@ export const useProspectActions = () => {
   useEffect(() => {
     if (state.success) {
       closeModal();
-      showNotification(getNotificationMessage(modalType ?? ""), "success");
+      showNotification(state.message, "success");
     }
 
     if (!state.success && state.message) {
@@ -37,26 +36,19 @@ export const useProspectActions = () => {
 
   const handleCancel = () => closeModal();
 
-  // Edit prospect
-  const openEditProspectModal = (prospect: Prospect) =>
-    openModal("editProspect", prospect);
+  const openEditQuoteModal = (quote: Quote) => openModal("updateQuote", quote);
 
   const openXlsxModal = () => openModal("createXlsx");
 
   return {
-    // General Actions
     state,
     isOpen,
     modalType,
-    prospect,
+    quote,
     handleCancel,
     closeModal,
     formAction,
-
-    // Edit prospect
-    openEditProspectModal,
-
-    // Create Xlsx
+    openEditQuoteModal,
     openXlsxModal,
   };
 };

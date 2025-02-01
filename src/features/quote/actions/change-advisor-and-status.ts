@@ -2,13 +2,15 @@
 
 import { z } from "zod";
 import { simplifyZodErrors } from "@/shared/utils";
-import { changeAdvisorService } from "../services/change-advisor.service";
+import { changeAdvisorService } from "../services/update/change-advisor.service";
 import { revalidatePath } from "next/cache";
 import { FormState } from "@/shared/types";
 import { PrismaError } from "@/shared/errors/prisma";
+import { QuoteStatus } from "@prisma/client";
 
 const ChangeAdvisorSchema = z.object({
-  advisorId: z.string(),
+  userId: z.string(),
+  status: z.nativeEnum(QuoteStatus),
 });
 
 export const changeStatusAndAdvisor = async (
@@ -17,7 +19,7 @@ export const changeStatusAndAdvisor = async (
   formData: FormData
 ): Promise<FormState> => {
   try {
-    const advisorId = formData.get("userId") as string;
+    const rawFormData = Object.fromEntries(formData);
 
     if (!prospectId) {
       return {
@@ -26,9 +28,7 @@ export const changeStatusAndAdvisor = async (
       };
     }
 
-    const { data, success, error } = ChangeAdvisorSchema.safeParse({
-      advisorId,
-    });
+    const { data, success, error } = ChangeAdvisorSchema.safeParse(rawFormData);
 
     if (!success) {
       const simplifiedErrors = simplifyZodErrors(error);
@@ -39,19 +39,9 @@ export const changeStatusAndAdvisor = async (
       };
     }
 
-    const prospect = await changeAdvisorService({
-      prospectId,
-      advisorId: data.advisorId,
-    });
+    await changeAdvisorService(prospectId, data);
 
-    if (!prospect) {
-      return {
-        success: false,
-        message: "No se pudo actualizar el prospecto.",
-      };
-    }
-
-    revalidatePath("/prospects");
+    revalidatePath("/cotizaciones");
 
     return {
       success: true,

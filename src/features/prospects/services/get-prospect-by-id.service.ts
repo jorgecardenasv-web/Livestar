@@ -7,9 +7,6 @@ export const getProspectByIdService = async (id: string) => {
       where: {
         id: id,
       },
-      include: {
-        user: true,
-      },
     });
   } catch (error) {
     throw handlePrismaError(error);

@@ -1,11 +1,10 @@
-import { Role, UserStatus } from "@prisma/client";
+import { Role, UserStatus, QuoteStatus } from "@prisma/client";
 import { hash } from "bcrypt";
 import { faker } from "@faker-js/faker/locale/es_MX";
 import prisma from ".";
 import { insurances } from "./data/insurance.data";
 import { planTypes } from "./data/planType.data";
 import { plans } from "./data/plan.data";
-import { deductibles } from "./data/deductible.data";
 
 async function main() {
   const adminPassword = "AdminPass123";
@@ -13,17 +12,15 @@ async function main() {
   const hashedAdminPassword = await hash(adminPassword, 10);
   const hashedAdvisorPassword = await hash(advisorPassword, 10);
 
-  // Se limpian todos los datos existentes
   await prisma.trackingNumber.deleteMany();
-  await prisma.quote.deleteMany();
   await prisma.medicalHistory.deleteMany();
+  await prisma.quote.deleteMany();
   await prisma.prospect.deleteMany();
   await prisma.plan.deleteMany();
   await prisma.planType.deleteMany();
   await prisma.insurance.deleteMany();
   await prisma.user.deleteMany();
 
-  // Se crea un usuario administrador
   await prisma.user.create({
     data: {
       name: "Administrador",
@@ -34,7 +31,6 @@ async function main() {
     },
   });
 
-  // Se crean usuarios de asesores
   const advisors = await Promise.all([
     prisma.user.create({
       data: {
@@ -62,12 +58,10 @@ async function main() {
       }),
   ]);
 
-  // Se crean las aseguradoras, tipos de planes, planes y deducibles
   await prisma.insurance.createMany({ data: insurances, skipDuplicates: true });
   await prisma.planType.createMany({ data: planTypes, skipDuplicates: true });
   await prisma.plan.createMany({ data: plans, skipDuplicates: true });
 
-  // se crean los prospectos y se asignan a los asesores
   const activeAdvisors = advisors.filter(
     (advisor) => advisor.status === UserStatus.ACTIVO
   );
@@ -75,9 +69,7 @@ async function main() {
   const prospects = await Promise.all(
     Array(10)
       .fill(null)
-      .map(async (_, index) => {
-        const advisor = activeAdvisors[index % activeAdvisors.length];
-
+      .map(async () => {
         return prisma.prospect.create({
           data: {
             id: faker.string.uuid(),
@@ -85,12 +77,9 @@ async function main() {
             gender: Math.random() > 0.5 ? "hombre" : "mujer",
             age: faker.number.int({ min: 18, max: 64 }),
             postalCode: faker.location.zipCode(),
-            protectWho: "solo_yo",
             whatsapp: faker.phone.number(),
             email: faker.internet.email(),
             isVerified: false,
-            additionalInfo: {},
-            userId: advisor.id,
             createdAt: new Date(),
             updatedAt: new Date(),
           },
@@ -98,10 +87,10 @@ async function main() {
       })
   );
 
-  // Se crean las cotizaciones de los prospectos
-  await Promise.all(
-    prospects.slice(0, 5).map((prospect) =>
-      prisma.quote.create({
+  const quotes = await Promise.all(
+    prospects.slice(0, 5).map((prospect, index) => {
+      const advisor = activeAdvisors[index % activeAdvisors.length];
+      return prisma.quote.create({
         data: {
           id: faker.string.uuid(),
           prospectId: prospect.id,
@@ -112,9 +101,53 @@ async function main() {
             max: 5000,
             fractionDigits: 2,
           }),
-          status: "NUEVO",
+          userId: advisor.id,
+          status: QuoteStatus.NUEVO,
+          protectWho: "solo_yo",
+          additionalInfo: {},
           createdAt: new Date(),
           updatedAt: new Date(),
+        },
+      });
+    })
+  );
+
+  await Promise.all(
+    quotes.map((quote) =>
+      prisma.medicalHistory.create({
+        data: {
+          id: faker.string.uuid(),
+          responses: {
+            pregunta1: faker.datatype.boolean() ? "Sí" : "No",
+            pregunta2: faker.datatype.boolean() ? "Sí" : "No",
+            pregunta3: faker.datatype.boolean() ? "Sí" : "No",
+          },
+          quoteId: quote.id,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      })
+    )
+  );
+
+  await Promise.all(
+    quotes.map((quote) =>
+      prisma.trackingNumber.create({
+        data: {
+          id: faker.string.uuid(),
+          number: `TRACK${faker.string.numeric(6)}`,
+          quoteId: quote.id,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          lastActivity: new Date(),
+          activityLog: {
+            actividades: [
+              {
+                fecha: new Date(),
+                descripcion: "Cotización creada",
+              },
+            ],
+          },
         },
       })
     )

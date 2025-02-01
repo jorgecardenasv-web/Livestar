@@ -49,13 +49,7 @@ export const QuoteFinalizationForm = ({ prospect }: QuoteFinalizationClientPageP
     currentErrors,
     handleSubmit,
   } = useMedicalQuoteForm({
-    questions: QUESTIONS,
-    onSubmitSuccess: () => {
-      console.log('Form submitted successfully');
-    },
-    onSubmitError: (error) => {
-      console.error('Error submitting form:', error);
-    }
+    questions: QUESTIONS
   });
 
   return (

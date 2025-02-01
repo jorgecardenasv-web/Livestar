@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
-import { generateReport } from "../actions/generate-report";
-import { useProspectActions } from "./use-prospect-actions";
+import { generateReport } from "../../prospects/actions/generate-report";
+import { useQuoteActions } from "./use-quote-actions";
 
 export const useReport = () => {
-  const { closeModal } = useProspectActions();
+  const { closeModal } = useQuoteActions();
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: undefined,
     to: undefined,

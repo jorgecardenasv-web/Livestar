@@ -4,19 +4,19 @@ import { Modal } from "@/shared/components/ui/modal";
 import { Advisor } from "@/features/advisors/types/advisor";
 import { Button } from "@/shared/components/ui/button";
 import { DateRangePicker } from "@/shared/components/ui/data-range-picker";
-import { useProspectActions } from "../../hooks/use-prospect-actions";
-import { ProspectForm } from "../forms/prospect-form";
+import { useQuoteActions } from "../../hooks/use-quote-actions";
+import { UpdateQuoteForm } from "../forms/update-prospect-form";
 import { useReport } from "../../hooks/use-report";
 
-export const ModalProspectActions = ({ advisors }: { advisors: Advisor[] }) => {
-  const { isOpen, modalType } = useProspectActions();
+export const ModalQuoteActions = ({ advisors }: { advisors: Advisor[] }) => {
+  const { isOpen, modalType } = useQuoteActions();
   const { handleDateChange, handleSubmit, isLoading } = useReport();
 
   return (
     <>
-      {isOpen && modalType === "editProspect" && (
+      {isOpen && modalType === "updateQuote" && (
         <Modal title="Editar Prospecto" description="" size="lg">
-          <ProspectForm advisors={advisors} />
+          <UpdateQuoteForm advisors={advisors} />
         </Modal>
       )}
 

@@ -51,13 +51,6 @@ export const getProspectsService = async ({
           ...whereText,
         },
         include: {
-          user: {
-            select: {
-              name: true,
-              email: true,
-              id: true,
-            },
-          },
           quotes: {
             select: {
               status: true,

@@ -16,14 +16,6 @@ export const getAllProspectsByDateService = async ({
           lte: endDate,
         },
       },
-      include: {
-        user: {
-          select: {
-            name: true,
-            email: true,
-          },
-        },
-      },
     });
   } catch (error) {
     throw handlePrismaError(error);

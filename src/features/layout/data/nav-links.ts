@@ -24,8 +24,8 @@ export const navLinks: NavLiks[] = [
     roles: ["ADMIN"],
   },
   {
-    name: "Prospectos",
-    href: `${prefix}/prospectos`,
+    name: "Cotizaciones",
+    href: `${prefix}/cotizaciones`,
     icon: Users,
     roles: ["ADMIN", "ADVISOR"],
   },

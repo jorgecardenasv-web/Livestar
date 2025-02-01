@@ -1,17 +1,16 @@
-import { getProspectById } from "@/features/prospects/loaders/get-prospect-by-id";
-import { ProspectClientPage } from "./page.client";
+import { QuotePageClient } from "./page.client";
 import { Breadcrumbs } from "@/shared/components/layout/breadcrumbs";
 import { prefix } from "@/shared/utils/constants";
-import { Prospect } from "@/features/prospects/types/prospect";
 import { getAdvisors } from "@/features/prospects/loaders/get-advisors";
-import { ModalProspectActions } from "@/features/prospects/components/modals/modal-prospect-actions";
+import { ModalQuoteActions } from "@/features/quote/components/modals/modal-quote-actions";
+import { getQuoteByIdLoader } from "@/features/quote/loaders/get-quote-by-id.loader";
 
 export default async function ProspectPage({
   params: { id },
 }: {
   params: { id: string };
 }) {
-  const prospect = await getProspectById(id);
+  const quote = await getQuoteByIdLoader(id);
   const advisors = await getAdvisors();
 
   return (
@@ -27,8 +26,8 @@ export default async function ProspectPage({
           ]}
         />
       </div>
-      <ProspectClientPage prospect={prospect} />
-      <ModalProspectActions advisors={advisors} />
+      <QuotePageClient quote={quote!} />
+      <ModalQuoteActions advisors={advisors} />
     </>
   );
 }

@@ -1,6 +1,6 @@
 import { SelectInput } from "@/shared/components/ui/select-input";
 import { TextInput } from "@/shared/components/ui/text-input";
-import { genderOptions, whoOptions } from "../../data/personal-info-data";
+import { genderOptions, whoOptions } from "../../data";
 import { FormData } from "../../schemas/form-schema";
 
 interface PersonalInfoSectionProps {
