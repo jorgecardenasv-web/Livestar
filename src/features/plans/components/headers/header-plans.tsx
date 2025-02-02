@@ -4,7 +4,7 @@ import Link from "next/link";
 import { BriefcaseMedical } from "lucide-react";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";
-import { prefix } from "@/shared/utils/constants";
+import { prefix } from "@/features/layout/nav-config/constants";
 
 export const HeaderPlans = () => {
   return (

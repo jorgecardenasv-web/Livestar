@@ -9,7 +9,7 @@ import {
   PenIcon as UserPen,
 } from "lucide-react";
 import { logout } from "@/features/auth/actions/logout";
-import { prefix } from "@/shared/utils/constants";
+import { prefix } from "@/features/layout/nav-config/constants";
 import {
   DropdownMenu,
   DropdownMenuContent,

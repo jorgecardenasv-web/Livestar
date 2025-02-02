@@ -4,7 +4,7 @@ import { reassignProspectService } from "@/features/quote/services/update/reassi
 import prisma from "@/lib/prisma";
 import { PrismaError } from "@/shared/errors/prisma";
 import { FormState } from "@/shared/types";
-import { prefix } from "@/shared/utils/constants";
+import { prefix } from "@/features/layout/nav-config/constants";
 import { revalidatePath } from "next/cache";
 
 export const deleteAdvisor = async (

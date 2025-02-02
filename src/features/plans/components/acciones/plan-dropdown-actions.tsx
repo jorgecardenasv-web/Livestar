@@ -13,7 +13,7 @@ import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { Plan } from "../../types/plan";
 import { usePlanActions } from "../../hooks/use-plan-actions";
-import { prefix } from "@/shared/utils/constants";
+import { prefix } from "@/features/layout/nav-config/constants";
 import Link from "next/link";
 
 export const DropdownActions = ({ plan }: { plan: Plan }) => {

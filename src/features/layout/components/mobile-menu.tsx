@@ -10,7 +10,7 @@ import Link from "next/link";
 import NavLinks from "@/features/layout/components/nav-link";
 import { ThemeSelector } from "@/features/theming/components/theme-selector";
 import { Dropdown } from "@/features/layout/components/dropdown";
-import { prefix } from "@/shared/utils/constants";
+import { prefix } from "@/features/layout/nav-config/constants";
 
 export const MobileMenu = () => {
   return (

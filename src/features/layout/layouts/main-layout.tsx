@@ -3,7 +3,7 @@ import { Sidebar } from "../components/sidebar";
 import { MobileMenu } from "../components/mobile-menu";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import Link from "next/link";
-import { prefix } from "@/shared/utils/constants";
+import { prefix } from "@/features/layout/nav-config/constants";
 
 export const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (

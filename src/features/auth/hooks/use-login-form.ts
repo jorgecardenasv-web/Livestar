@@ -1,6 +1,6 @@
 import { useNotificationStore } from "@/features/notification/store/notification-store";
 import { FormState } from "@/shared/types";
-import { prefix } from "@/shared/utils/constants";
+import { prefix } from "@/features/layout/nav-config/constants";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useFormState } from "react-dom";
@@ -27,5 +27,5 @@ export const useLoginForm = (
   return {
     state,
     formAction,
-  }
+  };
 };

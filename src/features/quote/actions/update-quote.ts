@@ -1,6 +1,6 @@
 "use server";
 
-import { prefix } from "@/shared/utils/constants";
+import { prefix } from "@/features/layout/nav-config/constants";
 import { revalidatePath } from "next/cache";
 import { updateQuoteService } from "../services/update/update-quote.service";
 import { parsedFormDataAge } from "@/shared/utils";

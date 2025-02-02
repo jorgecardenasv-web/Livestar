@@ -1,6 +1,6 @@
 "use server";
 
-import { prefix } from "@/shared/utils/constants";
+import { prefix } from "@/features/layout/nav-config/constants";
 import { createPlanService } from "../services/create/create-plan.service";
 import { redirect } from "next/navigation";
 import { flatPricesToJsonPrices, flatPricesToJsonPricesHDI } from "../utils";

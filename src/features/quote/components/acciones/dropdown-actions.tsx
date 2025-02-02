@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
 
-import { prefix } from "@/shared/utils/constants";
+import { prefix } from "@/features/layout/nav-config/constants";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { useQuoteActions } from "../../hooks/use-quote-actions";

@@ -3,7 +3,7 @@ import NavLinks from "@/features/layout/components/nav-link";
 import { ThemeSelector } from "@/features/theming/components/theme-selector";
 import { Dropdown } from "./dropdown";
 import { AuthenticadedUser } from "@/lib/iron-session/types";
-import { prefix } from "@/shared/utils/constants";
+import { prefix } from "@/features/layout/nav-config/constants";
 
 export const SidebarClient = ({ user }: { user?: AuthenticadedUser }) => {
   return (

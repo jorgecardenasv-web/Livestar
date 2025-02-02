@@ -1,4 +1,4 @@
-import { prefix } from "@/shared/utils/constants";
+import { prefix } from "@/features/layout/nav-config/constants";
 import { ChevronRightIcon, HomeIcon } from "lucide-react";
 import Link from "next/link";
 
