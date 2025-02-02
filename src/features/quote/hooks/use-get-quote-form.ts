@@ -3,11 +3,12 @@ import { z } from "zod";
 import { FormData, buildSchema } from "../schemas/form-schema";
 import { createProspect } from "@/features/prospects/actions/create-prospect";
 import { useModalStore } from "@/shared/store/modal-store";
+import { normalizeFormData } from "../utils/normalize-form-data";
 
 export const useGetQuoteForm = (initialState?: any) => {
   const { openModal, closeModal } = useModalStore();
   const [formData, setFormData] = useState<FormData>(() => {
-    return initialState || {};
+    return normalizeFormData(initialState);
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});

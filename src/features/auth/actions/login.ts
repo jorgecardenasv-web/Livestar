@@ -66,5 +66,5 @@ export const login = async (
           : "Error al iniciar sesión.",
     };
   }
-  redirect(`${prefix}/prospectos`);
+  redirect(`${prefix}/cotizaciones`);
 };

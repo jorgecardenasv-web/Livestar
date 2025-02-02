@@ -18,10 +18,10 @@ export default async function QuotesPage({
       <div className="flex items-center justify-between gap-2">
         <Breadcrumbs
           items={[
-            { label: "Prospectos", href: `${prefix}/prospectos` },
+            { label: "Cotizaciones", href: `${prefix}/cotizaciones` },
             {
-              label: "Detalle de prospecto",
-              href: `${prefix}/prospectos/${id}`,
+              label: "Detalle de cotización",
+              href: `${prefix}/cotizaciones/${id}`,
             },
           ]}
         />

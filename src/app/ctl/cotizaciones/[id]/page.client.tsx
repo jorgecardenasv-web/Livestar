@@ -1,7 +1,7 @@
 "use client";
 
 import { useNotificationStore } from "@/features/notification/store/notification-store";
-import { updateProspect } from "@/features/prospects/actions/update-prospect";
+import { updateProspect } from "@/features/quote/actions/update-quote";
 import { ContactInfoSection } from "@/features/quote/components/sections/contact-info-section";
 import { PersonalInfoSection } from "@/features/quote/components/sections/personal-info-section";
 import { useGetQuoteForm } from "@/features/quote/hooks/use-get-quote-form";
@@ -11,39 +11,14 @@ import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { useEffect } from "react";
 import { useFormState } from "react-dom";
 
-const normalizeQuoteData = (quote: Quote) => {
-  const { prospect, protectWho } = quote;
-
-  const baseData = {
-    name: prospect?.name,
-    gender: prospect?.gender,
-    postalCode: prospect?.postalCode,
-    whatsapp: prospect?.whatsapp,
-    email: prospect?.email,
-    protectWho,
-  };
-
-  switch (protectWho) {
-    case "solo_yo":
-      return {
-        ...baseData,
-        age: prospect?.age,
-      };
-    default:
-      return baseData;
-  }
-};
-
 export function QuotePageClient({ quote }: { quote: Quote }) {
-  const normalizedData = normalizeQuoteData(quote);
-
   const {
     formData,
     errors,
     handleChildChange,
     handleInputChange,
     handleProtectedPersonChange,
-  } = useGetQuoteForm(normalizedData);
+  } = useGetQuoteForm(quote);
 
   const { showNotification } = useNotificationStore();
 

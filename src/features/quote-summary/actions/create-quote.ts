@@ -45,8 +45,6 @@ export async function CreateContract(): Promise<FormState> {
       expirationDate: new Date(),
     };
 
-    console.log("quoteData", quoteData);
-
     const quote = await createQuoteService(quoteData);
     await createTrackingNumberService({ quoteId: quote.id });
 
