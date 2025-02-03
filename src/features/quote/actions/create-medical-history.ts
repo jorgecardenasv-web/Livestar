@@ -1,6 +1,6 @@
 "use server";
 
-import { createMedicalHistoryService } from "../services/create-medical-history.service";
+// import { createMedicalHistoryService } from "../services/create-medical-history.service";
 import { cookies } from "next/headers";
 import { getProspectByIdService } from "@/features/prospects/services/get-prospect-by-id.service";
 import { FormDataMedical } from "../types";
@@ -12,16 +12,22 @@ export const createMedicalHistory = async (formMedical: FormDataMedical[]) => {
     const cookieStore = cookies();
     const prospectJson = cookieStore.get("prospect")?.value;
     const prospect = prospectJson ? JSON.parse(prospectJson) : {};
-    const prospectData = await getProspectByIdService(prospect.id);
+    // const prospectData = await getProspectByIdService(prospect.id);
 
-    if (prospectData) {
-      await createMedicalHistoryService(formMedical, prospectData?.id);
+    console.log({
+      formMedical,
+      prospect,
+      // prospectData,
+    });
 
-      cookieStore.delete("prospect");
-      cookieStore.delete("selectedPlan");
-      cookieStore.delete("activePlanType");
-      cookieStore.delete("activePaymentType");
-    }
+    // if (prospectData) {
+    //   await createMedicalHistoryService(formMedical, prospectData?.id);
+
+    //   cookieStore.delete("prospect");
+    //   cookieStore.delete("selectedPlan");
+    //   cookieStore.delete("activePlanType");
+    //   cookieStore.delete("activePaymentType");
+    // }
   } catch (error) {
     return {
       success: false,
@@ -31,5 +37,5 @@ export const createMedicalHistory = async (formMedical: FormDataMedical[]) => {
           : "Error al crear el historial médico.",
     };
   }
-  redirect("/cotizar");
+  // redirect("/cotizar");
 };

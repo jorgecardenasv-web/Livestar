@@ -4,8 +4,7 @@ import { getProspectById } from "@/features/prospects/loaders/get-prospect-by-id
 import { QuoteFinalizationForm } from "@/features/quote/components/forms/quote-finalization-form";
 
 export default async function QuoteFinalizationPage() {
-  const propsectCookie = await getProspect();
-  const prospect = await getProspectById(propsectCookie.id);
+  const prospect = await getProspect();
 
   return (
     <>
