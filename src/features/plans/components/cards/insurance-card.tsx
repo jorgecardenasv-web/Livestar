@@ -7,6 +7,7 @@ import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { getProspect } from "../../loaders/get-prospect";
 import { PriceTable } from "../../types";
 import { getImage } from "../../../../shared/services/get-image.service";
+import { formatCurrency } from "@/shared/utils";
 
 interface InsuranceCardProps {
   company: Insurance;
@@ -27,7 +28,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   paymentType,
   isRecommended,
 }) => {
-  const prospect = await getProspect();
+  const { prospect } = await getProspect();
   const deductibles: Deductibles = plan.deductibles;
 
   const isMultiple = deductibles["default"]
@@ -94,7 +95,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
               {paymentType === "Mensual" ? "Pago mensual" : "Pago anual"} Total
             </p>
             <p className="text-3xl font-bold text-[#223E99]">
-              ${coverage_fee.toLocaleString()}
+              {formatCurrency(coverage_fee)}
             </p>
           </div>
         </div>
@@ -103,24 +104,24 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
           <InfoItem
             icon={<Shield className="w-5 h-5" />}
             title="Suma asegurada"
-            value={`$${(plan.sumInsured / 1000000).toLocaleString()} MILLONES`}
+            value={`${formatCurrency((plan.sumInsured / 1000000))} MILLONES`}
           />
           {/* ------------------ DEDUCIBLE ----------------- */}
           <InfoItem
             icon={<DollarSign className="w-5 h-5" />}
             title="Deducible"
-            value={`${isMultiple ? "DESDE" : ""} $${minor.toLocaleString()}`}
+            value={`${isMultiple ? "DESDE" : ""} ${formatCurrency(minor)}`}
           />
           {/* ---------------------------------------------- */}
           <InfoItem
             icon={<Percent className="w-5 h-5" />}
             title="Coaseguro"
-            value={`${(plan.coInsurance * 100).toFixed(0)}%`}
+            value={`${plan.coInsurance}%`}
           />
           <InfoItem
             icon={<Heart className="w-5 h-5" />}
             title="Tope coaseguro"
-            value={`$${plan.coInsuranceCap?.toLocaleString()}`}
+            value={`${formatCurrency(plan.coInsuranceCap || 0)}`}
           />
         </div>
 
@@ -134,17 +135,17 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
           <input
             type="hidden"
             name="coInsurance"
-            value={`${(plan.coInsurance * 100).toFixed(0)}`}
+            value={(plan.coInsurance)}
           />
           <input
             type="hidden"
             name="coInsuranceCap"
-            value={plan.coInsuranceCap?.toLocaleString()}
+            value={plan.coInsuranceCap || 0}
           />
           <input
             type="hidden"
             name="coverage_fee"
-            value={coverage_fee.toLocaleString()}
+            value={coverage_fee}
           />
           <input type="hidden" name="id" value={plan.id} />
           <input

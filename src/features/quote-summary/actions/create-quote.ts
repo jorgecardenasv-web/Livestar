@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getInsuranceState } from "@/features/plans/loaders/get-insurance-status";
-import { createProspectService } from "@/features/quote/services/create-prospect.service";
+// import { createProspectService } from "@/features/quote/services/create-prospect.service";
 import { getAdvisorWithLeastProspectsService } from "@/features/advisors/services/get-advisor-with-least-prospects.service";
 import {
   createQuoteService,
@@ -24,29 +24,29 @@ export async function CreateContract(): Promise<FormState> {
     const advisor = await getAdvisorWithLeastProspectsService();
     if (!advisor) throw new Error("No advisor available");
 
-    const newProspect = await createProspectService(prospect, advisor.id);
-    const planData = await getPlanByUuid(selectedPlan.id);
+    // const newProspect = await createProspectService(prospect, advisor.id);
+    // const planData = await getPlanByUuid(selectedPlan.id);
 
-    if (!planData || !newProspect) {
-      throw new Error("Failed to create prospect or get plan data");
-    }
+    // if (!planData || !newProspect) {
+    //   throw new Error("Failed to create prospect or get plan data");
+    // }
 
-    const newCookieProspect = {
-      ...prospect,
-      id: newProspect.id,
-    };
+    // const newCookieProspect = {
+    //   ...prospect,
+    //   id: newProspect.id,
+    // };
 
-    cookies().set("prospect", JSON.stringify(newCookieProspect));
+    // cookies().set("prospect", JSON.stringify(newCookieProspect));
 
-    const quoteData = {
-      prospectId: newProspect.id,
-      planId: planData.id,
-      totalPrice: parseFloat(selectedPlan.coverage_fee),
-      expirationDate: new Date(),
-    };
+    // const quoteData = {
+    //   prospectId: newProspect.id,
+    //   planId: planData.id,
+    //   totalPrice: parseFloat(selectedPlan.coverage_fee),
+    //   expirationDate: new Date(),
+    // };
 
-    const quote = await createQuoteService(quoteData);
-    await createTrackingNumberService({ quoteId: quote.id });
+    // const quote = await createQuoteService(quoteData);
+    // await createTrackingNumberService({ quoteId: quote.id });
 
     // await sendProspectEmail({
     //   prospectName: prospect.name,

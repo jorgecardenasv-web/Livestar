@@ -8,7 +8,6 @@ import { ContactInfoSection } from "../sections/contact-info-section";
 import { MedicalInformationForm } from "../forms/medical-information-form";
 import { PersonalInfoSection } from "../sections/personal-info-section";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
-import { useMedicalQuoteForm } from "../../hooks/use-medical-quote-form";
 
 const QUESTIONS: Question[] = [
   {
@@ -40,17 +39,12 @@ export const QuoteFinalizationForm = ({ prospect }: QuoteFinalizationClientPageP
     handleChildChange,
     handleInputChange,
     handleProtectedPersonChange,
-  } = useGetQuoteForm(prospect);
-
-  const {
+    handleSubmit,
     forms,
     setForms,
+    currentMedicalErrors,
     isSubmitting,
-    currentErrors,
-    handleSubmit,
-  } = useMedicalQuoteForm({
-    questions: QUESTIONS
-  });
+  } = useGetQuoteForm(prospect, QUESTIONS);
 
   return (
     <Card className="max-w-6xl mx-auto p-5">
@@ -80,7 +74,7 @@ export const QuoteFinalizationForm = ({ prospect }: QuoteFinalizationClientPageP
               setForms={setForms}
               questions={QUESTIONS}
               formFamily={formData}
-              errors={currentErrors}
+              errors={currentMedicalErrors}
             />
           </div>
 

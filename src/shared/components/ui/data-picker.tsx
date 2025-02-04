@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { format } from "date-fns";
+import { es } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 
 import { cn } from "@/shared/utils/cn";
@@ -16,35 +17,42 @@ import { Label } from "./label";
 
 interface DatePickerProps {
   value?: Date;
-  title: string;
+  label: string;
   placeholder?: string;
   onValueChange: (value: Date | undefined) => void;
   error?: string;
+  darkLabel?: boolean;
 }
 
 export function DatePicker({
   value,
-  title,
+  label,
   placeholder = "Selecciona una fecha",
   onValueChange,
   error,
+  darkLabel,
 }: DatePickerProps) {
   return (
-    <div className="grid w-full items-center gap-1.5">
-      <Label htmlFor={title} className={`mt-4`}>
-        {title}
-      </Label>
+    <div className="w-full space-y-1">
+      {label && (
+        <Label
+          htmlFor={label}
+          className={cn(darkLabel ? "text-white" : "", label ? "mt-4" : "")}
+        >
+          {label}
+        </Label>
+      )}
       <Popover>
         <PopoverTrigger asChild>
           <Button
-            variant={"outline"}
+            variant="outline"
             className={cn(
-              "w-[280px] justify-start text-left font-normal",
+              "w-full justify-start text-left px-3 py-2",
               !value && "text-muted-foreground"
             )}
           >
             <CalendarIcon className="mr-2" />
-            {value ? format(value, "PPP") : <span>{placeholder}</span>}
+            {value ? format(value, "PPP", { locale: es }) : <span>{placeholder}</span>}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0">
@@ -53,6 +61,7 @@ export function DatePicker({
             selected={value}
             onSelect={onValueChange}
             initialFocus
+            disabled={{ after: new Date() }}
           />
         </PopoverContent>
       </Popover>

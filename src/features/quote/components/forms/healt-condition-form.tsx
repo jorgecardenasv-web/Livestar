@@ -29,7 +29,7 @@ interface HealthConditionFormProps {
   errors: { [key: string]: string };
 }
 
-const HealthConditionForm: FC<HealthConditionFormProps> = ({
+export const HealthConditionForm: FC<HealthConditionFormProps> = ({
   formData,
   onChange,
   index,
@@ -37,7 +37,7 @@ const HealthConditionForm: FC<HealthConditionFormProps> = ({
   errors,
 }) => {
   return (
-    <div>
+    <div className="mb-4 space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <TextInput
           label="Nombre del padecimiento"
@@ -46,7 +46,7 @@ const HealthConditionForm: FC<HealthConditionFormProps> = ({
           onChange={(e) => onChange("nombrePadecimiento", e.target.value)}
           error={
             errors[
-              `question-${indexform}-condition-${index}-nombrePadecimiento`
+            `question-${indexform}-condition-${index}-nombrePadecimiento`
             ] || ""
           }
         />
@@ -66,18 +66,13 @@ const HealthConditionForm: FC<HealthConditionFormProps> = ({
         />
         <DatePicker
           value={formData.fechaInicio}
-          title="Fecha de inicio"
+          label="Fecha de inicio"
           placeholder="Fecha de inicio"
           onValueChange={(value) => onChange("fechaInicio", value)}
           error={
             errors[`question-${indexform}-condition-${index}-fechaInicio`] || ""
           }
         />
-        {/* <DatePicker
-          value={formData.fechaInicio}
-          placeholder="Fecha de inicio"
-          onValueChange={(value) => onChange("fechaInicio", value)}
-        /> */}
         <SelectInput
           label="Tipo de tratamiento"
           options={[
@@ -95,7 +90,7 @@ const HealthConditionForm: FC<HealthConditionFormProps> = ({
           onValueChange={(value) => onChange("tipoTratamiento", value)}
           error={
             errors[
-              `question-${indexform}-condition-${index}-tipoTratamiento`
+            `question-${indexform}-condition-${index}-tipoTratamiento`
             ] || ""
           }
         />
@@ -134,7 +129,7 @@ const HealthConditionForm: FC<HealthConditionFormProps> = ({
           onChange={(e) => onChange("detalleComplicacion", e.target.value)}
           error={
             errors[
-              `question-${indexform}-condition-${index}-detalleComplicacion`
+            `question-${indexform}-condition-${index}-detalleComplicacion`
             ] || ""
           }
         />
@@ -173,7 +168,7 @@ const HealthConditionForm: FC<HealthConditionFormProps> = ({
           onChange={(e) => onChange("detalleMedicamento", e.target.value)}
           error={
             errors[
-              `question-${indexform}-condition-${index}-detalleMedicamento`
+            `question-${indexform}-condition-${index}-detalleMedicamento`
             ] || ""
           }
         />
@@ -181,5 +176,3 @@ const HealthConditionForm: FC<HealthConditionFormProps> = ({
     </div>
   );
 };
-
-export default HealthConditionForm;

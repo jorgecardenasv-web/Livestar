@@ -8,6 +8,7 @@ import { deleteSelectedPlan } from "@/features/plans/actions/set-cookies";
 import { FC, useState } from "react";
 import { Button } from "@/shared/components/ui/button";
 import MultipleDeductibleModal from "../modals/MultipleDeductibleModal";
+import { formatCurrency } from "@/shared/utils";
 
 export const QuoteSummary: FC<InsuranceQuoteData & { imgCompanyLogo: { base64: string } }> = ({
   coInsurance,
@@ -63,7 +64,7 @@ export const QuoteSummary: FC<InsuranceQuoteData & { imgCompanyLogo: { base64: s
               Total {isPriceMonthly ? "Mensual" : "Anual"}
             </p>
             <p className="text-3xl sm:text-4xl font-bold text-[#223E99]">
-              ${coverage_fee.toLocaleString()}
+              {formatCurrency(coverage_fee)}
             </p>
           </div>
           <div className="text-center sm:text-right">
@@ -81,14 +82,14 @@ export const QuoteSummary: FC<InsuranceQuoteData & { imgCompanyLogo: { base64: s
         <InfoCard
           icon={<Shield className="w-4 h-4 sm:w-5 sm:h-5" />}
           title="Suma asegurada"
-          value={`$${sumInsured}`}
+          value={formatCurrency((sumInsured))}
         />
         {/* -------------------------------------------------------------------- */}
         <div className="flex justify-between">
           <InfoCard
             icon={<DollarSign className="w-4 h-4 sm:w-5 sm:h-5" />}
             title="Deducible"
-            value={`${isMultiple ? `desde $${deductible}` : `$${deductible}`}`}
+            value={`${isMultiple ? `desde ${formatCurrency(deductible)}` : `${formatCurrency(deductible)}`}`}
             useHtml={isMultiple}
             htmlElement={
               <div className="pl-8">
@@ -127,7 +128,7 @@ export const QuoteSummary: FC<InsuranceQuoteData & { imgCompanyLogo: { base64: s
         <InfoCard
           icon={<Heart className="w-4 h-4 sm:w-5 sm:h-5" />}
           title="Tope coaseguro"
-          value={`$${coInsuranceCap}`}
+          value={formatCurrency(coInsuranceCap)}
         />
       </div>
       <div className="flex justify-center">

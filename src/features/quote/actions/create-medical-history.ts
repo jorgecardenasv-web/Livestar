@@ -1,23 +1,30 @@
 "use server";
 
-// import { createMedicalHistoryService } from "../services/create-medical-history.service";
 import { cookies } from "next/headers";
 import { getProspectByIdService } from "@/features/prospects/services/get-prospect-by-id.service";
 import { FormDataMedical } from "../types";
 import { redirect } from "next/navigation";
 import { PrismaError } from "@/shared/errors/prisma";
+import { FormData } from "../schemas/form-schema";
 
-export const createMedicalHistory = async (formMedical: FormDataMedical[]) => {
+// Nueva interfaz para tipar el payload recibido
+export interface CreateMedicalHistoryPayload {
+  forms: FormDataMedical[];
+  prospectData: Partial<FormData>;
+}
+
+export const createMedicalHistory = async (
+  payload: CreateMedicalHistoryPayload
+) => {
   try {
+    const { forms, prospectData } = payload;
     const cookieStore = cookies();
     const prospectJson = cookieStore.get("prospect")?.value;
     const prospect = prospectJson ? JSON.parse(prospectJson) : {};
-    // const prospectData = await getProspectByIdService(prospect.id);
 
     console.log({
-      formMedical,
-      prospect,
-      // prospectData,
+      formMedical: forms[0].healthConditions,
+      prospectData,
     });
 
     // if (prospectData) {
