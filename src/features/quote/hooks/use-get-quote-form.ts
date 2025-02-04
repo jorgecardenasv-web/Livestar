@@ -110,6 +110,9 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
     return normalizeFormData(initialState);
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [medicalErrors, setMedicalErrors] = useState<Record<string, string>>(
+    {}
+  );
   const [showContactInfo, setShowContactInfo] = useState(false);
 
   // Nueva lógica médica (oculta detalles internos)
@@ -125,10 +128,15 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
     forms.forEach((form, questionIndex) => {
       const answerKey = `answer-${questions[questionIndex]?.id ?? questionIndex}`;
       if (form[answerKey] === "No") return;
-      if (!form.healthConditions?.length) return;
+
+      if (!form.healthConditions || form.healthConditions.length === 0) {
+        medicalErrors[`question-${questionIndex}-noPadecimiento`] =
+          "Debe agregar al menos un padecimiento.";
+        return;
+      }
+
       form.healthConditions.forEach(
         (condition: any, conditionIndex: number) => {
-          // Cambiar la generación de claves para que coincidan con el formulario
           const key = (field: string) =>
             `question-${questionIndex}-condition-${conditionIndex}-${field}`;
           const required: Record<string, string> = {
@@ -142,6 +150,9 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
               medicalErrors[key(field)] = message;
             }
           });
+          if (!condition.persona?.toString().trim()) {
+            medicalErrors[key("persona")] = "El campo persona es requerido.";
+          }
           if (
             condition.complicacion === "Sí" &&
             !condition.detalleComplicacion?.trim()
@@ -161,11 +172,6 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
     });
     return medicalErrors;
   }, [forms, questions]);
-
-  const currentMedicalErrors = useMemo(
-    () => (questions ? validateMedicalConditions() : {}),
-    [validateMedicalConditions, questions]
-  );
 
   const validateField = (field: keyof FormData, value: any) => {
     const schema = buildSchema(formData.protectWho!);
@@ -306,11 +312,11 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
       const validatedData = schema.parse(formData);
       const cleanedData = cleanFormData(validatedData);
 
-      // Validación médica adicional y envío
       if (questions && forms.length > 0) {
+        // Se ejecuta validateMedicalConditions solo en submit
         const medErrors = validateMedicalConditions();
         if (Object.keys(medErrors).length > 0) {
-          setErrors((prev) => ({ ...prev, ...medErrors }));
+          setMedicalErrors(medErrors);
           return;
         }
         await createMedicalHistory({ forms, prospectData: cleanedData });
@@ -348,7 +354,7 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
     openFormQuoteModal,
     forms,
     setForms,
-    currentMedicalErrors,
     isSubmitting,
+    currentMedicalErrors: medicalErrors,
   };
 };

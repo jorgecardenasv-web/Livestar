@@ -10,14 +10,12 @@ import {
 } from "../../types";
 import { Plus, X } from "lucide-react";
 import { FormData } from "../../schemas/form-schema";
-// Se reimportan los componentes Accordion para controlar el colapso de padecimientos
 import {
   Accordion,
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
 } from "@/shared/components/ui/accordion";
-import { Separator } from "@/shared/components/ui/separator";
 import { Button } from "@/shared/components/ui/button";
 import { SelectInput } from "@/shared/components/ui/select-input";
 
@@ -101,41 +99,6 @@ export const MedicalInformationForm: React.FC<MedicalInformationProps> = ({
   formFamily,
   errors,
 }) => {
-
-  // ...existing handleFormChangeRadio y handleFormChange2 sin cambios...
-  const handleFormChangeRadio = (
-    index: number,
-    field: keyof FormDataMedical,
-    value: string | RadioOption | Date | null | undefined
-  ) => {
-    const updated = [...forms];
-    updated[index] = { ...updated[index], [field]: value };
-    // Se elimina la eliminación del estado para conservar padecimientos y activePadecimiento
-    setForms(updated);
-  };
-
-  const handleFormChange2 = (
-    formIndex: number,
-    conditionIndex: number,
-    field: keyof HealthCondition,
-    value: string | RadioOption | Date | null | undefined
-  ) => {
-    // ...existing code...
-    setForms((prevForms) => {
-      const updatedForms = [...prevForms];
-      const updatedConditions = [...updatedForms[formIndex].healthConditions];
-      updatedConditions[conditionIndex] = {
-        ...updatedConditions[conditionIndex],
-        [field]: value,
-      };
-      updatedForms[formIndex] = {
-        ...updatedForms[formIndex],
-        healthConditions: updatedConditions,
-      };
-      return updatedForms;
-    });
-  };
-
   return (
     <>
       <div className="flex items-center space-x-4">
@@ -161,11 +124,23 @@ export const MedicalInformationForm: React.FC<MedicalInformationProps> = ({
             onChange={(name, value) => {
               const updated = [...forms];
               updated[index] = { ...updated[index], [name]: value };
-              // Se elimina la eliminación de las propiedades para conservar el estado
+              if (value === "Sí") {
+                if (updated[index].healthConditions && updated[index].healthConditions.length > 0) {
+                  updated[index].activePadecimiento = 0;
+                }
+              } else {
+                updated[index].activePadecimiento = null;
+              }
               setForms(updated);
             }}
           />
-
+          {/* Nueva validación: si existe error de noPadecimiento, se muestra */}
+          {forms[index]?.[`answer-${index}`] === "Sí" &&
+            errors[`question-${index}-noPadecimiento`] && (
+              <p className="mt-2 text-sm text-red-600">
+                {errors[`question-${index}-noPadecimiento`]}
+              </p>
+            )}
           {/* Si se responde "Sí", se muestran directamente los inputs */}
           {forms[index]?.[`answer-${index}`] === "Sí" && (
             <div className="mt-4">
@@ -249,6 +224,9 @@ export const MedicalInformationForm: React.FC<MedicalInformationProps> = ({
                                 return updated;
                               });
                             }}
+                            error={
+                              errors[`question-${index}-condition-${pIndex}-persona`] || ""
+                            }
                           />
                           {/* Formulario de detalle del padecimiento */}
                           <HealthConditionForm
