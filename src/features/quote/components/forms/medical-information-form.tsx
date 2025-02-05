@@ -111,170 +111,181 @@ export const MedicalInformationForm: React.FC<MedicalInformationProps> = ({
       </div>
 
       {/* Preguntas se muestran fijas */}
-      {questions.map((question, index) => (
-        <div key={question.id || index}>
-          <p className="mb-2">
-            {index + 1}.- {question.text}
-          </p>
-          {/* RadioGroup para la respuesta */}
-          <RadioGroup
-            name={`answer-${index}`}
-            options={["Sí", "No"]}
-            value={forms[index]?.[`answer-${index}`]}
-            onChange={(name, value) => {
-              const updated = [...forms];
-              updated[index] = { ...updated[index], [name]: value };
-              if (value === "Sí") {
-                if (updated[index].healthConditions && updated[index].healthConditions.length > 0) {
-                  updated[index].activePadecimiento = 0;
+      {questions.map((question, index) => {
+        // Calcula si se deben deshabilitar los radio buttons:
+        const disableMedical =
+          (formFamily.protectWho === "solo_mis_hijos" && !formFamily.childrenCount) ||
+          (formFamily.protectWho === "otros" &&
+            (!formFamily.protectedCount ||
+              !formFamily.protectedPersons ||
+              formFamily.protectedPersons.every((p: any) => !p.relationship)));
+
+        return (
+          <div key={question.id || index}>
+            <p className="mb-2">
+              {index + 1}.- {question.text}
+            </p>
+            {/* RadioGroup para la respuesta con restricción */}
+            <RadioGroup
+              name={`answer-${index}`}
+              options={["Sí", "No"]}
+              value={forms[index]?.[`answer-${index}`]}
+              disabled={disableMedical}
+              onChange={(name, value) => {
+                const updated = [...forms];
+                updated[index] = { ...updated[index], [name]: value };
+                if (value === "Sí") {
+                  if (updated[index].healthConditions && updated[index].healthConditions.length > 0) {
+                    updated[index].activePadecimiento = 0;
+                  }
+                } else {
+                  updated[index].activePadecimiento = null;
                 }
-              } else {
-                updated[index].activePadecimiento = null;
-              }
-              setForms(updated);
-            }}
-          />
-          {/* Nueva validación: si existe error de noPadecimiento, se muestra */}
-          {forms[index]?.[`answer-${index}`] === "Sí" &&
-            errors[`question-${index}-noPadecimiento`] && (
-              <p className="mt-2 text-sm text-red-600">
-                {errors[`question-${index}-noPadecimiento`]}
-              </p>
+                setForms(updated);
+              }}
+            />
+            {/* Nueva validación: si existe error de noPadecimiento, se muestra */}
+            {forms[index]?.[`answer-${index}`] === "Sí" &&
+              errors[`question-${index}-noPadecimiento`] && (
+                <p className="mt-2 text-sm text-red-600">
+                  {errors[`question-${index}-noPadecimiento`]}
+                </p>
+              )}
+            {/* Si se responde "Sí", se muestran directamente los inputs */}
+            {forms[index]?.[`answer-${index}`] === "Sí" && (
+              <div className="mt-4">
+                {/* Se utiliza Accordion con type "single" para colapsar los previos */}
+                <Accordion
+                  type="single"
+                  collapsible
+                  value={
+                    forms[index].activePadecimiento !== undefined &&
+                      forms[index].activePadecimiento !== null
+                      ? forms[index].activePadecimiento.toString()
+                      : ""
+                  }
+                  onValueChange={(val) => {
+                    const updated = [...forms];
+                    updated[index] = { ...updated[index], activePadecimiento: val ? parseInt(val) : null };
+                    setForms(updated);
+                  }}
+                >
+                  {forms[index].healthConditions &&
+                    forms[index].healthConditions.map(
+                      (padecimiento: HealthCondition & { persona?: string }, pIndex: number) => (
+                        <AccordionItem key={pIndex} value={pIndex.toString()}>
+                          <AccordionTrigger>
+                            {padecimiento.nombrePadecimiento
+                              ? `Padecimiento: ${padecimiento.nombrePadecimiento}`
+                              : `Padecimiento ${pIndex + 1}`}
+                          </AccordionTrigger>
+                          <AccordionContent className="w-full px-1 space-y-4">
+                            {/* Select para preguntar a quién corresponde el padecimiento */}
+                            <SelectInput
+                              label="Asegurado"
+                              name={`padecimiento-persona-${index}-${pIndex}`}
+                              options={
+                                (() => {
+                                  if (formFamily.protectWho === "familia") {
+                                    // En "familia": incluir "Yo", "Mi Pareja" y una opción por cada hijo
+                                    const opts: { label: string; value: string }[] = [
+                                      { label: "Yo", value: "Yo" },
+                                      { label: "Mi Pareja", value: "Mi Pareja" },
+                                    ];
+                                    (formFamily.children || []).forEach((child: any, index: number) => {
+                                      const label = child.gender === "mujer" ? `Hija ${index + 1}` : `Hijo ${index + 1}`;
+                                      opts.push({ label, value: label });
+                                    });
+                                    return opts;
+                                  }
+                                  if (formFamily.protectWho === "mis_hijos_y_yo" || formFamily.protectWho === "solo_mis_hijos") {
+                                    // Para estos casos, solo se listan los hijos individualmente
+                                    return (formFamily.children || []).map((child: any, index: number) => {
+                                      const label = child.gender === "mujer" ? `Hija ${index + 1}` : `Hijo ${index + 1}`;
+                                      return { label, value: label };
+                                    });
+                                  }
+                                  if (formFamily.protectWho === "otros") {
+                                    return (formFamily.protectedPersons || []).map((person: any, idx: number) => {
+                                      // Si se repiten relaciones, se puede agregar un número
+                                      const label = person.relationship + ((formFamily.protectedPersons.filter((p: any) => p.relationship === person.relationship).length > 1)
+                                        ? ` ${idx + 1}` : "");
+                                      return { label, value: person.relationship };
+                                    });
+                                  }
+                                  // Otros casos
+                                  const optionsMapping: Record<string, string[]> = {
+                                    mi_pareja_y_yo: ["Yo", "Mi Pareja"],
+                                    mis_padres: ["Madre", "Padre"],
+                                    solo_yo: ["Yo"],
+                                    otros: ["Otros"],
+                                  };
+                                  const opts = optionsMapping[formFamily.protectWho] || [];
+                                  return opts.map((opt) => ({ label: opt, value: opt }));
+                                })()
+                              }
+                              value={padecimiento.persona || ""}
+                              onValueChange={(value) => {
+                                setForms((prev) => {
+                                  const updated = [...prev];
+                                  const items = [...(updated[index].healthConditions || [])];
+                                  items[pIndex] = { ...items[pIndex], persona: value as string };
+                                  updated[index].healthConditions = items;
+                                  return updated;
+                                });
+                              }}
+                              error={
+                                errors[`question-${index}-condition-${pIndex}-persona`] || ""
+                              }
+                            />
+                            {/* Formulario de detalle del padecimiento */}
+                            <HealthConditionForm
+                              formData={padecimiento}
+                              onChange={(field, value) => {
+                                setForms((prev) => {
+                                  const updated = [...prev];
+                                  const items = [...(updated[index].healthConditions || [])];
+                                  items[pIndex] = { ...items[pIndex], [field]: value };
+                                  updated[index].healthConditions = items;
+                                  return updated;
+                                });
+                              }}
+                              index={pIndex}
+                              indexform={index}
+                              errors={errors}
+                            />
+
+                            <Button
+                              variant="outline"
+                              type="button"
+                              onClick={() =>
+                                handleDeletePadecimiento(index, pIndex, forms, setForms)
+                              }
+                              className="text-red-500 hover:text-red-600 mt-4 flex items-center"
+                            >
+                              <X /> <span>Eliminar</span>
+                            </Button>
+                          </AccordionContent>
+                        </AccordionItem>
+                      )
+                    )}
+                </Accordion>
+
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => addPadecimiento(index, forms, setForms)}
+                  className="text-primary font-semibold mt-2"
+                >
+                  <span className="flex gap-2 hover:underline">
+                    <Plus /> Agregar Padecimiento
+                  </span>
+                </Button>
+              </div>
             )}
-          {/* Si se responde "Sí", se muestran directamente los inputs */}
-          {forms[index]?.[`answer-${index}`] === "Sí" && (
-            <div className="mt-4">
-              {/* Se utiliza Accordion con type "single" para colapsar los previos */}
-              <Accordion
-                type="single"
-                collapsible
-                value={
-                  forms[index].activePadecimiento !== undefined &&
-                    forms[index].activePadecimiento !== null
-                    ? forms[index].activePadecimiento.toString()
-                    : ""
-                }
-                onValueChange={(val) => {
-                  const updated = [...forms];
-                  updated[index] = { ...updated[index], activePadecimiento: val ? parseInt(val) : null };
-                  setForms(updated);
-                }}
-              >
-                {forms[index].healthConditions &&
-                  forms[index].healthConditions.map(
-                    (padecimiento: HealthCondition & { persona?: string }, pIndex: number) => (
-                      <AccordionItem key={pIndex} value={pIndex.toString()}>
-                        <AccordionTrigger>
-                          {padecimiento.persona
-                            ? `Padecimiento para ${padecimiento.persona}`
-                            : `Padecimiento ${pIndex + 1}`}
-                        </AccordionTrigger>
-                        <AccordionContent className="w-full px-1 space-y-4">
-                          {/* Select para preguntar a quién corresponde el padecimiento */}
-                          <SelectInput
-                            label="¿Para quién es el padecimiento?"
-                            name={`padecimiento-persona-${index}-${pIndex}`}
-                            options={
-                              (() => {
-                                if (formFamily.protectWho === "familia") {
-                                  // En "familia": incluir "Yo", "Mi Pareja" y una opción por cada hijo
-                                  const opts: { label: string; value: string }[] = [
-                                    { label: "Yo", value: "Yo" },
-                                    { label: "Mi Pareja", value: "Mi Pareja" },
-                                  ];
-                                  (formFamily.children || []).forEach((child: any, index: number) => {
-                                    const label = child.gender === "mujer" ? `Hija ${index + 1}` : `Hijo ${index + 1}`;
-                                    opts.push({ label, value: label });
-                                  });
-                                  return opts;
-                                }
-                                if (formFamily.protectWho === "mis_hijos_y_yo" || formFamily.protectWho === "solo_mis_hijos") {
-                                  // Para estos casos, solo se listan los hijos individualmente
-                                  return (formFamily.children || []).map((child: any, index: number) => {
-                                    const label = child.gender === "mujer" ? `Hija ${index + 1}` : `Hijo ${index + 1}`;
-                                    return { label, value: label };
-                                  });
-                                }
-                                if (formFamily.protectWho === "otros") {
-                                  return (formFamily.protectedPersons || []).map((person: any, idx: number) => {
-                                    // Si se repiten relaciones, se puede agregar un número
-                                    const label = person.relationship + ((formFamily.protectedPersons.filter((p: any) => p.relationship === person.relationship).length > 1)
-                                      ? ` ${idx + 1}` : "");
-                                    return { label, value: person.relationship };
-                                  });
-                                }
-                                // Otros casos
-                                const optionsMapping: Record<string, string[]> = {
-                                  mi_pareja_y_yo: ["Yo", "Mi Pareja"],
-                                  mis_padres: ["Madre", "Padre"],
-                                  solo_yo: ["Yo"],
-                                  otros: ["Otros"],
-                                };
-                                const opts = optionsMapping[formFamily.protectWho] || [];
-                                return opts.map((opt) => ({ label: opt, value: opt }));
-                              })()
-                            }
-                            value={padecimiento.persona || ""}
-                            onValueChange={(value) => {
-                              setForms((prev) => {
-                                const updated = [...prev];
-                                const items = [...(updated[index].healthConditions || [])];
-                                items[pIndex] = { ...items[pIndex], persona: value as string };
-                                updated[index].healthConditions = items;
-                                return updated;
-                              });
-                            }}
-                            error={
-                              errors[`question-${index}-condition-${pIndex}-persona`] || ""
-                            }
-                          />
-                          {/* Formulario de detalle del padecimiento */}
-                          <HealthConditionForm
-                            formData={padecimiento}
-                            onChange={(field, value) => {
-                              setForms((prev) => {
-                                const updated = [...prev];
-                                const items = [...(updated[index].healthConditions || [])];
-                                items[pIndex] = { ...items[pIndex], [field]: value };
-                                updated[index].healthConditions = items;
-                                return updated;
-                              });
-                            }}
-                            index={pIndex}
-                            indexform={index}
-                            errors={errors}
-                          />
-
-                          <Button
-                            variant="outline"
-                            type="button"
-                            onClick={() =>
-                              handleDeletePadecimiento(index, pIndex, forms, setForms)
-                            }
-                            className="text-red-500 hover:text-red-600 mt-4 flex items-center"
-                          >
-                            <X /> <span>Eliminar</span>
-                          </Button>
-                        </AccordionContent>
-                      </AccordionItem>
-                    )
-                  )}
-              </Accordion>
-
-              <Button
-                type="button"
-                variant="ghost"
-                onClick={() => addPadecimiento(index, forms, setForms)}
-                className="text-primary font-semibold mt-2"
-              >
-                <span className="flex gap-2 hover:underline">
-                  <Plus /> Agregar Padecimiento
-                </span>
-              </Button>
-            </div>
-          )}
-        </div>
-      ))}
+          </div>
+        );
+      })}
     </>
   );
 };

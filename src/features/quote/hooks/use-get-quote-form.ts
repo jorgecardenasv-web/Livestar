@@ -29,7 +29,7 @@ const hasValidChildren = (children: any[], count: number) =>
   children &&
   children.length === count &&
   children.every(
-    (child: { age: number; gender: string }) => child.age > 0 && child.gender
+    (child: { age: number; gender: string }) => child.age >= 0 && child.gender
   );
 
 const hasValidProtectedPersons = (persons: any[], count: number) =>
@@ -37,7 +37,7 @@ const hasValidProtectedPersons = (persons: any[], count: number) =>
   persons.length === count &&
   persons.every(
     (person: { age: number; gender: string; relationship: string }) =>
-      person.age > 0 && person.gender && person.relationship
+      person.age >= 0 && person.gender && person.relationship
   );
 
 // Nuevo objeto para validar datos de contacto

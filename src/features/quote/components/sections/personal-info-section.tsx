@@ -148,7 +148,6 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 }
                 className="w-full"
                 min={1}
-                max={20}
                 error={errors.childrenCount}
               />
               {formData.childrenCount && formData.childrenCount > 0 && (
@@ -182,7 +181,6 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                             error={errors[`children.${index}.age`]}
                             className="w-full"
                             min={0}
-                            max={25}
                           />
                           <SelectInput
                             label="Género al nacer"
@@ -218,7 +216,6 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
               error={errors.protectedCount}
               className="w-full"
               min={1}
-              max={10}
             />
 
             <div className="col-span-2">
