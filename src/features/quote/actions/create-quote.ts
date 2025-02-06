@@ -13,7 +13,7 @@ export interface CreateMedicalHistoryPayload {
   prospectData: Partial<FormData>;
 }
 
-export const createMedicalHistory = async (
+export const createQuoteAction = async (
   payload: CreateMedicalHistoryPayload
 ) => {
   try {

@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { z } from "zod";
 import { FormData, buildSchema } from "../schemas/form-schema";
 import { createProspect } from "@/features/prospects/actions/create-prospect";
-import { createMedicalHistory } from "@/features/quote/actions/create-medical-history";
+import { createQuoteAction } from "@/features/quote/actions/create-quote";
 import { useModalStore } from "@/shared/store/modal-store";
 import { normalizeFormData } from "../utils/normalize-form-data";
 
@@ -319,7 +319,7 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
           setMedicalErrors(medErrors);
           return;
         }
-        await createMedicalHistory({ forms, prospectData: cleanedData });
+        await createQuoteAction({ forms, prospectData: cleanedData });
       }
 
       // Crear prospecto si no existe
