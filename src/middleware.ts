@@ -29,6 +29,20 @@ export async function middleware(request: NextRequest) {
   const session = await getSession();
 
   if (!session.isLoggedIn) {
+    // Permitir acceso a la ruta "/cotizar" para evitar bucle infinito
+    if (pathWithoutQuery === "/cotizar") {
+      return NextResponse.next();
+    }
+
+    // Solo para la ruta "/finalizar-cotizacion" verificar cookies "prospect" y "selectedPlan"
+    if (pathWithoutQuery === "/finalizar-cotizacion") {
+      const hasProspect = request.cookies.get("prospect");
+      const hasSelectedPlan = request.cookies.get("selectedPlan");
+      if (!hasProspect && !hasSelectedPlan) {
+        return NextResponse.redirect(new URL("/cotizar", request.url));
+      }
+    }
+
     if (
       publicPaths.includes(pathWithoutQuery) ||
       authPaths.includes(pathWithoutQuery)
@@ -67,7 +81,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Excluir explícitamente favicon.ico y otros recursos estáticos
     "/((?!favicon\\.ico|_next/static|_next/image|api|static|images).*)",
   ],
 };

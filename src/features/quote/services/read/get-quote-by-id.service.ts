@@ -11,7 +11,6 @@ export const getQuoteByIdService = async (
         id: quoteId,
       },
       include: {
-        medicalHistories: true,
         prospect: true,
         user: true,
       },

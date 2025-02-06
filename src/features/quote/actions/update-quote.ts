@@ -7,7 +7,7 @@ import { parsedFormDataAge } from "@/shared/utils";
 import { FormState } from "@/shared/types";
 import { PrismaError } from "@/shared/errors/prisma";
 
-export const updateProspect = async (
+export const updateQuote = async (
   quoteId: string,
   prevState: any,
   formData: FormData

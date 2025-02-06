@@ -16,7 +16,7 @@ import { useQuoteActions } from "../../hooks/use-quote-actions";
 import { useRouter } from "next/navigation";
 import { Quote } from "@prisma/client";
 
-export const DropdownActions = ({ quote }: { quote: Quote }) => {
+export const DropdownActions = ({ quote }: { quote: Omit<Quote, "medicalHistories"> }) => {
 
   const { push } = useRouter();
   const { openEditQuoteModal } = useQuoteActions();

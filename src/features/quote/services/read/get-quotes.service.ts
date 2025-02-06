@@ -20,7 +20,13 @@ export const getQuotesService = async ({
 
   const where =
     filterOptionsToWhere<
-      Omit<PrismaQuote, "customizations" | "additionalInfo">
+      Omit<
+        PrismaQuote,
+        | "customizations"
+        | "additionalInfo"
+        | "MedicalHistory"
+        | "medicalHistories"
+      >
     >(filtersOptions);
 
   const whereText = query
@@ -44,7 +50,6 @@ export const getQuotesService = async ({
       include: {
         user: true,
         prospect: true,
-        medicalHistories: true,
       },
     }),
     prisma.quote.count({

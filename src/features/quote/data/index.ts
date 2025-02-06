@@ -1,5 +1,6 @@
 import { FilterConfig } from "@/shared/hooks/use-table-filters";
 import { QuoteStatus } from "@prisma/client";
+import { Question } from "../types";
 
 interface QuoteStatusOptions {
   label: string;
@@ -92,5 +93,24 @@ export const filters: FilterConfig[] = [
     label: "Estado",
     type: "radio",
     options: quoteStatus,
+  },
+];
+
+export const QUESTIONS: Question[] = [
+  {
+    id: 0,
+    text: "¿Algún solicitante padece o ha padecido alguna enfermedad como hipertensión arterial, infarto, hepatitis, diabetes, epilepsia, esclerosis, fiebre reumática, SIDA, cáncer, tumores, COVID-19; enfermedades mentales, congénitas, inmunológicas u otras de tipo renal, pulmonar, neurológico o cardiovascular?",
+  },
+  {
+    id: 1,
+    text: "¿Algún Solicitante ha sido hospitalizado o le han hecho alguna cirugía por cualquier enfermedad, accidente, alteración congénita, reconstructiva o estética?",
+  },
+  {
+    id: 2,
+    text: "¿Algún Solicitante padece de alguna lesión, enfermedad, padecimiento o trastorno de salud no referida en la pregunta número 1?",
+  },
+  {
+    id: 3,
+    text: "¿Algún Solicitante está en tratamiento de cualquier tipo o tiene programada atención médica o quirúrgica?",
   },
 ];

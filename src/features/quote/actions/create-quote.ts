@@ -1,13 +1,13 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { getProspectByIdService } from "@/features/prospects/services/get-prospect-by-id.service";
 import { FormDataMedical } from "../types";
 import { redirect } from "next/navigation";
 import { PrismaError } from "@/shared/errors/prisma";
 import { FormData } from "../schemas/form-schema";
+import { cookies } from "next/headers";
+import { createQuoteService } from "../services/create/create-quote.service";
 
-// Nueva interfaz para tipar el payload recibido
 export interface CreateMedicalHistoryPayload {
   forms: FormDataMedical[];
   prospectData: Partial<FormData>;
@@ -19,22 +19,21 @@ export const createMedicalHistory = async (
   try {
     const { forms, prospectData } = payload;
     const cookieStore = cookies();
-    const prospectJson = cookieStore.get("prospect")?.value;
-    const prospect = prospectJson ? JSON.parse(prospectJson) : {};
 
-    console.log({
-      formMedical: forms[0].healthConditions,
-      prospectData,
-    });
+    const selectedPlan = cookieStore.get("selectedPlan")?.value;
 
-    // if (prospectData) {
-    //   await createMedicalHistoryService(formMedical, prospectData?.id);
+    if (prospectData) {
+      await createQuoteService({
+        prospectData,
+        forms,
+        plan: JSON.parse(selectedPlan!),
+      });
 
-    //   cookieStore.delete("prospect");
-    //   cookieStore.delete("selectedPlan");
-    //   cookieStore.delete("activePlanType");
-    //   cookieStore.delete("activePaymentType");
-    // }
+      cookieStore.delete("prospect");
+      cookieStore.delete("selectedPlan");
+      cookieStore.delete("activePlanType");
+      cookieStore.delete("activePaymentType");
+    }
   } catch (error) {
     return {
       success: false,
@@ -44,5 +43,5 @@ export const createMedicalHistory = async (
           : "Error al crear el historial médico.",
     };
   }
-  // redirect("/cotizar");
+  redirect("/cotizar");
 };

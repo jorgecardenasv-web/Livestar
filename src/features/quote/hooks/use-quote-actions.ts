@@ -36,7 +36,8 @@ export const useQuoteActions = () => {
 
   const handleCancel = () => closeModal();
 
-  const openEditQuoteModal = (quote: Quote) => openModal("updateQuote", quote);
+  const openEditQuoteModal = (quote: Omit<Quote, "medicalHistories">) =>
+    openModal("updateQuote", quote);
 
   const openXlsxModal = () => openModal("createXlsx");
 
