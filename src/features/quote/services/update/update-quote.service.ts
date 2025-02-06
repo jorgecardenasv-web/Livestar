@@ -22,7 +22,6 @@ export const updateQuoteService = async ({
       },
     });
   } catch (error) {
-    console.log(error);
     throw handlePrismaError(error);
   }
 };

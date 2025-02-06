@@ -76,7 +76,7 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
               </Card>
             </div>
 
-            <div className="rounded-xl bg-muted/50 p-5">
+            <div className="rounded-xl bg-muted/50 p-5 hidden md:block">
               <SubmitButton
                 label="Actualizar cotización"
                 className="w-full h-12 text-lg bg-primary hover:bg-primary/90"
@@ -97,6 +97,14 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
                 />
               </CardContent>
             </Card>
+          </div>
+
+          <div className="rounded-xl bg-muted/50 p-5 block md:hidden">
+            <SubmitButton
+              label="Actualizar cotización"
+              className="w-full h-12 text-lg bg-primary hover:bg-primary/90"
+              labelPending="Actualizando..."
+            />
           </div>
 
         </div>

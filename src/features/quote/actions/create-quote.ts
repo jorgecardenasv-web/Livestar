@@ -36,5 +36,5 @@ export const createQuoteAction = async (payload: any) => {
           : "Error al crear el historial médico.",
     };
   }
-  // redirect("/cotizar");
+  redirect("/cotizar");
 };

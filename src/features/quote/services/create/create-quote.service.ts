@@ -1,6 +1,5 @@
 import prisma from "@/lib/prisma";
 import { handlePrismaError } from "@/shared/errors/prisma";
-import { FormDataMedical } from "../../types";
 
 function generateTrackingNumber() {
   return `TM-${Math.random().toString(36).slice(2, 11).toUpperCase()}`;
@@ -33,8 +32,6 @@ export async function createQuoteService(data: any) {
         },
       });
 
-      console.log({ newProspect });
-
       const newQuote = await tx.quote.create({
         data: {
           protectWho: protectWho,
@@ -46,20 +43,14 @@ export async function createQuoteService(data: any) {
         },
       });
 
-      console.log({ newQuote });
-
-      const newTrackingNumber = await tx.trackingNumber.create({
+      await tx.trackingNumber.create({
         data: {
           number: generateTrackingNumber(),
           quoteId: newQuote.id,
         },
       });
-
-      console.log({ newTrackingNumber });
     });
   } catch (error) {
-    console.log({ error });
-
     throw handlePrismaError(error);
   }
 }

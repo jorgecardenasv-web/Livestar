@@ -38,7 +38,7 @@ export const HealthConditionForm: FC<HealthConditionFormProps> = ({
 }) => {
   return (
     <div className="mb-4 space-y-4">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <TextInput
           label="Nombre del padecimiento"
           placeholder="Nombre del padecimiento"
@@ -96,7 +96,7 @@ export const HealthConditionForm: FC<HealthConditionFormProps> = ({
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4 pt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
             ¿Estuvo hospitalizado?
@@ -135,7 +135,7 @@ export const HealthConditionForm: FC<HealthConditionFormProps> = ({
         />
       )}
 
-      <div className="grid grid-cols-2 gap-4 pt-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
             Estado actual de salud

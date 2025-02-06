@@ -24,7 +24,6 @@ const createInitialMedicalForms = (questions: any[]) =>
     healthConditions: [{ ...INITIAL_HEALTH_CONDITION }],
   }));
 
-// Funciones helper
 const hasValidChildren = (children: any[], count: number) =>
   children &&
   children.length === count &&
@@ -40,7 +39,6 @@ const hasValidProtectedPersons = (persons: any[], count: number) =>
       person.age >= 0 && person.gender && person.relationship
   );
 
-// Nuevo objeto para validar datos de contacto
 const contactInfoValidators: Record<string, (data: any) => boolean> = {
   solo_yo: (data) => Boolean(data.age),
   mi_pareja_y_yo: (data) =>
@@ -53,7 +51,6 @@ const contactInfoValidators: Record<string, (data: any) => boolean> = {
         data.childrenCount &&
         hasValidChildren(data.children, data.childrenCount)
     ),
-  // Reutilizamos la misma función para ambos casos
   mis_hijos_y_yo: (data) =>
     Boolean(
       data.childrenCount && hasValidChildren(data.children, data.childrenCount)
@@ -71,7 +68,6 @@ const contactInfoValidators: Record<string, (data: any) => boolean> = {
     Boolean(data.momName && data.dadName && data.momAge && data.dadAge),
 };
 
-// Función helper para copiar campos si existen
 const copyFields = (data: any, cleaned: any, keys: string[]) => {
   keys.forEach((key) => {
     if (data[key] !== undefined) {
@@ -80,7 +76,6 @@ const copyFields = (data: any, cleaned: any, keys: string[]) => {
   });
 };
 
-// Nuevo objeto para limpieza de datos (mejora de lógica usando copyFields)
 const dataCleaners: Record<string, (data: any, cleaned: any) => void> = {
   solo_yo: (data, cleaned) => copyFields(data, cleaned, ["age"]),
   mi_pareja_y_yo: (data, cleaned) =>
@@ -104,7 +99,6 @@ const dataCleaners: Record<string, (data: any, cleaned: any) => void> = {
 };
 
 export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
-  // Lógica original
   const { openModal, closeModal } = useModalStore();
   const [formData, setFormData] = useState<FormData>(() => {
     return normalizeFormData(initialState);
@@ -115,7 +109,6 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
   );
   const [showContactInfo, setShowContactInfo] = useState(false);
 
-  // Nueva lógica médica (oculta detalles internos)
   const [forms, setForms] = useState<any[]>(() =>
     questions
       ? initialState && initialState.medicalHistories
@@ -307,7 +300,6 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
     return cleanedData;
   };
 
-  // Nuevo helper para estructurar la información médica de forma limpia
   const formatMedicalData = () => {
     if (!questions) return [];
     return forms.map((form, index) => {
@@ -324,7 +316,6 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      // Validación y limpieza de datos base
       const schema = buildSchema(formData.protectWho!);
       const validatedData = schema.parse(formData);
       const cleanedData = cleanFormData(validatedData);
@@ -335,10 +326,9 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
           setMedicalErrors(medErrors);
           return;
         }
-        // Se obtiene la data médica formateada
         const medicalData = formatMedicalData();
         await createQuoteAction({
-          medicalData, // se envía ya formateada
+          medicalData,
           prospectData: cleanedData,
         });
       }

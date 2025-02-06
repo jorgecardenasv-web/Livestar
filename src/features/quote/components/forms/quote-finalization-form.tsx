@@ -1,7 +1,6 @@
 "use client";
 
 import { useGetQuoteForm } from "../../hooks/use-get-quote-form";
-import { Question } from "../../types";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Separator } from "@/shared/components/ui/separator";
 import { ContactInfoSection } from "../sections/contact-info-section";
