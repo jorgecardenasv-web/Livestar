@@ -100,7 +100,7 @@ export const MedicalInformationForm: React.FC<MedicalInformationProps> = ({
   errors,
 }) => {
   return (
-    <>
+    <div className="space-y-6 py-6">
       <div className="flex items-center space-x-4">
         <span className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-xl">
           3
@@ -286,6 +286,6 @@ export const MedicalInformationForm: React.FC<MedicalInformationProps> = ({
           </div>
         );
       })}
-    </>
+    </div>
   );
 };

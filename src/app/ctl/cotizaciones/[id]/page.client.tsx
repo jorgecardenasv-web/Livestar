@@ -1,80 +1,107 @@
-"use client";
+"use client"
 
-import { useNotificationStore } from "@/features/notification/store/notification-store";
-import { updateProspect } from "@/features/quote/actions/update-quote";
-import { ContactInfoSection } from "@/features/quote/components/sections/contact-info-section";
-import { PersonalInfoSection } from "@/features/quote/components/sections/personal-info-section";
-import { useGetQuoteForm } from "@/features/quote/hooks/use-get-quote-form";
-import { Quote } from "@/features/quote/types";
-import { Card, CardContent } from "@/shared/components/ui/card";
-import { SubmitButton } from "@/shared/components/ui/submit-button";
-import { useEffect } from "react";
-import { useFormState } from "react-dom";
+import { useNotificationStore } from "@/features/notification/store/notification-store"
+import { updateQuote } from "@/features/quote/actions/update-quote"
+import { ContactInfoSection } from "@/features/quote/components/sections/contact-info-section"
+import { PersonalInfoSection } from "@/features/quote/components/sections/personal-info-section"
+import { useGetQuoteForm } from "@/features/quote/hooks/use-get-quote-form"
+import type { Quote } from "@/features/quote/types"
+import { Card, CardContent } from "@/shared/components/ui/card"
+import { SubmitButton } from "@/shared/components/ui/submit-button"
+import { useEffect } from "react"
+import { useFormState } from "react-dom"
+import { MedicalInformationForm } from "@/features/quote/components/forms/medical-information-form"
+import { QUESTIONS } from "@/features/quote/data"
+import { Breadcrumbs } from "@/shared/components/layout/breadcrumbs"
+import { prefix } from "@/features/layout/nav-config/constants"
 
 export function QuotePageClient({ quote }: { quote: Quote }) {
-  const {
-    formData,
-    errors,
-    handleChildChange,
-    handleInputChange,
-    handleProtectedPersonChange,
-  } = useGetQuoteForm(quote);
+  const { formData, errors, handleChildChange, handleInputChange, handleProtectedPersonChange, forms, setForms } =
+    useGetQuoteForm(quote, QUESTIONS)
 
-  const { showNotification } = useNotificationStore();
+  const { showNotification } = useNotificationStore()
 
-  const updateUserWithId = updateProspect.bind(null, quote.id);
+  const updateUserWithId = updateQuote.bind(null, quote.id)
 
   const [state, formAction] = useFormState(updateUserWithId, {
     message: "",
     success: false,
     inputErrors: {},
-  });
+  })
 
   useEffect(() => {
     if (state.success) {
-      showNotification(
-        state.message,
-        "success"
-      );
+      showNotification(state.message, "success")
     }
-  }, [state]);
+  }, [state, showNotification]) // Added showNotification to dependencies
 
   return (
-    <form action={formAction}>
-      <div className="space-y-6">
-        <div className="flex-1 rounded-xl bg-muted/50 p-5 space-y-6">
-          <Card>
-            <CardContent>
-              <PersonalInfoSection
-                formData={formData}
-                errors={errors}
-                handleInputChange={handleInputChange}
-                handleChildChange={handleChildChange}
-                handleProtectedPersonChange={handleProtectedPersonChange}
-              />
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="flex-1 rounded-xl bg-muted/50 p-5 space-y-6">
-          <Card>
-            <CardContent>
-              <ContactInfoSection
-                formData={formData}
-                errors={errors}
-                handleInputChange={handleInputChange}
-              />
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-      <div className="flex justify-end mt-6">
-        <SubmitButton
-          label="Guardar"
-          className="h-14 text-xl"
-          labelPending="Guardando..."
+    <>
+      <div className="flex items-center justify-between gap-2">
+        <Breadcrumbs
+          items={[
+            { label: "Cotizaciones", href: `${prefix}/cotizaciones` },
+            {
+              label: "Detalle de cotización",
+              href: `${prefix}/cotizaciones/${quote.id}`,
+            },
+          ]}
         />
       </div>
-    </form>
-  );
+
+      <form action={formAction}>
+        <input type="hidden" name="medicalData" value={JSON.stringify(forms)} />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Left column */}
+          <div className="flex flex-col space-y-6">
+            <div className="rounded-xl bg-muted/50 p-5">
+              <Card>
+                <CardContent>
+                  <PersonalInfoSection
+                    formData={formData}
+                    errors={errors}
+                    handleInputChange={handleInputChange}
+                    handleChildChange={handleChildChange}
+                    handleProtectedPersonChange={handleProtectedPersonChange}
+                  />
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="rounded-xl bg-muted/50 p-5">
+              <Card>
+                <CardContent>
+                  <ContactInfoSection formData={formData} errors={errors} handleInputChange={handleInputChange} />
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="rounded-xl bg-muted/50 p-5">
+              <SubmitButton
+                label="Actualizar cotización"
+                className="w-full h-12 text-lg bg-primary hover:bg-primary/90"
+                labelPending="Actualizando..."
+              />
+            </div>
+          </div>
+
+          <div className="rounded-xl bg-muted/50 p-5">
+            <Card>
+              <CardContent>
+                <MedicalInformationForm
+                  forms={forms}
+                  setForms={setForms}
+                  questions={QUESTIONS}
+                  formFamily={formData}
+                  errors={errors}
+                />
+              </CardContent>
+            </Card>
+          </div>
+
+        </div>
+      </form>
+    </>
+  )
 }
+

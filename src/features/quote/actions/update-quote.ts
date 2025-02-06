@@ -16,6 +16,11 @@ export const updateQuote = async (
     const rawFormData = Object.fromEntries(formData);
     const parsed = parsedFormDataAge(rawFormData);
 
+    const medicalDataStr = formData.get("medicalData");
+    const medicalData = medicalDataStr
+      ? JSON.parse(String(medicalDataStr))
+      : [];
+
     const {
       name,
       age,
@@ -24,10 +29,27 @@ export const updateQuote = async (
       postalCode,
       whatsapp,
       protectWho,
-      ...aditionalInfo
+      ...rest
     } = parsed;
 
-    const quoute = await updateQuoteService({
+    const additionalInfo = Object.fromEntries(
+      Object.entries(rest).filter(([key]) =>
+        key === "medicalData"
+          ? false // Se excluye "medicalData"
+          : key.startsWith("$")
+            ? false // Se excluyen claves internas
+            : !/^answer-/.test(key) &&
+              !/^padecimiento-/.test(key) &&
+              !/^hospitalizado-/.test(key) &&
+              !/^complicacion-/.test(key) &&
+              !/^estadoSalud-/.test(key) &&
+              !/^medicamento-/.test(key) &&
+              !/^detalleComplicacion-/.test(key) &&
+              !/^detalleMedicamento-/.test(key)
+      )
+    );
+
+    await updateQuoteService({
       prospect: {
         name: String(name),
         age: Number(age),
@@ -39,7 +61,8 @@ export const updateQuote = async (
       quote: {
         id: quoteId,
         protectWho: String(protectWho),
-        ...aditionalInfo,
+        medicalHistories: medicalData,
+        additionalInfo: JSON.parse(JSON.stringify(additionalInfo)),
       },
     });
 

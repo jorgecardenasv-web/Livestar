@@ -8,16 +8,9 @@ import { FormData } from "../schemas/form-schema";
 import { cookies } from "next/headers";
 import { createQuoteService } from "../services/create/create-quote.service";
 
-export interface CreateMedicalHistoryPayload {
-  forms: FormDataMedical[];
-  prospectData: Partial<FormData>;
-}
-
-export const createQuoteAction = async (
-  payload: CreateMedicalHistoryPayload
-) => {
+export const createQuoteAction = async (payload: any) => {
   try {
-    const { forms, prospectData } = payload;
+    const { prospectData, medicalData } = payload;
     const cookieStore = cookies();
 
     const selectedPlan = cookieStore.get("selectedPlan")?.value;
@@ -25,7 +18,7 @@ export const createQuoteAction = async (
     if (prospectData) {
       await createQuoteService({
         prospectData,
-        forms,
+        medicalData,
         plan: JSON.parse(selectedPlan!),
       });
 
@@ -43,5 +36,5 @@ export const createQuoteAction = async (
           : "Error al crear el historial médico.",
     };
   }
-  redirect("/cotizar");
+  // redirect("/cotizar");
 };

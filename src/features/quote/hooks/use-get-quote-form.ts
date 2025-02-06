@@ -117,7 +117,11 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
 
   // Nueva lógica médica (oculta detalles internos)
   const [forms, setForms] = useState<any[]>(() =>
-    questions ? createInitialMedicalForms(questions) : []
+    questions
+      ? initialState && initialState.medicalHistories
+        ? initialState.medicalHistories
+        : createInitialMedicalForms(questions)
+      : []
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -303,6 +307,19 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
     return cleanedData;
   };
 
+  // Nuevo helper para estructurar la información médica de forma limpia
+  const formatMedicalData = () => {
+    if (!questions) return [];
+    return forms.map((form, index) => {
+      const questionId = questions[index]?.id ?? index;
+      return {
+        questionId,
+        answer: form[`answer-${questionId}`],
+        healthConditions: form.healthConditions || [],
+      };
+    });
+  };
+
   const unifiedHandleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -313,16 +330,19 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
       const cleanedData = cleanFormData(validatedData);
 
       if (questions && forms.length > 0) {
-        // Se ejecuta validateMedicalConditions solo en submit
         const medErrors = validateMedicalConditions();
         if (Object.keys(medErrors).length > 0) {
           setMedicalErrors(medErrors);
           return;
         }
-        await createQuoteAction({ forms, prospectData: cleanedData });
+        // Se obtiene la data médica formateada
+        const medicalData = formatMedicalData();
+        await createQuoteAction({
+          medicalData, // se envía ya formateada
+          prospectData: cleanedData,
+        });
       }
 
-      // Crear prospecto si no existe
       if (!initialState) {
         await createProspect(cleanedData);
       }

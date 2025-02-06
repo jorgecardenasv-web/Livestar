@@ -41,7 +41,7 @@ export async function createQuoteService(data: any) {
           totalPrice: Number(coverage_fee),
           additionalInfo,
           planId,
-          medicalHistories: data.forms,
+          medicalHistories: data.medicalData,
           prospectId: newProspect.id,
         },
       });

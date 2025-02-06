@@ -15,17 +15,6 @@ export default async function QuotesPage({
 
   return (
     <>
-      <div className="flex items-center justify-between gap-2">
-        <Breadcrumbs
-          items={[
-            { label: "Cotizaciones", href: `${prefix}/cotizaciones` },
-            {
-              label: "Detalle de cotización",
-              href: `${prefix}/cotizaciones/${id}`,
-            },
-          ]}
-        />
-      </div>
       <QuotePageClient quote={quote!} />
       <ModalQuoteActions advisors={advisors} />
     </>
