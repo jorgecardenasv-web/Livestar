@@ -91,7 +91,7 @@ export const ListQuotes = async ({ params }: {
                   colSpan={5}
                   className="h-24 text-center"
                 >
-                  No hay prospectos disponibles
+                  No hay cotizaciones disponibles
                 </TableCell>
               </TableRow>
             )}
