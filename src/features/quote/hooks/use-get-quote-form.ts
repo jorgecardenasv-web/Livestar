@@ -304,10 +304,13 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
     if (!questions) return [];
     return forms.map((form, index) => {
       const questionId = questions[index]?.id ?? index;
+      const answerKey = `answer-${questionId}`;
       return {
+        answer: form[answerKey],
+        [`${answerKey}`]: form[answerKey], // Añadimos el campo answer-{index}
         questionId,
-        answer: form[`answer-${questionId}`],
         healthConditions: form.healthConditions || [],
+        activePadecimiento: form.activePadecimiento, // Mantenemos el activePadecimiento
       };
     });
   };

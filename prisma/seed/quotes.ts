@@ -28,6 +28,7 @@ const createMedicalHistory = () => {
     .fill(null)
     .map((_, index) => ({
       answer: index === 0 ? "Sí" : "No",
+      [`answer-${index}`]: index === 0 ? "Sí" : "No", // Añadimos el campo answer-{index}
       questionId: index,
       healthConditions: [
         index === 0
@@ -46,30 +47,78 @@ const createMedicalHistory = () => {
             }
           : createEmptyHealthCondition(),
       ],
+      activePadecimiento: index === 0 ? 0 : null, // Añadimos el campo activePadecimiento
     }));
 };
 
 const createAdditionalInfo = (
   protectWho: (typeof PROTECT_WHO_OPTIONS)[number]
 ) => {
+  const baseAge = faker.number.int({ min: 18, max: 65 });
+
   switch (protectWho) {
     case "solo_yo":
-      return {};
+      return {
+        age: baseAge,
+      };
 
     case "mi_pareja_y_yo":
       return {
+        age: baseAge,
         partnerAge: faker.number.int({ min: 18, max: 65 }),
         partnerGender: faker.helpers.arrayElement(["hombre", "mujer"]),
       };
 
     case "familia":
-      const childrenCount = faker.number.int({ min: 1, max: 4 });
+      const familyChildrenCount = faker.number.int({ min: 1, max: 4 });
       return {
+        age: baseAge,
         partnerAge: faker.number.int({ min: 25, max: 65 }),
         partnerGender: faker.helpers.arrayElement(["hombre", "mujer"]),
+        childrenCount: familyChildrenCount,
+        children: Array.from({ length: familyChildrenCount }, () => ({
+          age: faker.number.int({ min: 0, max: 17 }),
+          gender: faker.helpers.arrayElement(["hombre", "mujer"]),
+        })),
+      };
+
+    case "mis_hijos_y_yo":
+      const childrenCount = faker.number.int({ min: 1, max: 4 });
+      return {
+        age: baseAge,
         childrenCount,
         children: Array.from({ length: childrenCount }, () => ({
           age: faker.number.int({ min: 0, max: 17 }),
+          gender: faker.helpers.arrayElement(["hombre", "mujer"]),
+        })),
+      };
+
+    case "solo_mis_hijos":
+      const soloChildrenCount = faker.number.int({ min: 1, max: 4 });
+      return {
+        childrenCount: soloChildrenCount,
+        children: Array.from({ length: soloChildrenCount }, () => ({
+          age: faker.number.int({ min: 0, max: 17 }),
+          gender: faker.helpers.arrayElement(["hombre", "mujer"]),
+        })),
+      };
+
+    case "otros":
+      const protectedCount = faker.number.int({ min: 1, max: 4 });
+      return {
+        protectedCount,
+        protectedPersons: Array.from({ length: protectedCount }, () => ({
+          relationship: faker.helpers.arrayElement([
+            "Hermano",
+            "Hermana",
+            "Tío",
+            "Tía",
+            "Sobrino",
+            "Sobrina",
+            "Primo",
+            "Prima",
+          ]),
+          age: faker.number.int({ min: 0, max: 80 }),
           gender: faker.helpers.arrayElement(["hombre", "mujer"]),
         })),
       };

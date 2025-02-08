@@ -1,7 +1,5 @@
 "use server";
 
-import { getProspectByIdService } from "@/features/prospects/services/get-prospect-by-id.service";
-import { FormDataMedical } from "../types";
 import { redirect } from "next/navigation";
 import { PrismaError } from "@/shared/errors/prisma";
 import { FormData } from "../schemas/form-schema";
