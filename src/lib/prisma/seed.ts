@@ -5,6 +5,7 @@ import prisma from ".";
 import { insurances } from "./data/insurance.data";
 import { planTypes } from "./data/planType.data";
 import { plans } from "./data/plan.data";
+import { seedQuotes } from "../../../prisma/seed/quotes";
 
 async function main() {
   const adminPassword = "AdminPass123";
@@ -13,7 +14,6 @@ async function main() {
   const hashedAdvisorPassword = await hash(advisorPassword, 10);
 
   await prisma.trackingNumber.deleteMany();
-  await prisma.medicalHistory.deleteMany();
   await prisma.quote.deleteMany();
   await prisma.prospect.deleteMany();
   await prisma.plan.deleteMany();
@@ -95,7 +95,6 @@ async function main() {
           id: faker.string.uuid(),
           prospectId: prospect.id,
           planId: plans[Math.floor(Math.random() * plans.length)].id!,
-          customizations: {},
           totalPrice: faker.number.float({
             min: 1000,
             max: 5000,
@@ -110,24 +109,6 @@ async function main() {
         },
       });
     })
-  );
-
-  await Promise.all(
-    quotes.map((quote) =>
-      prisma.medicalHistory.create({
-        data: {
-          id: faker.string.uuid(),
-          responses: {
-            pregunta1: faker.datatype.boolean() ? "Sí" : "No",
-            pregunta2: faker.datatype.boolean() ? "Sí" : "No",
-            pregunta3: faker.datatype.boolean() ? "Sí" : "No",
-          },
-          quoteId: quote.id,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      })
-    )
   );
 
   await Promise.all(
@@ -152,6 +133,8 @@ async function main() {
       })
     )
   );
+
+  await seedQuotes(prisma, activeAdvisors, plans);
 
   console.log("Seed completed successfully");
 }
