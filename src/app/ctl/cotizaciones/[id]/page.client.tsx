@@ -14,6 +14,9 @@ import { MedicalInformationForm } from "@/features/quote/components/forms/medica
 import { QUESTIONS } from "@/features/quote/data"
 import { Breadcrumbs } from "@/shared/components/layout/breadcrumbs"
 import { prefix } from "@/features/layout/nav-config/constants"
+import { NumberInput } from "@/shared/components/ui/number-input"
+import { DollarSign, Percent } from "lucide-react"
+import { TextInput } from "@/shared/components/ui/text-input"
 
 export function QuotePageClient({ quote }: { quote: Quote }) {
   const { formData, errors, handleChildChange, handleInputChange, handleProtectedPersonChange, forms, setForms } =
@@ -56,6 +59,63 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
           <div className="flex flex-col space-y-6">
             <div className="rounded-xl bg-muted/50 p-5">
               <Card>
+                <CardContent className="space-y-6 p-6">
+                  <div className="flex items-center space-x-4 mb-6">
+                    <span className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-xl" />
+
+                    <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
+                      Datos del plan cotizado
+                    </h3>
+                  </div>
+                  <TextInput
+                    name="planType"
+                    label="Nombre del Plan"
+                    defaultValue={quote?.plan?.planType?.name}
+                    disabled
+                  />
+
+                  <TextInput
+                    name="companyId"
+                    label="Compañía"
+                    defaultValue={quote?.plan?.company.name}
+                    disabled
+                  />
+
+                  <NumberInput
+                    name="sumInsured"
+                    label="Suma Asegurada"
+                    icon={<DollarSign className="w-4 h-4 text-gray-500" />}
+                    placeholder="Ingrese suma asegurada"
+                    defaultValue={quote?.plan?.sumInsured}
+                    disabled
+                  />
+
+                  <NumberInput
+                    name="coInsurance"
+                    label="Coaseguro"
+                    icon={<Percent className="w-4 h-4 text-gray-500" />}
+                    step="1"
+                    min="0"
+                    max="100"
+                    defaultValue={quote?.plan?.coInsurance}
+                    placeholder="Ej: 20%"
+                    disabled
+                  />
+
+                  <NumberInput
+                    name="coInsuranceCap"
+                    label="Tope de Coaseguro"
+                    icon={<DollarSign className="w-4 h-4 text-gray-500" />}
+                    placeholder="Ingrese tope de coaseguro"
+                    defaultValue={quote?.plan?.coInsuranceCap!}
+                    disabled
+                  />
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="rounded-xl bg-muted/50 p-5">
+              <Card>
                 <CardContent>
                   <PersonalInfoSection
                     formData={formData}
@@ -75,6 +135,8 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
                 </CardContent>
               </Card>
             </div>
+
+
 
             <div className="rounded-xl bg-muted/50 p-5 hidden md:block">
               <SubmitButton

@@ -13,6 +13,12 @@ export const getQuoteByIdService = async (
       include: {
         prospect: true,
         user: true,
+        plan: {
+          include: {
+            company: true,
+            planType: true,
+          },
+        },
       },
     });
   } catch (error) {
