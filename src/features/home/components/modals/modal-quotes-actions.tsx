@@ -12,7 +12,7 @@ export const ModalQuotesAction: FC = () => {
 
   return (
     <>
-      {isOpen && modalType === "Vida" && (
+      {/* {isOpen && modalType === "Vida" && (
         <Modal title="Vida" description="Descripcion para Vida" size="6xl">
           <div className="flex justify-center w-full">
             <Image
@@ -54,7 +54,7 @@ export const ModalQuotesAction: FC = () => {
             />
           </div>
         </Modal>
-      )}
+      )} */}
     </>
   );
 };
