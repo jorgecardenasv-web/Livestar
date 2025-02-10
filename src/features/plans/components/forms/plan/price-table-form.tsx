@@ -35,7 +35,6 @@ export const PriceTableForm: React.FC<PriceTableFormProps> = ({
 
   const onFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     await handleFileUpload(e);
-    // Limpiar el input file después de procesar el archivo
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }

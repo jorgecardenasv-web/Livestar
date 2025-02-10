@@ -20,13 +20,8 @@ export const usePriceTableForm = (
     if (typeof value === "number") return value;
     if (!value) return 0;
 
-    // Usar numeral para parsear el número
     const parsed = numeral(value);
     return parsed.value() || 0;
-  };
-
-  const formatPrice = (value: number): string => {
-    return numeral(value).format("0,0.00");
   };
 
   const handlePriceChange = (
