@@ -2,6 +2,7 @@ import { SelectInput } from "@/shared/components/ui/select-input";
 import { TextInput } from "@/shared/components/ui/text-input";
 import { genderOptions, whoOptions } from "../../data";
 import { FormData } from "../../schemas/form-schema";
+import { NumberInput } from "@/shared/components/ui/number-input";
 
 interface PersonalInfoSectionProps {
   formData: FormData;
@@ -87,9 +88,8 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           formData.protectWho === "mis_hijos_y_yo" ||
           formData.protectWho === "solo_yo" ||
           formData.protectWho === "familia") && (
-            <TextInput
+            <NumberInput
               label="Yo tengo"
-              type="number"
               name="age"
               placeholder="Ej: 18"
               value={formData.age}
@@ -114,9 +114,8 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                   handleInputChange("partnerGender", value)
                 }
               />
-              <TextInput
+              <NumberInput
                 label="Mi pareja tiene"
-                type="number"
                 id="partnerAge"
                 name="partnerAge"
                 placeholder="Ej: 18"
@@ -136,9 +135,8 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           formData.protectWho === "mis_hijos_y_yo" ||
           formData.protectWho === "solo_mis_hijos") && (
             <>
-              <TextInput
+              <NumberInput
                 label=" Número de hijos"
-                type="number"
                 id="childrenCount"
                 name="childrenCount"
                 placeholder="Nº de hijos"
@@ -164,9 +162,8 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                           key={index}
                           className="grid grid-cols-1 md:grid-cols-2 gap-4"
                         >
-                          <TextInput
+                          <NumberInput
                             label="Edad"
-                            type="number"
                             id={`childAge${index}`}
                             name={`childAge${index}`}
                             placeholder="Edad"
@@ -203,8 +200,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
 
         {formData.protectWho === "otros" && (
           <>
-            <TextInput
-              type="number"
+            <NumberInput
               label="¿Cuántas personas quieres asegurar?"
               id="protectedCount"
               name="protectedCount"
@@ -249,9 +245,8 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                           label="Parentesco"
                         />
 
-                        <TextInput
+                        <NumberInput
                           label="Edad"
-                          type="number"
                           id={`protectedAge${index}`}
                           name={`protectedAge${index}`}
                           placeholder="Edad"
@@ -314,9 +309,8 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 className="w-full"
               />
 
-              <TextInput
+              <NumberInput
                 label="Edad de papá"
-                type="number"
                 name="dadAge"
                 placeholder="Edad de papá"
                 value={formData.dadAge}
@@ -327,9 +321,8 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 className="w-full"
                 min={18}
               />
-              <TextInput
+              <NumberInput
                 label="Edad de mamá"
-                type="number"
                 name="momAge"
                 placeholder="Edad de mamá"
                 value={formData.momAge}

@@ -10,87 +10,63 @@ export const getDefaultState = (): FormData => ({
   age: 0,
 });
 
-export const normalizeFormData = (data?: any): FormData => {
-  if (!data) return getDefaultState();
+export const normalizeFormData = (initialData?: any): FormData => {
+  if (!initialData) {
+    return {} as FormData;
+  }
 
-  const { prospect, protectWho, additionalInfo } = data;
-  const baseData = {
-    name: prospect?.name || "",
-    gender: prospect?.gender || "",
-    age: prospect?.age || 0,
-    postalCode: prospect?.postalCode || "",
-    whatsapp: prospect?.whatsapp || "",
-    email: prospect?.email || "",
-    protectWho: protectWho || "solo_yo",
+  // Base data
+  const normalized: FormData = {
+    name: initialData.prospect?.name || "",
+    gender: initialData.prospect?.gender || "",
+    postalCode: initialData.prospect?.postalCode || "",
+    whatsapp: initialData.prospect?.whatsapp || "",
+    email: initialData.prospect?.email || "",
+    protectWho: initialData.protectWho || "",
   };
 
-  switch (protectWho) {
-    case "mi_pareja_y_yo":
-      return {
-        ...baseData,
-        partnerGender: additionalInfo?.partnerGender || "",
-        partnerAge: Number(additionalInfo?.partnerAge) || 0,
-      };
+  // Additional info
+  if (initialData.additionalInfo) {
+    const { additionalInfo } = initialData;
 
-    case "familia":
-      const childrenCount = Number(additionalInfo?.childrenCount) || 0;
-      const children = Array(childrenCount)
-        .fill(null)
-        .map((_, index) => ({
-          age: Number(additionalInfo[`childAge${index}`]) || 0,
-          gender: additionalInfo[`childGender${index}`] || "",
-        }));
+    // Procesar protectedCount y protectedPersons
+    if (additionalInfo.protectedCount) {
+      normalized.protectedCount = additionalInfo.protectedCount;
+      normalized.protectedPersons =
+        additionalInfo.protectedPersons?.map((person: any) => ({
+          relationship: person.relationship || "",
+          age: person.age || 0,
+          gender: person.gender || "",
+        })) || [];
+    }
 
-      return {
-        ...baseData,
-        partnerGender: additionalInfo?.partnerGender || "",
-        partnerAge: Number(additionalInfo?.partnerAge) || 0,
-        childrenCount,
-        children,
-      };
+    // Procesar información de niños
+    if (additionalInfo.childrenCount) {
+      normalized.childrenCount = additionalInfo.childrenCount;
+      normalized.children =
+        additionalInfo.children?.map((child: any) => ({
+          age: child.age || 0,
+          gender: child.gender || "",
+        })) || [];
+    }
 
-    case "mis_hijos_y_yo":
-    case "solo_mis_hijos":
-      const childCount = Number(additionalInfo?.childrenCount) || 0;
-      const childrenData = Array(childCount)
-        .fill(null)
-        .map((_, index) => ({
-          age: Number(additionalInfo[`childAge${index}`]) || 0,
-          gender: additionalInfo[`childGender${index}`] || "",
-        }));
+    // Procesar edad personal y de pareja
+    if (additionalInfo.age !== undefined) {
+      normalized.age = additionalInfo.age;
+    }
+    if (additionalInfo.partnerAge !== undefined) {
+      normalized.partnerAge = additionalInfo.partnerAge;
+      normalized.partnerGender = additionalInfo.partnerGender || "";
+    }
 
-      return {
-        ...baseData,
-        childrenCount: childCount,
-        children: childrenData,
-      };
-
-    case "otros":
-      const protectedCount = Number(additionalInfo?.protectedCount) || 0;
-      const protectedPersons = Array(protectedCount)
-        .fill(null)
-        .map((_, index) => ({
-          age: Number(additionalInfo[`protectedAge${index}`]) || 0,
-          gender: additionalInfo[`protectedGender${index}`] || "",
-          relationship: additionalInfo[`protectedRelationship${index}`] || "",
-        }));
-
-      return {
-        ...baseData,
-        protectedCount,
-        protectedPersons,
-      };
-
-    case "mis_padres":
-      return {
-        ...baseData,
-        momName: additionalInfo?.momName || "",
-        dadName: additionalInfo?.dadName || "",
-        momAge: Number(additionalInfo?.momAge) || 0,
-        dadAge: Number(additionalInfo?.dadAge) || 0,
-      };
-
-    default:
-      return baseData;
+    // Procesar información de padres
+    if (additionalInfo.momName || additionalInfo.dadName) {
+      normalized.momName = additionalInfo.momName || "";
+      normalized.momAge = additionalInfo.momAge || 0;
+      normalized.dadName = additionalInfo.dadName || "";
+      normalized.dadAge = additionalInfo.dadAge || 0;
+    }
   }
+
+  return normalized;
 };

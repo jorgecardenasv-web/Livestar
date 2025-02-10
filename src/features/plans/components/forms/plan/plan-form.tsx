@@ -106,10 +106,9 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
               required
             />
 
-            <TextInput
+            <NumberInput
               name="coInsurance"
               label="Coaseguro"
-              type="number"
               icon={<Percent className="w-4 h-4 text-gray-500" />}
               step="1"
               min="0"

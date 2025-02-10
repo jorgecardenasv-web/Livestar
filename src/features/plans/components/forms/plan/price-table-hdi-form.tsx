@@ -5,13 +5,12 @@ import { Input } from "@/shared/components/ui/input";
 import { PriceInput } from "../../inputs/price-input";
 import { Separator } from "@/shared/components/ui/separator";
 import { Upload } from "lucide-react";
-import { PriceDataHDI } from "../../../types";
 import { usePriceTableHDIForm } from "../../../hooks/use-price-table-hdi";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 
 interface PriceTableHDIFormProps {
-  prices: PriceDataHDI[];
-  setPrices: (prices: PriceDataHDI[]) => void;
+  prices: any[];
+  setPrices: (prices: any[]) => void;
 }
 
 export const PriceTableHDIForm: React.FC<PriceTableHDIFormProps> = ({ prices, setPrices }) => {
@@ -51,8 +50,6 @@ export const PriceTableHDIForm: React.FC<PriceTableHDIFormProps> = ({ prices, se
               </TableHeader>
               <TableBody>
                 {prices.map((row) => {
-                  console.log(row);
-
                   return (
                     <TableRow key={row.age}>
                       <TableCell className="text-center">{row.age}</TableCell>

@@ -23,32 +23,66 @@ const createEmptyHealthCondition = () => ({
   detalleComplicacion: "",
 });
 
-const createMedicalHistory = () => {
+const createMedicalHistory = (protectWho: string, additionalInfo: any) => {
   return Array(4)
     .fill(null)
-    .map((_, index) => ({
-      answer: index === 0 ? "Sí" : "No",
-      [`answer-${index}`]: index === 0 ? "Sí" : "No", // Añadimos el campo answer-{index}
-      questionId: index,
-      healthConditions: [
-        index === 0
-          ? {
-              persona: "Yo",
-              tipoEvento: "1",
-              estadoSalud: "Sano",
-              fechaInicio: "2025-02-03T06:00:00.000Z",
-              medicamento: "No",
-              complicacion: "No",
-              hospitalizado: "No",
-              tipoTratamiento: "2",
-              detalleMedicamento: "",
-              nombrePadecimiento: "Padecimiento de prueba",
-              detalleComplicacion: "",
-            }
-          : createEmptyHealthCondition(),
-      ],
-      activePadecimiento: index === 0 ? 0 : null, // Añadimos el campo activePadecimiento
-    }));
+    .map((_, index) => {
+      let persona;
+      if (
+        protectWho === "otros" &&
+        additionalInfo.protectedPersons?.length > 0
+      ) {
+        // Obtener el relationship y contar cuántas veces aparece
+        const firstPerson = additionalInfo.protectedPersons[0];
+        const sameRelationshipCount = additionalInfo.protectedPersons.filter(
+          (p: any) => p.relationship === firstPerson.relationship
+        ).length;
+
+        // Si hay más de uno con el mismo relationship, agregar un número
+        persona =
+          sameRelationshipCount > 1
+            ? `${firstPerson.relationship} 1`
+            : firstPerson.relationship;
+      } else {
+        // El resto del código para otros casos se mantiene igual
+        const personaMapping: Record<string, string> = {
+          solo_yo: "Yo",
+          mi_pareja_y_yo: "Yo",
+          familia: "Yo",
+          mis_hijos_y_yo: "Yo",
+          solo_mis_hijos:
+            additionalInfo.children?.[0]?.gender === "mujer"
+              ? "Hija 1"
+              : "Hijo 1",
+          mis_padres: "Madre",
+        };
+        persona = personaMapping[protectWho] || "Yo";
+      }
+
+      return {
+        answer: index === 0 ? "Sí" : "No",
+        [`answer-${index}`]: index === 0 ? "Sí" : "No",
+        questionId: index,
+        healthConditions: [
+          index === 0
+            ? {
+                persona,
+                tipoEvento: "1",
+                estadoSalud: "Sano",
+                fechaInicio: "2025-02-03T06:00:00.000Z",
+                medicamento: "No",
+                complicacion: "No",
+                hospitalizado: "No",
+                tipoTratamiento: "2",
+                detalleMedicamento: "",
+                nombrePadecimiento: "Padecimiento de prueba",
+                detalleComplicacion: "",
+              }
+            : createEmptyHealthCondition(),
+        ],
+        activePadecimiento: index === 0 ? 0 : null,
+      };
+    });
 };
 
 const createAdditionalInfo = (
@@ -145,6 +179,7 @@ export const seedQuotes = async (
 
   for (let i = 0; i < QUOTES_TO_CREATE; i++) {
     const protectWho = faker.helpers.arrayElement(PROTECT_WHO_OPTIONS);
+    const additionalInfo = createAdditionalInfo(protectWho);
     const prospect = await prisma.prospect.create({
       data: {
         name: faker.person.fullName(),
@@ -168,8 +203,8 @@ export const seedQuotes = async (
           fractionDigits: 2,
         }),
         protectWho,
-        additionalInfo: createAdditionalInfo(protectWho),
-        medicalHistories: createMedicalHistory(),
+        additionalInfo,
+        medicalHistories: createMedicalHistory(protectWho, additionalInfo),
         status: faker.helpers.arrayElement([
           QuoteStatus.NUEVO,
           QuoteStatus.CONTACTADO,

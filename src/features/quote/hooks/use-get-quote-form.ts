@@ -100,8 +100,10 @@ const dataCleaners: Record<string, (data: any, cleaned: any) => void> = {
 
 export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
   const { openModal, closeModal } = useModalStore();
+
   const [formData, setFormData] = useState<FormData>(() => {
-    return normalizeFormData(initialState);
+    const normalized = normalizeFormData(initialState);
+    return normalized;
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [medicalErrors, setMedicalErrors] = useState<Record<string, string>>(
