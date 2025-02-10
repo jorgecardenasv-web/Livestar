@@ -2,9 +2,9 @@
 
 import { redirect } from "next/navigation";
 import { PrismaError } from "@/shared/errors/prisma";
-import { FormData } from "../schemas/form-schema";
 import { cookies } from "next/headers";
 import { createQuoteService } from "../services/create/create-quote.service";
+import { getAdvisorWithLeastQuotesService } from "@/features/advisors/services/get-advisor-with-least-prospects.service";
 
 export const createQuoteAction = async (payload: any) => {
   try {
@@ -13,12 +13,17 @@ export const createQuoteAction = async (payload: any) => {
 
     const selectedPlan = cookieStore.get("selectedPlan")?.value;
 
+    const advisor = await getAdvisorWithLeastQuotesService();
+
     if (prospectData) {
-      await createQuoteService({
-        prospectData,
-        medicalData,
-        plan: JSON.parse(selectedPlan!),
-      });
+      await createQuoteService(
+        {
+          prospectData,
+          medicalData,
+          plan: JSON.parse(selectedPlan!),
+        },
+        advisor?.id!
+      );
 
       cookieStore.delete("prospect");
       cookieStore.delete("selectedPlan");

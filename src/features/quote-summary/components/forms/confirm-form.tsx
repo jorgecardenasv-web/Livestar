@@ -1,27 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { CreateContract } from "../../actions/create-quote";
 import {
   Alert,
   AlertDescription,
   AlertTitle,
 } from "@/shared/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { SubmitButton } from "@/shared/components/ui/submit-button";
-import { useFormState } from "react-dom";
-import { Callout } from "@/shared/components/ui/callout";
+import { Button } from "@/shared/components/ui/button";
+import Link from "next/link";
 
 export const ContractForm = () => {
   const [isConfirmed, setIsConfirmed] = useState(false);
 
-  const [state, formAction] = useFormState(CreateContract, {
-    message: "",
-    success: false
-  });
-
   return (
-    <form className="mt-5" action={formAction}>
+    <div className="mt-5">
       <Alert variant="default" className="mb-4">
         <AlertCircle className="h-4 w-4" color="black" />
         <AlertTitle>Aviso</AlertTitle>
@@ -59,23 +52,11 @@ export const ContractForm = () => {
         </AlertDescription>
       </Alert>
 
-      <SubmitButton
-        label="Contratar ahora"
-        labelPending="Generando confirmación..."
-        className="w-full"
-        size="lg"
-        disabled={!isConfirmed}
-      />
-
-      {!state.success && state.message && (
-        <Callout
-          className="mt-4"
-          variant={"warning"}
-          icon={false}
-        >
-          {state.message}
-        </Callout>
-      )}
-    </form>
+      <Button className="w-full py-6 text-lg">
+        <Link href="/finalizar-cotizacion" className="w-full">
+          Contratar ahora
+        </Link>
+      </Button>
+    </div>
   );
 };

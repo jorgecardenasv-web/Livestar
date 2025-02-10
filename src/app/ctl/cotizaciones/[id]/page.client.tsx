@@ -2,8 +2,8 @@
 
 import { useNotificationStore } from "@/features/notification/store/notification-store"
 import { updateQuote } from "@/features/quote/actions/update-quote"
-import { ContactInfoSection } from "@/features/quote/components/sections/contact-info-section"
-import { PersonalInfoSection } from "@/features/quote/components/sections/personal-info-section"
+import { ContactInfoSection } from "@/features/quote/components/forms/contact-info-section"
+import { PersonalInfoSection } from "@/features/quote/components/forms/personal-info-section"
 import { useGetQuoteForm } from "@/features/quote/hooks/use-get-quote-form"
 import type { Quote } from "@/features/quote/types"
 import { Card, CardContent } from "@/shared/components/ui/card"

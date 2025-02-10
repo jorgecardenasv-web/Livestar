@@ -199,13 +199,13 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
       const updatedData = { ...prev, [field]: value };
 
       if (field === "childrenCount" && !Number.isNaN(value)) {
-        const count = typeof value === "number" ? value : 0;
+        const count = typeof value === "number" ? value : 1;
 
         updatedData.children = Array(count).fill({ age: 0, gender: "" });
       }
 
       if (field === "protectedCount") {
-        const count = typeof value === "number" ? value : 0;
+        const count = typeof value === "number" ? value : 1;
         updatedData.protectedPersons = Array(count).fill({
           relationship: "",
           age: 0,
@@ -309,10 +309,10 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
       const answerKey = `answer-${questionId}`;
       return {
         answer: form[answerKey],
-        [`${answerKey}`]: form[answerKey], // Añadimos el campo answer-{index}
+        [`${answerKey}`]: form[answerKey],
         questionId,
         healthConditions: form.healthConditions || [],
-        activePadecimiento: form.activePadecimiento, // Mantenemos el activePadecimiento
+        activePadecimiento: form.activePadecimiento,
       };
     });
   };

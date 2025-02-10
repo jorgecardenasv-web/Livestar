@@ -136,7 +136,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           formData.protectWho === "solo_mis_hijos") && (
             <>
               <NumberInput
-                label=" Número de hijos"
+                label="Número de hijos"
                 id="childrenCount"
                 name="childrenCount"
                 placeholder="Nº de hijos"

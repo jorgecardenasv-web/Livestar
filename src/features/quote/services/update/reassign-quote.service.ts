@@ -2,19 +2,22 @@ import { getAdvisorWithLeastProspectsService } from "@/features/advisors/service
 import prisma from "@/lib/prisma";
 import { handlePrismaError } from "@/shared/errors/prisma";
 
-export const reassignProspectService = async (advisorId: string) => {
+export const reassignQuoteService = async (advisorId: string) => {
   try {
-    const prospectsToReassign = await prisma.prospect.findMany({
+    const quotesToReassign = await prisma.quote.findMany({
       select: {
         id: true,
       },
+      where: {
+        userId: advisorId,
+      },
     });
 
-    for (const prospect of prospectsToReassign) {
+    for (const quote of quotesToReassign) {
       const nextAdvisor = await getAdvisorWithLeastProspectsService();
       if (nextAdvisor) {
-        await prisma.prospect.update({
-          where: { id: prospect.id },
+        await prisma.quote.update({
+          where: { id: quote.id },
           data: {
             userId: nextAdvisor?.id,
           },
@@ -28,8 +31,8 @@ export const reassignProspectService = async (advisorId: string) => {
           },
         });
       } else {
-        await prisma.prospect.update({
-          where: { id: prospect.id },
+        await prisma.quote.update({
+          where: { id: quote.id },
           data: {
             userId: null,
           },

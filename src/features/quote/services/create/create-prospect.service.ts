@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
-import { FormData } from "../schemas/form-schema";
 import { prospectTransformer } from "@/features/prospects/transformers/prospect-transformer";
 import { handlePrismaError } from "@/shared/errors/prisma";
+import { FormData } from "../../schemas/form-schema";
 
 export const createProspectService = async (
   data: FormData,
@@ -10,10 +10,7 @@ export const createProspectService = async (
   try {
     const prospect = await prisma.$transaction(async (prisma) => {
       const createdProspect = await prisma.prospect.create({
-        data: {
-          ...data,
-          user: { connect: { id: advisorId! } },
-        },
+        data,
       });
 
       await prisma.user.update({

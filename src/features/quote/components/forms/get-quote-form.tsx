@@ -2,8 +2,8 @@
 
 import { useGetQuoteForm } from "../../hooks/use-get-quote-form";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
-import { PersonalInfoSection } from "../sections/personal-info-section";
-import { ContactInfoSection } from "../sections/contact-info-section";
+import { PersonalInfoSection } from "./personal-info-section";
+import { ContactInfoSection } from "./contact-info-section";
 
 export const GetQuoteForm: React.FC<{
   prospect: any;

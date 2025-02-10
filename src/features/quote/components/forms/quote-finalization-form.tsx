@@ -3,9 +3,9 @@
 import { useGetQuoteForm } from "../../hooks/use-get-quote-form";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Separator } from "@/shared/components/ui/separator";
-import { ContactInfoSection } from "../sections/contact-info-section";
+import { ContactInfoSection } from "./contact-info-section";
 import { MedicalInformationForm } from "../forms/medical-information-form";
-import { PersonalInfoSection } from "../sections/personal-info-section";
+import { PersonalInfoSection } from "./personal-info-section";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { QUESTIONS } from "../../data";
 

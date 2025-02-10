@@ -1,6 +1,6 @@
 "use server";
 
-import { reassignProspectService } from "@/features/quote/services/update/reassign-prospect.service";
+import { reassignQuoteService } from "@/features/quote/services/update/reassign-quote.service";
 import prisma from "@/lib/prisma";
 import { PrismaError } from "@/shared/errors/prisma";
 import { FormState } from "@/shared/types";
@@ -14,7 +14,7 @@ export const deleteAdvisor = async (
 ): Promise<FormState> => {
   try {
     await prisma.$transaction(async (prisma) => {
-      await reassignProspectService(advisorId);
+      await reassignQuoteService(advisorId);
 
       await prisma.user.delete({
         where: { id: advisorId },

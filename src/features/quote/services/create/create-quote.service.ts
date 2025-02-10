@@ -1,3 +1,4 @@
+import { getAdvisorWithLeastQuotesService } from "@/features/advisors/services/get-advisor-with-least-prospects.service";
 import prisma from "@/lib/prisma";
 import { handlePrismaError } from "@/shared/errors/prisma";
 
@@ -5,7 +6,7 @@ function generateTrackingNumber() {
   return `TM-${Math.random().toString(36).slice(2, 11).toUpperCase()}`;
 }
 
-export async function createQuoteService(data: any) {
+export async function createQuoteService(data: any, advisorId: string) {
   const {
     name,
     gender,
@@ -40,6 +41,7 @@ export async function createQuoteService(data: any) {
           planId,
           medicalHistories: data.medicalData,
           prospectId: newProspect.id,
+          userId: advisorId,
         },
       });
 
