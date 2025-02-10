@@ -9,12 +9,15 @@ export const getAllProspectsByDateService = async ({
   endDate: string;
 }) => {
   try {
-    return await prisma.prospect.findMany({
+    return await prisma.quote.findMany({
       where: {
         createdAt: {
           gte: startDate,
           lte: endDate,
         },
+      },
+      include: {
+        user: true,
       },
     });
   } catch (error) {

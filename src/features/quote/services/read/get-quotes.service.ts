@@ -50,6 +50,12 @@ export const getQuotesService = async ({
       include: {
         user: true,
         prospect: true,
+        plan: {
+          include: {
+            company: true,
+            planType: true,
+          },
+        },
       },
     }),
     prisma.quote.count({

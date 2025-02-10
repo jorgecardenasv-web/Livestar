@@ -5,9 +5,9 @@ import { Shield, Percent, Heart, DollarSign } from "lucide-react";
 import { handleInterestClick } from "../../actions/set-cookies";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { getProspect } from "../../loaders/get-prospect";
-import { PriceTable } from "../../types";
 import { getImage } from "../../../../shared/services/get-image.service";
 import { formatCurrency } from "@/shared/utils";
+import { PriceTable } from "../../types";
 
 interface InsuranceCardProps {
   company: Insurance;
