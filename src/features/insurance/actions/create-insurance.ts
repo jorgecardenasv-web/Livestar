@@ -1,6 +1,6 @@
 "use server";
 
-import { saveImage } from "@/shared/services/upload-image.service";
+import { convertToBlob } from "@/shared/services/blob-image.service";
 import { createInsuranceSchema } from "../schemas/create-insurance";
 import { simplifyZodErrors } from "@/shared/utils";
 import { createInsuranceService } from "../services/create-insurance.service";
@@ -15,7 +15,6 @@ export async function createInsurance(
 ): Promise<FormState> {
   try {
     const rawFormData = Object.fromEntries(formData.entries());
-
     const result = createInsuranceSchema.safeParse(rawFormData);
 
     if (!result.success) {
@@ -29,11 +28,11 @@ export async function createInsurance(
 
     const { name, logo } = result.data;
 
-    const filename = await saveImage(logo);
+    const logoBlob = await convertToBlob(logo);
 
     await createInsuranceService({
       name,
-      logo: `${filename}`,
+      logo: logoBlob,
     });
 
     revalidatePath("/ctl/aseguradoras");
