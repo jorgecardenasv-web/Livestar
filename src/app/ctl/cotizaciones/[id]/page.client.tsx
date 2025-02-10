@@ -33,7 +33,7 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
     if (state.success) {
       showNotification(state.message, "success")
     }
-  }, [state, showNotification]) // Added showNotification to dependencies
+  }, [state, showNotification])
 
   return (
     <>
