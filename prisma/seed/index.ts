@@ -58,83 +58,83 @@ async function main() {
       }),
   ]);
 
-  await prisma.insurance.createMany({ data: insurances, skipDuplicates: true });
-  await prisma.planType.createMany({ data: planTypes, skipDuplicates: true });
-  await prisma.plan.createMany({ data: plans, skipDuplicates: true });
+  // await prisma.insurance.createMany({ data: insurances, skipDuplicates: true });
+  // await prisma.planType.createMany({ data: planTypes, skipDuplicates: true });
+  // await prisma.plan.createMany({ data: plans, skipDuplicates: true });
 
-  const activeAdvisors = advisors.filter(
-    (advisor) => advisor.status === UserStatus.ACTIVO
-  );
+  // const activeAdvisors = advisors.filter(
+  //   (advisor) => advisor.status === UserStatus.ACTIVO
+  // );
 
-  const prospects = await Promise.all(
-    Array(10)
-      .fill(null)
-      .map(async () => {
-        return prisma.prospect.create({
-          data: {
-            id: faker.string.uuid(),
-            name: faker.person.fullName(),
-            gender: Math.random() > 0.5 ? "hombre" : "mujer",
-            age: faker.number.int({ min: 18, max: 64 }),
-            postalCode: faker.location.zipCode(),
-            whatsapp: faker.phone.number(),
-            email: faker.internet.email(),
-            isVerified: false,
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-        });
-      })
-  );
+  // const prospects = await Promise.all(
+  //   Array(10)
+  //     .fill(null)
+  //     .map(async () => {
+  //       return prisma.prospect.create({
+  //         data: {
+  //           id: faker.string.uuid(),
+  //           name: faker.person.fullName(),
+  //           gender: Math.random() > 0.5 ? "hombre" : "mujer",
+  //           age: faker.number.int({ min: 18, max: 64 }),
+  //           postalCode: faker.location.zipCode(),
+  //           whatsapp: faker.phone.number(),
+  //           email: faker.internet.email(),
+  //           isVerified: false,
+  //           createdAt: new Date(),
+  //           updatedAt: new Date(),
+  //         },
+  //       });
+  //     })
+  // );
 
-  const quotes = await Promise.all(
-    prospects.slice(0, 5).map((prospect, index) => {
-      const advisor = activeAdvisors[index % activeAdvisors.length];
-      return prisma.quote.create({
-        data: {
-          id: faker.string.uuid(),
-          prospectId: prospect.id,
-          planId: plans[Math.floor(Math.random() * plans.length)].id!,
-          totalPrice: faker.number.float({
-            min: 1000,
-            max: 5000,
-            fractionDigits: 2,
-          }),
-          userId: advisor.id,
-          status: QuoteStatus.NUEVO,
-          protectWho: "solo_yo",
-          additionalInfo: {},
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-      });
-    })
-  );
+  // const quotes = await Promise.all(
+  //   prospects.slice(0, 5).map((prospect, index) => {
+  //     const advisor = activeAdvisors[index % activeAdvisors.length];
+  //     return prisma.quote.create({
+  //       data: {
+  //         id: faker.string.uuid(),
+  //         prospectId: prospect.id,
+  //         planId: plans[Math.floor(Math.random() * plans.length)].id!,
+  //         totalPrice: faker.number.float({
+  //           min: 1000,
+  //           max: 5000,
+  //           fractionDigits: 2,
+  //         }),
+  //         userId: advisor.id,
+  //         status: QuoteStatus.NUEVO,
+  //         protectWho: "solo_yo",
+  //         additionalInfo: {},
+  //         createdAt: new Date(),
+  //         updatedAt: new Date(),
+  //       },
+  //     });
+  //   })
+  // );
 
-  await Promise.all(
-    quotes.map((quote) =>
-      prisma.trackingNumber.create({
-        data: {
-          id: faker.string.uuid(),
-          number: `TRACK${faker.string.numeric(6)}`,
-          quoteId: quote.id,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          lastActivity: new Date(),
-          activityLog: {
-            actividades: [
-              {
-                fecha: new Date(),
-                descripcion: "Cotización creada",
-              },
-            ],
-          },
-        },
-      })
-    )
-  );
+  // await Promise.all(
+  //   quotes.map((quote) =>
+  //     prisma.trackingNumber.create({
+  //       data: {
+  //         id: faker.string.uuid(),
+  //         number: `TRACK${faker.string.numeric(6)}`,
+  //         quoteId: quote.id,
+  //         createdAt: new Date(),
+  //         updatedAt: new Date(),
+  //         lastActivity: new Date(),
+  //         activityLog: {
+  //           actividades: [
+  //             {
+  //               fecha: new Date(),
+  //               descripcion: "Cotización creada",
+  //             },
+  //           ],
+  //         },
+  //       },
+  //     })
+  //   )
+  // );
 
-  await seedQuotes(prisma, activeAdvisors, plans);
+  // await seedQuotes(prisma, activeAdvisors, plans);
 
   console.log("Seed completed successfully");
 }

@@ -1,23 +1,31 @@
-import { DollarSign } from "lucide-react";
-import { NumberInput } from "@/shared/components/ui/number-input";
+import React from 'react';
+import { Input } from "@/shared/components/ui/input";
+import numeral from 'numeral';
 
-interface Props {
-  value: string | number;
+interface PriceInputProps {
+  value: string;
   onChange: (value: string) => void;
-  className?: string;
 }
 
-export const PriceInput: React.FC<Props> = ({ value, onChange, className }) => {
+export const PriceInput: React.FC<PriceInputProps> = ({ value, onChange }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.value);
+    const rawValue = e.target.value;
+    if (/^[\d,.\s]*$/.test(rawValue)) {
+      onChange(rawValue);
+    }
+  };
+
+  const formatDisplayValue = (value: string) => {
+    const num = numeral(value);
+    return num.value() ? num.format('0,0.00') : value;
   };
 
   return (
-    <NumberInput
-      value={value}
+    <Input
+      type="text"
+      value={formatDisplayValue(value)}
       onChange={handleChange}
-      icon={<DollarSign className="h-4 w-4 text-gray-500" />}
-      className={className}
+      className="text-right"
     />
   );
 };

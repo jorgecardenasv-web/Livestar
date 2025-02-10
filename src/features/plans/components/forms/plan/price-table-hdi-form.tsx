@@ -7,14 +7,24 @@ import { Separator } from "@/shared/components/ui/separator";
 import { Upload } from "lucide-react";
 import { usePriceTableHDIForm } from "../../../hooks/use-price-table-hdi";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
+import { useRef } from "react";
+import { PriceDataHDI } from "../../../types";
 
 interface PriceTableHDIFormProps {
-  prices: any[];
-  setPrices: (prices: any[]) => void;
+  prices: PriceDataHDI[];
+  setPrices: (prices: PriceDataHDI[]) => void;
 }
 
 export const PriceTableHDIForm: React.FC<PriceTableHDIFormProps> = ({ prices, setPrices }) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { handlePriceChange, handleFileUpload } = usePriceTableHDIForm(prices, setPrices);
+
+  const onFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    await handleFileUpload(e);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
   return (
     <div className="rounded-xl bg-muted/50 p-5">
@@ -24,9 +34,10 @@ export const PriceTableHDIForm: React.FC<PriceTableHDIFormProps> = ({ prices, se
             <span>Tabla de Precios HDI por Edad</span>
             <div className="relative">
               <Input
+                ref={fileInputRef}
                 type="file"
                 accept=".xlsx, .xls"
-                onChange={handleFileUpload}
+                onChange={onFileUpload}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
               <Button className="flex items-center gap-2">
@@ -49,37 +60,35 @@ export const PriceTableHDIForm: React.FC<PriceTableHDIFormProps> = ({ prices, se
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {prices.map((row) => {
-                  return (
-                    <TableRow key={row.age}>
-                      <TableCell className="text-center">{row.age}</TableCell>
-                      <TableCell>
-                        <PriceInput
-                          value={(row.monthlyPrice1 ?? 0).toString()}
-                          onChange={(value) =>
-                            handlePriceChange(row.age, "monthlyPrice1", value)
-                          }
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <PriceInput
-                          value={(row.monthlyPrice2to12 ?? 0).toString()}
-                          onChange={(value) =>
-                            handlePriceChange(row.age, "monthlyPrice2to12", value)
-                          }
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <PriceInput
-                          value={(row.annualPrice ?? 0).toString()}
-                          onChange={(value) =>
-                            handlePriceChange(row.age, "annualPrice", value)
-                          }
-                        />
-                      </TableCell>
-                    </TableRow>
-                  )
-                })}
+                {prices.map((price) => (
+                  <TableRow key={`price-row-${price.age}`}>
+                    <TableCell className="text-center">{price.age}</TableCell>
+                    <TableCell>
+                      <PriceInput
+                        value={(price.monthlyPrice1 ?? 0).toString()}
+                        onChange={(value) =>
+                          handlePriceChange(price.age, "monthlyPrice1", value)
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <PriceInput
+                        value={(price.monthlyPrice2to12 ?? 0).toString()}
+                        onChange={(value) =>
+                          handlePriceChange(price.age, "monthlyPrice2to12", value)
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <PriceInput
+                        value={(price.annualPrice ?? 0).toString()}
+                        onChange={(value) =>
+                          handlePriceChange(price.age, "annualPrice", value)
+                        }
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           ) : (
