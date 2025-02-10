@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/shared/utils/cn";
-import { navLinks } from "../data/nav-links";
+import { navLinks } from "../nav-config/nav-links";
 
 export default function NavLinks({ userRole }: { userRole?: string | null }) {
   const pathname = usePathname();
@@ -11,7 +11,10 @@ export default function NavLinks({ userRole }: { userRole?: string | null }) {
   return (
     <div className="flex flex-col w-full space-y-4 md:space-y-2">
       {navLinks
-        .filter((link) => link.roles.includes(userRole!))
+        .filter((link) =>
+          link.roles.includes(userRole!) &&
+          (link.visible !== false) // Solo mostrar links visibles
+        )
         .map((link) => {
           const LinkIcon = link.icon;
           const isActive = pathname === link.href;

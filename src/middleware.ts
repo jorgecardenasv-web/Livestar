@@ -1,48 +1,78 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getSession } from "@/lib/iron-session/get-session";
-import { prefix } from "@/shared/utils/constants";
+import { Role } from "@prisma/client";
+import {
+  prefix,
+  publicPaths,
+  authPaths,
+  defaultRoutes,
+} from "@/features/layout/nav-config/constants";
+import {
+  getRoutesByRoles,
+  matchRoute,
+} from "@/features/layout/nav-config/nav-links";
 
-const routeRoles: { [key: string]: string[] } = {
-  "/ctl/prospectos": ["ADMIN", "ADVISOR"],
-  "/ctl/asesores": ["ADMIN"],
-  "/ctl/aseguradoras": ["ADMIN"],
-  "/ctl/planes": ["ADMIN"],
-  "/ctl/planes/tipo-de-planes": ["ADMIN"],
-  "/ctl/sesiones": ["ADMIN"],
-  "/ctl/planes/nuevo-plan": ["ADMIN"],
-};
+const routeRoles = getRoutesByRoles();
 
-const publicPaths = [
-  "/",
-  "/ini-ses-adm",
-  "/cotizar",
-  "/finalizar-cotizacion",
-  "/aviso-de-Privacidad",
-];
+const staticResources = ["/_next/", "/api/", "/static/", "/images/"];
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
-  if (publicPaths.includes(path)) {
+  if (staticResources.some((resource) => path.startsWith(resource))) {
     return NextResponse.next();
   }
 
+  const pathWithoutQuery = path.split("?")[0];
+
   const session = await getSession();
 
-  if (!session.isLoggedIn && !publicPaths.includes(path)) {
-    return NextResponse.redirect(new URL("/ini-ses-adm", request.url));
+  if (!session.isLoggedIn) {
+    // Permitir acceso a la ruta "/cotizar" para evitar bucle infinito
+    if (pathWithoutQuery === "/cotizar") {
+      return NextResponse.next();
+    }
+
+    // Solo para la ruta "/finalizar-cotizacion" verificar cookies "prospect" y "selectedPlan"
+    if (pathWithoutQuery === "/finalizar-cotizacion") {
+      const hasProspect = request.cookies.get("prospect");
+      const hasSelectedPlan = request.cookies.get("selectedPlan");
+      if (!hasProspect && !hasSelectedPlan) {
+        return NextResponse.redirect(new URL("/cotizar", request.url));
+      }
+    }
+
+    if (
+      publicPaths.includes(pathWithoutQuery) ||
+      authPaths.includes(pathWithoutQuery)
+    ) {
+      return NextResponse.next();
+    }
+    return NextResponse.redirect(new URL(authPaths[0], request.url));
   }
 
-  if (session.isLoggedIn && session.user.role) {
-    const userRole = session.user.role as string;
+  const userRole = session.user.role as Role;
 
-    const allowedRoles = routeRoles[path];
+  if (publicPaths.includes(pathWithoutQuery)) {
+    const redirectUrl = new URL(defaultRoutes[userRole], request.url);
+    return NextResponse.redirect(redirectUrl);
+  }
 
-    if (allowedRoles && !allowedRoles.includes(userRole)) {
-      return NextResponse.redirect(
-        new URL(`${prefix}/prospectos`, request.url)
-      );
+  if (pathWithoutQuery.startsWith(prefix)) {
+    const hasPermission = Object.entries(routeRoles).some(
+      ([pattern, roles]) => {
+        const matches = matchRoute(pattern, pathWithoutQuery);
+        if (matches) {
+          return roles.includes(userRole);
+        }
+        return false;
+      }
+    );
+
+    if (!hasPermission && pathWithoutQuery !== defaultRoutes[userRole]) {
+      const redirectUrl = new URL(defaultRoutes[userRole], request.url);
+      return NextResponse.redirect(redirectUrl);
     }
   }
 
@@ -50,5 +80,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    "/((?!favicon\\.ico|_next/static|_next/image|api|static|images).*)",
+  ],
 };

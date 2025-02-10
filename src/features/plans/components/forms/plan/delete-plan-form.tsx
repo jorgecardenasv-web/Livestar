@@ -47,7 +47,7 @@ export const DeletePlanForm = () => {
         </div>
         <div className="flex flex-row items-center gap-2 mb-1">
           <p>Coaseguro:</p>
-          <p className="font-semibold">{plan?.coInsurance * 100}%</p>
+          <p className="font-semibold">{plan?.coInsurance}%</p>
         </div>
         <div className="flex flex-row items-center gap-2 mb-1">
           <p>Status:</p>

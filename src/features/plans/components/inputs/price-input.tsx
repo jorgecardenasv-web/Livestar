@@ -1,23 +1,23 @@
-import { memo } from "react";
-import { Input } from "@/shared/components/ui/input";
+import { DollarSign } from "lucide-react";
+import { NumberInput } from "@/shared/components/ui/number-input";
 
-const PriceInput = memo(
-  ({
-    value,
-    onChange,
-  }: {
-    value: string;
-    onChange: (value: string) => void;
-  }) => (
-    <Input
-      type="number"
+interface Props {
+  value: string | number;
+  onChange: (value: string) => void;
+  className?: string;
+}
+
+export const PriceInput: React.FC<Props> = ({ value, onChange, className }) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.value);
+  };
+
+  return (
+    <NumberInput
       value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="w-full"
+      onChange={handleChange}
+      icon={<DollarSign className="h-4 w-4 text-gray-500" />}
+      className={className}
     />
-  )
-);
-
-PriceInput.displayName = "PriceInput";
-
-export { PriceInput };
+  );
+};

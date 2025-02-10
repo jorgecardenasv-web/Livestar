@@ -8,11 +8,11 @@ export interface InsuranceQuoteData {
   imgCompanyLogo: string;
   plan: string;
   paymentType: string;
-  sumInsured: string;
-  deductible: string;
-  coInsurance: string;
-  coInsuranceCap: string;
-  coverage_fee: string;
+  sumInsured: number;
+  deductible: number;
+  coInsurance: number;
+  coInsuranceCap: number;
+  coverage_fee: number;
   id: string;
   isMultipleString?: string;
   deductiblesJson?: string;

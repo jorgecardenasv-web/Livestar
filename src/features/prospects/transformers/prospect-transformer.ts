@@ -1,26 +1,25 @@
-import { Prospect as PrismaProspect, User } from "@prisma/client";
-import { Prospect } from "../types/prospect";
+import { Quote as PrismaQuote, Prospect, User } from "@prisma/client";
 
-interface ProspectPayload extends PrismaProspect {
+interface QuotePayload extends PrismaQuote {
   user?: User;
+  prospect: Prospect;
 }
 
-export const prospectTransformer = (prospect: ProspectPayload): Prospect => {
+export const prospectTransformer = (quote: QuotePayload) => {
   return {
-    id: prospect.id,
-    name: prospect.name,
-    email: prospect.email,
-    createdAt: prospect.createdAt,
-    updatedAt: prospect.updatedAt,
-    additionalInfo: prospect.additionalInfo,
-    isVerified: prospect.isVerified,
-    gender: prospect.gender,
-    age: prospect.age,
-    postalCode: prospect.postalCode,
-    protectWho: prospect.protectWho,
-    whatsapp: prospect.whatsapp,
-    userId: prospect.userId,
-    lastContactDate: prospect.lastContactDate,
-    user: prospect.user,
+    id: quote.id,
+    name: quote?.prospect.name,
+    email: quote.prospect.email,
+    createdAt: quote.createdAt,
+    updatedAt: quote.updatedAt,
+    additionalInfo: quote.additionalInfo,
+    gender: quote.prospect.gender,
+    age: quote.prospect.age,
+    postalCode: quote.prospect.postalCode,
+    protectWho: quote.protectWho,
+    whatsapp: quote.prospect.whatsapp,
+    userId: quote.userId,
+    lastContactDate: quote.lastContactDate,
+    user: quote.user,
   };
 };

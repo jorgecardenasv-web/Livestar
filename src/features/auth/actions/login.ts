@@ -7,7 +7,7 @@ import { createSessionService } from "@/features/session/services/create-session
 import { simplifyZodErrors } from "@/shared/utils";
 import { FormState } from "@/shared/types";
 import { redirect } from "next/navigation";
-import { prefix } from "@/shared/utils/constants";
+import { prefix } from "@/features/layout/nav-config/constants";
 import { PrismaError } from "@/shared/errors/prisma";
 
 export const login = async (
@@ -66,5 +66,5 @@ export const login = async (
           : "Error al iniciar sesión.",
     };
   }
-  redirect(`${prefix}/prospectos`);
+  redirect(`${prefix}/cotizaciones`);
 };

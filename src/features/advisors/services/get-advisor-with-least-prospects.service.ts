@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { handlePrismaError } from "@/shared/errors/prisma";
 
-export const getAdvisorWithLeastProspectsService = async () => {
+export const getAdvisorWithLeastQuotesService = async () => {
   try {
     const newAdvisor = await prisma.user.findFirst({
       where: {

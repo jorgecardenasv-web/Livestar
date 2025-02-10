@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import * as XLSX from "xlsx";
 
 export interface PriceData {
   age: number;
@@ -15,14 +16,19 @@ export const usePriceTableForm = (
   setPrices: (prices: PriceData[]) => void
 ) => {
   const handlePriceChange = (
-    age: number,
-    field: keyof PriceData,
+    index: number,
+    field: FieldType,
     value: string
   ) => {
-    const updatedPrices = prices.map((price) =>
-      price.age === age ? { ...price, [field]: parseFloat(value) || 0 } : price
-    );
-    setPrices(updatedPrices);
+    const newPrices = [...prices];
+    const numericValue = value ? parseFloat(value) : 0;
+
+    newPrices[index] = {
+      ...newPrices[index],
+      [field]: numericValue,
+    };
+
+    setPrices(newPrices);
   };
 
   const handleFileUpload = useCallback(
@@ -31,7 +37,6 @@ export const usePriceTableForm = (
       if (!file) return;
 
       try {
-        const XLSX = (await import("xlsx")).default;
         const data = await file.arrayBuffer();
         const workbook = XLSX.read(data, { type: "array" });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];

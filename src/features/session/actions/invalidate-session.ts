@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { deleteSessionService } from "../services/delete-session.service";
-import { prefix } from "@/shared/utils/constants";
+import { prefix } from "@/features/layout/nav-config/constants";
 import { PrismaError } from "@/shared/errors/prisma";
 
 export const invalidateSession = async (sessionId: string) => {

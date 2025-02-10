@@ -42,7 +42,7 @@ export const Modal: React.FC<ModalProps> = ({
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <div className="space-y-4 py-4 px-2 overflow-auto w-full">{children}</div>
+        <div className="space-y-4 py-4 px-2 w-full">{children}</div>
       </DialogContent>
     </Dialog>
   );

@@ -17,9 +17,6 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="es">
-      <link rel="icon" href="./favicon.ico" type="image/x-icon" />
-      <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
-
       <body className={`${openSans.className} flex h-screen flex-col`}>
         <Providers>{children}</Providers>
       </body>

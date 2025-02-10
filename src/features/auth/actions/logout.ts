@@ -7,15 +7,15 @@ import { FormState } from "@/shared/types";
 import { PrismaError } from "@/shared/errors/prisma";
 
 export const logout = async (): Promise<FormState> => {
+  const session = await getSession();
   try {
-    const session = await getSession();
-
     if (session) {
       await deleteSessionService(session.sessionId!);
     }
 
     session.destroy();
   } catch (error) {
+    session.destroy();
     return {
       success: false,
       message:
