@@ -1,6 +1,5 @@
 "use client";
 
-import { Upload } from "lucide-react";
 import { Card, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import {
   Table,
@@ -14,6 +13,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { PriceInput } from "../../inputs/price-input";
 import { Separator } from "@/shared/components/ui/separator";
+import { Upload } from "lucide-react";
 import { PriceData, usePriceTableForm } from "../../../hooks/use-price-table";
 
 interface PriceTableFormProps {
@@ -21,8 +21,14 @@ interface PriceTableFormProps {
   setPrices: (prices: PriceData[]) => void;
 }
 
-export const PriceTableForm: React.FC<PriceTableFormProps> = ({ prices, setPrices }) => {
-  const { handlePriceChange, handleFileUpload } = usePriceTableForm(prices, setPrices);
+export const PriceTableForm: React.FC<PriceTableFormProps> = ({
+  prices,
+  setPrices,
+}) => {
+  const { handlePriceChange, handleFileUpload } = usePriceTableForm(
+    prices,
+    setPrices
+  );
 
   return (
     <Card className="w-full">
@@ -72,43 +78,45 @@ export const PriceTableForm: React.FC<PriceTableFormProps> = ({ prices, setPrice
               </TableRow>
             </TableHeader>
             <TableBody>
-              {prices.map((row) => (
-                <TableRow key={row.age}>
-                  <TableCell className="text-center">{row.age}</TableCell>
-                  <TableCell>
-                    <PriceInput
-                      value={(row.monthlyPriceMale ?? 0).toString()}
-                      onChange={(value) =>
-                        handlePriceChange(row.age, "monthlyPriceMale", value)
-                      }
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <PriceInput
-                      value={(row.monthlyPriceFemale ?? 0).toString()}
-                      onChange={(value) =>
-                        handlePriceChange(row.age, "monthlyPriceFemale", value)
-                      }
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <PriceInput
-                      value={(row.annualPriceMale ?? 0).toString()}
-                      onChange={(value) =>
-                        handlePriceChange(row.age, "annualPriceMale", value)
-                      }
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <PriceInput
-                      value={(row.annualPriceFemale ?? 0).toString()}
-                      onChange={(value) =>
-                        handlePriceChange(row.age, "annualPriceFemale", value)
-                      }
-                    />
-                  </TableCell>
-                </TableRow>
-              ))}
+              {prices.map((row, index) => {
+                return (
+                  <TableRow key={row.age}>
+                    <TableCell className="text-center">{row.age}</TableCell>
+                    <TableCell>
+                      <PriceInput
+                        value={row.monthlyPriceMale.toString()}
+                        onChange={(value) =>
+                          handlePriceChange(index, "monthlyPriceMale", value)
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <PriceInput
+                        value={row.monthlyPriceFemale.toString()}
+                        onChange={(value) =>
+                          handlePriceChange(index, "monthlyPriceFemale", value)
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <PriceInput
+                        value={row.annualPriceMale.toString()}
+                        onChange={(value) =>
+                          handlePriceChange(index, "annualPriceMale", value)
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <PriceInput
+                        value={row.annualPriceFemale.toString()}
+                        onChange={(value) =>
+                          handlePriceChange(index, "annualPriceFemale", value)
+                        }
+                      />
+                    </TableCell>
+                  </TableRow>
+                )
+              })}
             </TableBody>
           </Table>
         ) : (

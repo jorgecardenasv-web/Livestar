@@ -1,6 +1,6 @@
 import { useModalStore } from "@/shared/store/modal-store";
 import { Insurance } from "../types/insurance";
-import { insurances } from "@/lib/prisma/data/insurance.data";
+import { insurances } from "../../../../prisma/seed/data/insurance.data";
 
 export const useInsuranceActions = () => {
   const {

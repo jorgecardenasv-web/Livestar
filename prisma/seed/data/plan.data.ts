@@ -1,5 +1,5 @@
 import { Prisma } from "@prisma/client";
-import { generarPreciosSeguros } from "./utils.data";
+import { generarPreciosHDI, generarPreciosSeguros } from "./utils.data";
 
 export const plans: Prisma.PlanCreateManyInput[] = [
   {
@@ -7,7 +7,7 @@ export const plans: Prisma.PlanCreateManyInput[] = [
     planTypeId: "3d9a1e51-9612-43a4-a0bf-4b68523d272c",
     companyId: "123e4567-e89b-12d3-a456-426614174000",
     sumInsured: 5000000,
-    coInsurance: 0.1,
+    coInsurance: 10,
     coInsuranceCap: 35000,
     status: "ACTIVO",
     isRecommended: false,
@@ -24,7 +24,7 @@ export const plans: Prisma.PlanCreateManyInput[] = [
     planTypeId: "9af3201f-06da-4805-99e0-e3f4dc6900f1",
     companyId: "975a629c-c2c0-4fd4-b92c-aacfee8cb164",
     sumInsured: 10000000,
-    coInsurance: 0.1,
+    coInsurance: 10,
     coInsuranceCap: 40000,
     status: "ACTIVO",
     isRecommended: false,
@@ -56,7 +56,7 @@ export const plans: Prisma.PlanCreateManyInput[] = [
     coInsuranceCap: 0,
     status: "ACTIVO",
     isRecommended: true,
-    prices: generarPreciosSeguros(),
+    prices: generarPreciosHDI(),
     deductibles: {
       default: 25000,
     },

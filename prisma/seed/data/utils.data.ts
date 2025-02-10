@@ -1,4 +1,3 @@
-// src/utils/pricing.ts
 type Seguro = {
   hombre: {
     mensual: number;
@@ -8,6 +7,12 @@ type Seguro = {
     mensual: number;
     anual: number;
   };
+};
+
+type HDISeguro = {
+  anual: number;
+  primerMes: number;
+  segundoMesADoce: number;
 };
 
 const generarNumeroAleatorio = (min: number, max: number): number => {
@@ -32,5 +37,22 @@ export const generarPreciosSeguros = (): Record<number, Seguro> => {
       },
     };
   }
+  return resultado;
+};
+
+export const generarPreciosHDI = (): Record<string, HDISeguro> => {
+  const resultado: Record<string, HDISeguro> = {};
+
+  for (let edad = 0; edad <= 64; edad++) {
+    const primerMes = generarNumeroAleatorio(100, 300);
+    const segundoMesADoce = generarNumeroAleatorio(80, 250);
+
+    resultado[edad.toString()] = {
+      primerMes,
+      segundoMesADoce,
+      anual: primerMes + segundoMesADoce * 11,
+    };
+  }
+
   return resultado;
 };

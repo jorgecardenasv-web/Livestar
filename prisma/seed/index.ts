@@ -1,11 +1,11 @@
 import { Role, UserStatus, QuoteStatus } from "@prisma/client";
 import { hash } from "bcrypt";
 import { faker } from "@faker-js/faker/locale/es_MX";
-import prisma from ".";
+import prisma from "../../src/lib/prisma";
 import { insurances } from "./data/insurance.data";
 import { planTypes } from "./data/planType.data";
 import { plans } from "./data/plan.data";
-import { seedQuotes } from "../../../prisma/seed/quotes";
+import { seedQuotes } from "./quotes";
 
 async function main() {
   const adminPassword = "AdminPass123";

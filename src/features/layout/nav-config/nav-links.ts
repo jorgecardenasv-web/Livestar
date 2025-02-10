@@ -35,7 +35,7 @@ export const navLinks: NavLink[] = [
     icon: Users,
     roles: [Role.ADMIN, Role.ASESOR],
     visible: true,
-    children: [{ path: "/:id", roles: ["ADMIN", "ADVISOR"] }],
+    children: [{ path: "/:id", roles: [Role.ADMIN, Role.ASESOR] }],
   },
   {
     name: "Aseguradoras",
@@ -47,7 +47,8 @@ export const navLinks: NavLink[] = [
     name: "Planes",
     href: `${prefix}/planes`,
     icon: NotepadText,
-    roles: ["ADMIN"],
+    roles: [Role.ADMIN],
+    children: [{ path: "/:id", roles: [Role.ADMIN] }],
   },
   {
     name: "Tipo de planes",

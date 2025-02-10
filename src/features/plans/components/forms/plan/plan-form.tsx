@@ -19,6 +19,7 @@ import {
 } from "@/shared/components/ui/table";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { PriceTableHDIForm } from "./price-table-hdi-form";
+import { NumberInput } from "@/shared/components/ui/number-input";
 
 interface Insurance {
   id: string;
@@ -94,10 +95,9 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
             required
           />
 
-          <TextInput
+          <NumberInput
             name="sumInsured"
             label="Suma Asegurada"
-            type="number"
             icon={<DollarSign className="w-4 h-4 text-gray-500" />}
             placeholder="Ingrese suma asegurada"
             defaultValue={plan?.sumInsured}
@@ -117,10 +117,9 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
             required
           />
 
-          <TextInput
+          <NumberInput
             name="coInsuranceCap"
             label="Tope de Coaseguro"
-            type="number"
             icon={<DollarSign className="w-4 h-4 text-gray-500" />}
             placeholder="Ingrese tope de coaseguro"
             defaultValue={plan?.coInsuranceCap}
@@ -159,9 +158,8 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
                     </TableCell>
                     <TableCell>
                       <div className="mx-auto">
-                        <TextInput
+                        <NumberInput
                           name={`deducible.opcion_2.${nivel}`}
-                          type="number"
                           icon={
                             <DollarSign className="w-4 h-4 text-gray-500" />
                           }
@@ -173,9 +171,8 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
                     </TableCell>
                     <TableCell>
                       <div className="mx-auto">
-                        <TextInput
+                        <NumberInput
                           name={`deducible.opcion_4.${nivel}`}
-                          type="number"
                           icon={
                             <DollarSign className="w-4 h-4 text-gray-500" />
                           }
@@ -192,10 +189,9 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
           </div>
         ) : (
           <div className="mx-12 my-8">
-            <TextInput
+            <NumberInput
               name="deducible.default"
               label="Deducible"
-              type="number"
               icon={<DollarSign className="w-4 h-4 text-gray-500" />}
               placeholder="Ingrese Deducible"
               defaultValue={plan?.deductibles?.default}
