@@ -1,4 +1,4 @@
-import { getAdvisorWithLeastProspectsService } from "@/features/advisors/services/get-advisor-with-least-prospects.service";
+import { getAdvisorWithLeastQuotesService } from "@/features/advisors/services/get-advisor-with-least-prospects.service";
 import prisma from "@/lib/prisma";
 import { handlePrismaError } from "@/shared/errors/prisma";
 
@@ -14,7 +14,7 @@ export const reassignQuoteService = async (advisorId: string) => {
     });
 
     for (const quote of quotesToReassign) {
-      const nextAdvisor = await getAdvisorWithLeastProspectsService();
+      const nextAdvisor = await getAdvisorWithLeastQuotesService();
       if (nextAdvisor) {
         await prisma.quote.update({
           where: { id: quote.id },
