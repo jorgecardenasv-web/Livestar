@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { Card, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import {
   Table,
@@ -26,10 +27,19 @@ export const PriceTableForm: React.FC<PriceTableFormProps> = ({
   prices,
   setPrices,
 }) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { handlePriceChange, handleFileUpload } = usePriceTableForm(
     prices,
     setPrices
   );
+
+  const onFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    await handleFileUpload(e);
+    // Limpiar el input file después de procesar el archivo
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
   return (
     <div className="rounded-xl bg-muted/50 p-5">
@@ -39,9 +49,10 @@ export const PriceTableForm: React.FC<PriceTableFormProps> = ({
             <span>Tabla de Precios por Edad y Género</span>
             <div className="relative">
               <Input
+                ref={fileInputRef}
                 type="file"
                 accept=".xlsx, .xls"
-                onChange={handleFileUpload}
+                onChange={onFileUpload}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               />
               <Button className="flex items-center gap-2">
@@ -74,45 +85,43 @@ export const PriceTableForm: React.FC<PriceTableFormProps> = ({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {prices.map((row, index) => {
-                  return (
-                    <TableRow key={row.age}>
-                      <TableCell className="text-center">{row.age}</TableCell>
-                      <TableCell>
-                        <PriceInput
-                          value={row.monthlyPriceMale.toString()}
-                          onChange={(value) =>
-                            handlePriceChange(index, "monthlyPriceMale", value)
-                          }
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <PriceInput
-                          value={row.monthlyPriceFemale.toString()}
-                          onChange={(value) =>
-                            handlePriceChange(index, "monthlyPriceFemale", value)
-                          }
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <PriceInput
-                          value={row.annualPriceMale.toString()}
-                          onChange={(value) =>
-                            handlePriceChange(index, "annualPriceMale", value)
-                          }
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <PriceInput
-                          value={row.annualPriceFemale.toString()}
-                          onChange={(value) =>
-                            handlePriceChange(index, "annualPriceFemale", value)
-                          }
-                        />
-                      </TableCell>
-                    </TableRow>
-                  )
-                })}
+                {prices.map((row, index) => (
+                  <TableRow key={row.age}>
+                    <TableCell className="text-center">{row.age}</TableCell>
+                    <TableCell>
+                      <PriceInput
+                        value={row.monthlyPriceMale.toString()}
+                        onChange={(value) =>
+                          handlePriceChange(index, "monthlyPriceMale", value)
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <PriceInput
+                        value={row.monthlyPriceFemale.toString()}
+                        onChange={(value) =>
+                          handlePriceChange(index, "monthlyPriceFemale", value)
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <PriceInput
+                        value={row.annualPriceMale.toString()}
+                        onChange={(value) =>
+                          handlePriceChange(index, "annualPriceMale", value)
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <PriceInput
+                        value={row.annualPriceFemale.toString()}
+                        onChange={(value) =>
+                          handlePriceChange(index, "annualPriceFemale", value)
+                        }
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           ) : (
