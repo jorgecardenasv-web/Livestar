@@ -59,8 +59,12 @@ export const ListInsurance = async ({ params }: { params: Params }) => {
                   <TableRow key={insurance.id}>
                     <TableCell>
                       <Avatar>
-                        <AvatarImage src={logo?.base64} />
-                        <AvatarFallback>{insurance.name}</AvatarFallback>
+                        <AvatarImage
+                          src={logo?.base64}
+                          alt={insurance.name}
+                          className="object-contain p-1" // Añadir padding y object-contain
+                        />
+                        <AvatarFallback>{insurance.name[0]}</AvatarFallback>
                       </Avatar>
                     </TableCell>
                     <TableCell>{insurance.name}</TableCell>
@@ -84,7 +88,7 @@ export const ListInsurance = async ({ params }: { params: Params }) => {
                   colSpan={5}
                   className="h-24 text-center"
                 >
-                  No hay prospectos disponibles
+                  No hay aseguradoras disponibles
                 </TableCell>
               </TableRow>
             )}

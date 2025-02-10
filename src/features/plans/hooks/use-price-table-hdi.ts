@@ -100,7 +100,6 @@ export const usePriceTableHDIForm = (
           return;
         }
 
-        console.log("Primera fila procesada:", processedPrices[0]);
         setPrices(processedPrices);
       } catch (error) {
         console.error("Error detallado al procesar el archivo:", error);

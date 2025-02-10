@@ -1,6 +1,6 @@
 "use server";
 
-import { saveImage } from "@/shared/services/upload-image.service";
+import { convertToBlob } from "@/shared/services/blob-image.service";
 import { simplifyZodErrors } from "@/shared/utils";
 import { revalidatePath } from "next/cache";
 import { FormState } from "@/shared/types";
@@ -17,16 +17,16 @@ export async function updateInsurance(
     const logo = formData.get("logo");
     const name = formData.get("name") as string;
 
-    let logoFilename = undefined;
+    let logoBlob = undefined;
     if (logo instanceof File && logo.size > 0) {
-      logoFilename = await saveImage(logo);
+      logoBlob = await convertToBlob(logo);
     } else if (typeof logo === "string" && logo.trim() !== "") {
-      logoFilename = logo;
+      logoBlob = logo;
     }
 
     const result = updateInsuranceSchema.safeParse({
       name,
-      logo: logoFilename,
+      logo: logoBlob,
     });
 
     if (!result.success) {
@@ -38,10 +38,9 @@ export async function updateInsurance(
       };
     }
 
-    // Construir objeto de actualización solo con los campos que cambiaron
     const updateData: Record<string, string> = {};
     if (name) updateData.name = name;
-    if (logoFilename) updateData.logo = logoFilename;
+    if (logoBlob) updateData.logo = logoBlob;
 
     await updateInsuranceService(id, updateData);
 
