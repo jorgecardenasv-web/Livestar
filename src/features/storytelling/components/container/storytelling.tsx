@@ -9,9 +9,9 @@ export const InsuranceStorytelling = async ({ plans }: { plans: any[] }) => {
   const { prospect } = await getProspect();
   const { selectedPlan } = await getInsuranceState();
   const companyLogo = selectedPlan.companyLogo
-    ? await getImage(selectedPlan.companyLogo)
-    : "";
-
+  ? await getImage(selectedPlan.companyLogo)
+  : "";
+  
   const selectedPlanData = {
     imgCompanyLogo: companyLogo,
     ...selectedPlan,

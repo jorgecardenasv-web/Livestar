@@ -9,11 +9,15 @@ import { FC, useState } from "react";
 import { Button } from "@/shared/components/ui/button";
 import MultipleDeductibleModal from "../modals/MultipleDeductibleModal";
 import { formatCurrency } from "@/shared/utils";
+import MoreInformationModal from "../modals/MoreInformationModal";
 
-export const QuoteSummary: FC<InsuranceQuoteData & { imgCompanyLogo: { base64: string } }> = ({
+export const QuoteSummary: FC<
+  InsuranceQuoteData & { imgCompanyLogo: { base64: string } }
+> = ({
   coInsurance,
   coInsuranceCap,
   coverage_fee,
+  individualPricesJson,
   deductible,
   sumInsured,
   company,
@@ -24,10 +28,13 @@ export const QuoteSummary: FC<InsuranceQuoteData & { imgCompanyLogo: { base64: s
   isMultipleString,
   deductiblesJson,
 }) => {
+  console.log("individualPricesJson: ", individualPricesJson);
   const isMultiple = isMultipleString === "true" ? true : false;
   const [isModalOpen, setModalOpen] = useState(false);
-  const handleOpenModal = () => {
+  const [modalType, setModalType] = useState("moreInformation");
+  const handleOpenModal = (modalTypeString: string) => {
     setModalOpen(true);
+    setModalType(modalTypeString);
   };
 
   const handleCloseModal = () => {
@@ -82,7 +89,7 @@ export const QuoteSummary: FC<InsuranceQuoteData & { imgCompanyLogo: { base64: s
         <InfoCard
           icon={<Shield className="w-4 h-4 sm:w-5 sm:h-5" />}
           title="Suma asegurada"
-          value={formatCurrency((sumInsured))}
+          value={formatCurrency(sumInsured)}
         />
         {/* -------------------------------------------------------------------- */}
         <div className="flex justify-between">
@@ -97,7 +104,7 @@ export const QuoteSummary: FC<InsuranceQuoteData & { imgCompanyLogo: { base64: s
                   <Button
                     className="w-56"
                     size="sm"
-                    onClick={handleOpenModal}
+                    onClick={() => handleOpenModal("multipleDeductible")}
                     disabled={false}
                   >
                     DETALLES
@@ -106,7 +113,7 @@ export const QuoteSummary: FC<InsuranceQuoteData & { imgCompanyLogo: { base64: s
               </div>
             }
           />
-          {isModalOpen && (
+          {isModalOpen && modalType === "multipleDeductible" && (
             <MultipleDeductibleModal
               isOpen={isModalOpen}
               onClose={handleCloseModal}
@@ -132,10 +139,26 @@ export const QuoteSummary: FC<InsuranceQuoteData & { imgCompanyLogo: { base64: s
         />
       </div>
       <div className="flex justify-center">
-        <Button className="w-56 mt-2" size="sm" disabled={false}>
+        <Button
+          className="w-56 mt-2"
+          size="sm"
+          disabled={false}
+          onClick={() => handleOpenModal("moreInformation")}
+        >
           MÁS INFORMACIÓN
         </Button>
+        {isModalOpen && modalType === "moreInformation" && (
+          <MoreInformationModal
+            isOpen={isModalOpen}
+            onClose={handleCloseModal}
+            title="daleee"
+            individualPricesJson={individualPricesJson || ""}
+          >
+            daleeeeeee
+          </MoreInformationModal>
+        )}
       </div>
+
       <ContractForm />
     </div>
   );

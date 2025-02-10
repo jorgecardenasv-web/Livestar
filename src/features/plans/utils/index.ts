@@ -107,7 +107,7 @@ export function calculateInsurancePrice(
     if (data.additionalInfo?.dadAge) {
       const dadPrice = getPriceForPerson(data.additionalInfo.dadAge, "hombre");
       individualPrices.parents.push({
-        name: data.additionalInfo.dadName || "Padre",
+        name: "Padre",
         price: dadPrice,
       });
       totalPrice += dadPrice;
@@ -116,7 +116,7 @@ export function calculateInsurancePrice(
     if (data.additionalInfo?.momAge) {
       const momPrice = getPriceForPerson(data.additionalInfo.momAge, "mujer");
       individualPrices.parents.push({
-        name: data.additionalInfo.momName || "Madre",
+        name: "Madre",
         price: momPrice,
       });
       totalPrice += momPrice;
@@ -170,9 +170,26 @@ export function calculateInsurancePrice(
         );
       }
     }
+
+    // Precio de otros asegurados
+    if (data.protectWho === "otros") {
+      individualPrices.others = [];
+      data.additionalInfo?.protectedPersons?.map((other) => {
+        const otherPrice = getPriceForPerson(other.age, other.gender);
+        individualPrices?.others?.push({
+          relationship: other.relationship || "Otro",
+          price: otherPrice,
+        });
+        totalPrice += otherPrice;
+        return
+      });
+    }
   }
   return {
     coverage_fee: totalPrice,
-    individualPrices,
+    individualPrices: {
+      ...individualPrices,
+      protectWho: data.protectWho,
+    },
   };
 }

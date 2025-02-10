@@ -26,7 +26,15 @@ export interface InsurancePriceResult {
     partner?: number;
     children?: number[];
     parents?: Parents[];
+    others?: {relationship: string; price: number}[];
+    protectWho?: string;
   };
+}
+
+export interface ProtectedPersons {
+  relationship: string;
+  age: number;
+  gender: "mujer" | "hombre";
 }
 
 export interface Parents {
@@ -62,6 +70,7 @@ export interface FamiliaAdditionalInfo {
   dadAge: number;
   momName: string;
   momAge: number;
+  protectedPersons: ProtectedPersons[];
 }
 
 export interface InsuranceData {
