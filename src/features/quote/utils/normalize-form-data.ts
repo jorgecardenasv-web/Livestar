@@ -17,6 +17,7 @@ export const normalizeFormData = (initialData?: any): FormData => {
 
   // Base data
   const normalized: FormData = {
+    age: initialData.prospect?.age || 0,
     name: initialData.prospect?.name || "",
     gender: initialData.prospect?.gender || "",
     postalCode: initialData.prospect?.postalCode || "",
