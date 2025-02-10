@@ -1,10 +1,30 @@
 import { useCallback } from "react";
-import { PriceDataHDI } from "../types";
+import * as XLSX from "xlsx";
+import numeral from "numeral";
+
+export interface PriceDataHDI {
+  age: number;
+  monthlyPrice1: number;
+  monthlyPrice2to12: number;
+  annualPrice: number;
+}
+
+export type FieldType = keyof Omit<PriceDataHDI, "age">;
 
 export const usePriceTableHDIForm = (
   prices: PriceDataHDI[],
   setPrices: (prices: PriceDataHDI[]) => void
 ) => {
+  // Función para parsear valores numéricos (incluyendo decimales)
+  const parsePrice = (value: string | number): number => {
+    if (typeof value === "number") return value;
+    if (!value) return 0;
+
+    // Usar numeral para parsear el número
+    const parsed = numeral(value);
+    return parsed.value() || 0;
+  };
+
   // Función para manejar cambios en los precios
   const handlePriceChange = (
     age: number,
@@ -12,7 +32,9 @@ export const usePriceTableHDIForm = (
     value: string
   ) => {
     const updatedPrices = prices.map((price) =>
-      price.age === age ? { ...price, [field]: parseFloat(value) || 0 } : price
+      price.age === age
+        ? { ...price, [field]: parsePrice(value) } // Usar parsePrice para manejar decimales
+        : price
     );
     setPrices(updatedPrices);
   };
@@ -21,55 +43,57 @@ export const usePriceTableHDIForm = (
   const handleFileUpload = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
-      if (!file) return; // Si no hay archivo, no hacer nada
+      if (!file) return;
 
       try {
-        // Importa la librería XLSX dinámicamente
-        const XLSX = (await import("xlsx")).default;
-
-        // Lee el archivo como un ArrayBuffer
         const data = await file.arrayBuffer();
-
-        // Convierte el ArrayBuffer en un libro de trabajo de Excel
         const workbook = XLSX.read(data, { type: "array" });
 
-        // Obtiene la primera hoja del libro de trabajo
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        // Buscar la hoja "Tarifas HDI"
+        const sheetName = workbook.SheetNames.find((name) =>
+          name.toLowerCase().includes("tarifas hdi")
+        );
 
-        // Convierte la hoja en un array de objetos (filas)
+        if (!sheetName) {
+          console.error("No se encontró la hoja 'Tarifas HDI'");
+          return;
+        }
+
+        const worksheet = workbook.Sheets[sheetName];
+
         const jsonData = XLSX.utils.sheet_to_json<(string | number)[]>(
           worksheet,
           {
-            header: 1, // Usa la primera fila como encabezados
+            header: 1, // Usar la primera fila como encabezados
+            raw: false, // Para obtener los valores como strings
+            defval: "", // Valor por defecto para celdas vacías
           }
         );
 
-        // Procesa los datos del archivo Excel
+        // Procesar los datos del archivo Excel
         const processedPrices: PriceDataHDI[] = jsonData
+          .slice(2) // Ignorar las dos primeras filas (encabezados)
           .filter(
             (row): row is (string | number)[] =>
               Array.isArray(row) && typeof row[0] === "number" // Filtra solo filas con edad válida
           )
           .map((row) => ({
-            age: row[0] as number, // Edad
-            monthlyPrice1:
-              row[1] !== undefined && row[1] !== "" ? Number(row[1]) : 0, // Convierte vacíos en 0
-            monthlyPrice2to12:
-              row[2] !== undefined && row[2] !== "" ? Number(row[2]) : 0, // Convierte vacíos en 0
-            annualPrice:
-              row[3] !== undefined && row[3] !== "" ? Number(row[3]) : 0, // Convierte vacíos en 0
+            age: row[0] as number, // Edad (columna A)
+            monthlyPrice1: parsePrice(row[1]), // Prima Mensual 1.0 (columna B)
+            monthlyPrice2to12: parsePrice(row[2]), // Prima Mensual 2-12 (columna C)
+            annualPrice: parsePrice(row[3]), // PT Anual (columna D)
           }));
 
-        // Actualiza el estado con los precios procesados
+        console.log("Precios procesados:", processedPrices);
+
         setPrices(processedPrices);
       } catch (error) {
-        console.error("Error al procesar el archivo:", error); // Maneja errores
+        console.error("Error al procesar el archivo:", error);
       }
     },
-    []
+    [setPrices]
   );
 
-  // Retorna el estado y las funciones para ser usadas en el componente
   return {
     prices,
     handlePriceChange,
