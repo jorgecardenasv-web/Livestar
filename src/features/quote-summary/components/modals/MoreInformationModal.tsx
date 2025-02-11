@@ -59,7 +59,7 @@ export default function MoreInformationQuote() {
 }
 
 function getFormattedValue(key: string, value: any, protectWho: any) {
-  if (key === "main" && ["solo_yo", "mi_pareja_y_yo", "mi_familia", "mis_hijos_y_yo"].includes(protectWho)) {
+  if (key === "main" && ["solo_yo", "mi_pareja_y_yo", "familia", "mis_hijos_y_yo"].includes(protectWho)) {
     return (
       <TableRow key="main">
         <TableCell className="flex justify-center">
@@ -74,7 +74,7 @@ function getFormattedValue(key: string, value: any, protectWho: any) {
     );
   }
 
-  if (key === "partner" && ["mi_pareja_y_yo", "mi_familia"].includes(protectWho)) {
+  if (key === "partner" && ["mi_pareja_y_yo", "familia"].includes(protectWho)) {
     return (
       <TableRow key="partner">
         <TableCell className="flex justify-center">
