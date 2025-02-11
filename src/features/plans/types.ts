@@ -26,7 +26,7 @@ export interface InsurancePriceResult {
     partner?: number;
     children?: number[];
     parents?: Parents[];
-    others?: {relationship: string; price: number}[];
+    others?: { relationship: string; price: number }[];
     protectWho?: string;
   };
 }
@@ -36,7 +36,7 @@ export interface IndividualPrices {
   partner?: number;
   children?: number[];
   parents?: Parents[];
-  others?: {relationship: string; price: number}[];
+  others?: { relationship: string; price: number }[];
 }
 
 export interface ProtectedPersons {

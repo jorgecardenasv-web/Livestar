@@ -31,7 +31,7 @@ export default function Home() {
           <div></div>
         </ScrollAnimatedComponent>
         <ScrollAnimatedComponent>
-        <GreaterSpecializationImg/>
+          <GreaterSpecializationImg />
         </ScrollAnimatedComponent>
         <ScrollAnimatedComponent>
           <GreaterSpecialization />

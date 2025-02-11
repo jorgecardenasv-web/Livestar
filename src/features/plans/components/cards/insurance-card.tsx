@@ -50,8 +50,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
     { ...prospect, protectWho, additionalInfo },
     prices,
     paymentType
-    );
-    console.log("individualPrices: ", individualPrices);
+  );
 
   const logoSrc = company.logo ? await getImage(company.logo) : "";
 
@@ -193,12 +192,9 @@ function getMinimumValue(
 function getFormattedValue(key: string, value: any, protectWho: any) {
   if (
     key === "main" &&
-    [
-      "solo_yo",
-      "mi_pareja_y_yo",
-      "mi_familia",
-      "mis_hijos_y_yo",
-    ].includes(protectWho)
+    ["solo_yo", "mi_pareja_y_yo", "mi_familia", "mis_hijos_y_yo"].includes(
+      protectWho
+    )
   ) {
     return (
       <div className="flex items-center space-x-4 justify-between">

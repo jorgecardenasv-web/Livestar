@@ -172,10 +172,8 @@ export function calculateInsurancePrice(
     individualPrices.main = getPriceForPerson(
       data.age,
       isHDIPriceTable(priceTable) ? undefined : data.gender || "hombre"
-      );
-      console.log("data: ", data);
-      totalPrice += individualPrices.main;
-      console.log("individualPrices.main: ", individualPrices.main);
+    );
+    totalPrice += individualPrices.main;
 
     const validProtectWhoOptions = [
       "familia",
@@ -220,7 +218,7 @@ export function calculateInsurancePrice(
           price: otherPrice,
         });
         totalPrice += otherPrice;
-        return
+        return;
       });
     }
   }
@@ -239,7 +237,7 @@ export function calculateInsurancePrice(
       })),
       others: (individualPrices.others || []).map((other) => ({
         ...other,
-        price: roundPrice(other.price)
+        price: roundPrice(other.price),
       })),
       protectWho: data.protectWho,
     },
