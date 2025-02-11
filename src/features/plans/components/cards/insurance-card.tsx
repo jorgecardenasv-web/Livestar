@@ -7,7 +7,11 @@ import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { getProspect } from "../../loaders/get-prospect";
 import { getImage } from "../../../../shared/services/get-image.service";
 import { formatCurrency } from "@/shared/utils";
-import { PriceTable } from "../../types";
+import {
+  IndividualPrices,
+  InsurancePriceResult,
+  PriceTable,
+} from "../../types";
 
 interface InsuranceCardProps {
   company: Insurance;
@@ -28,7 +32,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   paymentType,
   isRecommended,
 }) => {
-  const { prospect } = await getProspect();
+  const { prospect, protectWho, additionalInfo } = await getProspect();
   const deductibles: Deductibles = plan.deductibles;
 
   const isMultiple = deductibles["default"]
@@ -43,7 +47,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 
   const prices: PriceTable = (plan.prices as unknown as PriceTable) || {};
   const { coverage_fee, individualPrices } = calculateInsurancePrice(
-    prospect,
+    { ...prospect, protectWho, additionalInfo },
     prices,
     paymentType
   );
@@ -63,7 +67,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
       <div className="p-6">
         <div className="flex flex-col items-center mb-6">
           <Image
-            src={logoSrc ? logoSrc.base64 : '/fallback-image.png'}
+            src={logoSrc ? logoSrc.base64 : "/fallback-image.png"}
             width={128}
             height={128}
             alt={company.name}
@@ -74,22 +78,12 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
               {paymentType === "Mensual" ? "Pago mensual" : "Pago anual"}
             </p>
             {Object.entries(individualPrices).map(([key, value], index) => {
-              const formattedValue = getFormattedValue(key, value);
-              return (
-                <div
-                  key={index}
-                  className={`${(getCustomKey(key) === "Hijo(s)" || getCustomKey(key) === "Padres") && formattedValue !== "$0" ? "space-x-4 justify-between" : "flex items-center space-x-4 justify-between"}`}
-                >
-                  {" "}
-                  <p className="text-xs text-sky-600 font-semibold uppercase flex-shrink-0">
-                    {" "}
-                    {getCustomKey(key)}
-                  </p>
-                  <p className="text-lg font-bold text-[#223E99]">
-                    {formattedValue}
-                  </p>
-                </div>
+              const formattedValue = getFormattedValue(
+                key,
+                value,
+                individualPrices.protectWho
               );
+              return <div key={index}> {formattedValue}</div>;
             })}
             <p className="text-sm text-sky-600 font-semibold uppercase mb-1 mt-2">
               {paymentType === "Mensual" ? "Pago mensual" : "Pago anual"} Total
@@ -104,7 +98,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
           <InfoItem
             icon={<Shield className="w-5 h-5" />}
             title="Suma asegurada"
-            value={`${formatCurrency((plan.sumInsured / 1000000))} MILLONES`}
+            value={`${formatCurrency(plan.sumInsured / 1000000)} MILLONES`}
           />
           {/* ------------------ DEDUCIBLE ----------------- */}
           <InfoItem
@@ -127,25 +121,22 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 
         <form action={handleInterestClick}>
           <input type="hidden" name="company" value={company.name} />
-          <input type="hidden" name="companyLogo" value={company.logo} />
+          {/* <input type="hidden" name="companyLogo" value={company.logo} /> */}
           <input type="hidden" name="plan" value={plan.planType.name} />
           <input type="hidden" name="paymentType" value={paymentType} />
           <input type="hidden" name="sumInsured" value={plan.sumInsured} />
           <input type="hidden" name="deductible" value={minor} />
-          <input
-            type="hidden"
-            name="coInsurance"
-            value={(plan.coInsurance)}
-          />
+          <input type="hidden" name="coInsurance" value={plan.coInsurance} />
           <input
             type="hidden"
             name="coInsuranceCap"
             value={plan.coInsuranceCap || 0}
           />
+          <input type="hidden" name="coverage_fee" value={coverage_fee} />
           <input
             type="hidden"
-            name="coverage_fee"
-            value={coverage_fee}
+            name="individualPricesJson"
+            value={JSON.stringify(individualPrices)}
           />
           <input type="hidden" name="id" value={plan.id} />
           <input
@@ -197,40 +188,80 @@ function getMinimumValue(
   return valores.length > 0 ? Math.min(...valores) : 0;
 }
 
-function getFormattedValue(key: string, value: any) {
+function getFormattedValue(key: string, value: any, protectWho: any) {
+  if (
+    key === "main" &&
+    ["solo_yo", "mi_pareja_y_yo", "mi_familia", "mis_hijos_y_yo"].includes(
+      protectWho
+    )
+  ) {
+    return (
+      <div className="flex items-center space-x-4 justify-between">
+        <p className="text-xs text-sky-600 font-semibold uppercase flex-shrink-0">
+          {`Tú: `}
+        </p>
+        <p className="text-lg font-bold text-[#223E99]">
+          {`$${(value ?? 0).toLocaleString()}`}
+        </p>
+      </div>
+    );
+  }
+
+  if (
+    key === "partner" &&
+    ["mi_pareja_y_yo", "mi_familia"].includes(protectWho)
+  ) {
+    return (
+      <div className="flex items-center space-x-4 justify-between">
+        <p className="text-xs text-sky-600 font-semibold uppercase flex-shrink-0">
+          {`Pareja: `}
+        </p>
+        <p className="text-lg font-bold text-[#223E99]">
+          {`$${(value ?? 0).toLocaleString()}`}
+        </p>
+      </div>
+    );
+  }
+
+  if (Array.isArray(value) && value.length === 0)
+    return <div className="hidden"></div>;
+
   if (key === "parents" && Array.isArray(value)) {
-    if (value.length === 0) return "$0";
-    return value
-      .map((parent: any) => `${parent.name}: $${parent.price.toLocaleString()}`)
-      .join(" | ");
+    return value.map((parent, index) => (
+      <div key={index} className="flex items-center space-x-4 justify-between">
+        <p className="text-xs text-sky-600 font-semibold uppercase flex-shrink-0">
+          {`${parent.name}: `}
+        </p>
+        <p className="text-lg font-bold text-[#223E99]">
+          {`$${(parent.price ?? 0).toLocaleString()}`}
+        </p>
+      </div>
+    ));
   }
 
   if (key === "children" && Array.isArray(value)) {
-    if (value.length === 0) return "$0";
-
-    if (value.length > 1) {
-      return value
-        .map((child, index) => {
-          return `Hijo ${index + 1}: $${child.toLocaleString()}`;
-        })
-        .join(" | ");
-    }
-    return `Hijo: $${value[0].toLocaleString()}`;
+    return value.map((child, index) => (
+      <div key={index} className="flex items-center space-x-4 justify-between">
+        <p className="text-xs text-sky-600 font-semibold uppercase flex-shrink-0">
+          {`Hijo${value.length > 1 ? ` ${index + 1}` : ""}:`}
+        </p>
+        <p className="text-lg font-bold text-[#223E99]">
+          {`$${(child ?? 0).toLocaleString()}`}
+        </p>
+      </div>
+    ));
   }
 
-  if (Array.isArray(value)) {
-    return value.join(", ").toLocaleString();
+  if (key === "others" && Array.isArray(value)) {
+    return value.map((other, index) => (
+      <div key={index} className="flex items-center space-x-4 justify-between">
+        <p className="text-xs text-sky-600 font-semibold uppercase flex-shrink-0">
+          {`${other.relationship}: `}
+        </p>
+        <p className="text-lg font-bold text-[#223E99]">
+          {`$${(other.price ?? 0).toLocaleString()}`}
+        </p>
+      </div>
+    ));
   }
-
-  return `$${value.toLocaleString()}`;
-}
-
-function getCustomKey(key: string) {
-  const keyMapping: { [key: string]: string } = {
-    main: "Tú",
-    partner: "Pareja",
-    children: "Hijo(s)",
-    parents: "Padres",
-  };
-  return keyMapping[key] || key;
 }

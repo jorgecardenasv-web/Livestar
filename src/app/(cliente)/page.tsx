@@ -6,6 +6,7 @@ import { MedicalExpenses } from "@/features/home/components/sections/medical-exp
 import { Quotes } from "@/features/home/components/sections/quotes";
 import { SuccessStory } from "@/features/home/components/sections/success-story";
 import { ScrollAnimatedComponent } from "@/shared/components/ui/scroll-animated";
+import { GreaterSpecializationImg } from "@/features/home/components/sections/greater-specialization-img";
 
 export default function Home() {
   return (
@@ -30,8 +31,14 @@ export default function Home() {
           <div></div>
         </ScrollAnimatedComponent>
         <ScrollAnimatedComponent>
+          <GreaterSpecializationImg />
+        </ScrollAnimatedComponent>
+        <ScrollAnimatedComponent>
           <GreaterSpecialization />
         </ScrollAnimatedComponent>
+        {/* <ScrollAnimatedComponent>
+          Formulario de contacto
+        </ScrollAnimatedComponent> */}
       </main>
     </>
   );

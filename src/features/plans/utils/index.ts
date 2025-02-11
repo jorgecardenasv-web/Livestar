@@ -75,6 +75,24 @@ export function jsonPricesToFlatPricesHDI(
   }));
 }
 
+function isHDIPriceTable(
+  priceTable: any
+): priceTable is Record<
+  string,
+  { anual: number; primerMes: number; segundoMesADoce: number }
+> {
+  const firstValue = Object.values(priceTable)[0];
+  return (
+    firstValue !== null &&
+    typeof firstValue === "object" &&
+    "anual" in firstValue
+  );
+}
+
+function roundPrice(price: number): number {
+  return Math.round(price);
+}
+
 export function calculateInsurancePrice(
   data: InsuranceData,
   priceTable: PriceTable,
@@ -88,55 +106,72 @@ export function calculateInsurancePrice(
     parents: [],
   };
 
-  function getPriceForPerson(age: number, gender: "mujer" | "hombre"): number {
-    if (age >= 0 && age <= 64) {
+  function getPriceForPerson(age: number, gender?: "mujer" | "hombre"): number {
+    if (age >= 0 && age <= 84) {
       const ageKey = age.toString();
-      return (
-        priceTable[ageKey]?.[gender]?.[
-          paymentType.toLowerCase() as "anual" | "mensual"
-        ] || 0
-      );
+
+      if (isHDIPriceTable(priceTable)) {
+        const prices = priceTable[ageKey];
+        if (!prices) return 0;
+
+        if (paymentType.toLowerCase() === "anual") {
+          return roundPrice(prices.anual);
+        } else {
+          return roundPrice(prices.primerMes);
+        }
+      } else {
+        return roundPrice(
+          priceTable[ageKey]?.[gender || "hombre"]?.[
+            paymentType.toLowerCase() as "anual" | "mensual"
+          ] || 0
+        );
+      }
     }
     return 0;
   }
 
-  // Si el seguro es solo para los padres
   if (data.protectWho === "mis_padres") {
     individualPrices.parents = [];
 
     if (data.additionalInfo?.dadAge) {
-      const dadPrice = getPriceForPerson(data.additionalInfo.dadAge, "hombre");
+      const dadPrice = getPriceForPerson(
+        data.additionalInfo.dadAge,
+        isHDIPriceTable(priceTable) ? undefined : "hombre"
+      );
       individualPrices.parents.push({
-        name: data.additionalInfo.dadName || "Padre",
+        name: "Padre",
         price: dadPrice,
       });
       totalPrice += dadPrice;
     }
 
     if (data.additionalInfo?.momAge) {
-      const momPrice = getPriceForPerson(data.additionalInfo.momAge, "mujer");
+      const momPrice = getPriceForPerson(
+        data.additionalInfo.momAge,
+        isHDIPriceTable(priceTable) ? undefined : "mujer"
+      );
       individualPrices.parents.push({
-        name: data.additionalInfo.momName || "Madre",
+        name: "Madre",
         price: momPrice,
       });
       totalPrice += momPrice;
     }
-  }
-  // Si el seguro es solo para los hijos, excluimos al asegurado principal
-  else if (
+  } else if (
     data.protectWho === "solo_mis_hijos" &&
     data.additionalInfo?.children
   ) {
     individualPrices.children = data.additionalInfo.children.map((child) => {
-      const childPrice = getPriceForPerson(child.age, child.gender);
+      const childPrice = getPriceForPerson(
+        child.age,
+        isHDIPriceTable(priceTable) ? undefined : child.gender
+      );
       totalPrice += childPrice;
       return childPrice;
     });
   } else {
-    // Precio del asegurado principal
     individualPrices.main = getPriceForPerson(
       data.age,
-      data.gender || "hombre"
+      isHDIPriceTable(priceTable) ? undefined : data.gender || "hombre"
     );
     totalPrice += individualPrices.main;
 
@@ -147,32 +182,64 @@ export function calculateInsurancePrice(
     ];
 
     if (validProtectWhoOptions.includes(data.protectWho)) {
-      // Precio de la pareja
       if (
         data.additionalInfo?.partnerAge &&
         data.additionalInfo?.partnerGender
       ) {
         individualPrices.partner = getPriceForPerson(
           data.additionalInfo.partnerAge,
-          data.additionalInfo.partnerGender
+          isHDIPriceTable(priceTable)
+            ? undefined
+            : data.additionalInfo.partnerGender
         );
         totalPrice += individualPrices.partner;
       }
 
-      // Precio de los hijos
       if (data.additionalInfo?.children) {
         individualPrices.children = data.additionalInfo.children.map(
           (child) => {
-            const childPrice = getPriceForPerson(child.age, child.gender);
+            const childPrice = getPriceForPerson(
+              child.age,
+              isHDIPriceTable(priceTable) ? undefined : child.gender
+            );
             totalPrice += childPrice;
             return childPrice;
           }
         );
       }
     }
+
+    if (data.protectWho === "otros") {
+      individualPrices.others = [];
+      data.additionalInfo?.protectedPersons?.map((other) => {
+        const otherPrice = getPriceForPerson(other.age, other.gender);
+        individualPrices?.others?.push({
+          relationship: other.relationship || "Otro",
+          price: otherPrice,
+        });
+        totalPrice += otherPrice;
+        return;
+      });
+    }
   }
+
   return {
-    coverage_fee: totalPrice,
-    individualPrices,
+    coverage_fee: roundPrice(totalPrice),
+    individualPrices: {
+      main: roundPrice(individualPrices.main),
+      partner: roundPrice(individualPrices.partner || 0),
+      children: (individualPrices.children ?? []).map((price) =>
+        roundPrice(price)
+      ),
+      parents: (individualPrices.parents || []).map((parent) => ({
+        ...parent,
+        price: roundPrice(parent.price),
+      })),
+      others: (individualPrices.others || []).map((other) => ({
+        ...other,
+        price: roundPrice(other.price),
+      })),
+      protectWho: data.protectWho,
+    },
   };
 }

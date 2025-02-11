@@ -8,24 +8,11 @@ import {
   TableBody,
 } from "@/shared/components/ui/table";
 import React from "react";
+import { useQuoteSumaryActions } from "../../hooks/use-quote-sumary-actions";
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  children: React.ReactNode;
-  deductiblesJson: string;
-}
-
-export default function MultipleDeductibleModal({
-  isOpen,
-  onClose,
-  title,
-  children,
-  deductiblesJson,
-}: ModalProps) {
-  if (!isOpen) return null;
-  const rawDeductibles = JSON.parse(deductiblesJson);
+export default function MultipleDeductibleModal() {
+  const { modalProps, closeModal } = useQuoteSumaryActions();
+  const rawDeductibles = JSON.parse(modalProps.deductibles);
 
   const transformedData = Object.entries(rawDeductibles).reduce(
     (acc: any[], [key, values]: [string, any]) => {
@@ -48,13 +35,13 @@ export default function MultipleDeductibleModal({
   );
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 pt-16 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded shadow-lg max-w-screen-xl  w-full mx-auto">
         <h2 className="text-4xl font-bold text-center text-gradiant mb-4">
-          {title}
+          {modalProps.title}
         </h2>
         <div className="text-lg text-center mb-10 mt-4 px-1 md:px-36">
-          {children}
+          {modalProps.children}
         </div>
         <Card>
           <Table className="w-full text-center border-collapse">
@@ -93,7 +80,7 @@ export default function MultipleDeductibleModal({
           </Table>
         </Card>
         <button
-          onClick={onClose}
+          onClick={closeModal}
           className="text-lg mt-4 px-4 py-2 w-full bg-primary text-white rounded-md hover:bg-primary/90 block mx-auto"
         >
           Cerrar

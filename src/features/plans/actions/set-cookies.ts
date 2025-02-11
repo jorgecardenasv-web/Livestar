@@ -14,6 +14,7 @@ export async function handleInterestClick(formData: FormData) {
     coInsurance: formData.get("coInsurance"),
     coInsuranceCap: formData.get("coInsuranceCap"),
     coverage_fee: formData.get("coverage_fee"),
+    individualPricesJson: formData.get("individualPricesJson"),
     id: formData.get("id"),
     isMultipleString: formData.get("isMultipleString"),
     deductiblesJson: formData.get("deductiblesJson")

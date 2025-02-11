@@ -45,8 +45,8 @@ export const ContractForm = () => {
               className="h-4 w-4 text-[#223E99] focus:ring-[#223E99] border-gray-300 rounded"
             />
             <label htmlFor="confirmation">
-              Confirmo que no padezco ninguna enfermedad preexistente ni me
-              encuentro en estado de embarazo
+              Entiendo que cualquier padecimiento preexistente a la contratación
+              del seguro estará excluida en mis coberturas
             </label>
           </div>
         </AlertDescription>

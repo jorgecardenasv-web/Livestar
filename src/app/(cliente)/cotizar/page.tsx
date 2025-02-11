@@ -16,6 +16,7 @@ export interface InsuranceQuoteData {
   id: string;
   isMultipleString?: string;
   deductiblesJson?: string;
+  individualPricesJson?: string;
 }
 
 export default async function QuoteSummaryPage() {
