@@ -59,7 +59,7 @@ function getFormattedValue(key: string, value: any, protectWho: any) {
   ) {
     return (
       <>
-        <TableRow key={key}>
+        <TableRow>
           <TableCell className="flex justify-center">
             <div className="bg-sky-100 px-3 py-1.5 rounded-lg text-sky-600">
               {"Yo: "}
@@ -79,7 +79,7 @@ function getFormattedValue(key: string, value: any, protectWho: any) {
   ) {
     return (
       <>
-        <TableRow key={key}>
+        <TableRow>
           <TableCell className="flex justify-center">
             <div className="bg-sky-100 px-3 py-1.5 rounded-lg text-sky-600">
               {"Pareja: "}
@@ -98,7 +98,7 @@ function getFormattedValue(key: string, value: any, protectWho: any) {
   if (key === "parents" && Array.isArray(value)) {
     return value.map((parent, index) => (
       <>
-        <TableRow key={key}>
+        <TableRow>
           <TableCell className="flex justify-center">
             <div className="bg-sky-100 px-3 py-1.5 rounded-lg text-sky-600">
               {`${parent.name}: `}
@@ -115,7 +115,7 @@ function getFormattedValue(key: string, value: any, protectWho: any) {
   if (key === "children" && Array.isArray(value)) {
     return value.map((child, index) => (
       <>
-        <TableRow key={key}>
+        <TableRow>
           <TableCell className="flex justify-center">
             <div className="bg-sky-100 px-3 py-1.5 rounded-lg text-sky-600">
               {`Hijo${value.length > 1 ? ` ${index + 1}` : ""}:`}
@@ -132,7 +132,7 @@ function getFormattedValue(key: string, value: any, protectWho: any) {
   if (key === "others" && Array.isArray(value)) {
     return value.map((other, index) => (
       <>
-        <TableRow key={key}>
+        <TableRow>
           <TableCell className="flex justify-center">
             <div className="bg-sky-100 px-3 py-1.5 rounded-lg text-sky-600">
               {`${other.relationship}: `}
