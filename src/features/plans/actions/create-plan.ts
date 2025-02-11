@@ -27,8 +27,7 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
     const { planTypeId, prices, isMultiple, planId, isUpdate, isHDI, ...rest } =
       data;
 
-    const isRecommended =
-      planTypeId === "ce4ec4e3-e706-44c3-af00-ab16a07bcd69" ? true : false;
+    const isRecommended = isHDI;
 
     const planData = {
       ...rest,

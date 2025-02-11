@@ -54,9 +54,8 @@ export async function middleware(request: NextRequest) {
 
   const userRole = session.user.role as Role;
 
-  if (publicPaths.includes(pathWithoutQuery)) {
-    const redirectUrl = new URL(defaultRoutes[userRole], request.url);
-    return NextResponse.redirect(redirectUrl);
+  if (pathWithoutQuery === "/iniciar-sesion") {
+    return NextResponse.redirect(new URL(defaultRoutes[userRole], request.url));
   }
 
   if (pathWithoutQuery.startsWith(prefix)) {
