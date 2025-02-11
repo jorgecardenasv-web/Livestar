@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-
+import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import {
   Dialog,
   DialogContent,
@@ -37,12 +37,14 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
-      <DialogContent className={`${sizeClasses[size]} max-h-[600px] overflow-y-auto`}>
+      <DialogContent className={`${sizeClasses[size]} max-h-[600px]`}>
         <DialogHeader className="px-4 py-2">
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <div className="space-y-4 py-4 px-2 w-full">{children}</div>
+        <ScrollArea className="h-full max-h-[500px]">
+          <div className="space-y-4 py-4 px-2 w-full">{children}</div>
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );

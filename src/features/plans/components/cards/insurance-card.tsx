@@ -56,9 +56,8 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 
   return (
     <div
-      className={`bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${
-        isRecommended ? "ring-4 ring-[#00a5e3] " : ""
-      }`}
+      className={`bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${isRecommended ? "ring-4 ring-[#00a5e3] " : ""
+        }`}
     >
       {isRecommended && (
         <div className="bg-[#00a5e3] text-white text-center py-2 text-sm font-bold">
@@ -122,7 +121,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 
         <form action={handleInterestClick}>
           <input type="hidden" name="company" value={company.name} />
-          <input type="hidden" name="companyLogo" value={company.logo} />
+          {/* <input type="hidden" name="companyLogo" value={company.logo} /> */}
           <input type="hidden" name="plan" value={plan.planType.name} />
           <input type="hidden" name="paymentType" value={paymentType} />
           <input type="hidden" name="sumInsured" value={plan.sumInsured} />

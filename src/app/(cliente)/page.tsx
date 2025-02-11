@@ -36,9 +36,9 @@ export default function Home() {
         <ScrollAnimatedComponent>
           <GreaterSpecialization />
         </ScrollAnimatedComponent>
-        <ScrollAnimatedComponent>
-          {/* Formulario de contacto */}
-        </ScrollAnimatedComponent>
+        {/* <ScrollAnimatedComponent>
+          Formulario de contacto
+        </ScrollAnimatedComponent> */}
       </main>
     </>
   );
