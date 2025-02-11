@@ -10,6 +10,9 @@ import { Button } from "@/shared/components/ui/button";
 import MultipleDeductibleModal from "../modals/MultipleDeductibleModal";
 import { formatCurrency } from "@/shared/utils";
 import MoreInformationModal from "../modals/MoreInformationModal";
+import { useQuoteSumaryActions } from "../../hooks/use-quote-sumary-actions";
+import { Modal } from "@/shared/components/ui/modal";
+import MoreInformationQuote from "../modals/MoreInformationModal";
 
 export const QuoteSummary: FC<
   InsuranceQuoteData & { imgCompanyLogo: { base64: string } }
@@ -28,14 +31,23 @@ export const QuoteSummary: FC<
   isMultipleString,
   deductiblesJson,
 }) => {
-  console.log("individualPricesJson: ", individualPricesJson);
   const isMultiple = isMultipleString === "true" ? true : false;
   const [isModalOpen, setModalOpen] = useState(false);
-  const [modalType, setModalType] = useState("moreInformation");
-  const handleOpenModal = (modalTypeString: string) => {
+  const handleOpenModal = () => {
     setModalOpen(true);
-    setModalType(modalTypeString);
   };
+
+  // --------------------------------
+
+  const {
+    isOpen,
+    modalType,
+    modalProps,
+    openModalMoreInformation,
+    openModalMultipleDeductible,
+  } = useQuoteSumaryActions();
+
+  // --------------------------------
 
   const handleCloseModal = () => {
     setModalOpen(false);
@@ -104,7 +116,14 @@ export const QuoteSummary: FC<
                   <Button
                     className="w-56"
                     size="sm"
-                    onClick={() => handleOpenModal("multipleDeductible")}
+                    onClick={() =>
+                      openModalMultipleDeductible(
+                        "¿Cuáles serán los gastos en caso de accidente o padecimiento?",
+                        `Si llegaras a tener un padecimiento o accidente, podrás acudir a un hospital
+                      de cualquier nivel y tu participación sería de acuerdo a tu elección:`,
+                        deductiblesJson
+                      )
+                    }
                     disabled={false}
                   >
                     DETALLES
@@ -113,17 +132,10 @@ export const QuoteSummary: FC<
               </div>
             }
           />
-          {isModalOpen && modalType === "multipleDeductible" && (
-            <MultipleDeductibleModal
-              isOpen={isModalOpen}
-              onClose={handleCloseModal}
-              title="¿Cuáles serán los gastos en caso de accidente o padecimiento?"
-              deductiblesJson={deductiblesJson || ""}
-            >
-              Si llegaras a tener un padecimiento o accidente, podrás acudir a
-              un hospital de cualquier nivel y tu participación sería de acuerdo
-              a tu elección:
-            </MultipleDeductibleModal>
+          {isOpen && modalType === "multipleDeducible" && (
+            <Modal title="" size="6xl">
+              <MultipleDeductibleModal />
+            </Modal>
           )}
         </div>
         {/* -------------------------------------------------------------------- */}
@@ -143,22 +155,18 @@ export const QuoteSummary: FC<
           className="w-56 mt-2"
           size="sm"
           disabled={false}
-          onClick={() => handleOpenModal("moreInformation")}
+          onClick={() =>
+            openModalMoreInformation(JSON.parse(individualPricesJson!))
+          }
         >
           MÁS INFORMACIÓN
         </Button>
-        {isModalOpen && modalType === "moreInformation" && (
-          <MoreInformationModal
-            isOpen={isModalOpen}
-            onClose={handleCloseModal}
-            title="daleee"
-            individualPricesJson={individualPricesJson || ""}
-          >
-            daleeeeeee
-          </MoreInformationModal>
+        {isOpen && modalType === "moreInformationQuote" && (
+          <Modal title="" size="6xl">
+            <MoreInformationQuote />
+          </Modal>
         )}
       </div>
-
       <ContractForm />
     </div>
   );

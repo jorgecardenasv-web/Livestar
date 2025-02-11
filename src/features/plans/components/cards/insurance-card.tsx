@@ -7,7 +7,11 @@ import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { getProspect } from "../../loaders/get-prospect";
 import { getImage } from "../../../../shared/services/get-image.service";
 import { formatCurrency } from "@/shared/utils";
-import { PriceTable } from "../../types";
+import {
+  IndividualPrices,
+  InsurancePriceResult,
+  PriceTable,
+} from "../../types";
 
 interface InsuranceCardProps {
   company: Insurance;
@@ -47,6 +51,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
     prices,
     paymentType
     );
+    console.log("individualPrices: ", individualPrices);
 
   const logoSrc = company.logo ? await getImage(company.logo) : "";
 
@@ -75,7 +80,11 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
               {paymentType === "Mensual" ? "Pago mensual" : "Pago anual"}
             </p>
             {Object.entries(individualPrices).map(([key, value], index) => {
-              const formattedValue = getFormattedValue(key, value, individualPrices.protectWho);
+              const formattedValue = getFormattedValue(
+                key,
+                value,
+                individualPrices.protectWho
+              );
               return <div key={index}> {formattedValue}</div>;
             })}
             <p className="text-sm text-sky-600 font-semibold uppercase mb-1 mt-2">
@@ -126,7 +135,11 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             value={plan.coInsuranceCap || 0}
           />
           <input type="hidden" name="coverage_fee" value={coverage_fee} />
-          <input type="hidden" name="individualPricesJson" value={JSON.stringify(individualPrices)} />
+          <input
+            type="hidden"
+            name="individualPricesJson"
+            value={JSON.stringify(individualPrices)}
+          />
           <input type="hidden" name="id" value={plan.id} />
           <input
             type="hidden"
@@ -179,8 +192,13 @@ function getMinimumValue(
 
 function getFormattedValue(key: string, value: any, protectWho: any) {
   if (
-    key === "main" && 
-    ["solo_yo", "mi_pareja_y_yo", "mi_familia", "mis_hijos_y_yo", "otros"].includes(protectWho)
+    key === "main" &&
+    [
+      "solo_yo",
+      "mi_pareja_y_yo",
+      "mi_familia",
+      "mis_hijos_y_yo",
+    ].includes(protectWho)
   ) {
     return (
       <div className="flex items-center space-x-4 justify-between">
@@ -194,7 +212,10 @@ function getFormattedValue(key: string, value: any, protectWho: any) {
     );
   }
 
-  if (key === "partner" && ["mi_pareja_y_yo", "mi_familia"].includes(protectWho)) {
+  if (
+    key === "partner" &&
+    ["mi_pareja_y_yo", "mi_familia"].includes(protectWho)
+  ) {
     return (
       <div className="flex items-center space-x-4 justify-between">
         <p className="text-xs text-sky-600 font-semibold uppercase flex-shrink-0">
@@ -207,7 +228,8 @@ function getFormattedValue(key: string, value: any, protectWho: any) {
     );
   }
 
-  if (Array.isArray(value) && value.length === 0) return <div className="hidden"></div>;
+  if (Array.isArray(value) && value.length === 0)
+    return <div className="hidden"></div>;
 
   if (key === "parents" && Array.isArray(value)) {
     return value.map((parent, index) => (

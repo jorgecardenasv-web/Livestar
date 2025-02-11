@@ -31,6 +31,14 @@ export interface InsurancePriceResult {
   };
 }
 
+export interface IndividualPrices {
+  main: number;
+  partner?: number;
+  children?: number[];
+  parents?: Parents[];
+  others?: {relationship: string; price: number}[];
+}
+
 export interface ProtectedPersons {
   relationship: string;
   age: number;
