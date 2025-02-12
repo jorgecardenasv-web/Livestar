@@ -111,7 +111,7 @@ model Plan {
   quotes         Quote[]
   isRecommended  Boolean    @default(false)
   prices         Json
-  deductibles    Json       @default("{}")
+  deductibles    Json
 
   @@unique([planTypeId, companyId])
   @@schema("public")

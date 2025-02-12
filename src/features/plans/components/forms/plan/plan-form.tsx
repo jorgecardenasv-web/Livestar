@@ -33,6 +33,12 @@ interface Props {
   plan?: any;
 }
 
+const isHDIPriceFormat = (prices: any[]): boolean => {
+  if (!prices.length) return false;
+  const firstPrice = prices[0];
+  return 'monthlyPrice1' in firstPrice && 'monthlyPrice2to12' in firstPrice;
+};
+
 export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
   const isUpdateMode = plan ? true : false;
   const {
@@ -46,16 +52,14 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
   } = useInsurancePlanForm(createPlan);
 
   useEffect(() => {
-    if (plan?.prices.length > 0) {
+    if (plan?.prices?.length > 0) {
       setPrices(plan.prices);
+      setIsHDI(isHDIPriceFormat(plan.prices));
     }
     if (plan?.deductibles) {
       setIsMultiple(!(plan.deductibles.default >= 0));
     }
-    if (plan?.company.name.includes("HDI")) {
-      setIsHDI(true);
-    }
-  }, [plan, setPrices, setIsMultiple]);
+  }, [plan, setPrices, setIsMultiple, setIsHDI]);
 
   const planTypeOptions = useMemo(
     () =>

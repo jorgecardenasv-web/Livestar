@@ -1,5 +1,9 @@
 import { getInsurancePlanByIdService } from "../services/read/get-insurance-plan-by-id.service";
-import { jsonPricesToFlatPrices, jsonPricesToFlatPricesHDI } from "../utils";
+import {
+  jsonPricesToFlatPrices,
+  jsonPricesToFlatPricesHDI,
+  normalizePlanData,
+} from "../utils";
 
 export const getInsurancePlanById = async (id: string) => {
   const insurancePlan = await getInsurancePlanByIdService(id);
@@ -7,22 +11,19 @@ export const getInsurancePlanById = async (id: string) => {
     throw new Error("El plan o los precios del plan no se encuentran");
   }
 
-  const isHDI = insurancePlan.company.name.includes("HDI");
+  const normalizedPlan = normalizePlanData(insurancePlan);
+  const prices = normalizedPlan.prices;
+  const useHDIFormat = isHDIPriceFormat(prices);
 
   return {
-    ...insurancePlan,
-    prices: isHDI
-      ? jsonPricesToFlatPricesHDI(
-          insurancePlan.prices as Record<
-            string,
-            { anual: number; primerMes: number; segundoMesADoce: number }
-          >
-        )
-      : jsonPricesToFlatPrices(
-          insurancePlan.prices as Record<
-            string,
-            Record<string, Record<string, number>>
-          >
-        ),
+    ...normalizedPlan,
+    prices: useHDIFormat
+      ? jsonPricesToFlatPricesHDI(prices as any)
+      : jsonPricesToFlatPrices(prices as any),
   };
+};
+
+const isHDIPriceFormat = (prices: any): boolean => {
+  const firstPrice = Object.values(prices)[0] as any;
+  return firstPrice && "anual" in firstPrice && "primerMes" in firstPrice;
 };

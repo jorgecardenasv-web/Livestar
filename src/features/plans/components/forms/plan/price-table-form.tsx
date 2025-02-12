@@ -12,7 +12,7 @@ import {
 } from "@/shared/components/ui/table";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
-import { PriceInput } from "../../inputs/price-input";
+import { NumberInput } from "@/shared/components/ui/number-input";
 import { Separator } from "@/shared/components/ui/separator";
 import { Upload } from "lucide-react";
 import { PriceData, usePriceTableForm } from "../../../hooks/use-price-table";
@@ -88,34 +88,34 @@ export const PriceTableForm: React.FC<PriceTableFormProps> = ({
                   <TableRow key={row.age}>
                     <TableCell className="text-center">{row.age}</TableCell>
                     <TableCell>
-                      <PriceInput
-                        value={row.monthlyPriceMale.toString()}
-                        onChange={(value) =>
-                          handlePriceChange(index, "monthlyPriceMale", value)
+                      <NumberInput
+                        value={row.monthlyPriceMale}
+                        onChange={(e) =>
+                          handlePriceChange(index, "monthlyPriceMale", e.target.value)
                         }
                       />
                     </TableCell>
                     <TableCell>
-                      <PriceInput
-                        value={row.monthlyPriceFemale.toString()}
-                        onChange={(value) =>
-                          handlePriceChange(index, "monthlyPriceFemale", value)
+                      <NumberInput
+                        value={row.monthlyPriceFemale}
+                        onChange={(e) =>
+                          handlePriceChange(index, "monthlyPriceFemale", e.target.value)
                         }
                       />
                     </TableCell>
                     <TableCell>
-                      <PriceInput
-                        value={row.annualPriceMale.toString()}
-                        onChange={(value) =>
-                          handlePriceChange(index, "annualPriceMale", value)
+                      <NumberInput
+                        value={row.annualPriceMale}
+                        onChange={(e) =>
+                          handlePriceChange(index, "annualPriceMale", e.target.value)
                         }
                       />
                     </TableCell>
                     <TableCell>
-                      <PriceInput
-                        value={row.annualPriceFemale.toString()}
-                        onChange={(value) =>
-                          handlePriceChange(index, "annualPriceFemale", value)
+                      <NumberInput
+                        value={row.annualPriceFemale}
+                        onChange={(e) =>
+                          handlePriceChange(index, "annualPriceFemale", e.target.value)
                         }
                       />
                     </TableCell>

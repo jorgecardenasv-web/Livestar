@@ -67,6 +67,8 @@ export function jsonPricesToFlatPricesHDI(
     { anual: number; primerMes: number; segundoMesADoce: number }
   >
 ): PriceDataHDI[] {
+  console.log(jsonPrices);
+
   return Object.entries(jsonPrices).map(([age, prices]) => ({
     age: parseInt(age),
     annualPrice: prices.anual,
@@ -243,3 +245,18 @@ export function calculateInsurancePrice(
     },
   };
 }
+
+export const normalizePlanData = (plan: any) => {
+  return {
+    ...plan,
+    deductibles: plan.deductibles || {},
+    company: {
+      id: plan.company?.id || "",
+      name: plan.company?.name || "",
+    },
+    planType: {
+      id: plan.planType?.id || "",
+      name: plan.planType?.name || "",
+    },
+  };
+};

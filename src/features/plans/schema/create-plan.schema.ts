@@ -2,8 +2,11 @@ import { z } from "zod";
 
 const deductibleSchema = z
   .string()
+  .nullable()
   .optional()
-  .transform((val) => (val ? Number(val) : undefined));
+  .transform((val) =>
+    val === null || val === undefined ? undefined : Number(val)
+  );
 
 export const createPlanSchema = z
   .object({
@@ -31,7 +34,7 @@ export const createPlanSchema = z
     // Transformación final para estructurar el objeto deducible
     const deductibles: any = {};
 
-    if (!data.isMultiple && data["deducible.default"]) {
+    if (!data.isMultiple && data["deducible.default"] !== undefined) {
       deductibles.default = data["deducible.default"];
     } else {
       ["2", "4"].forEach((opcion) => {
