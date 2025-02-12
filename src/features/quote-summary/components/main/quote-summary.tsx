@@ -7,14 +7,13 @@ import { ContractForm } from "../forms/confirm-form";
 import { InfoCard } from "../cards/info-card";
 import { deleteSelectedPlan } from "@/features/plans/actions/set-cookies";
 import { FC } from "react";
-import { Button } from "@/shared/components/ui/button";
 import MultipleDeductibleModal from "../modals/MultipleDeductibleModal";
 import { formatCurrency } from "@/shared/utils";
 import { useQuoteSumaryActions } from "../../hooks/use-quote-sumary-actions";
 import { Modal } from "@/shared/components/ui/modal";
 import MoreInformationQuote from "../modals/MoreInformationModal";
-import { generatePDF } from "@/shared/hooks/generatePdf";
 import { BurguerMenu } from "@/shared/components/burguerMenu";
+import { generatePDFAction } from "../../actions/generate-pdf";
 
 export const QuoteSummary: FC<
   InsuranceQuoteData & { imgCompanyLogo: { base64: string } }
@@ -67,37 +66,71 @@ export const QuoteSummary: FC<
   ];
 
   //! -------------------------------------------------------------------
-  async function handleGeneratePDF() {
-    const content = document.documentElement.outerHTML;
-    const pdfBuffer = await generatePDF(content, {format: "A4"});
+  const handleGeneratePDF = async () => {
+    try {
+      const members = [];
+      if (individualPricesJson) {
+        const prices = JSON.parse(individualPricesJson);
+        if (prices.main) members.push({ type: "Titular", price: prices.main });
+        if (prices.partner)
+          members.push({ type: "Pareja", price: prices.partner });
+        if (prices.children) {
+          prices.children.forEach((price: number, index: number) => {
+            members.push({ type: `Hijo/a ${index + 1}`, price });
+          });
+        }
+        if (prices.parents) {
+          prices.parents.forEach((parent: { name: string; price: number }) => {
+            members.push({
+              type: "Padre/Madre",
+              name: parent.name,
+              price: parent.price,
+            });
+          });
+        }
+      }
 
-    if (pdfBuffer) {
-      const blob = new Blob([new Uint8Array(pdfBuffer)], {
-        type: "application/pdf",
-      });
-      const url = URL.createObjectURL(blob);
+      const pdfData = {
+        company,
+        plan,
+        coverageFee: coverage_fee,
+        paymentType,
+        sumInsured,
+        deductible,
+        coInsurance,
+        coInsuranceCap,
+        members,
+        isMultipleDeductible: isMultipleString === "true",
+        deductibles: deductiblesJson ? JSON.parse(deductiblesJson) : undefined,
+      };
 
-      window.open(url, "_blank");
+      const result = await generatePDFAction(pdfData);
 
-      //? ---------------- APARTADO DE DESCARGA DIRECTA ---------------
-      // const link = document.createElement("a");
-      // link.href = url;
-      // link.download = "Quote.pdf";
-      // document.body.appendChild(link);
-      // link.click();
-      // document.body.removeChild(link);
-      //? --------------------------------------------------------------
-      URL.revokeObjectURL(url);
+      if (result.success && result.data) {
+        const link = document.createElement("a");
+        link.href = result.data;
+        link.download = `cotizacion-${company}-${plan}.pdf`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        console.error("Error generando PDF:", result.error);
+      }
+    } catch (error) {
+      console.error("Error en la descarga:", error);
     }
-  }
+  };
   //! -------------------------------------------------------------------
 
   const isPriceMonthly = paymentType === "Mensual";
   return (
-    <div className="max-w-4xl mx-auto p-4 sm:p-6 rounded-3xl shadow-lg border m-8">
+    <div
+      id="quote-summary"
+      className="max-w-4xl mx-auto p-4 sm:p-6 rounded-3xl shadow-lg border m-8"
+    >
       <div className="flex flex-col sm:flex-row justify-between items-center mb-2 space-y-4 sm:space-y-0">
         <div className="flex items-center space-x-4">
-          <form action={deleteSelectedPlan}>
+          <form id="pdfIngnore" action={deleteSelectedPlan}>
             <button className="text-tremor-content-emphasis mt-2">
               <ArrowLeft strokeWidth={3} size={30} />
             </button>
@@ -107,12 +140,12 @@ export const QuoteSummary: FC<
           </h2>
         </div>
         <Image
-            src={imgCompanyLogo}
-            width={60}
-            height={60}
-            className="h-10 sm:h-12 w-auto object-contain"
-            alt={`Logo de ${company}`}
-          />
+          src={imgCompanyLogo}
+          width={60}
+          height={60}
+          className="h-10 sm:h-12 w-auto object-contain"
+          alt={`Logo de ${company}`}
+        />
       </div>
 
       <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm mb-4">
@@ -125,10 +158,14 @@ export const QuoteSummary: FC<
               {formatCurrency(coverage_fee)}
             </p>
           </div>
-          <p className="text-xs sm:text-sm text-sky-600 font-semibold uppercase">
-            Plan
-          </p>
-          <p className="text-lg sm:text-xl font-bold text-[#223E99]">{plan}</p>
+          <div>
+            <p className="text-xs sm:text-sm text-sky-600 font-semibold uppercase">
+              Plan
+            </p>
+            <p className="text-lg sm:text-xl font-bold text-[#223E99]">
+              {plan}
+            </p>
+          </div>
         </div>
       </div>
 
@@ -144,10 +181,7 @@ export const QuoteSummary: FC<
             title="Deducible"
             value={`${isMultiple ? `desde ${formatCurrency(deductible)}` : `${formatCurrency(deductible)}`}`}
             useHtml={isMultiple}
-            htmlElement={
-              <div className="pl-8">
-              </div>
-            }
+            htmlElement={<div className="pl-8"></div>}
           />
         </div>
         <InfoCard
@@ -168,7 +202,9 @@ export const QuoteSummary: FC<
           buttonData={optionsBtn}
         ></BurguerMenu>
       </div>
-      <ContractForm />
+      <div id="pdfIngnore">
+        <ContractForm />
+      </div>
       {isOpen && (
         <Modal title="" size="6xl">
           {modalType === "multipleDeducible" && <MultipleDeductibleModal />}
