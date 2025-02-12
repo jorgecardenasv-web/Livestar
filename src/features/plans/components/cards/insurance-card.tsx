@@ -191,7 +191,7 @@ function getMinimumValue(
 function getFormattedValue(key: string, value: any, protectWho: any) {
   if (
     key === "main" &&
-    ["solo_yo", "mi_pareja_y_yo", "familia", "mis_hijos_y_yo"].includes(
+    ["mi_pareja_y_yo", "mi_familia", "mis_hijos_y_yo"].includes(
       protectWho
     )
   ) {
