@@ -6,6 +6,5 @@ export async function handleContact(formData: FormData) {
   const rawFormData = Object.fromEntries(formData);
   const {success, data, error} = contactSchema.safeParse(rawFormData)
   if(!success) return simplifyZodErrors(error)
-  console.log("data: ", data);
   //   Send to BD or Advisor Email
 }
