@@ -7,6 +7,7 @@ import { Quotes } from "@/features/home/components/sections/quotes";
 import { SuccessStory } from "@/features/home/components/sections/success-story";
 import { ScrollAnimatedComponent } from "@/shared/components/ui/scroll-animated";
 import { GreaterSpecializationImg } from "@/features/home/components/sections/greater-specialization-img";
+import { ContactForm } from "@/features/home/components/sections/contact-form";
 
 export default function Home() {
   return (
@@ -36,9 +37,9 @@ export default function Home() {
         <ScrollAnimatedComponent>
           <GreaterSpecialization />
         </ScrollAnimatedComponent>
-        {/* <ScrollAnimatedComponent>
-          Formulario de contacto
-        </ScrollAnimatedComponent> */}
+        <ScrollAnimatedComponent>
+        <ContactForm/>
+        </ScrollAnimatedComponent>
       </main>
     </>
   );
