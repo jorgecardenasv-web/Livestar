@@ -2,6 +2,8 @@ import { getInsuranceState } from "../../loaders/get-insurance-status";
 import { InsuranceCard } from "../cards/insurance-card";
 import { PaymentSelector } from "../selectors/payment-selector";
 import { PlanSelector } from "../selectors/plan-selector";
+import { SubmitButton } from "@/shared/components/ui/submit-button";
+import { deleteProspectQuote } from "../../actions/set-cookies";
 
 export const Plans = async ({ plans }: { plans: any[] }) => {
   const { activePlanType, activePaymentType } = await getInsuranceState();
@@ -15,6 +17,16 @@ export const Plans = async ({ plans }: { plans: any[] }) => {
 
   return (
     <div className="mx-auto px-4 py-2 space-y-4 m-8">
+      <div className="flex justify-center">
+        <form action={deleteProspectQuote}>
+        <SubmitButton
+            type="submit"
+            label="Empezar de Nuevo"
+            labelPending="Cargando..."
+            className="w-full bg-white border border-blue-600 text-[#223E99] py-3 rounded font-bold text-lg transition duration-300"
+            />
+        </form>
+      </div>
       <div className="flex flex-col justify-center items-center">
         <PlanSelector planTypes={planTypes} activePlanType={activePlanType} />
         <PaymentSelector
