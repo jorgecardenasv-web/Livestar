@@ -18,6 +18,7 @@ export async function handleInterestClick(formData: FormData) {
     id: formData.get("id"),
     isMultipleString: formData.get("isMultipleString"),
     deductiblesJson: formData.get("deductiblesJson"),
+    protectedWho: formData.get("protectedWho"),
   };
 
   cookies().set("selectedPlan", JSON.stringify(insuranceData));

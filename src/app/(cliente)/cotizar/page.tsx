@@ -13,6 +13,7 @@ export interface InsuranceQuoteData {
   coInsuranceCap: number;
   coverage_fee: number;
   id: string;
+  protectedWho: string;
   isMultipleString?: string;
   deductiblesJson?: string;
   individualPricesJson?: string;
