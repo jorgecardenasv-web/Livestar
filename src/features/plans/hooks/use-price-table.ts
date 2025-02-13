@@ -17,11 +17,10 @@ export const usePriceTableForm = (
   setPrices: (prices: PriceData[]) => void
 ) => {
   const parsePrice = (value: string | number): number => {
-    if (typeof value === "number") return value;
+    if (typeof value === "number") return Math.round(value);
     if (!value) return 0;
 
-    const parsed = numeral(value);
-    return parsed.value() || 0;
+    return Math.round(numeral(value).value() || 0);
   };
 
   const handlePriceChange = (

@@ -1,7 +1,6 @@
 "use client";
 
 import { DollarSign, Percent } from "lucide-react";
-import { TextInput } from "@/shared/components/ui/text-input";
 import { PriceTableForm } from "./price-table-form";
 import { createPlan } from "../../../actions/create-plan";
 import { Card, CardContent } from "@/shared/components/ui/card";
@@ -115,8 +114,8 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
               label="Coaseguro"
               icon={<Percent className="w-4 h-4 text-gray-500" />}
               step="1"
-              min="0"
-              max="100"
+              min={0}
+              max={100}
               defaultValue={plan?.coInsurance}
               placeholder="Ej: 20%"
               required

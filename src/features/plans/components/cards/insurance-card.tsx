@@ -54,9 +54,8 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 
   return (
     <div
-      className={`bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${
-        isRecommended ? "ring-4 ring-[#00a5e3] " : ""
-      }`}
+      className={`bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${isRecommended ? "ring-4 ring-[#00a5e3] " : ""
+        }`}
     >
       {isRecommended && (
         <div className="bg-[#00a5e3] text-white text-center py-2 text-sm font-bold">
