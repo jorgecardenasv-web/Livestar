@@ -39,3 +39,7 @@ export const deleteSelectedPlan = () => {
   cookies().delete("selectedPlan");
   revalidatePath("/cotizar");
 };
+
+export const deleteProspectQuote = () => {
+  cookies().delete("prospect")
+}
