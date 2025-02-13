@@ -188,8 +188,10 @@ function getMinimumValue(
   options: Record<string, Record<string, number>>,
   age: number
 ): number {
+  if (!options) return 0;
   const option = age < 45 ? options.opcion_2 : options.opcion_4;
-  const valores = Object.values(option).flat();
+  if (!option) return 0;
+  const valores = Object.values(option);
   return valores.length > 0 ? Math.min(...valores) : 0;
 }
 

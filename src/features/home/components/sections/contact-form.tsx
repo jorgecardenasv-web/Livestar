@@ -1,46 +1,46 @@
 "use client";
-import { useState } from "react";
-import { Button } from "@/shared/components/ui/button";
+
+import { ChangeEvent, HTMLAttributes, useState } from "react";
 import { Card, CardContent } from "@/shared/components/ui/card";
-import { Input } from "@/shared/components/ui/input";
 import { TextInput } from "@/shared/components/ui/text-input";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
-import { sendAndSaveContactForm } from "../../actions/contactForm-action";
+import { handleContact } from "../../actions/contactForm-action";
+import { Textarea } from "@/shared/components/ui/textarea";
+import { RadioGroup } from "@/shared/components/inputs/radio-group";
+import { Mail, Phone } from "lucide-react";
+import { FormError } from "@/shared/types";
+
+const inputConfig: Record<string, { 
+  placeholder: string;
+  type: "text" | "email" | "tel";
+  icon: JSX.Element;
+  inputMode: "email" | "search" | "text" | "numeric" | "tel" | "url" | "none" | "decimal";
+  pattern: string;
+}> = {
+  email: {
+    placeholder: "Correo Electrónico",
+    icon: <Mail className="text-gray-400" />,
+    type: "email",
+    inputMode: "email",
+    pattern: ""
+  },
+  phone: {
+    placeholder: "Número de Teléfono",
+    icon: <Phone className="text-gray-400" />,
+    type: "tel",
+    inputMode: "tel",
+    pattern: "[0-9]*"
+  },
+};
 
 export const ContactForm = () => {
-  const [contactMethod, setContactMethod] = useState("mail");
-  const [contactValue, setContactValue] = useState("");
-  const [error, setError] = useState("");
+  const [contactType, setContactType] = useState<'email' | 'phone'>('email');
+  const [error, setError] = useState<FormError>({});
 
-  const handleRadioChange = (value: string) => {
-    setContactMethod(value);
-    setContactValue("");
-    setError("");
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement);
-    const email = formData.get("email")?.toString();
-    const phone = formData.get("phone")?.toString();
-
-    if (contactMethod === "mail") {
-      if (!email || !isValidEmail(email)) {
-        setError("Por favor ingresa un Correo Electtronico valido.");
-        return;
-      }
-    }
-
-    if (contactMethod === "phone") {
-      if (!phone || !isValidPhone(phone)) {
-        setError("Por favor ingresa un Número telefonico valido.");
-        return;
-      }
-    }
-
-    setError("");
-    await sendAndSaveContactForm(formData);
-  };
+  const onSubmit = async (formData: FormData) => {
+    const handleError = await handleContact(formData) || {};
+    setError(handleError)
+  }
 
   return (
     <section className="relative w-full text-black my-16 flex justify-center">
@@ -50,68 +50,36 @@ export const ContactForm = () => {
         </h2>
         <Card>
           <CardContent className="space-y-6 p-6">
-            <form onSubmit={handleSubmit}>
+            <form action={onSubmit}>
               <TextInput required={true} placeholder="Nombre(s)" name="name" />
-              <div className="w-2/6">
-                <div className="flex mt-4">
-                  <label htmlFor="mail" className="text-lg">
-                    Correo electrónico
-                  </label>
-                  <Input
-                    checked={contactMethod === "mail"}
-                    className="ml-1 w-8 h-8"
-                    id="mail"
-                    type="radio"
-                    name="contactMethod"
-                    value="mail"
-                    onChange={() => handleRadioChange("mail")}
-                  />
-                </div>
-                <div className="flex mt-2">
-                  <label htmlFor="phone" className="text-lg">
-                    Número de teléfono
-                  </label>
-                  <Input
-                    checked={contactMethod === "phone"}
-                    className="ml-1 w-8 h-8"
-                    id="phone"
-                    type="radio"
-                    name="contactMethod"
-                    value="phone"
-                    onChange={() => handleRadioChange("phone")}
-                  />
-                </div>
+              <div className="w-2/4 mt-4">
+                <RadioGroup
+                  label="Tipo de contacto"
+                  name="contactType"
+                  position="row"
+                  defaultValue="email"
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setContactType(e.target?.value as 'email' | 'phone')
+                  }
+                  options={[
+                    { label: "Correo Electronico", value: "email" },
+                    { label: "Número de Teléfono", value: "phone" },
+                  ]}
+                ></RadioGroup>
               </div>
-              <div className="mt-4 mb-4">
-                {contactMethod === "mail" ? (
-                  <TextInput
-                    required={contactMethod === "mail"}
-                    placeholder="Correo Electrónico"
-                    name="email"
-                    value={contactValue}
-                    error={error}
-                    onChange={(e) => {
-                      setContactValue(e.target.value);
-                    }}
-                  />
-                ) : (
-                  <TextInput
-                    required={contactMethod === "phone"}
-                    placeholder="Número de teléfono"
-                    name="phone"
-                    value={contactValue}
-                    error={error}
-                    onChange={(e) => {
-                      let value = e.target.value;
-                      value = value.replace(/\D/g, "");
-                      if (value.length <= 10) {
-                        setContactValue(value);
-                      }
-                    }}
-                  />
-                )}
+              <div className="mt-5 mb-4">
+                <TextInput
+                  required
+                  placeholder={inputConfig[contactType].placeholder}
+                  type={inputConfig[contactType].type}
+                  name={"contactMethod"}
+                  error={error?.contactMethod}
+                  icon={inputConfig[contactType].icon}
+                  inputMode={inputConfig[contactType].inputMode}
+                  pattern={inputConfig[contactType].pattern}
+                />
               </div>
-              <textarea className="w-full" rows={10} name="comment"></textarea>
+              <Textarea className="w-full" name="comment"></Textarea>
               <SubmitButton
                 className="w-full mt-4"
                 label="Enviar"
@@ -123,13 +91,4 @@ export const ContactForm = () => {
       </div>
     </section>
   );
-};
-
-const isValidEmail = (email: string) => {
-  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-  return emailRegex.test(email);
-};
-
-const isValidPhone = (phone: string) => {
-  return phone.length === 10;
 };

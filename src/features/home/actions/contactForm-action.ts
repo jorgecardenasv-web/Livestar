@@ -1,10 +1,11 @@
-export async function sendAndSaveContactForm(formData: FormData) {
-  const contactForm: Record<string, string> = {};
-  ["name", "phone", "email", "comment"].forEach((key) => {
-    const value = formData.get(key)?.toString().trim();
-    if (value) {
-      contactForm[key] = value;
-    }
-  });
+'use server'
+import { simplifyZodErrors } from "@/shared/utils";
+import { contactSchema } from "../schemas/contact.schema";
+
+export async function handleContact(formData: FormData) {
+  const rawFormData = Object.fromEntries(formData);
+  const {success, data, error} = contactSchema.safeParse(rawFormData)
+  if(!success) return simplifyZodErrors(error)
+  console.log("data: ", data);
   //   Send to BD or Advisor Email
 }
