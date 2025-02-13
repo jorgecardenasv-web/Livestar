@@ -5,8 +5,6 @@ import { PlanSelector } from "../selectors/plan-selector";
 import { InsuranceCardSkeleton } from "../skeletons/insurance-card-skeleton";
 import { PlansContent } from "./plans-content";
 import { Suspense } from 'react';
-import { SubmitButton } from "@/shared/components/ui/submit-button";
-import { deleteProspectQuote } from "../../actions/set-cookies";
 
 export const Plans = async () => {
   const planTypes = await getCachedPlanTypes();
@@ -31,17 +29,7 @@ export const Plans = async () => {
 
   return (
 
-    <div className="mx-auto px-4 py-2 space-y-4 m-8">
-      <div className="flex justify-center">
-        <form action={deleteProspectQuote}>
-        <SubmitButton
-            type="submit"
-            label="Empezar de Nuevo"
-            labelPending="Cargando..."
-            className="w-full bg-white border border-blue-600 text-[#223E99] py-3 rounded font-bold text-lg transition duration-300"
-            />
-        </form>
-      </div>
+    <div className="mx-auto px-4 space-y-4 mb-8">
       <div className="flex flex-col justify-center items-center">
         <PlanSelector
           planTypes={regularPlanTypes}
