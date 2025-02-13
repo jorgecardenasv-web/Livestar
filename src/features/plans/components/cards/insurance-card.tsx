@@ -56,8 +56,9 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 
   return (
     <div
-      className={`bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${isRecommended ? "ring-4 ring-[#00a5e3] " : ""
-        }`}
+      className={`bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${
+        isRecommended ? "ring-4 ring-[#00a5e3] " : ""
+      }`}
     >
       {isRecommended && (
         <div className="bg-[#00a5e3] text-white text-center py-2 text-sm font-bold">
@@ -85,9 +86,12 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
               );
               return <div key={index}> {formattedValue}</div>;
             })}
-            <p className="text-sm text-sky-600 font-semibold uppercase mb-1 mt-2">
-              {paymentType === "Mensual" ? "Pago mensual" : "Pago anual"} Total
-            </p>
+            {protectWho !== "solo_yo" && (
+              <p className="text-sm text-sky-600 font-semibold uppercase mb-1 mt-2">
+                {paymentType === "Mensual" ? "Pago mensual" : "Pago anual"}{" "}
+                Total
+              </p>
+            )}
             <p className="text-3xl font-bold text-[#223E99]">
               {formatCurrency(coverage_fee)}
             </p>
@@ -149,6 +153,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             name="deductiblesJson"
             value={JSON.stringify(deductibles)}
           />
+          <input type="hidden" name="protectedWho" value={protectWho} />
           <SubmitButton
             type="submit"
             label="Me interesa"
@@ -191,9 +196,7 @@ function getMinimumValue(
 function getFormattedValue(key: string, value: any, protectWho: any) {
   if (
     key === "main" &&
-    ["solo_yo", "mi_pareja_y_yo", "familia", "mis_hijos_y_yo"].includes(
-      protectWho
-    )
+    ["mi_pareja_y_yo", "familia", "mis_hijos_y_yo"].includes(protectWho)
   ) {
     return (
       <div className="flex items-center space-x-4 justify-between">
@@ -207,10 +210,7 @@ function getFormattedValue(key: string, value: any, protectWho: any) {
     );
   }
 
-  if (
-    key === "partner" &&
-    ["mi_pareja_y_yo", "familia"].includes(protectWho)
-  ) {
+  if (key === "partner" && ["mi_pareja_y_yo", "familia"].includes(protectWho)) {
     return (
       <div className="flex items-center space-x-4 justify-between">
         <p className="text-xs text-sky-600 font-semibold uppercase flex-shrink-0">

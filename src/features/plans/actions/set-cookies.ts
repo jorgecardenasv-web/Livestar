@@ -17,7 +17,8 @@ export async function handleInterestClick(formData: FormData) {
     individualPricesJson: formData.get("individualPricesJson"),
     id: formData.get("id"),
     isMultipleString: formData.get("isMultipleString"),
-    deductiblesJson: formData.get("deductiblesJson")
+    deductiblesJson: formData.get("deductiblesJson"),
+    protectedWho: formData.get("protectedWho"),
   };
 
   cookies().set("selectedPlan", JSON.stringify(insuranceData));
@@ -33,7 +34,6 @@ export async function setActivePaymentType(formData: FormData) {
   const paymentType = formData.get("paymentType") as string;
   cookies().set("activePaymentType", paymentType);
 }
-
 
 export const deleteSelectedPlan = () => {
   cookies().delete("selectedPlan");
