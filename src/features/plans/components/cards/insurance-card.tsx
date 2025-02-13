@@ -75,11 +75,9 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             className="w-32 h-16 object-contain mb-4"
           />
           <div className="text-center">
-            {protectWho !== "solo_yo" && (
-              <p className="text-sm text-sky-600 font-semibold uppercase mb-2">
-                {paymentType === "Mensual" ? "Pago mensual" : "Pago anual"}
-              </p>
-            )}
+            <p className="text-sm text-sky-600 font-semibold uppercase mb-2">
+              {paymentType === "Mensual" ? "Pago mensual" : "Pago anual"}
+            </p>
             {Object.entries(individualPrices).map(([key, value], index) => {
               const formattedValue = getFormattedValue(
                 key,
@@ -88,9 +86,12 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
               );
               return <div key={index}> {formattedValue}</div>;
             })}
-            <p className="text-sm text-sky-600 font-semibold uppercase mb-1 mt-2">
-              {paymentType === "Mensual" ? "Pago mensual" : "Pago anual"} Total
-            </p>
+            {protectWho !== "solo_yo" && (
+              <p className="text-sm text-sky-600 font-semibold uppercase mb-1 mt-2">
+                {paymentType === "Mensual" ? "Pago mensual" : "Pago anual"}{" "}
+                Total
+              </p>
+            )}
             <p className="text-3xl font-bold text-[#223E99]">
               {formatCurrency(coverage_fee)}
             </p>
