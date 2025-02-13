@@ -34,7 +34,7 @@ export const ListAdvisors = async ({ params }: {
   return (
     <div className="w-full space-y-4">
       <div className="flex items-center py-2">
-        <SearchBar placeholder="Buscar prospectos por nombre, correo electrónico" />
+        <SearchBar placeholder="Buscar asesores por nombre, correo electrónico" />
         <TableFilters filters={filters} />
       </div>
       <div className="rounded-md border">
