@@ -5,13 +5,16 @@ import { PrismaError } from "@/shared/errors/prisma";
 import { cookies } from "next/headers";
 import { createQuoteService } from "../services/create/create-quote.service";
 import { getAdvisorWithLeastQuotesService } from "@/features/advisors/services/get-advisor-with-least-prospects.service";
+import { generatePDFService } from "@/features/quote-summary/services/generate-pdf.service";
+import { sendQuoteEmailService } from "../services/send-email/send-quote-email.service";
+import { processPDFData } from "@/features/quote-summary/utils/process-pdf-data.util";
 
 export const createQuoteAction = async (payload: any) => {
   try {
     const { prospectData, medicalData } = payload;
     const cookieStore = cookies();
-
     const selectedPlan = cookieStore.get("selectedPlan")?.value;
+    const parsedPlan = JSON.parse(selectedPlan!);
 
     const advisor = await getAdvisorWithLeastQuotesService();
 
@@ -20,10 +23,31 @@ export const createQuoteAction = async (payload: any) => {
         {
           prospectData,
           medicalData,
-          plan: JSON.parse(selectedPlan!),
+          plan: parsedPlan,
         },
         advisor?.id!
       );
+
+      try {
+        const pdfData = processPDFData(parsedPlan);
+        const pdfBuffer = generatePDFService(pdfData, "arraybuffer");
+        const buffer = Buffer.from(new Uint8Array(pdfBuffer as ArrayBuffer));
+
+        await sendQuoteEmailService({
+          prospectName: prospectData.name,
+          prospectEmail: prospectData.email,
+          whatsapp: prospectData.whatsapp,
+          pdfBuffer: buffer,
+          company: parsedPlan.company,
+          plan: parsedPlan.plan,
+          advisorName: advisor?.name,
+          advisorEmail: "ulises.vargas@yocontigo-it.com", // TODO: Cambiar por advisor.email cuando se implemente
+        });
+
+        console.log("Emails enviados correctamente");
+      } catch (pdfError) {
+        console.error("Error generando o enviando PDF:", pdfError);
+      }
 
       cookieStore.delete("prospect");
       cookieStore.delete("selectedPlan");
@@ -31,6 +55,7 @@ export const createQuoteAction = async (payload: any) => {
       cookieStore.delete("activePaymentType");
     }
   } catch (error) {
+    console.error("Error en createQuoteAction:", error);
     return {
       success: false,
       message:

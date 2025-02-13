@@ -21,10 +21,10 @@ export interface InsuranceQuoteData {
 
 export default async function QuoteSummaryPage() {
   return (
-    <>
+    <div>
       <HeaderSecondary />
       <InsuranceStorytelling />
       <ModalStorytellingActions />
-    </>
+    </div>
   );
 }

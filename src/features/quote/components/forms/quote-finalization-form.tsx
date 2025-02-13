@@ -6,8 +6,9 @@ import { Separator } from "@/shared/components/ui/separator";
 import { ContactInfoSection } from "./contact-info-section";
 import { MedicalInformationForm } from "../forms/medical-information-form";
 import { PersonalInfoSection } from "./personal-info-section";
-import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { QUESTIONS } from "../../data";
+import { Button } from "@/shared/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 interface QuoteFinalizationClientPageProps {
   prospect: any;
@@ -60,11 +61,14 @@ export const QuoteFinalizationForm = ({ prospect }: QuoteFinalizationClientPageP
           </div>
 
           <div className="flex justify-end">
-            <SubmitButton
-              label="Enviar solicitud"
-              labelPending="Enviando..."
+            <Button
+              type="submit"
+              size="lg"
+              className="font-semibold text-lg"
               disabled={isSubmitting}
-            />
+            >
+              {isSubmitting ? (<><Loader2 className="w-6 h-6 mr-2 animate-spin" />Enviando...</>) : "Enviar solicitud"}
+            </Button>
           </div>
         </form>
       </CardContent>

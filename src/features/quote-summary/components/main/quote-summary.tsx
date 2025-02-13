@@ -13,26 +13,28 @@ import { useQuoteSumaryActions } from "../../hooks/use-quote-sumary-actions";
 import { Modal } from "@/shared/components/ui/modal";
 import MoreInformationQuote from "../modals/MoreInformationModal";
 import { BurguerMenu } from "@/shared/components/burguerMenu";
-import { generatePDFAction } from "../../actions/generate-pdf";
 import { Button } from "@/shared/components/ui/button";
+import { generatePDFAction } from "../../actions/generate-pdf";
+import { processPDFData } from "../../utils/process-pdf-data.util";
 
 export const QuoteSummary: FC<
   InsuranceQuoteData & { imgCompanyLogo: { base64: string } }
-> = ({
-  coInsurance,
-  coInsuranceCap,
-  coverage_fee,
-  individualPricesJson,
-  deductible,
-  sumInsured,
-  company,
-  imgCompanyLogo,
-  plan,
-  paymentType,
-  isMultipleString,
-  deductiblesJson,
-  protectedWho,
-}) => {
+> = (props) => {
+  const {
+    coInsurance,
+    coInsuranceCap,
+    coverage_fee,
+    individualPricesJson,
+    deductible,
+    sumInsured,
+    company,
+    imgCompanyLogo,
+    plan,
+    paymentType,
+    isMultipleString,
+    deductiblesJson,
+    protectedWho,
+  } = props;
   const isMultiple = isMultipleString === "true" ? true : false;
   const {
     isOpen,
@@ -76,48 +78,13 @@ export const QuoteSummary: FC<
   //! -------------------------------------------------------------------
   const handleGeneratePDF = async () => {
     try {
-      const members = [];
-      if (individualPricesJson) {
-        const prices = JSON.parse(individualPricesJson);
-        if (prices.main) members.push({ type: "Titular", price: prices.main });
-        if (prices.partner)
-          members.push({ type: "Pareja", price: prices.partner });
-        if (prices.children) {
-          prices.children.forEach((price: number, index: number) => {
-            members.push({ type: `Hijo/a ${index + 1}`, price });
-          });
-        }
-        if (prices.parents) {
-          prices.parents.forEach((parent: { name: string; price: number }) => {
-            members.push({
-              type: "Padre/Madre",
-              name: parent.name,
-              price: parent.price,
-            });
-          });
-        }
-      }
-
-      const pdfData = {
-        company,
-        plan,
-        coverageFee: coverage_fee,
-        paymentType,
-        sumInsured,
-        deductible,
-        coInsurance,
-        coInsuranceCap,
-        members,
-        isMultipleDeductible: isMultipleString === "true",
-        deductibles: deductiblesJson ? JSON.parse(deductiblesJson) : undefined,
-      };
-
+      const pdfData = processPDFData(props);
       const result = await generatePDFAction(pdfData);
 
       if (result.success && result.data) {
         const link = document.createElement("a");
         link.href = result.data;
-        link.download = `cotizacion-${company}-${plan}.pdf`;
+        link.download = `cotizacion-${props.company}-${props.plan}.pdf`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

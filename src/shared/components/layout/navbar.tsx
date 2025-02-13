@@ -11,7 +11,7 @@ export const Navbar = () => {
   const [showDropdown, setShowDropdown] = useState(false)
 
   return (
-    <nav className="text-white pt-5 md:pt-8">
+    <nav className="text-white pt-5 md:pt-8 container">
       <div className="flex justify-between items-center h-20">
         {/* Logo */}
         <Link href="/" className="flex-shrink-0">

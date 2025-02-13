@@ -5,7 +5,6 @@ import HeroImageMobile from "@/assets/home/hero_mobile.png";
 import HeroDecorationMobile from "@/assets/home/hero_decorator_mobile.svg";
 import Link from "next/link";
 import { Button } from "@/shared/components/ui/button";
-import { sendEmailAction } from "@/sendEmail";
 
 export const Hero = () => {
   return (
@@ -61,11 +60,6 @@ export const Hero = () => {
                 tu bienestar y el de los que más amas.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-end">
-                <form action={sendEmailAction}>
-                  <Button type="submit" className="w-full sm:w-auto">
-                    Enviar correo
-                  </Button>
-                </form>
                 <Link
                   href="/cotizar"
                   className="inline-flex font-bold h-14 items-center justify-center rounded bg-white px-6 text-[#223E99] hover:text-primary transition-colors w-full sm:w-auto"

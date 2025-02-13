@@ -1,22 +1,45 @@
 'use client'
 
-import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion'
+import { useRef, useEffect } from 'react'
 
 interface ScrollAnimatedComponentProps {
-  children: React.ReactNode
+  children: React.ReactNode;
+  initialVisible?: boolean;
 }
 
-export const ScrollAnimatedComponent: React.FC<ScrollAnimatedComponentProps> = ({ children }) => {
+export const ScrollAnimatedComponent: React.FC<ScrollAnimatedComponentProps> = ({
+  children,
+  initialVisible = false
+}) => {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: false, amount: 0.1 })
+  const shouldReduceMotion = useReducedMotion()
+
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"]
+  })
+
+  const opacity = useTransform(
+    scrollYProgress,
+    [0, 0.2, 1],
+    [initialVisible ? 1 : 0, 1, 1]
+  )
+
+  const y = useTransform(
+    scrollYProgress,
+    [0, 0.2, 1],
+    [initialVisible ? 0 : 20, 0, 0]
+  )
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-      transition={{ duration: 0.3 }}
+      style={{
+        opacity,
+        y: shouldReduceMotion ? 0 : y,
+        willChange: 'opacity, transform'
+      }}
     >
       {children}
     </motion.div>

@@ -4,8 +4,6 @@ import { Header } from "@/shared/components/layout/header";
 import { Hero } from "@/features/home/components/sections/hero";
 import { MedicalExpenses } from "@/features/home/components/sections/medical-expenses";
 import { Quotes } from "@/features/home/components/sections/quotes";
-import { SuccessStory } from "@/features/home/components/sections/success-story";
-import { ScrollAnimatedComponent } from "@/shared/components/ui/scroll-animated";
 import { GreaterSpecializationImg } from "@/features/home/components/sections/greater-specialization-img";
 
 export default function Home() {
