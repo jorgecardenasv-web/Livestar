@@ -1,15 +1,7 @@
 "use client";
 
-import React, { FC, ReactElement } from "react";
-import Link from "next/link";
-import {
-  ChevronDown,
-  PowerIcon,
-  UserCircle,
-  PenIcon as UserPen,
-} from "lucide-react";
-import { logout } from "@/features/auth/actions/logout";
-import { prefix } from "@/features/layout/nav-config/constants";
+import React, { FC } from "react";
+import { ChevronDown } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,

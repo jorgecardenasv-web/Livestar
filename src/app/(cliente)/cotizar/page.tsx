@@ -14,13 +14,16 @@ export interface InsuranceQuoteData {
   coInsuranceCap: number;
   coverage_fee: number;
   id: string;
+  protectedWho: string;
   isMultipleString?: string;
   deductiblesJson?: string;
   individualPricesJson?: string;
 }
 
 export default async function QuoteSummaryPage() {
-  const { data: { items } } = await getPlans({
+  const {
+    data: { items },
+  } = await getPlans({
     page: "1",
     offset: "100",
   });

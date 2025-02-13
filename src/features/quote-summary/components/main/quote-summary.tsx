@@ -14,6 +14,7 @@ import { Modal } from "@/shared/components/ui/modal";
 import MoreInformationQuote from "../modals/MoreInformationModal";
 import { BurguerMenu } from "@/shared/components/burguerMenu";
 import { generatePDFAction } from "../../actions/generate-pdf";
+import { Button } from "@/shared/components/ui/button";
 
 export const QuoteSummary: FC<
   InsuranceQuoteData & { imgCompanyLogo: { base64: string } }
@@ -30,6 +31,7 @@ export const QuoteSummary: FC<
   paymentType,
   isMultipleString,
   deductiblesJson,
+  protectedWho,
 }) => {
   const isMultiple = isMultipleString === "true" ? true : false;
   const {
@@ -65,6 +67,12 @@ export const QuoteSummary: FC<
     },
   ];
 
+  const filteredOpt: typeof optionsBtn = [];
+  optionsBtn.forEach((opt, index) => {
+    if (!isMultiple && index === 0) return;
+    if (protectedWho === "solo_yo" && index === 1) return;
+    filteredOpt.push(opt);
+  });
   //! -------------------------------------------------------------------
   const handleGeneratePDF = async () => {
     try {
@@ -196,11 +204,21 @@ export const QuoteSummary: FC<
         />
       </div>
       <div className="flex justify-center">
-        <BurguerMenu
-          label="Más información"
-          className="w-48 mt-2"
-          buttonData={optionsBtn}
-        ></BurguerMenu>
+        {filteredOpt.length > 1 ? (
+          <BurguerMenu
+            label="Más información"
+            className="w-48 mt-2"
+            buttonData={filteredOpt}
+          ></BurguerMenu>
+        ) : (
+          <Button
+            className="w-48 mt-2 border border-primary"
+            variant="outline"
+            onClick={handleGeneratePDF}
+          >
+            Descargar Cotización
+          </Button>
+        )}
       </div>
       <div id="pdfIngnore">
         <ContractForm />
