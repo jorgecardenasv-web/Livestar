@@ -1,6 +1,12 @@
-import { Insurance, Plan as PlanPrisma, PlanType } from "@prisma/client";
+import { PlanType, Plan as PrismaPlan } from "@prisma/client";
 
-export interface Plan extends Pick<PlanPrisma, "id" | "status" | "createdAt" | "planTypeId"> {
-  company: Insurance
-  planType: PlanType
+export interface Plan extends PrismaPlan {
+  deductibles: any
+  prices: any
+  planType: PlanType;
+  company: {
+    id: string;
+    name: string;
+    logo: string;
+  };
 }

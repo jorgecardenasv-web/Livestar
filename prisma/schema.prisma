@@ -79,12 +79,13 @@ enum PlanTypeStatus {
 }
 
 model PlanType {
-  id        String         @id @default(uuid()) @db.Uuid
-  name      String
-  status    PlanTypeStatus @default(ACTIVO)
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @default(now())
-  Plan      Plan[]
+  id         String         @id @default(uuid()) @db.Uuid
+  name       String
+  status     PlanTypeStatus @default(ACTIVO)
+  orderIndex Int            @default(0)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @default(now())
+  Plan       Plan[]
 
   @@schema("public")
 }

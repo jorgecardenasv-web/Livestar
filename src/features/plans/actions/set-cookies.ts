@@ -17,7 +17,7 @@ export async function handleInterestClick(formData: FormData) {
     individualPricesJson: formData.get("individualPricesJson"),
     id: formData.get("id"),
     isMultipleString: formData.get("isMultipleString"),
-    deductiblesJson: formData.get("deductiblesJson")
+    deductiblesJson: formData.get("deductiblesJson"),
   };
 
   cookies().set("selectedPlan", JSON.stringify(insuranceData));
@@ -25,15 +25,14 @@ export async function handleInterestClick(formData: FormData) {
 }
 
 export async function setActivePlanType(formData: FormData) {
-  const planType = formData.get("planType") as string;
-  cookies().set("activePlanType", planType);
+  const planTypeId = formData.get("planTypeId");
+  cookies().set("planTypeId", planTypeId as string);
 }
 
 export async function setActivePaymentType(formData: FormData) {
   const paymentType = formData.get("paymentType") as string;
   cookies().set("activePaymentType", paymentType);
 }
-
 
 export const deleteSelectedPlan = () => {
   cookies().delete("selectedPlan");
