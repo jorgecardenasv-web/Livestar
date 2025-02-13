@@ -1,10 +1,6 @@
-import Image from "next/image";
-import GreaterSpecializationDesktop from "@/assets/home/bg_greater-specialization_desktop.svg";
-import GreaterSpecializationMobile from "@/assets/home/bg_greater-specialization_mobile.svg";
-
 export const GreaterSpecialization = () => {
   return (
-    <section className="w-full h-72 md:h-96 text-white mb-8">
+    <section className="w-full py-24 text-white">
       <div className="max-w-7xl mx-auto grid text-center place-content-center px-4 sm:px-6 lg:px-8 md:h-full text-[#666]">
         <h2 className="text-4xl font-bold text-wrap text-gradiant">
           ¿NECESITAS MAYOR ESPECIALIZACIÓN?

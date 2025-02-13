@@ -3,8 +3,6 @@ import { SuccessCardCarousel } from "../cards/carousel";
 
 import SuccessBgImageDesktop from "@/assets/home/bg_success-story_desktop.svg";
 import SuccessBgImageMobile from "@/assets/home/bg_success-story_mobile.svg";
-import SuccessImageDesktop from '@/assets/home/success-story_desktop.png'
-import SuccessImageMobile from '@/assets/home/success-story_mobile.png'
 
 import CaseOne from "@/assets/home/case_one_success_story.png";
 import CaseTwo from "@/assets/home/case_two_success_story.png";
