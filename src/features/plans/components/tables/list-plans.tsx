@@ -43,8 +43,9 @@ export const PlansList = async ({ params }: { params: Params }) => {
           <TableHeader>
             <TableRow>
               <TableHead>Nombre</TableHead>
-              <TableHead>Asseguradora</TableHead>
+              <TableHead>Aseguradora</TableHead>
               <TableHead>Estado</TableHead>
+              <TableHead>Recomendado</TableHead>
               <TableHead>Fecha de creación</TableHead>
               <TableHead>Acciones</TableHead>
             </TableRow>
@@ -70,6 +71,13 @@ export const PlansList = async ({ params }: { params: Params }) => {
                         <Badge variant="success">Activo</Badge>
                       ) : (
                         <Badge variant="destructive">Inactivo</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {plan?.isRecommended ? (
+                        <Badge variant="recommended">Recomendado</Badge>
+                      ) : (
+                        <Badge variant="notRecommended">No recomendado</Badge>
                       )}
                     </TableCell>
                     <TableCell>

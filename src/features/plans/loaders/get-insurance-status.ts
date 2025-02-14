@@ -22,8 +22,8 @@ export async function getInsuranceState() {
     : {};
 
   return {
-    activePlanType: cookieStore.get("activePlanType")?.value || "Plan Básico",
-    activePaymentType: cookieStore.get("activePaymentType")?.value || "Mensual",
+    planTypeId: cookieStore.get("planTypeId")?.value,
+    activePaymentType: cookieStore.get("activePaymentType")?.value || "Anual",
     selectedPlan,
   };
 }

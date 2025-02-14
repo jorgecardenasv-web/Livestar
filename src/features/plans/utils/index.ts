@@ -243,3 +243,19 @@ export function calculateInsurancePrice(
     },
   };
 }
+
+export const normalizePlanData = (plan: any) => {
+  return {
+    ...plan,
+    deductibles: plan.deductibles || {},
+    company: {
+      id: plan.company?.id || "",
+      name: plan.company?.name || "",
+      logo: plan.company?.logo || "",
+    },
+    planType: {
+      id: plan.planType?.id || "",
+      name: plan.planType?.name || "",
+    },
+  };
+};

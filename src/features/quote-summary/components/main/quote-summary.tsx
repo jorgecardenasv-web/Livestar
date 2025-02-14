@@ -12,27 +12,29 @@ import { formatCurrency } from "@/shared/utils";
 import { useQuoteSumaryActions } from "../../hooks/use-quote-sumary-actions";
 import { Modal } from "@/shared/components/ui/modal";
 import MoreInformationQuote from "../modals/MoreInformationModal";
-import { BurguerMenu } from "@/shared/components/burguerMenu";
-import { generatePDFAction } from "../../actions/generate-pdf";
+import { DropdownOptions } from "@/shared/components/dropdown-options";
 import { Button } from "@/shared/components/ui/button";
+import { generatePDFAction } from "../../actions/generate-pdf";
+import { processPDFData } from "../../utils/process-pdf-data.util";
 
 export const QuoteSummary: FC<
   InsuranceQuoteData & { imgCompanyLogo: { base64: string } }
-> = ({
-  coInsurance,
-  coInsuranceCap,
-  coverage_fee,
-  individualPricesJson,
-  deductible,
-  sumInsured,
-  company,
-  imgCompanyLogo,
-  plan,
-  paymentType,
-  isMultipleString,
-  deductiblesJson,
-  protectedWho,
-}) => {
+> = (props) => {
+  const {
+    coInsurance,
+    coInsuranceCap,
+    coverage_fee,
+    individualPricesJson,
+    deductible,
+    sumInsured,
+    company,
+    imgCompanyLogo,
+    plan,
+    paymentType,
+    isMultipleString,
+    deductiblesJson,
+    protectedWho,
+  } = props;
   const isMultiple = isMultipleString === "true" ? true : false;
   const {
     isOpen,
@@ -76,48 +78,13 @@ export const QuoteSummary: FC<
   //! -------------------------------------------------------------------
   const handleGeneratePDF = async () => {
     try {
-      const members = [];
-      if (individualPricesJson) {
-        const prices = JSON.parse(individualPricesJson);
-        if (prices.main) members.push({ type: "Titular", price: prices.main });
-        if (prices.partner)
-          members.push({ type: "Pareja", price: prices.partner });
-        if (prices.children) {
-          prices.children.forEach((price: number, index: number) => {
-            members.push({ type: `Hijo/a ${index + 1}`, price });
-          });
-        }
-        if (prices.parents) {
-          prices.parents.forEach((parent: { name: string; price: number }) => {
-            members.push({
-              type: "Padre/Madre",
-              name: parent.name,
-              price: parent.price,
-            });
-          });
-        }
-      }
-
-      const pdfData = {
-        company,
-        plan,
-        coverageFee: coverage_fee,
-        paymentType,
-        sumInsured,
-        deductible,
-        coInsurance,
-        coInsuranceCap,
-        members,
-        isMultipleDeductible: isMultipleString === "true",
-        deductibles: deductiblesJson ? JSON.parse(deductiblesJson) : undefined,
-      };
-
+      const pdfData = processPDFData(props);
       const result = await generatePDFAction(pdfData);
 
       if (result.success && result.data) {
         const link = document.createElement("a");
         link.href = result.data;
-        link.download = `cotizacion-${company}-${plan}.pdf`;
+        link.download = `cotizacion-${props.company}-${props.plan}.pdf`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -149,9 +116,9 @@ export const QuoteSummary: FC<
         </div>
         <Image
           src={imgCompanyLogo}
-          width={60}
+          width={120}
           height={60}
-          className="h-10 sm:h-12 w-auto object-contain"
+          className="h-16 sm:h-20 w-auto object-contain"
           alt={`Logo de ${company}`}
         />
       </div>
@@ -205,14 +172,14 @@ export const QuoteSummary: FC<
       </div>
       <div className="flex justify-center">
         {filteredOpt.length > 1 ? (
-          <BurguerMenu
+          <DropdownOptions
             label="Más información"
-            className="w-48 mt-2"
+            className="w-full max-w-[200px] mt-2"
             buttonData={filteredOpt}
-          ></BurguerMenu>
+          />
         ) : (
           <Button
-            className="w-48 mt-2 border border-primary"
+            className="w-[200px] gap-2 bg-white hover:bg-blue-50 hover:text-blue-600 hover:border-blue-100 transition-all duration-200"
             variant="outline"
             onClick={handleGeneratePDF}
           >
