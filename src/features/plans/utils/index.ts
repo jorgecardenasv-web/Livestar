@@ -251,6 +251,7 @@ export const normalizePlanData = (plan: any) => {
     company: {
       id: plan.company?.id || "",
       name: plan.company?.name || "",
+      logo: plan.company?.logo || "",
     },
     planType: {
       id: plan.planType?.id || "",

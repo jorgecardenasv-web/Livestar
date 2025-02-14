@@ -33,9 +33,10 @@ export const getAdvisorsService = async ({
         where: {
           ...where,
           ...whereText,
+          role: "ASESOR",
         },
         orderBy: {
-          createdAt: "desc",
+          name: "asc",
         },
       }),
       prisma.user.count({

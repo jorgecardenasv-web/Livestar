@@ -30,6 +30,9 @@ export const getPlanTypesService = async ({
       },
       skip,
       take: pageSize,
+      orderBy: {
+        orderIndex: "asc",
+      },
     }),
     prisma.planType.count({
       where: {

@@ -15,4 +15,5 @@ export interface QuotePDFData {
   }[];
   isMultipleDeductible: boolean;
   deductibles?: Record<string, Record<string, number>>;
+  insuranceLogo: string;
 }

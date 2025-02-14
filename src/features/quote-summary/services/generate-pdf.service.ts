@@ -1,52 +1,76 @@
-import { QuotePDFData } from "../types/pdf";
+import type { QuotePDFData } from "../types/pdf";
 import jsPDF from "jspdf";
 import { formatCurrency } from "@/shared/utils";
 
 type OutputFormat = "datauri" | "arraybuffer";
+
+const styles = {
+  colors: {
+    primary: "#003366", // Navy blue for financial services
+    text: "#333333",
+    subtext: "#666666",
+    accent: "#60A5FA", // Gold accent
+    background: "#F8F9FA",
+  },
+  margins: {
+    left: 25,
+    right: 25,
+    top: 20,
+  },
+  columns: {
+    label: 50,
+    value: 90,
+  },
+  spacing: {
+    section: 8, // Reduced from 15
+    element: 6, // Reduced from 7
+  },
+  fonts: {
+    header: "helvetica",
+    body: "helvetica",
+  },
+};
 
 export const generatePDFService = (
   data: QuotePDFData,
   format: OutputFormat
 ): string | ArrayBuffer => {
   try {
-    const doc = new jsPDF({
+    let doc: jsPDF;
+    doc = new jsPDF({
       orientation: "portrait",
       unit: "mm",
       format: "letter",
     });
 
-    const styles = {
-      colors: {
-        primary: "#223E99",
-        text: "#2D3748",
-        subtext: "#4A5568",
-        accent: "#0EA5E9",
-      },
-      margins: {
-        top: 20,
-        left: 20,
-        right: 20,
-      },
-    };
-
-    // Helper para texto
-    const addText = (text: string, options: any = {}) => {
+    const addText = (doc: jsPDF, text: string, options: any = {}) => {
       const {
         x = styles.margins.left,
         y,
-        size = 10,
+        size = 11,
         color = styles.colors.text,
         align = "left",
+        font = styles.fonts.body,
+        style = "normal",
+        underline = false,
       } = options;
 
+      doc.setFont(font, style);
       doc.setFontSize(size);
       doc.setTextColor(color);
       doc.text(text, x, y, { align });
+
+      if (underline) {
+        const textWidth = doc.getTextWidth(text);
+        doc.setDrawColor(color);
+        doc.line(x, y + 1, x + textWidth, y + 1);
+      }
     };
 
-    // Helper para líneas horizontales
-    const addLine = (y: number) => {
-      doc.setDrawColor(230, 230, 230);
+    const addLine = (doc: jsPDF, y: number, options: any = {}) => {
+      const { color = styles.colors.subtext, width = 0.5 } = options;
+      doc.setDrawColor(color);
+      doc.setLineWidth(width);
       doc.line(
         styles.margins.left,
         y,
@@ -57,189 +81,234 @@ export const generatePDFService = (
 
     let yPos = styles.margins.top;
 
-    // Encabezado del documento
-    addText("COTIZACIÓN DE SEGURO DE GASTOS MÉDICOS", {
+    addText(doc, "COTIZACIÓN DE SEGURO", {
       y: yPos,
-      size: 16,
+      size: 24,
       color: styles.colors.primary,
       align: "center",
       x: doc.internal.pageSize.width / 2,
-    });
-
-    yPos += 15;
-
-    // Información de la aseguradora
-    addText(`Aseguradora: ${data.company}`, {
-      y: yPos,
-      size: 12,
-      color: styles.colors.primary,
+      style: "bold",
+      font: styles.fonts.header,
     });
 
     yPos += 8;
-    addText(`Plan: ${data.plan}`, { y: yPos, size: 12 });
-
-    yPos += 8;
-    const today = new Date().toLocaleDateString("es-MX", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-    addText(`Fecha de cotización: ${today}`, { y: yPos });
-
-    yPos += 15;
-    addLine(yPos);
-    yPos += 10;
-
-    // Sección de Prima
-    addText("PRIMA DEL SEGURO", {
+    addText(doc, "DE GASTOS MÉDICOS", {
       y: yPos,
-      size: 12,
+      size: 20,
       color: styles.colors.primary,
+      align: "center",
+      x: doc.internal.pageSize.width / 2,
+      style: "bold",
+      font: styles.fonts.header,
     });
 
-    yPos += 8;
-    addText(`Forma de Pago: ${data.paymentType}`, { y: yPos });
+    yPos += 4;
+    addLine(doc, yPos, { color: styles.colors.accent, width: 1 });
 
-    yPos += 8;
-    addText(`Prima Total: ${formatCurrency(data.coverageFee)}`, {
-      y: yPos,
-      size: 14,
-      color: styles.colors.primary,
-    });
-
-    yPos += 15;
-    addLine(yPos);
-    yPos += 10;
-
-    // Sección de Coberturas Principales
-    addText("COBERTURAS PRINCIPALES", {
-      y: yPos,
-      size: 12,
-      color: styles.colors.primary,
-    });
-
-    yPos += 10;
-    const coverages = [
-      { label: "Suma Asegurada", value: formatCurrency(data.sumInsured) },
+    const infoItems = [
+      { label: "Aseguradora:", value: data.company },
+      { label: "Plan:", value: data.plan },
       {
-        label: "Deducible",
+        label: "Fecha de cotización:",
+        value: new Date().toLocaleDateString("es-MX", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }),
+      },
+    ];
+
+    yPos += 10;
+    infoItems.forEach((item) => {
+      addText(doc, item.label, {
+        y: yPos,
+        color: styles.colors.subtext,
+        x: styles.margins.left,
+      });
+      addText(doc, item.value, {
+        y: yPos,
+        x: styles.margins.left + styles.columns.label,
+      });
+      yPos += styles.spacing.element;
+    });
+
+    yPos += styles.spacing.section;
+    addLine(doc, yPos);
+    yPos += styles.spacing.section;
+
+    const addSectionHeader = (doc: jsPDF, text: string) => {
+      yPos += styles.spacing.section;
+      doc.setFillColor(styles.colors.background);
+      doc.rect(
+        styles.margins.left,
+        yPos - 5,
+        doc.internal.pageSize.width - 50,
+        10,
+        "F"
+      );
+      addText(doc, text, {
+        y: yPos,
+        size: 14,
+        color: styles.colors.primary,
+        style: "bold",
+        font: styles.fonts.header,
+      });
+      yPos += 8;
+    };
+
+    addSectionHeader(doc, "PRIMA DEL SEGURO");
+
+    addText(doc, "Forma de Pago:", {
+      y: yPos,
+      color: styles.colors.subtext,
+    });
+    addText(doc, data.paymentType, {
+      y: yPos,
+      x: styles.margins.left + styles.columns.label,
+    });
+
+    yPos += styles.spacing.element;
+
+    addText(doc, "Prima Total:", {
+      y: yPos,
+      color: styles.colors.subtext,
+    });
+    addText(doc, formatCurrency(data.coverageFee), {
+      y: yPos,
+      x: styles.margins.left + styles.columns.label,
+      size: 12,
+      style: "bold",
+    });
+
+    yPos += styles.spacing.section;
+    addLine(doc, yPos);
+    yPos += styles.spacing.section;
+
+    addSectionHeader(doc, "COBERTURAS PRINCIPALES");
+
+    const coverages = [
+      { label: "Suma Asegurada:", value: formatCurrency(data.sumInsured) },
+      {
+        label: "Deducible:",
         value: `${data.isMultipleDeductible ? "desde " : ""}${formatCurrency(data.deductible)}`,
       },
-      { label: "Coaseguro", value: `${data.coInsurance}%` },
+      { label: "Coaseguro:", value: `${data.coInsurance}%` },
       {
-        label: "Tope de Coaseguro",
+        label: "Tope de Coaseguro:",
         value: formatCurrency(data.coInsuranceCap),
       },
     ];
 
     coverages.forEach((item) => {
-      addText(`• ${item.label}:`, { y: yPos });
-      addText(item.value, {
+      addText(doc, item.label, {
         y: yPos,
-        x: 100,
-        color: styles.colors.primary,
+        color: styles.colors.subtext,
       });
-      yPos += 8;
+      addText(doc, item.value, {
+        y: yPos,
+        x: styles.margins.left + styles.columns.label,
+      });
+      yPos += styles.spacing.element;
     });
 
-    yPos += 7;
-    addLine(yPos);
-    yPos += 10;
+    yPos += styles.spacing.section;
+    addLine(doc, yPos);
+    yPos += styles.spacing.section;
 
-    // Sección de Asegurados
     if (data.members.length > 0) {
-      addText("DESGLOSE DE ASEGURADOS", {
-        y: yPos,
-        size: 12,
-        color: styles.colors.primary,
-      });
+      addSectionHeader(doc, "DESGLOSE DE ASEGURADOS");
 
-      yPos += 10;
-
-      // Encabezados de tabla
-      doc.setFillColor(247, 250, 252);
+      doc.setFillColor(styles.colors.primary);
       doc.rect(
         styles.margins.left,
         yPos - 5,
-        doc.internal.pageSize.width - 40,
-        10,
+        doc.internal.pageSize.width - 50,
+        8,
         "F"
       );
 
-      addText("Asegurado", { y: yPos, color: styles.colors.primary });
-      addText("Prima Individual", {
+      addText(doc, "Asegurado", {
+        y: yPos,
+        style: "bold",
+        color: "#FFFFFF",
+      });
+      addText(doc, "Prima Individual", {
         y: yPos,
         x: doc.internal.pageSize.width - 60,
-        color: styles.colors.primary,
+        style: "bold",
+        color: "#FFFFFF",
       });
 
       yPos += 8;
 
-      data.members.forEach((member) => {
-        addText(member.name || member.type, { y: yPos });
-        addText(formatCurrency(member.price), {
+      data.members.forEach((member, index) => {
+        const checkSpace = (doc: jsPDF, neededSpace: number): void => {
+          const pageHeight = doc.internal.pageSize.height;
+          if (yPos + neededSpace > pageHeight - 30) {
+            doc.addPage();
+            yPos = styles.margins.top;
+          }
+        };
+        checkSpace(doc, 10);
+        if (index % 2 === 0) {
+          doc.setFillColor(styles.colors.background);
+          doc.rect(
+            styles.margins.left,
+            yPos - 5,
+            doc.internal.pageSize.width - 50,
+            8,
+            "F"
+          );
+        }
+
+        addText(doc, member.name || member.type, {
+          y: yPos,
+        });
+        addText(doc, formatCurrency(member.price), {
           y: yPos,
           x: doc.internal.pageSize.width - 60,
-        });
-        yPos += 7;
-      });
-    }
-
-    // Deductibles múltiples en nueva página si aplica
-    if (data.isMultipleDeductible && data.deductibles) {
-      doc.addPage();
-      yPos = styles.margins.top;
-
-      addText("TABLA DE DEDUCIBLES POR NIVEL HOSPITALARIO", {
-        y: yPos,
-        size: 12,
-        color: styles.colors.primary,
-      });
-
-      yPos += 15;
-
-      const opciones: { [key: string]: string } = {
-        opcion_2: "De 0 a 45 años",
-        opcion_4: "De 45 a más años",
-      };
-
-      Object.entries(data.deductibles).forEach(([key, values]) => {
-        addText(opciones[key], {
-          y: yPos,
-          size: 11,
           color: styles.colors.primary,
         });
-        yPos += 8;
 
-        Object.entries(values).forEach(([level, amount]) => {
-          addText(`${level}:`, { y: yPos });
-          addText(formatCurrency(amount), {
-            y: yPos,
-            x: 80,
-          });
-          yPos += 7;
-        });
-        yPos += 5;
+        yPos += 8;
       });
     }
 
-    // Pie de página
-    const footerText =
-      "Este documento es únicamente informativo y no constituye una póliza de seguro. Los términos y condiciones específicos están sujetos a la póliza emitida por la aseguradora.";
-    const pageHeight = doc.internal.pageSize.height;
+    const addFooter = (doc: jsPDF, pageNumber: number) => {
+      const footerText =
+        "Este documento es únicamente informativo y no constituye una póliza de seguro. Los términos y condiciones específicos están sujetos a la póliza emitida por la aseguradora.";
 
-    doc.setFontSize(8);
-    doc.setTextColor(styles.colors.subtext);
+      doc.setFontSize(8);
+      doc.setTextColor(styles.colors.subtext);
 
-    const splitFooter = doc.splitTextToSize(
-      footerText,
-      doc.internal.pageSize.width - 40
-    );
-    doc.text(splitFooter, doc.internal.pageSize.width / 2, pageHeight - 20, {
-      align: "center",
-    });
+      const splitFooter = doc.splitTextToSize(
+        footerText,
+        doc.internal.pageSize.width -
+          (styles.margins.left + styles.margins.right)
+      );
 
-    // Específicamente para datauri, usar dataurlstring que es más confiable
+      const footerY = doc.internal.pageSize.height - 20;
+      doc.text(splitFooter, doc.internal.pageSize.width / 2, footerY, {
+        align: "center",
+      });
+
+      addLine(doc, footerY - 5, { color: styles.colors.accent, width: 0.5 });
+
+      doc.setTextColor(styles.colors.primary);
+      doc.text(
+        `Página ${pageNumber}`,
+        doc.internal.pageSize.width - styles.margins.right,
+        doc.internal.pageSize.height - 10,
+        { align: "right" }
+      );
+    };
+
+    const totalPages = doc.internal.pages.length - 1;
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      addFooter(doc, i);
+    }
+
     if (format === "datauri") {
       return doc.output("dataurlstring");
     }
