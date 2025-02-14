@@ -2,7 +2,7 @@ import { Card, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
-import { PriceInput } from "../../inputs/price-input";
+import { NumberInput } from "@/shared/components/ui/number-input";
 import { Separator } from "@/shared/components/ui/separator";
 import { Upload } from "lucide-react";
 import { usePriceTableHDIForm } from "../../../hooks/use-price-table-hdi";
@@ -64,26 +64,26 @@ export const PriceTableHDIForm: React.FC<PriceTableHDIFormProps> = ({ prices, se
                   <TableRow key={`price-row-${price.age}`}>
                     <TableCell className="text-center">{price.age}</TableCell>
                     <TableCell>
-                      <PriceInput
-                        value={(price.monthlyPrice1 ?? 0).toString()}
-                        onChange={(value) =>
-                          handlePriceChange(price.age, "monthlyPrice1", value)
+                      <NumberInput
+                        value={price.monthlyPrice1}
+                        onChange={(e) =>
+                          handlePriceChange(price.age, "monthlyPrice1", e.target.value)
                         }
                       />
                     </TableCell>
                     <TableCell>
-                      <PriceInput
-                        value={(price.monthlyPrice2to12 ?? 0).toString()}
-                        onChange={(value) =>
-                          handlePriceChange(price.age, "monthlyPrice2to12", value)
+                      <NumberInput
+                        value={price.monthlyPrice2to12}
+                        onChange={(e) =>
+                          handlePriceChange(price.age, "monthlyPrice2to12", e.target.value)
                         }
                       />
                     </TableCell>
                     <TableCell>
-                      <PriceInput
-                        value={(price.annualPrice ?? 0).toString()}
-                        onChange={(value) =>
-                          handlePriceChange(price.age, "annualPrice", value)
+                      <NumberInput
+                        value={price.annualPrice}
+                        onChange={(e) =>
+                          handlePriceChange(price.age, "annualPrice", e.target.value)
                         }
                       />
                     </TableCell>

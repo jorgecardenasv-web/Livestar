@@ -30,6 +30,9 @@ export const getPlanTypesService = async ({
       },
       skip,
       take: pageSize,
+      orderBy: {
+        orderIndex: "asc",
+      },
     }),
     prisma.planType.count({
       where: {
@@ -51,4 +54,19 @@ export const getPlanTypesService = async ({
       currentPage: Number(page),
     },
   };
+};
+
+export const GetPlanTypesService = async () => {
+  const planTypes = await prisma.planType.findMany({
+    where: {
+      name: {
+        not: "Hibrido",
+      },
+    },
+    orderBy: {
+      orderIndex: "asc",
+    },
+  });
+
+  return planTypes;
 };

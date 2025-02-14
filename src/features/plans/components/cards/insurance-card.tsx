@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { Insurance, Plan } from "../../../../shared/types/insurance";
 import { calculateInsurancePrice } from "../../utils";
 import { Shield, Percent, Heart, DollarSign } from "lucide-react";
 import { handleInterestClick } from "../../actions/set-cookies";
@@ -8,13 +7,16 @@ import { getProspect } from "../../loaders/get-prospect";
 import { getImage } from "../../../../shared/services/get-image.service";
 import { formatCurrency } from "@/shared/utils";
 import {
-  IndividualPrices,
-  InsurancePriceResult,
   PriceTable,
 } from "../../types";
+import { Plan } from "../../types/plan";
 
 interface InsuranceCardProps {
-  company: Insurance;
+  company: {
+    id: string;
+    name: string;
+    logo: string;
+  };
   plan: Plan;
   paymentType: string;
   isRecommended: boolean;
@@ -35,13 +37,9 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   const { prospect, protectWho, additionalInfo } = await getProspect();
   const deductibles: Deductibles = plan.deductibles;
 
-  const isMultiple = deductibles["default"]
-    ? deductibles["default"] >= 0
-      ? false
-      : true
-    : true;
+  const isMultiple = typeof deductibles["default"] === "number" ? false : true;
 
-  const minor = deductibles["default"]
+  const minor = typeof deductibles["default"] === "number"
     ? deductibles["default"]
     : getMinimumValue(plan.deductibles, prospect.age);
 
@@ -52,13 +50,12 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
     paymentType
   );
 
-  const logoSrc = company.logo ? await getImage(company.logo) : "";
+  const logoSrc = company.logo ? await getImage(company.logo) : null;
 
   return (
     <div
-      className={`bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${
-        isRecommended ? "ring-4 ring-[#00a5e3] " : ""
-      }`}
+      className={`bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${isRecommended ? "ring-4 ring-[#00a5e3] " : ""
+        }`}
     >
       {isRecommended && (
         <div className="bg-[#00a5e3] text-white text-center py-2 text-sm font-bold">
@@ -68,7 +65,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
       <div className="p-6">
         <div className="flex flex-col items-center mb-6">
           <Image
-            src={logoSrc ? logoSrc.base64 : "/fallback-image.png"}
+            src={logoSrc?.base64 || '/fallback-image.png'}
             width={128}
             height={128}
             alt={company.name}
@@ -188,8 +185,12 @@ function getMinimumValue(
   options: Record<string, Record<string, number>>,
   age: number
 ): number {
+  if (!options) return 0;
+
   const option = age < 45 ? options.opcion_2 : options.opcion_4;
-  const valores = Object.values(option).flat();
+  if (!option) return 0;
+
+  const valores = Object.values(option);
   return valores.length > 0 ? Math.min(...valores) : 0;
 }
 

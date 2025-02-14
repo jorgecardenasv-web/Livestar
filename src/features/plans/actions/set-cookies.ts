@@ -26,8 +26,8 @@ export async function handleInterestClick(formData: FormData) {
 }
 
 export async function setActivePlanType(formData: FormData) {
-  const planType = formData.get("planType") as string;
-  cookies().set("activePlanType", planType);
+  const planTypeId = formData.get("planTypeId");
+  cookies().set("planTypeId", planTypeId as string);
 }
 
 export async function setActivePaymentType(formData: FormData) {

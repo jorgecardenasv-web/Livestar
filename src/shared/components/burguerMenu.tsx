@@ -42,7 +42,7 @@ export const BurguerMenu: FC<DropdownProps> = ({
           {buttonData &&
             buttonData.map((btn: any) => {
               return (
-                <DropdownMenuItem className="border border-blue-400 ">
+                <DropdownMenuItem className="border border-blue-400" key={btn.buttonLabel}>
                   <button
                     className="flex items-center space-x-2 w-full text-left"
                     onClick={() => btn.action()}

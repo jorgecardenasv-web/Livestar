@@ -10,7 +10,7 @@ import { AnimatedCircles } from "../ui/animated-cicle";
 
 export const MedicalExpenses = () => {
   return (
-    <div className="relative overflow-hidden">
+    <div className="relative overflow-hidden py-24">
       <div className="max-w-7xl mx-auto text-gray-600 flex flex-col gap-y-6 px-4 py-5 relative z-10">
         <h2 className="text-4xl font-bold text-center bg-gradient-to-b from-[#008AED] to-[#004E87] text-transparent bg-clip-text">
           Gastos médicos

@@ -31,7 +31,7 @@ export const getInsuranceService = async ({
         take: pageSize,
         skip: skip,
         orderBy: {
-          createdAt: "desc",
+          name: "asc",
         },
         where: {
           ...where,
