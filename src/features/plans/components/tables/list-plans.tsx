@@ -74,10 +74,8 @@ export const PlansList = async ({ params }: { params: Params }) => {
                       )}
                     </TableCell>
                     <TableCell>
-                      {plan?.isRecommended ? (
+                      {plan?.isRecommended && (
                         <Badge variant="recommended">Recomendado</Badge>
-                      ) : (
-                        <Badge variant="notRecommended">No recomendado</Badge>
                       )}
                     </TableCell>
                     <TableCell>
