@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function handleInterestClick(formData: FormData) {
   const insuranceData = {
@@ -41,5 +42,7 @@ export const deleteSelectedPlan = () => {
 };
 
 export const deleteProspectQuote = () => {
-  cookies().delete("prospect")
-}
+  cookies().delete("prospect");
+  cookies().delete("selectedPlan");
+  redirect("/cotizar");
+};

@@ -17,6 +17,7 @@ import { Separator } from "@/shared/components/ui/separator";
 import { Upload } from "lucide-react";
 import { PriceData, usePriceTableForm } from "../../../hooks/use-price-table";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
+import { PriceInput } from "@/shared/components/ui/price-input";
 
 interface PriceTableFormProps {
   prices: PriceData[];
@@ -88,7 +89,7 @@ export const PriceTableForm: React.FC<PriceTableFormProps> = ({
                   <TableRow key={row.age}>
                     <TableCell className="text-center">{row.age}</TableCell>
                     <TableCell>
-                      <NumberInput
+                      <PriceInput
                         value={row.monthlyPriceMale}
                         onChange={(e) =>
                           handlePriceChange(index, "monthlyPriceMale", e.target.value)
@@ -96,7 +97,7 @@ export const PriceTableForm: React.FC<PriceTableFormProps> = ({
                       />
                     </TableCell>
                     <TableCell>
-                      <NumberInput
+                      <PriceInput
                         value={row.monthlyPriceFemale}
                         onChange={(e) =>
                           handlePriceChange(index, "monthlyPriceFemale", e.target.value)
@@ -104,7 +105,7 @@ export const PriceTableForm: React.FC<PriceTableFormProps> = ({
                       />
                     </TableCell>
                     <TableCell>
-                      <NumberInput
+                      <PriceInput
                         value={row.annualPriceMale}
                         onChange={(e) =>
                           handlePriceChange(index, "annualPriceMale", e.target.value)
@@ -112,7 +113,7 @@ export const PriceTableForm: React.FC<PriceTableFormProps> = ({
                       />
                     </TableCell>
                     <TableCell>
-                      <NumberInput
+                      <PriceInput
                         value={row.annualPriceFemale}
                         onChange={(e) =>
                           handlePriceChange(index, "annualPriceFemale", e.target.value)
