@@ -43,7 +43,7 @@ export const createQuoteAction = async (payload: any) => {
           company: parsedPlan.company,
           plan: parsedPlan.plan,
           advisorName: advisor?.name,
-          advisorEmail: advisor?.email ?? "ulises.vargas@yocontigo-it.com", // TODO: Quitar correo de prueba
+          advisorEmail: advisor?.email ?? "emma@livestar.mx",
         });
 
         console.log("Emails enviados correctamente");
