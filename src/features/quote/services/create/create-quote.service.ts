@@ -1,12 +1,28 @@
-import { getAdvisorWithLeastQuotesService } from "@/features/advisors/services/get-advisor-with-least-prospects.service";
 import prisma from "@/lib/prisma";
-import { handlePrismaError } from "@/shared/errors/prisma";
 
-function generateTrackingNumber() {
-  return `TM-${Math.random().toString(36).slice(2, 11).toUpperCase()}`;
+interface CreateQuoteParams {
+  prospectData: any;
+  medicalData: any;
+  plan: {
+    id: string;
+    company: string;
+    plan: string;
+    coverage_fee: number | string;
+    paymentType: string;
+    sumInsured: number | string;
+    deductible: number | string;
+    coInsurance: number | string;
+    coInsuranceCap: number | string;
+    individualPricesJson?: string;
+    isMultipleString?: string;
+    deductiblesJson?: string;
+  };
 }
 
-export async function createQuoteService(data: any, advisorId: string) {
+export const createQuoteService = async (
+  { prospectData, medicalData, plan }: CreateQuoteParams,
+  advisorId: string
+) => {
   const {
     name,
     gender,
@@ -16,43 +32,47 @@ export async function createQuoteService(data: any, advisorId: string) {
     email,
     age,
     ...additionalInfo
-  } = data.prospectData;
+  } = prospectData;
 
-  const { coverage_fee, id: planId } = data.plan;
+  const prospect = await prisma.prospect.create({
+    data: {
+      name,
+      gender,
+      postalCode,
+      whatsapp,
+      email,
+      age,
+    },
+  });
 
-  try {
-    return await prisma.$transaction(async (tx) => {
-      const newProspect = await tx.prospect.create({
-        data: {
-          name,
-          email,
-          gender,
-          whatsapp,
-          age,
-          postalCode,
-        },
-      });
+  const membersData = plan.individualPricesJson
+    ? JSON.parse(plan.individualPricesJson)
+    : null;
+  const deductiblesData = plan.deductiblesJson
+    ? JSON.parse(plan.deductiblesJson)
+    : null;
 
-      const newQuote = await tx.quote.create({
-        data: {
-          protectWho: protectWho,
-          totalPrice: Number(coverage_fee),
-          additionalInfo,
-          planId,
-          medicalHistories: data.medicalData,
-          prospectId: newProspect.id,
-          userId: advisorId,
-        },
-      });
+  // Convertir todos los valores numéricos a tipo number
+  const quoteData = {
+    prospectId: prospect.id,
+    planId: plan.id,
+    totalPrice: parseFloat(plan.coverage_fee.toString()),
+    protectWho,
+    medicalHistories: medicalData,
+    userId: advisorId,
+    coverageFee: parseFloat(plan.coverage_fee.toString()),
+    paymentType: plan.paymentType,
+    sumInsured: parseFloat(plan.sumInsured.toString()),
+    deductible: parseFloat(plan.deductible.toString()),
+    coInsurance: parseFloat(plan.coInsurance.toString()),
+    coInsuranceCap: parseFloat(plan.coInsuranceCap.toString()),
+    membersData: membersData,
+    isMultipleDeductible: plan.isMultipleString === "true",
+    deductiblesData: deductiblesData,
+    additionalInfo,
+  };
 
-      await tx.trackingNumber.create({
-        data: {
-          number: generateTrackingNumber(),
-          quoteId: newQuote.id,
-        },
-      });
-    });
-  } catch (error) {
-    throw handlePrismaError(error);
-  }
-}
+  return await prisma.quote.create({
+    data: quoteData,
+  });
+};

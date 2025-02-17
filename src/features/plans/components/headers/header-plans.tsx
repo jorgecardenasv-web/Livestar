@@ -16,7 +16,7 @@ export const HeaderPlans = () => {
             Visión general de todos los planes registrados en tu organización.
           </p>
         </section>
-        <Button>
+        <Button asChild>
           <Link
             className="flex items-center flex-row gap-1"
             href={`${prefix}/planes/nuevo-plan`}

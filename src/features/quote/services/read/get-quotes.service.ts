@@ -26,6 +26,8 @@ export const getQuotesService = async ({
         | "additionalInfo"
         | "MedicalHistory"
         | "medicalHistories"
+        | "membersData"
+        | "deductiblesData"
       >
     >(filtersOptions);
 

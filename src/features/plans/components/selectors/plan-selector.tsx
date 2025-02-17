@@ -31,8 +31,8 @@ const PlanButton = ({
       type="submit"
       disabled={pending}
       className={`flex items-center px-4 py-3 rounded text-sm font-medium transition-all duration-300 ${planTypeId === type.id
-          ? "bg-[#223E99] text-white shadow-lg transform scale-105"
-          : "bg-white text-[#223E99] border-2 border-[#223E99] hover:bg-sky-50 hover:shadow-md"
+        ? "bg-[#223E99] text-white shadow-lg transform scale-105"
+        : "bg-white text-[#223E99] border-2 border-[#223E99] hover:bg-sky-50 hover:shadow-md"
         }`}
     >
       {pending ? (

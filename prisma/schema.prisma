@@ -144,23 +144,32 @@ enum QuoteStatus {
 }
 
 model Quote {
-  id               String          @id @default(uuid()) @db.Uuid
-  prospect         Prospect        @relation(fields: [prospectId], references: [id])
-  prospectId       String          @db.Uuid
-  plan             Plan            @relation(fields: [planId], references: [id])
-  planId           String          @db.Uuid
-  totalPrice       Float
-  status           QuoteStatus     @default(NUEVO)
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
-  trackingNumber   TrackingNumber?
-  expirationDate   DateTime?
-  protectWho       String
-  additionalInfo   Json?
-  medicalHistories Json[]
-  userId           String?         @db.Uuid
-  user             User?           @relation(fields: [userId], references: [id])
-  lastContactDate  DateTime?
+  id                   String          @id @default(uuid()) @db.Uuid
+  prospect             Prospect        @relation(fields: [prospectId], references: [id])
+  prospectId           String          @db.Uuid
+  plan                 Plan            @relation(fields: [planId], references: [id])
+  planId               String          @db.Uuid
+  totalPrice           Float
+  status               QuoteStatus     @default(NUEVO)
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
+  trackingNumber       TrackingNumber?
+  expirationDate       DateTime?
+  protectWho           String
+  additionalInfo       Json?
+  medicalHistories     Json[]
+  userId               String?         @db.Uuid
+  user                 User?           @relation(fields: [userId], references: [id])
+  lastContactDate      DateTime?
+  coverageFee          Float
+  paymentType          String
+  sumInsured           Float
+  deductible           Float
+  coInsurance          Float
+  coInsuranceCap       Float
+  membersData          Json? // Almacenará el array de miembros con sus precios
+  isMultipleDeductible Boolean         @default(false)
+  deductiblesData      Json? // Para almacenar múltiples deducibles si aplica
 
   @@schema("public")
 }

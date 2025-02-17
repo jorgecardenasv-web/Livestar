@@ -170,6 +170,114 @@ const createAdditionalInfo = (
   }
 };
 
+const createMembersData = (protectWho: string, additionalInfo: any) => {
+  const membersData: any = {};
+  const mainPrice = faker.number.float({
+    min: 8000,
+    max: 15000,
+    fractionDigits: 2,
+  });
+
+  switch (protectWho) {
+    case "solo_yo":
+      membersData.main = mainPrice;
+      break;
+
+    case "mi_pareja_y_yo":
+      membersData.main = mainPrice;
+      membersData.partner = faker.number.float({
+        min: 8000,
+        max: 15000,
+        fractionDigits: 2,
+      });
+      break;
+
+    case "familia":
+    case "mis_hijos_y_yo":
+      membersData.main = mainPrice;
+      if (additionalInfo.partnerAge) {
+        membersData.partner = faker.number.float({
+          min: 8000,
+          max: 15000,
+          fractionDigits: 2,
+        });
+      }
+      if (additionalInfo.children) {
+        membersData.children = additionalInfo.children.map(() =>
+          faker.number.float({ min: 5000, max: 10000, fractionDigits: 2 })
+        );
+      }
+      break;
+
+    case "solo_mis_hijos":
+      if (additionalInfo.children) {
+        membersData.children = additionalInfo.children.map(() =>
+          faker.number.float({ min: 5000, max: 10000, fractionDigits: 2 })
+        );
+      }
+      break;
+
+    case "mis_padres":
+      membersData.parents = [];
+      if (additionalInfo.momAge) {
+        membersData.parents.push({
+          name: additionalInfo.momName,
+          price: faker.number.float({
+            min: 12000,
+            max: 20000,
+            fractionDigits: 2,
+          }),
+        });
+      }
+      if (additionalInfo.dadAge) {
+        membersData.parents.push({
+          name: additionalInfo.dadName,
+          price: faker.number.float({
+            min: 12000,
+            max: 20000,
+            fractionDigits: 2,
+          }),
+        });
+      }
+      break;
+
+    case "otros":
+      if (additionalInfo.protectedPersons) {
+        membersData.others = additionalInfo.protectedPersons.map(
+          (person: any) => ({
+            name: person.relationship,
+            price: faker.number.float({
+              min: 8000,
+              max: 15000,
+              fractionDigits: 2,
+            }),
+          })
+        );
+      }
+      break;
+  }
+
+  return membersData;
+};
+
+const createDeductiblesData = (baseDeductible: number) => {
+  const deductibles = {
+    opcion_2: {
+      A: baseDeductible * 3,
+      B: baseDeductible * 2,
+      C: baseDeductible * 1.5,
+      D: baseDeductible,
+    },
+    opcion_4: {
+      A: baseDeductible * 5,
+      B: baseDeductible * 4,
+      C: baseDeductible * 3,
+      D: baseDeductible * 2,
+    },
+  };
+  return deductibles;
+};
+
 export const seedQuotes = async (
   prisma: PrismaClient,
   advisors: any[],
@@ -180,6 +288,13 @@ export const seedQuotes = async (
   for (let i = 0; i < QUOTES_TO_CREATE; i++) {
     const protectWho = faker.helpers.arrayElement(PROTECT_WHO_OPTIONS);
     const additionalInfo = createAdditionalInfo(protectWho);
+    const baseDeductible = faker.number.int({ min: 9500, max: 25000 });
+    const coverageFee = faker.number.float({
+      min: 20000,
+      max: 100000,
+      fractionDigits: 2,
+    });
+
     const prospect = await prisma.prospect.create({
       data: {
         name: faker.person.fullName(),
@@ -197,11 +312,7 @@ export const seedQuotes = async (
         prospectId: prospect.id,
         planId: faker.helpers.arrayElement(plans).id,
         userId: faker.helpers.arrayElement(advisors).id,
-        totalPrice: faker.number.float({
-          min: 1000,
-          max: 5000,
-          fractionDigits: 2,
-        }),
+        totalPrice: coverageFee,
         protectWho,
         additionalInfo,
         medicalHistories: createMedicalHistory(protectWho, additionalInfo),
@@ -211,6 +322,29 @@ export const seedQuotes = async (
           QuoteStatus.EN_PROGRESO,
           QuoteStatus.CERRADO,
         ]),
+        // Nuevos campos
+        coverageFee,
+        paymentType: faker.helpers.arrayElement([
+          "Anual",
+          "Semestral",
+          "Trimestral",
+          "Mensual",
+        ]),
+        sumInsured: faker.number.float({
+          min: 5000000,
+          max: 15000000,
+          fractionDigits: 2,
+        }),
+        deductible: baseDeductible,
+        coInsurance: faker.helpers.arrayElement([10, 20, 30]),
+        coInsuranceCap: faker.number.float({
+          min: 30000,
+          max: 60000,
+          fractionDigits: 2,
+        }),
+        membersData: createMembersData(protectWho, additionalInfo),
+        isMultipleDeductible: faker.datatype.boolean(),
+        deductiblesData: createDeductiblesData(baseDeductible),
       },
     });
 

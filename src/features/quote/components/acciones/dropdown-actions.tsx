@@ -15,6 +15,7 @@ import { Button } from "@/shared/components/ui/button";
 import { useQuoteActions } from "../../hooks/use-quote-actions";
 import { useRouter } from "next/navigation";
 import { Quote } from "@prisma/client";
+import Link from "next/link";
 
 export const DropdownActions = ({ quote }: { quote: Omit<Quote, "medicalHistories"> }) => {
 
@@ -34,9 +35,11 @@ export const DropdownActions = ({ quote }: { quote: Omit<Quote, "medicalHistorie
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="cursor-pointer"
-          onClick={() => push(`${prefix}/cotizaciones/${quote.id}`)}
+          asChild
         >
-          Ver detalles
+          <Link href={`${prefix}/cotizaciones/${quote.id}`}>
+            Ver detalles
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem
           className="cursor-pointer"

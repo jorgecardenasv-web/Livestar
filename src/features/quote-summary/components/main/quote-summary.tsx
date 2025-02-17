@@ -18,7 +18,7 @@ import { generatePDFAction } from "../../actions/generate-pdf";
 import { processPDFData } from "../../utils/process-pdf-data.util";
 
 export const QuoteSummary: FC<
-  InsuranceQuoteData & { imgCompanyLogo: { base64: string } }
+  InsuranceQuoteData
 > = (props) => {
   const {
     coInsurance,

@@ -4,7 +4,6 @@ import { InsuranceStorytelling } from "@/features/storytelling/components/contai
 
 export interface InsuranceQuoteData {
   company: string;
-  imgCompanyLogo: string;
   plan: string;
   paymentType: string;
   sumInsured: number;
@@ -17,6 +16,7 @@ export interface InsuranceQuoteData {
   isMultipleString?: string;
   deductiblesJson?: string;
   individualPricesJson?: string;
+  imgCompanyLogo: string;
 }
 
 export default async function QuoteSummaryPage() {

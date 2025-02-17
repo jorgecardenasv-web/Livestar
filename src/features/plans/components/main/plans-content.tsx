@@ -61,20 +61,32 @@ export const PlansContent = async ({
   currentPlanType,
   activePaymentType
 }: PlansContentProps) => {
-  // Mover la obtención de datos aquí para que sea async
   const { data: { items: plans } } = await getPlans({
     page: "1",
     offset: "100",
     planTypeId,
   });
 
-  const regularPlans = (plans as Plan[])
-    .filter(plan => regularPlanTypes.map(pt => pt.id).includes(plan.planTypeId))
-    .sort((a, b) => a.planType.orderIndex - b.planType.orderIndex);
+  const sortedPlans = (plans as Plan[]).sort((a, b) =>
+    a.planType.orderIndex - b.planType.orderIndex
+  );
 
-  const hybridPlans = (plans as Plan[]).filter(plan =>
+  const regularPlans = sortedPlans.filter(plan =>
+    !['hibrido', 'híbrido'].includes(plan.planType.name.toLowerCase())
+  );
+
+  const hybridPlans = sortedPlans.filter(plan =>
     ['hibrido', 'híbrido'].includes(plan.planType.name.toLowerCase())
   );
+
+  // Si no hay planes para mostrar, retornamos un mensaje
+  if (regularPlans.length === 0 && hybridPlans.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <p>No hay planes disponibles para esta selección.</p>
+      </div>
+    );
+  }
 
   return (
     <Suspense fallback={
