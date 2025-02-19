@@ -1,109 +1,129 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { FacebookIcon, InstagramIcon, WhatsAppIcon, YouTubeIcon } from "@/shared/components/icons/social-icons";
-import Logo from "@/assets/shared/Logo.svg";
-import Image from "next/image";
+import type React from "react"
+
+import Link from "next/link"
+import { FacebookIcon, InstagramIcon, WhatsAppIcon, YouTubeIcon } from "@/shared/components/icons/social-icons"
+import Logo from "@/assets/shared/Logo.svg"
+import Image from "next/image"
+
+const quickLinks = {
+  seguros: [
+    { name: "Vida", href: "https://livestar.mx/seguros/vida/" },
+    { name: "Gastos Médicos", href: "https://livestar.mx/seguros/gastos-medicos/" },
+    { name: "Vehículos", href: "https://livestar.mx/seguros/vehiculos/" },
+    { name: "Empresas", href: "https://livestar.mx/seguros/empresas/" },
+    { name: "Hogar", href: "https://livestar.mx/seguros/hogar/" },
+  ],
+  cotizadores: [
+    { name: "EMMA Ahorro", href: "https://livestar.mx/emma/ahorro.php" },
+    { name: "Seguro de Vida", href: "https://livestar.com.mx/seguro/segurodevida.php" },
+  ],
+  general: [
+    { name: "Nosotros", href: "https://livestar.mx/nosotros/" },
+    { name: "Contacto", href: "https://livestar.mx/contacto/" },
+    { name: "En confianza", href: "https://livestar.mx/en-confianza/" },
+    { name: "Aviso de Privacidad", href: "/aviso-de-Privacidad" },
+  ],
+}
+
+const socialLinks = [
+  {
+    name: "Facebook",
+    href: "https://www.facebook.com/SegurosLivestar",
+    icon: FacebookIcon,
+    hoverColor: "hover:fill-[#1877f2]",
+  },
+  {
+    name: "Instagram",
+    href: "https://www.instagram.com/livestarmexico",
+    icon: InstagramIcon,
+    hoverColor: "hover:fill-[#E4405F]",
+  },
+  {
+    name: "YouTube",
+    href: "https://www.youtube.com/channel/UCu3y9eH65ysFaiiyw7Ws3AA",
+    icon: YouTubeIcon,
+    hoverColor: "hover:fill-[#FF0000]",
+  },
+  { name: "WhatsApp", href: "https://wa.me/+523318100575", icon: WhatsAppIcon, hoverColor: "hover:fill-[#25D366]" },
+]
+
+const FooterLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
+  <Link href={href} className="text-sm md:text-base text-gray-600 hover:text-black transition-colors duration-200">
+    {children}
+  </Link>
+)
+
+const FooterLinkGroup = ({ title, links }: { title: string; links: { name: string; href: string }[] }) => (
+  <div className="space-y-3">
+    <h4 className="text-sm font-medium text-gray-700">{title}</h4>
+    <ul className="space-y-2">
+      {links.map((link) => (
+        <li key={link.href}>
+          <FooterLink href={link.href}>{link.name}</FooterLink>
+        </li>
+      ))}
+    </ul>
+  </div>
+)
 
 export function Footer() {
   return (
-    <footer className="bg-gradient-to-r text-[#666666] pt-2 pb-4 border-t border-[#666666]/15">
-      <div className="container mx-auto px-4 pt-5">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="flex flex-col items-center md:items-start">
-            <Image src={Logo} width={257} height={158} alt={"Logo empresa"} />
+    <footer className="bg-white text-gray-600 py-8 md:py-12 border-t border-gray-200">
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col md:flex-row justify-between mb-8 gap-y-10">
+          <div className="col-span-1 md:col-span-2 lg:col-span-1 w-full">
+            <Image
+              src={Logo || "/placeholder.svg"}
+              width={180}
+              height={110}
+              alt="Logo empresa"
+              className="mb-4"
+              priority
+            />
+            <p className="text-sm mb-4">Seguros y Ahorros entre personas</p>
+            <div className="flex space-x-4">
+              {socialLinks.map((social) => (
+                <Link
+                  key={social.name}
+                  href={social.href}
+                  className="transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <social.icon className={`fill-[#666666] ${social.hoverColor}`} />
+                  <span className="sr-only">{social.name}</span>
+                </Link>
+              ))}
+            </div>
           </div>
-          <div className="flex flex-col items-center md:items-start">
-            <h3 className="font-semibold text-lg mb-4">Enlaces Rápidos</h3>
-            <nav className="flex flex-col space-y-2">
-              <Link href="#" className="transition-colors">
-                Seguros
-              </Link>
-              <Link href="#" className="transition-colors">
-                Simulador Seguro de Vida
-              </Link>
-              <Link href="#" className="transition-colors">
-                Cotizadores
-              </Link>
-              <Link href="#" className="transition-colors">
-                Nosotros
-              </Link>
-              <Link href="#" className="transition-colors">
-                Contacto
-              </Link>
-              <Link href="#" className="transition-colors">
-                En confianza
-              </Link>
-              <Link href="/aviso-de-Privacidad" className="transition-colors">
-                Aviso de Privacidad
-              </Link>
-            </nav>
-          </div>
-          <div className="flex flex-col items-center md:items-start text-[#666666]">
-            <h3 className="font-semibold text-lg mb-4">Contáctanos</h3>
-            <address className="not-italic text-sm">
-              Plaza Concentro
-              <br />
-              Av Vallarta Pte. No. 6503
-              <br />
-              Local B5-5A
-              <br />
-              Ciudad Granja, 45010
-              <br />
-              Zapopan, Jal, México
-            </address>
-            <div className="mt-4 space-y-2">
-              <p className="text-sm">contacto@livestar.mx</p>
-              <p className="text-sm">(33) 3110 1122</p>
-              <p className="text-sm">(33) 1810 1118</p>
+          <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-4 lg:pl-8 w-full">
+            <div>
+              <FooterLinkGroup title="Seguros" links={quickLinks.seguros} />
+            </div>
+            <div>
+              <FooterLinkGroup title="Cotizadores" links={quickLinks.cotizadores} />
+            </div>
+            <div>
+              <FooterLinkGroup title="General" links={quickLinks.general} />
             </div>
           </div>
         </div>
-        <div className="mt-8 pt-4 border-t border-[#666666]/15 flex justify-between items-center">
-          <p className="text-sm">
-            © {new Date().getFullYear()} Livestar. Todos los derechos
-            reservados.
-          </p>
-          <div className="flex space-x-4">
-            <Link
-              href="https://www.facebook.com/SegurosLivestar"
-              className="transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <FacebookIcon className="fill-[#666666] hover:fill-[#1877f2]" />
-              <span className="sr-only">Facebook</span>
-            </Link>
-            <Link
-              href="https://www.instagram.com/livestarmexico"
-              className="transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <InstagramIcon className="fill-[#666666] hover:fill-[#E4405F]" />
-              <span className="sr-only">Instagram</span>
-            </Link>
-            <Link
-              href="https://www.youtube.com/channel/UCu3y9eH65ysFaiiyw7Ws3AA"
-              className="transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <YouTubeIcon className="fill-[#666666] hover:fill-[#FF0000]" />
-              <span className="sr-only">YouTube</span>
-            </Link>
-            <Link
-              href="https://wa.me/+523318100575"
-              className="transition-colors"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <WhatsAppIcon className="fill-[#666666] hover:fill-[#25D366]" />
-              <span className="sr-only">WhatsApp</span>
-            </Link>
+        <div className="border-t border-gray-100 pt-6 mt-6">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="text-xs md:text-sm text-gray-500 mb-4 md:mb-0 text-center md:text-left">
+              <p>Plaza Concentro, Av Vallarta Pte. No. 6503, Local B5-5A</p>
+              <p>Ciudad Granja, 45010, Zapopan, Jal, México</p>
+              <p>contacto@livestar.mx | (33) 3110 1122 | (33) 1810 1118</p>
+            </div>
+            <p className="text-xs md:text-sm text-gray-500 text-center md:text-right">
+              © {new Date().getFullYear()} Livestar. Todos los derechos reservados.
+            </p>
           </div>
         </div>
       </div>
     </footer>
-  );
+  )
 }
+
