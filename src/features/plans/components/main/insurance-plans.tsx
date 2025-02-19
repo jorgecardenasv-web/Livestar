@@ -9,31 +9,32 @@ import { Suspense } from 'react';
 export const Plans = async () => {
   const planTypes = await getCachedPlanTypes();
 
-  const defaultPlanType = planTypes
-    .filter(pt => !['hibrido', 'híbrido'].includes(pt.name.toLowerCase()))
-    .sort((a, b) => a.orderIndex - b.orderIndex)[0];
-
-  const { planTypeId, activePaymentType } = await getInsuranceState();
-
-  const currentPlanTypeId = planTypeId ?? defaultPlanType.id;
-
-  const regularPlanTypes = planTypes
+  // Filtrar los planes híbridos para el selector
+  const selectorPlanTypes = planTypes
     .filter(planType => !['hibrido', 'híbrido'].includes(planType.name.toLowerCase()))
     .sort((a, b) => a.orderIndex - b.orderIndex);
 
-  const currentPlanType = currentPlanTypeId
-    ? regularPlanTypes.find(planType => planType.id === currentPlanTypeId) ?? defaultPlanType
-    : defaultPlanType;
+  if (planTypes.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <p>No hay planes disponibles en este momento.</p>
+      </div>
+    );
+  }
+
+  const defaultPlanType = selectorPlanTypes[0];
+  const { planTypeId, activePaymentType } = await getInsuranceState();
+  const currentPlanTypeId = planTypeId ?? defaultPlanType?.id;
+  const currentPlanType = selectorPlanTypes.find(planType => planType.id === currentPlanTypeId) ?? defaultPlanType;
 
   const paymentTypes = ["Mensual", "Anual"];
 
   return (
-
     <div className="mx-auto px-4 space-y-4 mb-8">
       <div className="flex flex-col justify-center items-center">
         <PlanSelector
-          planTypes={regularPlanTypes}
-          planTypeId={currentPlanType.id}
+          planTypes={selectorPlanTypes}
+          planTypeId={currentPlanType?.id}
         />
         <PaymentSelector
           paymentTypes={paymentTypes}
@@ -53,7 +54,7 @@ export const Plans = async () => {
       >
         <PlansContent
           planTypeId={currentPlanTypeId}
-          regularPlanTypes={regularPlanTypes}
+          regularPlanTypes={planTypes}
           currentPlanType={currentPlanType}
           activePaymentType={activePaymentType}
         />

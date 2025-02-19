@@ -27,6 +27,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   handleChildChange,
   handleProtectedPersonChange,
 }) => {
+
   return (
     <div className="space-y-6 py-6">
       <div className="flex items-center space-x-4 mb-6">

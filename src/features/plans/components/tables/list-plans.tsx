@@ -74,9 +74,11 @@ export const PlansList = async ({ params }: { params: Params }) => {
                       )}
                     </TableCell>
                     <TableCell>
-                      {plan?.isRecommended && (
-                        <Badge variant="recommended">Recomendado</Badge>
-                      )}
+                      {
+                        plan?.isRecommended && (
+                          <Badge variant="recommended">Recomendado</Badge>
+                        )
+                      }
                     </TableCell>
                     <TableCell>
                       {formatDate(plan.createdAt)}

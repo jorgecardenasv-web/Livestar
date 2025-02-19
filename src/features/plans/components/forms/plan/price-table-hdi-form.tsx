@@ -2,13 +2,13 @@ import { Card, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/shared/components/ui/table";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
-import { NumberInput } from "@/shared/components/ui/number-input";
 import { Separator } from "@/shared/components/ui/separator";
 import { Upload } from "lucide-react";
 import { usePriceTableHDIForm } from "../../../hooks/use-price-table-hdi";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { useRef } from "react";
 import { PriceDataHDI } from "../../../types";
+import { PriceInput } from "@/shared/components/ui/price-input";
 
 interface PriceTableHDIFormProps {
   prices: PriceDataHDI[];
@@ -64,7 +64,7 @@ export const PriceTableHDIForm: React.FC<PriceTableHDIFormProps> = ({ prices, se
                   <TableRow key={`price-row-${price.age}`}>
                     <TableCell className="text-center">{price.age}</TableCell>
                     <TableCell>
-                      <NumberInput
+                      <PriceInput
                         value={price.monthlyPrice1}
                         onChange={(e) =>
                           handlePriceChange(price.age, "monthlyPrice1", e.target.value)
@@ -72,7 +72,7 @@ export const PriceTableHDIForm: React.FC<PriceTableHDIFormProps> = ({ prices, se
                       />
                     </TableCell>
                     <TableCell>
-                      <NumberInput
+                      <PriceInput
                         value={price.monthlyPrice2to12}
                         onChange={(e) =>
                           handlePriceChange(price.age, "monthlyPrice2to12", e.target.value)
@@ -80,7 +80,7 @@ export const PriceTableHDIForm: React.FC<PriceTableHDIFormProps> = ({ prices, se
                       />
                     </TableCell>
                     <TableCell>
-                      <NumberInput
+                      <PriceInput
                         value={price.annualPrice}
                         onChange={(e) =>
                           handlePriceChange(price.age, "annualPrice", e.target.value)

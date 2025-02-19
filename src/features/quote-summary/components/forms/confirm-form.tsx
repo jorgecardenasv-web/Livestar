@@ -9,9 +9,11 @@ import {
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import Link from "next/link";
+import { useFormStatus } from "react-dom";
 
 export const ContractForm = () => {
   const [isConfirmed, setIsConfirmed] = useState(false);
+  const { pending } = useFormStatus();
 
   return (
     <div className="mt-5">
@@ -52,9 +54,9 @@ export const ContractForm = () => {
         </AlertDescription>
       </Alert>
 
-      <Button className="w-full py-6 text-lg">
+      <Button className="w-full py-6 text-lg" disabled={!isConfirmed || pending}>
         <Link href="/finalizar-cotizacion" className="w-full">
-          Contratar ahora
+          {pending ? "Confirmando cotización..." : "Confirmar cotización"}
         </Link>
       </Button>
     </div>

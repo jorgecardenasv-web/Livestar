@@ -32,6 +32,7 @@ export const DropdownActions = ({ plan }: { plan: Plan }) => {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="cursor-pointer w-full"
+          asChild
         >
           <Link href={`${prefix}/planes/${plan.id}`} className="w-full">
             Ver detalles

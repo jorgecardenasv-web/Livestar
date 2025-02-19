@@ -25,7 +25,7 @@ export const InsuranceStorytelling = async () => {
     <>
       {hasProspect && !hasSelectedPlan ? (
         <Plans />
-      ) : hasSelectedPlan ? (
+      ) : hasSelectedPlan && hasProspect ? (
         <QuoteSummary {...selectedPlanData} />
       ) : (
         <InsuranceFlow />

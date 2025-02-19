@@ -8,6 +8,8 @@ import { getAdvisorWithLeastQuotesService } from "@/features/advisors/services/g
 import { generatePDFService } from "@/features/quote-summary/services/generate-pdf.service";
 import { sendQuoteEmailService } from "../services/send-email/send-quote-email.service";
 import { processPDFData } from "@/features/quote-summary/utils/process-pdf-data.util";
+import { revalidatePath } from "next/cache";
+import { prefix } from "@/features/layout/nav-config/constants";
 
 export const createQuoteAction = async (payload: any) => {
   try {
@@ -41,7 +43,7 @@ export const createQuoteAction = async (payload: any) => {
           company: parsedPlan.company,
           plan: parsedPlan.plan,
           advisorName: advisor?.name,
-          advisorEmail: "ulises.vargas@yocontigo-it.com", // TODO: Cambiar por advisor.email cuando se implemente
+          advisorEmail: advisor?.email ?? "emma@livestar.mx",
         });
 
         console.log("Emails enviados correctamente");
@@ -64,5 +66,6 @@ export const createQuoteAction = async (payload: any) => {
           : "Error al crear el historial médico.",
     };
   }
+  revalidatePath(`${prefix}/cotizaciones`);
   redirect("/cotizar");
 };
