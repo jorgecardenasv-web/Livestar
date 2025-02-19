@@ -13,7 +13,7 @@ export default function NavLinks({ userRole }: { userRole?: string | null }) {
       {navLinks
         .filter((link) =>
           link.roles.includes(userRole!) &&
-          (link.visible !== false) // Solo mostrar links visibles
+          (link.visible !== false)
         )
         .map((link) => {
           const LinkIcon = link.icon;

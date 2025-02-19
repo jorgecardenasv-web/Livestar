@@ -1,8 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Facebook, Instagram, Twitter } from "lucide-react";
-
+import { FacebookIcon, InstagramIcon, WhatsAppIcon, YouTubeIcon } from "@/shared/components/icons/social-icons";
 import Logo from "@/assets/shared/Logo.svg";
 import Image from "next/image";
 
@@ -66,17 +65,41 @@ export function Footer() {
             reservados.
           </p>
           <div className="flex space-x-4">
-            <Link href="#" className="transition-colors">
-              <Facebook size={24} />
+            <Link
+              href="https://www.facebook.com/SegurosLivestar"
+              className="transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FacebookIcon className="fill-[#666666] hover:fill-[#1877f2]" />
               <span className="sr-only">Facebook</span>
             </Link>
-            <Link href="#" className="transition-colors">
-              <Instagram size={24} />
+            <Link
+              href="https://www.instagram.com/livestarmexico"
+              className="transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <InstagramIcon className="fill-[#666666] hover:fill-[#E4405F]" />
               <span className="sr-only">Instagram</span>
             </Link>
-            <Link href="#" className="transition-colors">
-              <Twitter size={24} />
-              <span className="sr-only">Twitter</span>
+            <Link
+              href="https://www.youtube.com/channel/UCu3y9eH65ysFaiiyw7Ws3AA"
+              className="transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <YouTubeIcon className="fill-[#666666] hover:fill-[#FF0000]" />
+              <span className="sr-only">YouTube</span>
+            </Link>
+            <Link
+              href="https://wa.me/+523318100575"
+              className="transition-colors"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <WhatsAppIcon className="fill-[#666666] hover:fill-[#25D366]" />
+              <span className="sr-only">WhatsApp</span>
             </Link>
           </div>
         </div>

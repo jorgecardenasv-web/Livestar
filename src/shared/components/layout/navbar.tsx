@@ -36,9 +36,26 @@ export const Navbar = () => {
               <NewQuoteButton />
             }
 
-            <button className="px-4 lg:px-6 py-2 bg-white text-[#223E99] rounded-md hover:bg-opacity-90 transition-colors font-medium text-sm lg:text-base">
-              Cotizadores
-            </button>
+            <div className="relative group">
+              <button className="flex items-center gap-1 px-4 lg:px-6 py-2 bg-white text-[#223E99] rounded-md hover:bg-opacity-90 transition-colors font-medium text-sm lg:text-base">
+                <span>Cotizadores</span>
+                <ChevronDown className="w-4 h-4" />
+              </button>
+
+              {/* Dropdown Menu Cotizadores */}
+              <div className="absolute right-0 mt-2 w-60 bg-white rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                <div className="py-2">
+                  <Link href="https://livestar.mx/emma/ahorro.php" className="flex items-center px-4 py-2 text-[#223E99] hover:bg-gray-100 transition-colors">
+                    <HeartPulse className="w-5 h-5 mr-2" />
+                    <span>EMMA Ahorro</span>
+                  </Link>
+                  <Link href="https://livestar.com.mx/seguro/segurodevida.php" className="flex items-center px-4 py-2 text-[#223E99] hover:bg-gray-100 transition-colors">
+                    <Hospital className="w-5 h-5 mr-2" />
+                    <span>Seguro de Vida</span>
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="relative group">
