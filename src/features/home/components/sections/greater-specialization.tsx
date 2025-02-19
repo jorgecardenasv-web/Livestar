@@ -1,3 +1,6 @@
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+
 export const GreaterSpecialization = () => {
   return (
     <section className="w-full py-24 text-white">
@@ -11,7 +14,9 @@ export const GreaterSpecialization = () => {
         </p>
         <div className="flex justify-center mt-8">
           <button className="px-4 py-3 rounded font-bold text-lg outline bg-[#008AED] text-white transition-all duration-300 hover:bg-gradient-to-br hover:from-[#008AED] hover:to-[#004E87] focus:outline-none focus:ring-2 focus:ring-[#008AED] focus:ring-opacity-50">
-            <span className="font-bold">Quiero saber más.</span>
+            <Link className="flex items-center gap-x-4 w-full mx-4" href={"/cotizar"}>
+            <span className="font-bold">Quiero saber más</span><ArrowRight/>
+            </Link>
           </button>
         </div>
       </div>

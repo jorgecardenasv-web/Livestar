@@ -12,7 +12,7 @@ interface RadioGroupProps extends ComponentProps<typeof ShadcnRadioGroup> {
 export function RadioGroup({ label, options, position = "column", ...props }: RadioGroupProps) {
   return (
     <ShadcnRadioGroup {...props}>
-      <div className={cn("flex space-y-2", position === "column" ? "flex-col" : "flex-row")}>
+      <div className={cn("flex space-x-4", position === "column" ? "flex-col" : "flex-row")}>
         {
           options.map((option) => (
             <div key={option.value} className="flex items-center space-x-2">
