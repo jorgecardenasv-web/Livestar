@@ -6,8 +6,8 @@ import { Providers } from "./providers";
 const openSans = Open_Sans({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Livestar",
-  description: "Seguros y ahorros entre personas",
+  title: "Livestar - Seguro de gastos médicos",
+  description: "Seguro de gastos médicos",
 };
 
 export default async function RootLayout({
