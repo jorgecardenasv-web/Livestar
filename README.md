@@ -1,13 +1,24 @@
 # Livestar Insurance
 
-## Descripción de como ejecutar el proyecto y sus comandos
+Sistema de cotización de seguros desarrollado con tecnologías modernas.
 
-## Tecnologías utilizadas
+## 🚀 Características principales
+
+- Gestión de cotizaciones de seguros
+- Panel de administración
+- Simulador de costos
+- Comparador de coberturas
+- Gestión de asesores
+- Seguimiento de prospectos
+- Interfaz moderna y responsiva
+- Generación de propuestas en PDF
+- Gestión de usuarios y roles
+
+## 🛠️ Tecnologías utilizadas
 
 - **[Next.js](https://nextjs.org/)**
 - **[Prisma](https://www.prisma.io/)**
 - **[Docker](https://www.docker.com/)**
-- **[Playwright](https://playwright.dev/)**
 - **[TailwindCSS](https://tailwindcss.com/)**
 - **[Shadcn/ui](https://ui.shadcn.com/)**
 - **[Iron-Session](https://github.com/vvo/iron-session)**
@@ -17,7 +28,7 @@
 - **[React](https://react.dev)**
 - **[Typescript](https://www.typescriptlang.org)**
 
-## Requisitos
+## ⚙️ Requisitos previos
 
 Para ejecutar este proyecto, necesitarás tener instalados los siguientes programas:
 
@@ -25,14 +36,63 @@ Para ejecutar este proyecto, necesitarás tener instalados los siguientes progra
 - **[PNPM](https://pnpm.io/es/) Versión 9 o superior**
 - **[Docker](https://www.docker.com/) Versión 4 o superior**
 
-## Configuración
+## 🔧 Configuración inicial
 
-Antes de ejecutar el proyecto, asegúrate de configurar las variables de entorno. Crea un archivo .env en la raíz del proyecto y añade las variables
+1. Clona el repositorio
+
+```bash
+git clone https://github.com/tu-usuario/livestar_insurance.git
+cd livestar_insurance
+```
+
+2. Instala las dependencias
+
+```bash
+pnpm install
+```
+
+3. Copia el archivo de variables de entorno
+
+```bash
+cp .env.example .env
+```
+
+4. Configura las variables de entorno en el archivo `.env`:
+
+```env
+DATABASE_URL="postgresql://usuario:contraseña@localhost:5432/livestar_insurance"
+SESSION_SECRET="tu-secreto-seguro"
+EMAIL_USER="tu-email@dominio.com"
+EMAIL_PASSWORD="tu-contraseña"
+EMAIL_HOST="tu-host-smtp"
+EMAIL_PORT="puerto-smtp"
+```
 
 > [!IMPORTANT]
 > Si es la primera vez que ejecutas el proyecto, debes ir a la sección de ejecutar por primera vez.
 
-## Comandos
+## 📦 Estructura del proyecto
+
+```
+livestar_insurance/
+├── public/             # Archivos estáticos (imágenes, fuentes, etc.)
+├── src/                # Código fuente principal
+│   ├── app/            # Componentes y páginas de la interfaz
+│   ├── features/       # Funcionalidades principales del sistema
+│   │   ├── auth/       # Autenticación y autorización
+│   │   ├── quotes/     # Gestión de cotizaciones
+│   │   ├── advisors/   # Gestión de asesores
+│   │   └── insurances/ # Generación de aseguradoras
+│   ├── lib/            # Utilidades y funciones auxiliares
+│   └── shared/         # Recursos compartidos (componentes, hooks, etc.)
+├── prisma/             # Esquema y migraciones de base de datos
+└── middleware.ts       # Configuración de middlewares
+```
+
+> [!NOTE]
+> Esta estructura sigue los principios de **Screaming Architecture**, donde la organización del código refleja claramente el propósito del sistema. Para más detalles sobre la arquitectura, consulta [STRUCTURE.md](STRUCTURE.md).
+
+## 🚀 Comandos disponibles
 
 > [!NOTE]
 > Para ejecutar los comandos, asegúrate de tener instalado el paquete pnpm, y poner `pnpm run comando-a-ejecutar`
@@ -42,14 +102,10 @@ Antes de ejecutar el proyecto, asegúrate de configurar las variables de entorno
 - **`start`** Inicia el servidor Next.js en modo producción. Utiliza los archivos generados por el comando build y sirve la aplicación de manera optimizada para producción.
 - **`lint`** Ejecuta el linter de Next.js para analizar el código en busca de errores y advertencias de estilo, asegurando la consistencia y calidad del código.
 
-## Ejecutar por primera vez
+## 🏃‍♂️ Primera ejecución
 
 Ejecuta los siguientes comandos en orden en la raíz del proyecto:
 
 2. **`prisma:push`**
 3. **`prisma:generate`**
 4. **`dev`**
-
-### Ya inicializado y configurado el proyecto
-
-1. **`dev`**
