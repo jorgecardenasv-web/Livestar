@@ -7,9 +7,8 @@ import { FilterOptions } from "../../loaders/get-plans";
 import { GetAllResponse } from "@/shared/types";
 import { Plan as PlanPrisma, Prisma } from "@prisma/client";
 import { Plan } from "../../types/plan";
-import { sleep } from "@/shared/utils/sleep";
 
-export const GetPlansService = async ({
+export const getPlansService = async ({
   page = "1",
   query,
   offset = "10",

@@ -62,7 +62,6 @@ export const PlansContent = async ({
   const { data: { items: plans } } = await getPlans({
     page: "1",
     offset: "100",
-    planTypeId,
   });
 
   const sortedPlans = (plans as Plan[]).sort((a, b) =>
