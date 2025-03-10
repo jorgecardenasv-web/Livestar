@@ -1,5 +1,4 @@
-import { InsuranceQuoteData } from "@/app/(cliente)/cotizar/page";
-import { QuotePDFData } from "../types/pdf";
+import { InsuranceQuoteData, QuotePDFData } from "../types";
 
 export const processPDFData = (data: InsuranceQuoteData): QuotePDFData => {
   const members = [];

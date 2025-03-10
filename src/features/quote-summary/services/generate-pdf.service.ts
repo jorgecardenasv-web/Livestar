@@ -1,4 +1,4 @@
-import type { QuotePDFData } from "../types/pdf";
+import type { QuotePDFData } from "../types";
 import jsPDF from "jspdf";
 import { formatCurrency } from "@/shared/utils";
 

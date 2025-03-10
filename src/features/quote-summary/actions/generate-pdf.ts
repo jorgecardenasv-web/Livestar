@@ -1,6 +1,6 @@
 "use server";
 
-import { QuotePDFData } from "../types/pdf";
+import { QuotePDFData } from "../types";
 import { generatePDFService } from "../services/generate-pdf.service";
 
 export async function generatePDFAction(

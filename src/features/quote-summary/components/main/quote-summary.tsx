@@ -14,23 +14,8 @@ import MoreInformationQuote from "../modals/MoreInformationModal";
 import { DropdownOptions } from "@/shared/components/dropdown-options";
 import { Button } from "@/shared/components/ui/button";
 import { generatePDFAction } from "../../actions/generate-pdf";
-import { processPDFData } from "../../utils/process-pdf-data.util";
-export interface InsuranceQuoteData {
-  company: string;
-  plan: string;
-  paymentType: string;
-  sumInsured: number;
-  deductible: number;
-  coInsurance: number;
-  coInsuranceCap: number;
-  coverage_fee: number;
-  id: string;
-  protectedWho: string;
-  isMultipleString?: string;
-  deductiblesJson?: string;
-  individualPricesJson?: string;
-  imgCompanyLogo: string;
-}
+import { processPDFData } from "../../utils/process-pdf-data.util"
+import { InsuranceQuoteData } from "../../types";
 
 export const QuoteSummary: FC<
   InsuranceQuoteData

@@ -1,3 +1,20 @@
+export interface InsuranceQuoteData {
+  company: string;
+  plan: string;
+  paymentType: string;
+  sumInsured: number;
+  deductible: number;
+  coInsurance: number;
+  coInsuranceCap: number;
+  coverage_fee: number;
+  id: string;
+  protectedWho: string;
+  isMultipleString?: string;
+  deductiblesJson?: string;
+  individualPricesJson?: string;
+  imgCompanyLogo: string;
+}
+
 export interface QuotePDFData {
   company: string;
   plan: string;
