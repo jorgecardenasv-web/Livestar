@@ -1,5 +1,6 @@
+import { PlanTypeStatus } from "@prisma/client";
 import { getInsuranceState } from "../../loaders/get-insurance-status";
-import { getCachedPlanTypes } from "../../services/read/cache-plan-types.service";
+import { getPlanTypes } from "../../loaders/get-plan-types";
 import { PaymentSelector } from "../selectors/payment-selector";
 import { PlanSelector } from "../selectors/plan-selector";
 import { InsuranceCardSkeleton } from "../skeletons/insurance-card-skeleton";
@@ -7,9 +8,14 @@ import { PlansContent } from "./plans-content";
 import { Suspense } from 'react';
 
 export const Plans = async () => {
-  const planTypes = await getCachedPlanTypes();
+  const {
+    data: { items: planTypes },
+  } = await getPlanTypes({
+    page: "1",
+    offset: "100",
+    status: PlanTypeStatus.ACTIVO,
+  });
 
-  // Filtrar los planes híbridos para el selector
   const selectorPlanTypes = planTypes
     .filter(planType => !['hibrido', 'híbrido'].includes(planType.name.toLowerCase()))
     .sort((a, b) => a.orderIndex - b.orderIndex);
@@ -41,12 +47,11 @@ export const Plans = async () => {
           activePaymentType={activePaymentType}
         />
       </div>
-      {/* Solo el contenido de las cards con Suspense */}
       <Suspense
         key={currentPlanTypeId}
         fallback={
           <div className="w-11/12 mx-auto flex-col gap-4 xl:grid xl:grid-flow-col justify-center lg:auto-cols-max items-end">
-            {[1, 2, 3].map((i) => (
+            {[1, 2].map((i) => (
               <InsuranceCardSkeleton key={i} />
             ))}
           </div>

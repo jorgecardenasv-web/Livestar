@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export const createProspect = async (formData: any) => {
   const {
@@ -29,5 +29,5 @@ export const createProspect = async (formData: any) => {
     })
   );
 
-  revalidatePath("/cotizar");
+  redirect("/cotizar/planes");
 };

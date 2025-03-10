@@ -1,30 +1,19 @@
-import { HeaderSecondary } from "@/shared/components/layout/header-secondary";
-import { ModalStorytellingActions } from "@/features/storytelling/components/modals/modal-storytelling-actions";
-import { InsuranceStorytelling } from "@/features/storytelling/components/container/storytelling";
+import { redirect } from 'next/navigation';
+import { getProspect } from "@/features/plans/loaders/get-prospect";
+import { getInsuranceState } from "@/features/plans/loaders/get-insurance-status";
 
-export interface InsuranceQuoteData {
-  company: string;
-  plan: string;
-  paymentType: string;
-  sumInsured: number;
-  deductible: number;
-  coInsurance: number;
-  coInsuranceCap: number;
-  coverage_fee: number;
-  id: string;
-  protectedWho: string;
-  isMultipleString?: string;
-  deductiblesJson?: string;
-  individualPricesJson?: string;
-  imgCompanyLogo: string;
-}
+export default async function QuotePage() {
+  const { prospect } = await getProspect();
+  const { selectedPlan } = await getInsuranceState();
 
-export default async function QuoteSummaryPage() {
-  return (
-    <div>
-      <HeaderSecondary />
-      <InsuranceStorytelling />
-      <ModalStorytellingActions />
-    </div>
-  );
+  const hasProspect = Object.keys(prospect).length > 0;
+  const hasSelectedPlan = Object.keys(selectedPlan).length > 0;
+
+  if (hasProspect && !hasSelectedPlan) {
+    redirect('/cotizar/planes');
+  } else if (hasSelectedPlan && hasProspect) {
+    redirect('/cotizar/resumen');
+  } else {
+    redirect('/cotizar/flow');
+  }
 }

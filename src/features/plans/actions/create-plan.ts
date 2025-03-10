@@ -42,7 +42,7 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
           ? flatPricesToJsonPrices(JSON.parse(prices))
           : flatPricesToJsonPricesHDI(JSON.parse(prices))
         : {},
-      planTypeId: planTypeId,
+      planTypeId,
       isRecommended,
     };
 

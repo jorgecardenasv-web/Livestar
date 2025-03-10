@@ -22,6 +22,7 @@ import { NumberInput } from "@/shared/components/ui/number-input";
 import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import { Label } from "@/shared/components/ui/label";
+import { Callout } from "@/shared/components/ui/callout";
 
 interface Insurance {
   id: string;
@@ -91,13 +92,19 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
       <div className="rounded-xl bg-muted/50 p-5">
         <Card>
           <CardContent className="space-y-6 p-6">
-            <SelectInput
-              name="planTypeId"
-              label="Nombre del Plan"
-              options={planTypeOptions}
-              defaultValue={plan?.planType?.id}
-              required
-            />
+            <div className="space-y-4">
+              <Callout title="Importante" variant="info" className="text-sm">
+                <p>No puede haber dos planes con el tipo nombre en la misma compañía, esto aplica para la creación y actualización.</p>
+                <p>Si desea crear o cambiar el tipo de plan, es necesario borrar el plan que ya existe.</p>
+              </Callout>
+              <SelectInput
+                name="planTypeId"
+                label="Nombre del Plan"
+                options={planTypeOptions}
+                defaultValue={plan?.planType?.id}
+                required
+              />
+            </div>
 
             <SelectInput
               name="companyId"
@@ -253,11 +260,13 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
 
       {/* ------------------------------------------------------------------------- */}
       <input type="hidden" name="isUpdate" value={isUpdateMode.toString()} />
-      {isUpdateMode && (
-        <div>
-          <input type="hidden" name="planId" value={plan?.id} />
-        </div>
-      )}
+      {
+        isUpdateMode && (
+          <div>
+            <input type="hidden" name="planId" value={plan?.id} />
+          </div>
+        )
+      }
       <div className="rounded-xl bg-muted/50 p-5">
         <Card>
           <CardContent className="space-y-4 p-6">
@@ -298,6 +307,6 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
           type="submit"
         />
       </div>
-    </form>
+    </form >
   );
 };

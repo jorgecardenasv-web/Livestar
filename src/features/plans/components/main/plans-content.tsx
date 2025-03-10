@@ -1,8 +1,6 @@
 import { getPlans } from "../../loaders/get-plans";
 import { Plan } from "../../types/plan";
 import { InsuranceCard } from "../cards/insurance-card";
-import { InsuranceCardSkeleton } from "../skeletons/insurance-card-skeleton";
-import { Suspense } from "react";
 
 interface PlansGridProps {
   regularPlans: Plan[];
@@ -50,7 +48,7 @@ const PlansGrid = ({
 
 interface PlansContentProps {
   planTypeId: string;
-  regularPlanTypes: { id: string }[]; // Tipado más específico
+  regularPlanTypes: { id: string }[];
   currentPlanType: { id: string };
   activePaymentType: string;
 }
@@ -79,7 +77,6 @@ export const PlansContent = async ({
     ['hibrido', 'híbrido'].includes(plan.planType.name.toLowerCase())
   );
 
-  // Si no hay planes para mostrar, retornamos un mensaje
   if (regularPlans.length === 0 && hybridPlans.length === 0) {
     return (
       <div className="text-center py-8">
@@ -89,19 +86,12 @@ export const PlansContent = async ({
   }
 
   return (
-    <Suspense fallback={
-      <div className="w-11/12 mx-auto flex-col gap-4 xl:grid xl:grid-flow-col justify-center lg:auto-cols-max items-end">
-        {[1, 2, 3].map((i) => (
-          <InsuranceCardSkeleton key={i} />
-        ))}
-      </div>
-    }>
-      <PlansGrid
-        regularPlans={regularPlans}
-        hybridPlans={hybridPlans}
-        currentPlanType={currentPlanType}
-        activePaymentType={activePaymentType}
-      />
-    </Suspense>
+
+    <PlansGrid
+      regularPlans={regularPlans}
+      hybridPlans={hybridPlans}
+      currentPlanType={currentPlanType}
+      activePaymentType={activePaymentType}
+    />
   );
 };

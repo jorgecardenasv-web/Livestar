@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { InsuranceQuoteData } from "@/app/(cliente)/cotizar/page";
 import { Shield, DollarSign, Percent, Heart, ArrowLeft } from "lucide-react";
 import { ContractForm } from "../forms/confirm-form";
 import { InfoCard } from "../cards/info-card";
@@ -16,6 +15,22 @@ import { DropdownOptions } from "@/shared/components/dropdown-options";
 import { Button } from "@/shared/components/ui/button";
 import { generatePDFAction } from "../../actions/generate-pdf";
 import { processPDFData } from "../../utils/process-pdf-data.util";
+export interface InsuranceQuoteData {
+  company: string;
+  plan: string;
+  paymentType: string;
+  sumInsured: number;
+  deductible: number;
+  coInsurance: number;
+  coInsuranceCap: number;
+  coverage_fee: number;
+  id: string;
+  protectedWho: string;
+  isMultipleString?: string;
+  deductiblesJson?: string;
+  individualPricesJson?: string;
+  imgCompanyLogo: string;
+}
 
 export const QuoteSummary: FC<
   InsuranceQuoteData
@@ -118,7 +133,7 @@ export const QuoteSummary: FC<
           src={imgCompanyLogo}
           width={120}
           height={60}
-          className="h-16 sm:h-20 w-auto object-contain"
+          className="h-32 w-auto object-contain"
           alt={`Logo de ${company}`}
         />
       </div>

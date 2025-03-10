@@ -23,7 +23,7 @@ export async function handleInterestClick(formData: FormData) {
   };
 
   cookies().set("selectedPlan", JSON.stringify(insuranceData));
-  revalidatePath("/cotizar");
+  redirect("/cotizar/resumen");
 }
 
 export async function setActivePlanType(formData: FormData) {
@@ -38,7 +38,7 @@ export async function setActivePaymentType(formData: FormData) {
 
 export const deleteSelectedPlan = () => {
   cookies().delete("selectedPlan");
-  revalidatePath("/cotizar");
+  redirect("/cotizar/planes");
 };
 
 export const deleteProspectQuote = () => {

@@ -7,6 +7,7 @@ import {
   publicPaths,
   authPaths,
   defaultRoutes,
+  quoteRoutes,
 } from "@/features/layout/nav-config/constants";
 import {
   getRoutesByRoles,
@@ -25,24 +26,46 @@ export async function middleware(request: NextRequest) {
   }
 
   const pathWithoutQuery = path.split("?")[0];
-
   const session = await getSession();
 
-  if (!session.isLoggedIn) {
-    // Permitir acceso a la ruta "/cotizar" para evitar bucle infinito
-    if (pathWithoutQuery === "/cotizar") {
-      return NextResponse.next();
-    }
+  // Manejo de rutas de cotización
+  if (pathWithoutQuery.startsWith("/cotizar")) {
+    const prospect = request.cookies.get("prospect")?.value;
+    const selectedPlan = request.cookies.get("selectedPlan")?.value;
 
-    // Solo para la ruta "/finalizar-cotizacion" verificar cookies "prospect" y "selectedPlan"
-    if (pathWithoutQuery === "/finalizar-cotizacion") {
-      const hasProspect = request.cookies.get("prospect");
-      const hasSelectedPlan = request.cookies.get("selectedPlan");
-      if (!hasProspect && !hasSelectedPlan) {
-        return NextResponse.redirect(new URL("/cotizar", request.url));
+    const hasProspect = prospect ? JSON.parse(prospect) : null;
+    const hasSelectedPlan = selectedPlan ? JSON.parse(selectedPlan) : null;
+
+    if (pathWithoutQuery === quoteRoutes.root) {
+      if (!hasProspect) {
+        return NextResponse.redirect(new URL(quoteRoutes.flow, request.url));
+      }
+      if (hasProspect && !hasSelectedPlan) {
+        return NextResponse.redirect(new URL(quoteRoutes.planes, request.url));
+      }
+      if (hasProspect && hasSelectedPlan) {
+        return NextResponse.redirect(new URL(quoteRoutes.resumen, request.url));
       }
     }
 
+    if (pathWithoutQuery === quoteRoutes.planes && !hasProspect) {
+      return NextResponse.redirect(new URL(quoteRoutes.flow, request.url));
+    }
+
+    if (
+      pathWithoutQuery === quoteRoutes.resumen &&
+      (!hasProspect || !hasSelectedPlan)
+    ) {
+      return NextResponse.redirect(new URL(quoteRoutes.flow, request.url));
+    }
+
+    if (pathWithoutQuery === quoteRoutes.flow && hasProspect) {
+      return NextResponse.redirect(new URL(quoteRoutes.planes, request.url));
+    }
+  }
+
+  // Manejo de autenticación
+  if (!session.isLoggedIn) {
     if (
       publicPaths.includes(pathWithoutQuery) ||
       authPaths.includes(pathWithoutQuery)

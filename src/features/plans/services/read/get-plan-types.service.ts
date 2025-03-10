@@ -55,18 +55,3 @@ export const getPlanTypesService = async ({
     },
   };
 };
-
-export const GetPlanTypesService = async () => {
-  const planTypes = await prisma.planType.findMany({
-    where: {
-      name: {
-        not: "Hibrido",
-      },
-    },
-    orderBy: {
-      orderIndex: "asc",
-    },
-  });
-
-  return planTypes;
-};

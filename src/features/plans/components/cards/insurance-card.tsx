@@ -69,7 +69,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             width={128}
             height={128}
             alt={company.name}
-            className="w-32 h-16 object-contain mb-4"
+            className="w-40 h-32 object-contain mb-4"
           />
           <div className="text-center">
             <p className="text-sm text-sky-600 font-semibold uppercase mb-2">

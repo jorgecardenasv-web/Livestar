@@ -11,7 +11,7 @@ import { usePathname } from "next/navigation";
 export const Navbar = () => {
   const pathname = usePathname();
 
-  const isVisible = pathname === "/cotizar" || pathname === "/finalizar-cotizacion";
+  const isQuoteRoute = pathname?.startsWith('/cotizar') || pathname === '/finalizar-cotizacion';
 
   return (
     <nav className="text-white pt-5 md:pt-8 container">
@@ -32,7 +32,7 @@ export const Navbar = () => {
         <div className="hidden md:flex items-center gap-4 lg:gap-6 xl:gap-8">
           <div className="flex items-center gap-4">
             {
-              isVisible &&
+              isQuoteRoute &&
               <NewQuoteButton />
             }
 
