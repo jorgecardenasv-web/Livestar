@@ -6,8 +6,13 @@ import Image from "next/image";
 import Link from "next/link";
 import Logo from "@/assets/shared/livestar_logo_horizontal_blanco.svg"
 import { useState } from "react";
+import { NewQuoteButton } from "./new-quote.button";
 
-export function NavbarMobile() {
+export function NavbarMobile({
+  isQuoteRoute
+}: {
+  isQuoteRoute: boolean
+}) {
   const [showDropdown, setShowDropdown] = useState(false)
   return (
     <div className="md:hidden">
@@ -78,6 +83,10 @@ export function NavbarMobile() {
                 <Link href="https://livestar.mx/en-confianza/" className="block px-3 py-2 text-white hover:text-gray-200 transition-colors font-medium">
                   En confianza
                 </Link>
+                {
+                  isQuoteRoute &&
+                  <NewQuoteButton />
+                }
               </div>
             </div>
           </nav>

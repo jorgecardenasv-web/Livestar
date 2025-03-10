@@ -28,7 +28,7 @@ export const steps = [
     component: (
       <>
         <h2 className="text-3xl font-bold text-center text-gray-600 mb-6">
-        ¿Qué es un seguro de gastos médicos?
+          ¿Qué es un seguro de gastos médicos?
         </h2>
         <p className="text-gray-600 text-lg text-center leading-8 text-balance">
           Es tu <span className="text-primary font-bold">respaldo</span> cuando

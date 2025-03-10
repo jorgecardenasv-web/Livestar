@@ -106,7 +106,7 @@ export const Navbar = () => {
         </div>
 
         {/* Mobile menu button and content */}
-        <NavbarMobile />
+        <NavbarMobile isQuoteRoute />
       </div>
     </nav>
   );

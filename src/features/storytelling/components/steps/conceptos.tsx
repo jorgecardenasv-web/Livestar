@@ -32,21 +32,21 @@ const concepts: Concept[] = [
 
 export const Conceptos = () => {
   return (
-    <div className="space-y-10">
+    <div className="space-y-6 sm:space-y-10">
       <div>
-        <h2 className="text-3xl font-bold text-center text-gray-600 mb-3">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-600 mb-2 sm:mb-3">
           ¿Cómo funciona?
         </h2>
-        <h4 className="text-xl font-semibold text-center text-gray-600 mb-6">
+        <h4 className="text-lg sm:text-xl font-semibold text-center text-gray-600 mb-4 sm:mb-6">
           Los 3 conceptos básicos que necesitas saber
         </h4>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4 gap-x-6 mt-6 justify-items-center">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 justify-items-center">
         {concepts.map(({ title, description, icon }) => (
           <div
             key={title}
-            className="border bg-white rounded shadow-md overflow-hidden transition-all duration-300 lg:hover:shadow-xl relative group w-72 md:w-52 h-auto lg:h-64"
+            className="border bg-white rounded shadow-md overflow-hidden transition-all duration-300 lg:hover:shadow-xl relative group w-full max-w-[280px] md:w-52 h-auto lg:h-64"
           >
             <div className="absolute inset-0 bg-gradient-to-b from-[#008AED] to-[#004E87] opacity-0 lg:group-hover:opacity-70 transition-opacity duration-300 z-10"></div>
 

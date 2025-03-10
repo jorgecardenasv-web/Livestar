@@ -15,11 +15,11 @@ export function InsuranceFlow() {
   const progress = ((step + 1) / steps.length) * 100;
 
   return (
-    <div className="bg-gradient-to-b from-white to-blue-50 pb-10 px-2 sm:px-4">
+    <div className="bg-gradient-to-b from-white to-blue-50 pb-6 sm:pb-10 px-2 sm:px-6">
       <Card className="max-w-6xl mx-auto bg-white overflow-hidden">
-        <CardContent className="pt-4 px-2 sm:px-6">
+        <CardContent className="pt-4 sm:pt-6 px-2 sm:px-6">
           {/* Progress Bar */}
-          <div className="w-full sm:w-2/3 mx-auto bg-gray-100 h-2 rounded-full mb-8">
+          <div className="w-[90%] sm:w-2/3 mx-auto bg-gray-100 h-2 rounded-full mb-6 sm:mb-10">
             <motion.div
               className="h-full bg-primary rounded-full"
               initial={{ width: 0 }}
@@ -29,7 +29,7 @@ export function InsuranceFlow() {
           </div>
 
           {/* Navigation */}
-          <div className="mt-10 items-center">
+          <div className="mt-4 sm:mt-8 items-center">
             {/* Content */}
             <AnimatePresence mode="wait">
               <motion.div
@@ -38,7 +38,7 @@ export function InsuranceFlow() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
-                className="min-h-[400px] sm:min-h-[500px] grid place-content-center max-w-full sm:max-w-[800px] mx-auto px-2"
+                className="min-h-[350px] sm:min-h-[500px] grid place-content-center max-w-full sm:max-w-[800px] mx-auto px-2 sm:px-8 overflow-x-hidden"
               >
                 {steps[step].component}
               </motion.div>
@@ -49,9 +49,9 @@ export function InsuranceFlow() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3, delay: 0.1 }}
-              className="flex flex-col items-center gap-y-4 mt-10"
+              className="flex flex-col items-center gap-y-4 sm:gap-y-6 mt-6 sm:mt-12"
             >
-              <div className="flex flex-col md:flex-row justify-between items-center w-full gap-y-4 md:gap-y-0">
+              <div className="flex flex-col md:flex-row justify-between items-center w-full gap-y-4 sm:gap-y-6 md:gap-y-0">
                 {/* Skip Intro Button */}
                 <AnimatePresence mode="wait">
                   {step === 0 && (
