@@ -19,7 +19,7 @@ const PlansGrid = ({
     <div className="w-11/12 mx-auto flex-col gap-4 xl:grid xl:grid-flow-col justify-center lg:auto-cols-max items-end">
       {regularPlans.map((plan) => {
         const activePlan =
-          plan.planTypeId === currentPlanType.id ? plan : null;
+          plan.planTypeId === currentPlanType?.id ? plan : null;
 
         return (
           activePlan && (
@@ -86,7 +86,6 @@ export const PlansContent = async ({
   }
 
   return (
-
     <PlansGrid
       regularPlans={regularPlans}
       hybridPlans={hybridPlans}
