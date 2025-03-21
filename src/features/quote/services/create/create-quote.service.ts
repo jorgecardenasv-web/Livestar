@@ -16,6 +16,13 @@ interface CreateQuoteParams {
     individualPricesJson?: string;
     isMultipleString?: string;
     deductiblesJson?: string;
+    companyId?: string;
+    companyLogo?: string;
+    planTypeId?: string;
+    planTypeName?: string;
+    prices?: any;
+    deductibles?: any;
+    isRecommended?: boolean;
   };
 }
 
@@ -52,10 +59,26 @@ export const createQuoteService = async (
     ? JSON.parse(plan.deductiblesJson)
     : null;
 
-  // Convertir todos los valores numéricos a tipo number
+  const planData = {
+    id: plan.id,
+    companyId: plan.companyId,
+    companyName: plan.company,
+    companyLogo: plan.companyLogo,
+    planTypeId: plan.planTypeId,
+    planTypeName: plan.planTypeName || plan.plan,
+    sumInsured: parseFloat(plan.sumInsured.toString()),
+    coInsurance: parseFloat(plan.coInsurance.toString()),
+    coInsuranceCap: parseFloat(plan.coInsuranceCap.toString()),
+    prices: plan.prices || (plan.individualPricesJson ? JSON.parse(plan.individualPricesJson) : null),
+    deductibles: plan.deductibles || (plan.deductiblesJson ? JSON.parse(plan.deductiblesJson) : null),
+    isRecommended: plan.isRecommended || false,
+    paymentType: plan.paymentType,
+    coverageFee: parseFloat(plan.coverage_fee.toString()),
+  };
+
   const quoteData = {
     prospectId: prospect.id,
-    planId: plan.id,
+    planData: planData,
     totalPrice: parseFloat(plan.coverage_fee.toString()),
     protectWho,
     medicalHistories: medicalData,

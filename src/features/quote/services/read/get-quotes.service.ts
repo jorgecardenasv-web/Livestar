@@ -6,7 +6,7 @@ import {
   filterOptionsToWhere,
   textSearchFilterBuilder,
 } from "@/shared/utils/where-filter-builder";
-import { Quote } from "../../types";
+import { PlanData, Quote } from "../../types";
 
 export const getQuotesService = async ({
   page = "1",
@@ -28,6 +28,7 @@ export const getQuotesService = async ({
         | "medicalHistories"
         | "membersData"
         | "deductiblesData"
+        | "planData"
       >
     >(filtersOptions);
 
@@ -52,12 +53,6 @@ export const getQuotesService = async ({
       include: {
         user: true,
         prospect: true,
-        plan: {
-          include: {
-            company: true,
-            planType: true,
-          },
-        },
       },
     }),
     prisma.quote.count({
@@ -68,10 +63,48 @@ export const getQuotesService = async ({
     }),
   ]);
 
+  // Procesar cada cotización para asegurar que planData tenga la estructura correcta
+  const processedQuotes: Quote[] = quotes.map(quote => {
+    let parsedPlanData: PlanData | null = null;
+    
+    if (quote.planData) {
+      try {
+        const rawPlanData = typeof quote.planData === 'string' 
+          ? JSON.parse(quote.planData) 
+          : quote.planData;
+        
+        // Asegurarnos de que tiene la estructura correcta
+        parsedPlanData = {
+          id: rawPlanData.id || '',
+          companyId: rawPlanData.companyId || '',
+          companyName: rawPlanData.companyName || '',
+          companyLogo: rawPlanData.companyLogo,
+          planTypeId: rawPlanData.planTypeId || '',
+          planTypeName: rawPlanData.planTypeName || '',
+          sumInsured: Number(rawPlanData.sumInsured) || 0,
+          coInsurance: Number(rawPlanData.coInsurance) || 0,
+          coInsuranceCap: Number(rawPlanData.coInsuranceCap) || 0,
+          prices: rawPlanData.prices,
+          deductibles: rawPlanData.deductibles,
+          isRecommended: Boolean(rawPlanData.isRecommended),
+          paymentType: rawPlanData.paymentType || '',
+          coverageFee: Number(rawPlanData.coverageFee) || 0,
+        };
+      } catch (e) {
+        console.error('Error parsing planData:', e);
+      }
+    }
+    
+    return {
+      ...quote,
+      planData: parsedPlanData as PlanData
+    };
+  });
+
   return {
     success: true,
     data: {
-      items: quotes,
+      items: processedQuotes,
       totalItems: count,
       totalPages: Math.ceil(count / pageSize),
       currentPage,

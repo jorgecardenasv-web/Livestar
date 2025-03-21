@@ -109,12 +109,10 @@ model Plan {
   status         PlanStatus @default(ACTIVO)
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
-  quotes         Quote[]
   isRecommended  Boolean    @default(false)
   prices         Json
   deductibles    Json
 
-  @@unique([planTypeId, companyId])
   @@schema("public")
 }
 
@@ -145,10 +143,9 @@ enum QuoteStatus {
 
 model Quote {
   id                   String          @id @default(uuid()) @db.Uuid
-  prospect             Prospect        @relation(fields: [prospectId], references: [id])
+  prospect             Prospect        @relation(fields: [prospectId], references: [id], onDelete: Cascade)
   prospectId           String          @db.Uuid
-  plan                 Plan            @relation(fields: [planId], references: [id])
-  planId               String          @db.Uuid
+  planData             Json            
   totalPrice           Float
   status               QuoteStatus     @default(NUEVO)
   createdAt            DateTime        @default(now())
@@ -177,7 +174,7 @@ model Quote {
 model TrackingNumber {
   id           String   @id @default(uuid()) @db.Uuid
   number       String   @unique
-  quote        Quote    @relation(fields: [quoteId], references: [id])
+  quote        Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
   quoteId      String   @unique @db.Uuid
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt

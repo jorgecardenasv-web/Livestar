@@ -24,13 +24,17 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
 
   const { showNotification } = useNotificationStore()
 
-  const updateUserWithId = updateQuote.bind(null, quote.id)
+  // Asegurarnos de que quote no sea nulo antes de acceder a sus propiedades
+  const updateUserWithId = quote?.id ? updateQuote.bind(null, quote.id) : null
 
-  const [state, formAction] = useFormState(updateUserWithId, {
-    message: "",
-    success: false,
-    inputErrors: {},
-  })
+  const [state, formAction] = useFormState(
+    updateUserWithId || (() => ({ message: "Error: No se pudo encontrar la cotización", success: false, inputErrors: {} })),
+    {
+      message: "",
+      success: false,
+      inputErrors: {},
+    }
+  )
 
   useEffect(() => {
     if (state.success) {
@@ -78,15 +82,19 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
     return members;
   };
 
-  const getDeductibleText = (quote: Quote) => {
-    if (quote.isMultipleDeductible && quote.deductiblesData) {
-      return `desde ${formatCurrency(quote.deductible)}`;
+  // Función para obtener el texto del deducible
+  const getDeductibleText = (quote: Quote | null) => {
+    if (!quote) return '';
+    
+    if (quote.isMultipleDeductible) {
+      return "Múltiples opciones";
+    } else {
+      return formatCurrency(quote.deductible);
     }
-    return formatCurrency(quote.deductible);
   };
 
   // Procesar los miembros desde la data real
-  const members = processMembers(quote.membersData);
+  const members = processMembers(quote?.membersData);
 
   return (
     <>
@@ -96,7 +104,7 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
             { label: "Cotizaciones", href: `${prefix}/cotizaciones` },
             {
               label: "Detalle de cotización",
-              href: `${prefix}/cotizaciones/${quote.id}`,
+              href: `${prefix}/cotizaciones/${quote?.id}`,
             },
           ]}
         />
@@ -161,10 +169,10 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
                   <div className="flex items-center space-x-4">
                     <div className="flex-1">
                       <h3 className="text-xl font-bold text-primary">
-                        {quote?.plan?.planType?.name}
+                        {quote?.planData?.planTypeName}
                       </h3>
                       <p className="text-muted-foreground">
-                        {quote?.plan?.company.name}
+                        {quote?.planData?.companyName}
                       </p>
                     </div>
                   </div>
@@ -182,7 +190,7 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
                         <dt className="text-muted-foreground">Deducible:</dt>
                         <dd className="font-medium">{getDeductibleText(quote)}</dd>
                       </div>
-                      {quote.isMultipleDeductible && quote.deductiblesData && (
+                      {quote?.isMultipleDeductible && quote?.deductiblesData && (
                         <div className="pt-2">
                           <DeductiblesAccordion
                             deductiblesData={quote.deductiblesData as DeductiblesData}
@@ -194,11 +202,11 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
                       )}
                       <div className="flex justify-between">
                         <dt className="text-muted-foreground">Coaseguro:</dt>
-                        <dd className="font-medium">{quote.coInsurance}%</dd>
+                        <dd className="font-medium">{quote?.coInsurance}%</dd>
                       </div>
                       <div className="flex justify-between">
                         <dt className="text-muted-foreground">Tope de Coaseguro:</dt>
-                        <dd className="font-medium">{formatCurrency(quote.coInsuranceCap)}</dd>
+                        <dd className="font-medium">{formatCurrency(quote?.coInsuranceCap)}</dd>
                       </div>
                     </dl>
                   </div>
@@ -241,4 +249,3 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
     </>
   )
 }
-

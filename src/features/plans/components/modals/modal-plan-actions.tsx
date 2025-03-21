@@ -12,7 +12,11 @@ export const ModalPlanActions: FC = () => {
     <>
       {
         isOpen && modalType === "deletePlan" && (
-          <Modal title="Eliminar tipo de plan" size="2xl">
+          <Modal 
+            title="Eliminar Plan" 
+            description="¿Estás seguro de que deseas eliminar este plan? Esta acción no se puede deshacer."
+            size="lg"
+          >
             <DeletePlanForm />
           </Modal>
         )

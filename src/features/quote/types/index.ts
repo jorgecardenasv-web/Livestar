@@ -5,6 +5,7 @@ import {
   Quote as PrismaQuote,
   Prospect,
   User,
+  Prisma,
 } from "@prisma/client";
 
 interface Plan extends PrismaPlan {
@@ -12,10 +13,29 @@ interface Plan extends PrismaPlan {
   company: Insurance;
 }
 
-export interface Quote extends PrismaQuote {
+// Definimos la estructura del objeto planData
+export interface PlanData {
+  id: string;
+  companyId: string;
+  companyName: string;
+  companyLogo?: string;
+  planTypeId: string;
+  planTypeName: string;
+  sumInsured: number;
+  coInsurance: number;
+  coInsuranceCap: number;
+  prices?: any;
+  deductibles?: any;
+  isRecommended?: boolean;
+  paymentType: string;
+  coverageFee: number;
+  [key: string]: any; // Añadimos un índice de firma para hacerlo compatible con JsonObject
+}
+
+export interface Quote extends Omit<PrismaQuote, 'planData'> {
   user: User | null;
   prospect: Prospect | null;
-  plan: Plan | null;
+  planData: PlanData;
 }
 
 // Definir tipos más específicos para los datos de deducibles

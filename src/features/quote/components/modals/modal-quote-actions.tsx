@@ -7,6 +7,7 @@ import { DateRangePicker } from "@/shared/components/ui/data-range-picker";
 import { useQuoteActions } from "../../hooks/use-quote-actions";
 import { UpdateQuoteForm } from "../forms/update-prospect-form";
 import { useReport } from "../../hooks/use-report";
+import { DeleteQuoteForm } from "../forms/delete-quote-form";
 
 export const ModalQuoteActions = ({ advisors }: { advisors: Advisor[] }) => {
   const { isOpen, modalType } = useQuoteActions();
@@ -32,6 +33,16 @@ export const ModalQuoteActions = ({ advisors }: { advisors: Advisor[] }) => {
               {isLoading ? "Generando..." : "Crear"}
             </Button>
           </form>
+        </Modal>
+      )}
+
+      {isOpen && modalType === "deleteQuote" && (
+        <Modal 
+          title="Eliminar Cotización" 
+          description="¿Estás seguro de que deseas eliminar esta cotización? Esta acción también podría eliminar el prospecto asociado si no tiene otras cotizaciones."
+          size="lg"
+        >
+          <DeleteQuoteForm />
         </Modal>
       )}
     </>

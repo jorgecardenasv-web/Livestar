@@ -92,11 +92,7 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
       <div className="rounded-xl bg-muted/50 p-5">
         <Card>
           <CardContent className="space-y-6 p-6">
-            <div className="space-y-4">
-              <Callout title="Importante" variant="info" className="text-sm">
-                <p>No puede haber dos tipos de planes en la misma aseguradora, esto aplica para la creación y actualización.</p>
-                <p>Si desea crear o cambiar el tipo de plan, es necesario borrar el plan que ya existe.</p>
-              </Callout>
+            
               <SelectInput
                 name="planTypeId"
                 label="Tipo de Plan"
@@ -104,7 +100,6 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
                 defaultValue={plan?.planType?.id}
                 required
               />
-            </div>
 
             <SelectInput
               name="companyId"
