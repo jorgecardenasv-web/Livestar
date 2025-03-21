@@ -310,7 +310,7 @@ export const seedQuotes = async (
     const quote = await prisma.quote.create({
       data: {
         prospectId: prospect.id,
-        planId: faker.helpers.arrayElement(plans).id,
+        planData: faker.helpers.arrayElement(plans),
         userId: faker.helpers.arrayElement(advisors).id,
         totalPrice: coverageFee,
         protectWho,
