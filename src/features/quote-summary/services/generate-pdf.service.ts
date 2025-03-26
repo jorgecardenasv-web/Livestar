@@ -6,10 +6,10 @@ type OutputFormat = "datauri" | "arraybuffer";
 
 const styles = {
   colors: {
-    primary: "#003366", // Navy blue for financial services
+    primary: "#003366",
     text: "#333333",
     subtext: "#666666",
-    accent: "#60A5FA", // Gold accent
+    accent: "#60A5FA",
     background: "#F8F9FA",
   },
   margins: {
@@ -22,8 +22,8 @@ const styles = {
     value: 90,
   },
   spacing: {
-    section: 8, // Reduced from 15
-    element: 6, // Reduced from 7
+    section: 12,
+    element: 8, 
   },
   fonts: {
     header: "helvetica",
@@ -79,8 +79,35 @@ export const generatePDFService = (
       );
     };
 
-    let yPos = styles.margins.top;
+    const checkSpace = (doc: jsPDF, neededSpace: number): void => {
+      const pageHeight = doc.internal.pageSize.height;
+      if (yPos + neededSpace > pageHeight - 40) {
+        doc.addPage();
+        yPos = styles.margins.top;
+      }
+    };
 
+    const addSectionHeader = (doc: jsPDF, text: string) => {
+      yPos += styles.spacing.section / 2;
+      doc.setFillColor(styles.colors.background);
+      doc.rect(
+        styles.margins.left,
+        yPos - 5,
+        doc.internal.pageSize.width - 50,
+        10,
+        "F"
+      );
+      addText(doc, text, {
+        y: yPos,
+        size: 14,
+        color: styles.colors.primary,
+        style: "bold",
+        font: styles.fonts.header,
+      });
+      yPos += 10;
+    };
+
+    let yPos = styles.margins.top;
     addText(doc, "COTIZACIÓN DE SEGURO", {
       y: yPos,
       size: 24,
@@ -91,7 +118,7 @@ export const generatePDFService = (
       font: styles.fonts.header,
     });
 
-    yPos += 8;
+    yPos += 10;
     addText(doc, "DE GASTOS MÉDICOS", {
       y: yPos,
       size: 20,
@@ -102,7 +129,7 @@ export const generatePDFService = (
       font: styles.fonts.header,
     });
 
-    yPos += 4;
+    yPos += 6;
     addLine(doc, yPos, { color: styles.colors.accent, width: 1 });
 
     const infoItems = [
@@ -118,7 +145,7 @@ export const generatePDFService = (
       },
     ];
 
-    yPos += 10;
+    yPos += 15;    
     infoItems.forEach((item) => {
       addText(doc, item.label, {
         y: yPos,
@@ -135,26 +162,6 @@ export const generatePDFService = (
     yPos += styles.spacing.section;
     addLine(doc, yPos);
     yPos += styles.spacing.section;
-
-    const addSectionHeader = (doc: jsPDF, text: string) => {
-      yPos += styles.spacing.section;
-      doc.setFillColor(styles.colors.background);
-      doc.rect(
-        styles.margins.left,
-        yPos - 5,
-        doc.internal.pageSize.width - 50,
-        10,
-        "F"
-      );
-      addText(doc, text, {
-        y: yPos,
-        size: 14,
-        color: styles.colors.primary,
-        style: "bold",
-        font: styles.fonts.header,
-      });
-      yPos += 8;
-    };
 
     addSectionHeader(doc, "PRIMA DEL SEGURO");
 
@@ -180,10 +187,11 @@ export const generatePDFService = (
       style: "bold",
     });
 
-    yPos += styles.spacing.section;
+    yPos += styles.spacing.section + 4;
     addLine(doc, yPos);
     yPos += styles.spacing.section;
 
+    // Sección de Coberturas Principales
     addSectionHeader(doc, "COBERTURAS PRINCIPALES");
 
     const coverages = [
@@ -211,9 +219,48 @@ export const generatePDFService = (
       yPos += styles.spacing.element;
     });
 
-    yPos += styles.spacing.section;
+    yPos += styles.spacing.section + 4;
     addLine(doc, yPos);
     yPos += styles.spacing.section;
+
+    const hasMultipleDeductibles = data.isMultipleDeductible && data.deductibles;
+    
+    let transformedDeductibles: any[] = [];
+    if (hasMultipleDeductibles) {
+      transformedDeductibles = Object.entries(data.deductibles!).reduce(
+        (acc: any[], [key, values]: [string, any]) => {
+          Object.entries(values).forEach(([hospitalLevel, amount]) => {
+            const existingGroup = acc.find(
+              (item) => item.hospitalLevel === hospitalLevel
+            );
+            if (existingGroup) {
+              existingGroup[key] = amount;
+            } else {
+              acc.push({
+                hospitalLevel,
+                [key]: amount,
+              });
+            }
+          });
+          return acc;
+        },
+        []
+      );
+    }
+    
+    let totalNeededSpace = 0;
+    
+    if (data.members.length > 0) {
+      totalNeededSpace += 30 + (data.members.length * 10);
+    }
+    
+    if (hasMultipleDeductibles) {
+      totalNeededSpace += 40 + (transformedDeductibles.length * 12);
+    }
+    
+    if (data.members.length > 0 && hasMultipleDeductibles) {
+      checkSpace(doc, totalNeededSpace);
+    }
 
     if (data.members.length > 0) {
       addSectionHeader(doc, "DESGLOSE DE ASEGURADOS");
@@ -223,7 +270,7 @@ export const generatePDFService = (
         styles.margins.left,
         yPos - 5,
         doc.internal.pageSize.width - 50,
-        8,
+        10,
         "F"
       );
 
@@ -231,6 +278,7 @@ export const generatePDFService = (
         y: yPos,
         style: "bold",
         color: "#FFFFFF",
+        x: styles.margins.left + 5,
       });
       addText(doc, "Prima Individual", {
         y: yPos,
@@ -239,30 +287,23 @@ export const generatePDFService = (
         color: "#FFFFFF",
       });
 
-      yPos += 8;
+      yPos += 10;
 
       data.members.forEach((member, index) => {
-        const checkSpace = (doc: jsPDF, neededSpace: number): void => {
-          const pageHeight = doc.internal.pageSize.height;
-          if (yPos + neededSpace > pageHeight - 30) {
-            doc.addPage();
-            yPos = styles.margins.top;
-          }
-        };
-        checkSpace(doc, 10);
         if (index % 2 === 0) {
           doc.setFillColor(styles.colors.background);
           doc.rect(
             styles.margins.left,
             yPos - 5,
             doc.internal.pageSize.width - 50,
-            8,
+            10,
             "F"
           );
         }
 
         addText(doc, member.name || member.type, {
           y: yPos,
+          x: styles.margins.left + 5,
         });
         addText(doc, formatCurrency(member.price), {
           y: yPos,
@@ -270,7 +311,96 @@ export const generatePDFService = (
           color: styles.colors.primary,
         });
 
-        yPos += 8;
+        yPos += 10;
+      });
+    }
+
+    if (hasMultipleDeductibles) {
+      if (data.members.length === 0) {
+        checkSpace(doc, 40 + (transformedDeductibles.length * 12));
+      } else {
+        yPos += 10;
+      }
+      
+      addSectionHeader(doc, "DEDUCIBLES POR NIVEL HOSPITALARIO");
+      
+      doc.setFillColor(styles.colors.primary);
+      doc.rect(
+        styles.margins.left,
+        yPos - 5,
+        doc.internal.pageSize.width - 50,
+        10,
+        "F"
+      );
+      
+      const tableWidth = doc.internal.pageSize.width - 50 - styles.margins.left;
+      const colWidth = tableWidth / 3;
+      
+      addText(doc, "Nivel Hospitalario", {
+        y: yPos,
+        style: "bold",
+        color: "#FFFFFF",
+        x: styles.margins.left + 5,
+      });
+      
+      addText(doc, "Menores de 45 años", {
+        y: yPos,
+        style: "bold",
+        color: "#FFFFFF",
+        x: styles.margins.left + colWidth + 5,
+      });
+      
+      addText(doc, "Mayores de 45 años", {
+        y: yPos,
+        style: "bold",
+        color: "#FFFFFF",
+        x: styles.margins.left + (colWidth * 2) + 5,
+      });
+      
+      yPos += 10;
+      
+      transformedDeductibles.forEach((deductible, index) => {
+        if (index % 2 === 0) {
+          doc.setFillColor(styles.colors.background);
+          doc.rect(
+            styles.margins.left,
+            yPos - 5,
+            doc.internal.pageSize.width - 50,
+            10,
+            "F"
+          );
+        }
+        
+        addText(doc, deductible.hospitalLevel, {
+          y: yPos,
+          x: styles.margins.left + 5,
+        });
+        
+        addText(doc, deductible.opcion_2 ? formatCurrency(deductible.opcion_2) : "N/A", {
+          y: yPos,
+          x: styles.margins.left + colWidth + 5,
+          color: styles.colors.primary,
+          style: "bold",
+        });
+        
+        addText(doc, deductible.opcion_4 ? formatCurrency(deductible.opcion_4) : "N/A", {
+          y: yPos,
+          x: styles.margins.left + (colWidth * 2) + 5,
+          color: styles.colors.primary,
+          style: "bold",
+        });
+        
+        yPos += 10;
+      });
+      
+      yPos += 8;
+      const noteText = "* Los deducibles varían según el nivel hospitalario y la edad del asegurado.";
+      addText(doc, noteText, {
+        y: yPos,
+        size: 9,
+        color: styles.colors.subtext,
+        x: styles.margins.left,
+        style: "italic",
       });
     }
 
