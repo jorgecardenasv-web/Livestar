@@ -6,9 +6,7 @@ import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { getProspect } from "../../loaders/get-prospect";
 import { getImage } from "../../../../shared/services/get-image.service";
 import { formatCurrency } from "@/shared/utils";
-import {
-  PriceTable,
-} from "../../types";
+import { PriceTable } from "../../types";
 import { Plan } from "../../types/plan";
 
 interface InsuranceCardProps {
@@ -39,9 +37,10 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 
   const isMultiple = typeof deductibles["default"] === "number" ? false : true;
 
-  const minor = typeof deductibles["default"] === "number"
-    ? deductibles["default"]
-    : getMinimumValue(plan.deductibles, prospect.age);
+  const minor =
+    typeof deductibles["default"] === "number"
+      ? deductibles["default"]
+      : getMinimumValue(plan.deductibles, prospect.age);
 
   const prices: PriceTable = (plan.prices as unknown as PriceTable) || {};
   const { coverage_fee, individualPrices } = calculateInsurancePrice(
@@ -54,8 +53,9 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 
   return (
     <div
-      className={`bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${isRecommended ? "ring-4 ring-[#00a5e3] " : ""
-        }`}
+      className={`md:min-w-[350px] bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${
+        isRecommended ? "ring-4 ring-[#00a5e3] " : ""
+      }`}
     >
       {isRecommended && (
         <div className="bg-[#00a5e3] text-white text-center py-2 text-sm font-bold">
@@ -65,7 +65,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
       <div className="p-6">
         <div className="flex flex-col items-center mb-6">
           <Image
-            src={logoSrc?.base64 || '/fallback-image.png'}
+            src={logoSrc?.base64 || "/fallback-image.png"}
             width={128}
             height={128}
             alt={company.name}

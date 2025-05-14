@@ -280,10 +280,19 @@ const createDeductiblesData = (baseDeductible: number) => {
 
 export const seedQuotes = async (
   prisma: PrismaClient,
-  advisors: any[],
-  plans: any[]
+  advisors: User[], // Changed from any[] to User[] for better type safety
+  plansFromDb: Plan[] // Changed from any[] to Plan[]
 ) => {
   const QUOTES_TO_CREATE = 50;
+
+  if (advisors.length === 0) {
+    console.warn("⚠️ No advisors found to assign quotes. Skipping quote seeding.");
+    return;
+  }
+  if (plansFromDb.length === 0) {
+    console.warn("⚠️ No plans found to assign to quotes. Skipping quote seeding.");
+    return;
+  }
 
   for (let i = 0; i < QUOTES_TO_CREATE; i++) {
     const protectWho = faker.helpers.arrayElement(PROTECT_WHO_OPTIONS);
@@ -307,11 +316,14 @@ export const seedQuotes = async (
       },
     });
 
+    const selectedPlan = faker.helpers.arrayElement(plansFromDb);
+    const selectedAdvisor = faker.helpers.arrayElement(advisors);
+
     const quote = await prisma.quote.create({
       data: {
         prospectId: prospect.id,
-        planData: faker.helpers.arrayElement(plans),
-        userId: faker.helpers.arrayElement(advisors).id,
+        planData: selectedPlan, // Assign the full plan object, Prisma handles JSON conversion
+        userId: selectedAdvisor.id,
         totalPrice: coverageFee,
         protectWho,
         additionalInfo,
@@ -322,7 +334,6 @@ export const seedQuotes = async (
           QuoteStatus.EN_PROGRESO,
           QuoteStatus.CERRADO,
         ]),
-        // Nuevos campos
         coverageFee,
         paymentType: faker.helpers.arrayElement([
           "Anual",
@@ -345,27 +356,17 @@ export const seedQuotes = async (
         membersData: createMembersData(protectWho, additionalInfo),
         isMultipleDeductible: faker.datatype.boolean(),
         deductiblesData: createDeductiblesData(baseDeductible),
+        // Ensure all required fields from your schema are present
+        expirationDate: faker.date.future(), // Example: add if needed
+        lastContactDate: faker.date.recent(), // Example: add if needed
       },
     });
 
-    await prisma.trackingNumber.create({
-      data: {
-        number: `TM-${faker.string.alphanumeric(8).toUpperCase()}`,
-        quoteId: quote.id,
-        lastActivity: new Date(),
-        activityLog: {
-          actividades: [
-            {
-              fecha: new Date(),
-              descripcion: "Cotización creada",
-            },
-          ],
-        },
-      },
-    });
+    // REMOVED TrackingNumber creation
+    // await prisma.trackingNumber.create({ ... });
   }
 
   console.log(
-    `✅ Created ${QUOTES_TO_CREATE} quotes with prospects and tracking numbers`
+    `✅ Created ${QUOTES_TO_CREATE} quotes with prospects.` // Updated log message
   );
 };

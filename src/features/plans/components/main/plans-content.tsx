@@ -13,7 +13,7 @@ const PlansGrid = ({
   regularPlans,
   hybridPlans,
   currentPlanType,
-  activePaymentType
+  activePaymentType,
 }: PlansGridProps) => {
   return (
     <div className="w-11/12 mx-auto flex-col gap-4 xl:grid xl:grid-flow-col justify-center lg:auto-cols-max items-end">
@@ -24,7 +24,7 @@ const PlansGrid = ({
         return (
           activePlan && (
             <InsuranceCard
-              key={`${plan.company.name}-${currentPlanType.id}`}
+              key={activePlan.id}
               company={plan.company}
               plan={activePlan}
               paymentType={activePaymentType}
@@ -33,15 +33,22 @@ const PlansGrid = ({
           )
         );
       })}
-      {hybridPlans.map((plan) => (
-        <InsuranceCard
-          key={`${plan.company.name}-hybrid`}
-          company={plan.company}
-          plan={plan}
-          paymentType={activePaymentType}
-          isRecommended={plan.isRecommended}
-        />
-      ))}
+      {hybridPlans.map((plan) => {
+        const activePlan =
+          plan.planTypeId === currentPlanType?.id ? plan : null;
+
+        return (
+          activePlan && (
+            <InsuranceCard
+              key={activePlan.id}
+              company={plan.company}
+              plan={activePlan}
+              paymentType={activePaymentType}
+              isRecommended={plan.isRecommended}
+            />
+          )
+        );
+      })}
     </div>
   );
 };
@@ -57,23 +64,25 @@ export const PlansContent = async ({
   planTypeId,
   regularPlanTypes,
   currentPlanType,
-  activePaymentType
+  activePaymentType,
 }: PlansContentProps) => {
-  const { data: { items: plans } } = await getPlans({
+  const {
+    data: { items: plans },
+  } = await getPlans({
     page: "1",
     offset: "100",
   });
 
-  const sortedPlans = (plans as Plan[]).sort((a, b) =>
-    a.planType.orderIndex - b.planType.orderIndex
+  const sortedPlans = (plans as Plan[]).sort(
+    (a, b) => a.planType.orderIndex - b.planType.orderIndex
   );
 
-  const regularPlans = sortedPlans.filter(plan =>
-    !['hibrido', 'híbrido'].includes(plan.planType.name.toLowerCase())
+  const regularPlans = sortedPlans.filter(
+    (plan) => !["hibrido", "híbrido"].includes(plan.planType.name.toLowerCase())
   );
 
-  const hybridPlans = sortedPlans.filter(plan =>
-    ['hibrido', 'híbrido'].includes(plan.planType.name.toLowerCase())
+  const hybridPlans = sortedPlans.filter((plan) =>
+    ["hibrido", "híbrido"].includes(plan.planType.name.toLowerCase())
   );
 
   if (regularPlans.length === 0 && hybridPlans.length === 0) {
