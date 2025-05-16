@@ -1,13 +1,30 @@
 import Image from "next/image";
-import { calculateInsurancePrice } from "../../utils";
-import { Shield, Percent, Heart, DollarSign } from "lucide-react";
+import { calculateInsurancePrice, isHDIPriceTable } from "../../utils";
+import {
+  Shield,
+  Percent,
+  Heart,
+  DollarSign,
+  User,
+  Users,
+  Baby,
+  PersonStanding,
+} from "lucide-react";
 import { handleInterestClick } from "../../actions/set-cookies";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { getProspect } from "../../loaders/get-prospect";
 import { getImage } from "../../../../shared/services/get-image.service";
 import { formatCurrency } from "@/shared/utils";
-import { PriceTable } from "../../types";
-import { Plan } from "../../types/plan";
+import type { PriceTable } from "../../types";
+import type { Plan } from "../../types/plan";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/shared/components/ui/accordion";
+import { cookies } from "next/headers";
+import type { HDIPriceTable } from "../../types";
 
 interface InsuranceCardProps {
   company: {
@@ -35,19 +52,53 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   const { prospect, protectWho, additionalInfo } = await getProspect();
   const deductibles: Deductibles = plan.deductibles;
 
-  const isMultiple = typeof deductibles["default"] === "number" ? false : true;
+  const isMultiple = typeof deductibles.default !== "number";
 
   const minor =
-    typeof deductibles["default"] === "number"
-      ? deductibles["default"]
+    typeof deductibles.default === "number"
+      ? deductibles.default
       : getMinimumValue(plan.deductibles, prospect.age);
 
-  const prices: PriceTable = (plan.prices as unknown as PriceTable) || {};
+  const prices: PriceTable | HDIPriceTable =
+    (plan.prices as unknown as PriceTable | HDIPriceTable) || {};
+
+  // Use the type guard here
+  const isHDIPrice = isHDIPriceTable(prices);
+
   const { coverage_fee, individualPrices } = calculateInsurancePrice(
     { ...prospect, protectWho, additionalInfo },
     prices,
     paymentType
   );
+  //we need to calculate the total segundoMesADoce fee if HDI and payment is mensual, looks a little weird though
+  let totalSegundoMesADoce = 0;
+  if (isHDIPrice && paymentType === "Mensual") {
+    if (typeof individualPrices.main !== "number") {
+      totalSegundoMesADoce += individualPrices.main?.segundoMesADoce || 0;
+    }
+    if (
+      individualPrices.partner &&
+      typeof individualPrices.partner !== "number"
+    ) {
+      totalSegundoMesADoce += individualPrices.partner?.segundoMesADoce || 0;
+    }
+    individualPrices.children.forEach((childPrice) => {
+      if (typeof childPrice !== "number") {
+        totalSegundoMesADoce += childPrice?.segundoMesADoce || 0;
+      }
+    });
+    individualPrices.parents.forEach((parent) => {
+      if (typeof parent.price !== "number") {
+        totalSegundoMesADoce += parent.price?.segundoMesADoce || 0;
+      }
+    });
+    individualPrices.others?.forEach((other) => {
+      if (typeof other.price !== "number") {
+        totalSegundoMesADoce += other.price?.segundoMesADoce || 0;
+      }
+    });
+    totalSegundoMesADoce = Math.round(totalSegundoMesADoce);
+  }
 
   const logoSrc = company.logo ? await getImage(company.logo) : null;
 
@@ -71,29 +122,74 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             alt={company.name}
             className="w-44 h-auto mb-4"
           />
-          <div className="text-center">
+          <div className="w-full text-center">
+            {/* we could left this or change it to the plan name, or change it to plan instead of pago */}
             <p className="text-sm text-sky-600 font-semibold uppercase mb-2">
               {paymentType === "Mensual" ? "Pago mensual" : "Pago anual"}
             </p>
-            {Object.entries(individualPrices).map(([key, value], index) => {
-              const formattedValue = getFormattedValue(
-                key,
-                value,
-                individualPrices.protectWho
-              );
-              return <div key={index}> {formattedValue}</div>;
-            })}
-            {protectWho !== "solo_yo" && (
+            {isHDIPrice && paymentType === "Mensual" ? (
+              <>
+                <p className="text-xl font-bold text-[#223E99]">
+                  {formatCurrency(coverage_fee)}{" "}
+                  <span className="text-base font-normal text-gray-600">
+                    /primer mes
+                  </span>
+                </p>
+                <p className="text-xl font-bold text-[#223E99]">
+                  {formatCurrency(totalSegundoMesADoce)}{" "}
+                  <span className="text-base font-normal text-gray-600">
+                    /mes (2-12)
+                  </span>
+                </p>
+              </>
+            ) : (
+              //works for both cases, HDI and non-HDI
+              <p className="text-3xl font-bold text-[#223E99]">
+                {formatCurrency(coverage_fee)}{" "}
+                <span className="text-base font-normal text-gray-600">
+                  {paymentType === "Mensual" ? "/mes" : "/año"}
+                </span>{" "}
+              </p>
+            )}
+            {/* {protectWho !== "solo_yo" && (
               <p className="text-sm text-sky-600 font-semibold uppercase mb-1 mt-2">
                 {paymentType === "Mensual" ? "Pago mensual" : "Pago anual"}{" "}
                 Total
               </p>
-            )}
-            <p className="text-3xl font-bold text-[#223E99]">
-              {formatCurrency(coverage_fee)}
-            </p>
+            )} */}
           </div>
         </div>
+
+        {protectWho !== "solo_yo" && (
+          <div className="mb-6">
+            <Accordion
+              type="single"
+              collapsible
+              className="w-full bg-slate-50 border-none rounded-lg"
+            >
+              <AccordionItem value="item-1" className="border-b-0">
+                <AccordionTrigger className="px-4 py-3 text-sm text-sky-600 font-semibold uppercase hover:no-underline border-none bg-white rounded-lg shadow-sm flex items-center justify-between">
+                  <p className="font-sans">
+                    {paymentType === "Mensual"
+                      ? "Desglose Mensual"
+                      : "Desglose Anual"}
+                  </p>
+                </AccordionTrigger>
+                <AccordionContent className="p-4 rounded space-y-2 shadow-sm">
+                  {Object.entries(individualPrices).map(([key, value]) => {
+                    const formattedValue = getFormattedValue(
+                      key,
+                      value,
+                      individualPrices.protectWho,
+                      paymentType
+                    );
+                    return formattedValue;
+                  })}
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+        )}
 
         <div className="space-y-4 mb-6">
           <InfoItem
@@ -172,7 +268,7 @@ const InfoItem = ({
   title: string;
   value: string;
 }) => (
-  <div className="bg-white rounded-xl p-4 shadow-sm flex items-center space-x-3">
+  <div className="bg-white rounded-xl p-4 shadow-sm flex items-center space-x-3 hover:shadow-md transition-all ease-in-out duration-200">
     <div className="bg-sky-100 p-2 rounded-lg text-sky-600">{icon}</div>
     <div>
       <p className="text-xs text-sky-600 font-semibold uppercase">{title}</p>
@@ -194,75 +290,155 @@ function getMinimumValue(
   return valores.length > 0 ? Math.min(...valores) : 0;
 }
 
-function getFormattedValue(key: string, value: any, protectWho: any) {
-  if (
-    key === "main" &&
-    ["mi_pareja_y_yo", "familia", "mis_hijos_y_yo"].includes(protectWho)
-  ) {
-    return (
-      <div className="flex items-center space-x-4 justify-between">
-        <p className="text-xs text-sky-600 font-semibold uppercase flex-shrink-0">
-          {`Tú: `}
-        </p>
-        <p className="text-lg font-bold text-[#223E99]">
-          {`$${(value ?? 0).toLocaleString()}`}
-        </p>
-      </div>
-    );
-  }
+function getFormattedValue(
+  key: string,
+  value: any,
+  protectWho: any,
+  paymentType: string
+) {
+  let icon = null;
+  let label = "";
 
-  if (key === "partner" && ["mi_pareja_y_yo", "familia"].includes(protectWho)) {
-    return (
-      <div className="flex items-center space-x-4 justify-between">
-        <p className="text-xs text-sky-600 font-semibold uppercase flex-shrink-0">
-          {`Pareja: `}
-        </p>
-        <p className="text-lg font-bold text-[#223E99]">
-          {`$${(value ?? 0).toLocaleString()}`}
-        </p>
-      </div>
-    );
-  }
+  const renderPriceDetails = (price: any) => {
+    if (typeof price === "number") {
+      return (
+        <p className="text-lg font-bold text-[#223E99]">{`$${price.toLocaleString()}`}</p>
+      );
+    }
 
-  if (Array.isArray(value) && value.length === 0)
-    return <div className="hidden"></div>;
-
-  if (key === "parents" && Array.isArray(value)) {
-    return value.map((parent, index) => (
-      <div key={index} className="flex items-center space-x-4 justify-between">
-        <p className="text-xs text-sky-600 font-semibold uppercase flex-shrink-0">
-          {`${parent.name}: `}
-        </p>
+    if (
+      price &&
+      typeof price === "object" &&
+      "anual" in price &&
+      "primerMes" in price &&
+      "segundoMesADoce" in price
+    ) {
+      if (paymentType === "Mensual") {
+        return (
+          <div className="flex flex-col items-end text-right">
+            <p className="text-sm font-bold text-[#223E99]">
+              {formatCurrency(price.primerMes)}
+              <span className="text-xs font-normal text-gray-600">
+                /primer mes
+              </span>
+            </p>
+            <p className="text-sm font-bold text-[#223E99]">
+              {formatCurrency(price.segundoMesADoce)}
+              <span className="text-xs font-normal text-gray-600">
+                /mes (2-12)
+              </span>
+            </p>
+          </div>
+        );
+      }
+      return (
         <p className="text-lg font-bold text-[#223E99]">
-          {`$${(parent.price ?? 0).toLocaleString()}`}
+          {formatCurrency(price.anual)}
+          <span className="text-xs font-normal text-gray-600">/año</span>
         </p>
-      </div>
-    ));
-  }
+      );
+    }
+    return null;
+  };
 
-  if (key === "children" && Array.isArray(value)) {
-    return value.map((child, index) => (
-      <div key={index} className="flex items-center space-x-4 justify-between">
-        <p className="text-xs text-sky-600 font-semibold uppercase flex-shrink-0">
-          {`Hijo${value.length > 1 ? ` ${index + 1}` : ""}:`}
-        </p>
-        <p className="text-lg font-bold text-[#223E99]">
-          {`$${(child ?? 0).toLocaleString()}`}
-        </p>
-      </div>
-    ));
-  }
-
-  if (key === "others" && Array.isArray(value)) {
-    return value.map((other, index) => (
-      <div key={index} className="flex items-center space-x-4 justify-between">
-        <p className="text-xs text-sky-600 font-semibold uppercase flex-shrink-0">
-          {`${other.relationship}: `}
-        </p>
-        <p className="text-lg font-bold text-[#223E99]">
-          {`$${(other.price ?? 0).toLocaleString()}`}
-        </p>
-      </div>
-    ));
+  switch (key) {
+    case "main":
+      if (
+        ["mi_pareja_y_yo", "familia", "mis_hijos_y_yo"].includes(protectWho)
+      ) {
+        icon = <User className="w-4 h-4 text-sky-600 flex-shrink-0" />;
+        label = "Tú:";
+        return (
+          <div
+            key={key}
+            className="flex items-center space-x-4 justify-between"
+          >
+            <div className="flex items-center space-x-2">
+              {icon}
+              <p className="text-xs text-sky-600 font-semibold uppercase flex-shrink-0">
+                {label}
+              </p>
+            </div>
+            {renderPriceDetails(value)}
+          </div>
+        );
+      }
+      return null;
+    case "partner":
+      if (["mi_pareja_y_yo", "familia"].includes(protectWho)) {
+        icon = <Heart className="w-4 h-4 text-sky-600 flex-shrink-0" />;
+        label = "Pareja:";
+        return (
+          <div
+            key={key}
+            className="flex items-center space-x-4 justify-between"
+          >
+            <div className="flex items-center space-x-2">
+              {icon}
+              <p className="text-xs text-sky-600 font-semibold uppercase flex-shrink-0">
+                {label}
+              </p>
+            </div>
+            {renderPriceDetails(value)}
+          </div>
+        );
+      }
+      return null;
+    case "parents":
+      if (Array.isArray(value) && value.length > 0) {
+        return value.map((parent, index) => (
+          <div
+            key={`${key}-${index.toString()}`}
+            className="flex items-center space-x-4 justify-between"
+          >
+            <div className="flex items-center space-x-2">
+              <PersonStanding className="w-4 h-4 text-sky-600 flex-shrink-0" />
+              <p className="text-xs text-sky-600 font-semibold uppercase flex-shrink-0">
+                {`${parent.name}: `}
+              </p>
+            </div>
+            {renderPriceDetails(parent.price)}
+          </div>
+        ));
+      }
+      return null;
+    case "children":
+      if (Array.isArray(value) && value.length > 0) {
+        return value.map((child, index) => (
+          <div
+            key={`${key}-${index.toString()}`}
+            className="flex items-center space-x-4 justify-between"
+          >
+            <div className="flex items-center space-x-2">
+              <Baby className="w-4 h-4 text-sky-600 flex-shrink-0" />
+              <p className="text-xs text-sky-600 font-semibold uppercase flex-shrink-0">
+                {`Hijo${value.length > 1 ? ` ${index + 1}` : ""}:`}
+              </p>
+            </div>
+            {renderPriceDetails(child)}
+          </div>
+        ));
+      }
+      return null;
+    case "others":
+      if (Array.isArray(value) && value.length > 0) {
+        return value.map((other, index) => (
+          <div
+            key={`${key}-${index.toString()}`}
+            className="flex items-center space-x-4 justify-between"
+          >
+            <div className="flex items-center space-x-2">
+              <Users className="w-4 h-4 text-sky-600 flex-shrink-0" />
+              <p className="text-xs text-sky-600 font-semibold uppercase flex-shrink-0">
+                {`${other.relationship}: `}
+              </p>
+            </div>
+            {renderPriceDetails(other.price)}
+          </div>
+        ));
+      }
+      return null;
+    default:
+      return null;
   }
 }

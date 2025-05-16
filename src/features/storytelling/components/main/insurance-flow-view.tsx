@@ -70,8 +70,8 @@ export function InsuranceFlow() {
                       >
                         <SkipForward
                           size={24}
-                          strokeWidth={3}
-                          className="animate-ping"
+                          /* strokeWidth={3} */
+                          /* className="animate-ping" */
                         />
                         Saltar introducción
                       </Button>
