@@ -21,6 +21,8 @@ export const formatCurrency = (value: number) =>
     maximumFractionDigits: 0,
   }).format(value);
 
+export const formatPercentage = (value: number) => `${value}%`;
+
 export * from "./notification-message";
 export * from "./simplify-zod-errors";
 export * from "./parsed-form-data-age";

@@ -129,7 +129,7 @@ export function CoInsuranceAccordion({
                   <div key={levelKey} className="flex justify-between items-center py-1">
                     <span className="text-muted-foreground">{LEVEL_LABELS[levelKey]}:</span>
                     <div className="flex gap-2 items-center">
-                      <span className="font-medium text-primary">{formatPercentage(value)}</span>
+                      <span className="font-medium text-primary">{formatPercentage(Number(value))}</span>
                       {coInsuranceCaps && (
                         <span className="text-xs text-muted-foreground">
                           (Tope: {formatCurrency(coInsuranceCaps[levelKey as keyof typeof coInsuranceCaps])})

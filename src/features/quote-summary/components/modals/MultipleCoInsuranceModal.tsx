@@ -72,18 +72,18 @@ export default function MultipleCoInsuranceModal() {
                 Nivel {row.hospitalLevel}
               </TableCell>
               <TableCell>
-                {formatPercentage(row.opcion_2 ?? 0)}
+                {formatPercentage(Number(row.opcion_2 ?? 0))}
                 {capData[row.hospitalLevel]?.opcion_2 && (
                   <span className="text-xs text-muted-foreground ml-2">
-                    (Tope: {formatCurrency(capData[row.hospitalLevel].opcion_2)})
+                    (Tope: {formatCurrency(Number(capData[row.hospitalLevel].opcion_2))})
                   </span>
                 )}
               </TableCell>
               <TableCell>
-                {formatPercentage(row.opcion_4 ?? 0)}
+                {formatPercentage(Number(row.opcion_4 ?? 0))}
                 {capData[row.hospitalLevel]?.opcion_4 && (
                   <span className="text-xs text-muted-foreground ml-2">
-                    (Tope: {formatCurrency(capData[row.hospitalLevel].opcion_4)})
+                    (Tope: {formatCurrency(Number(capData[row.hospitalLevel].opcion_4))})
                   </span>
                 )}
               </TableCell>

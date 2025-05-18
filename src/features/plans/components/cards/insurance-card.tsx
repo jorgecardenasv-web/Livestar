@@ -10,6 +10,7 @@ import {
   PriceTable,
 } from "../../types";
 import { Plan } from "../../types/plan";
+import { CoInsuranceData, CoInsuranceCapData } from "../../../quote/types";
 
 interface InsuranceCardProps {
   company: {
@@ -42,11 +43,11 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 }) => {
   const { prospect, protectWho, additionalInfo } = await getProspect();
   const deductibles: Deductibles = plan.deductibles;
-  const coInsuranceData: CoInsuranceValues = plan.coInsurance;
-  const coInsuranceCapData: CoInsuranceValues = plan.coInsuranceCap || { value: 0 };
+  const coInsuranceData: CoInsuranceValues = plan.coInsurance as CoInsuranceValues;
+  const coInsuranceCapData: CoInsuranceValues = plan.coInsuranceCap ? (plan.coInsuranceCap as CoInsuranceValues) : { value: 0 };
 
   const isMultiple = typeof deductibles["default"] === "number" ? false : true;
-  const isMultipleCoInsurance = coInsuranceData.value !== undefined ? false : true;
+  const isMultipleCoInsurance = coInsuranceData && typeof coInsuranceData === 'object' && 'opcion_2' in coInsuranceData;
 
   const minor = typeof deductibles["default"] === "number"
     ? deductibles["default"]
