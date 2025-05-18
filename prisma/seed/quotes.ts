@@ -170,7 +170,11 @@ const createAdditionalInfo = (
   }
 };
 
-const createMembersData = (protectWho: string, additionalInfo: any) => {
+const createMembersData = (
+  protectWho: string,
+  additionalInfo: any,
+  isHDI: boolean = false
+) => {
   const membersData: any = {};
   const mainPrice = faker.number.float({
     min: 8000,
@@ -178,81 +182,161 @@ const createMembersData = (protectWho: string, additionalInfo: any) => {
     fractionDigits: 2,
   });
 
+  // Función para generar datos HDI con formato diferente
+  const generateHDIPrice = () => {
+    const primerMes = faker.number.float({
+      min: 2500,
+      max: 5000,
+      fractionDigits: 2,
+    });
+    const segundoMesADoce = faker.number.float({
+      min: 800,
+      max: 2500,
+      fractionDigits: 2,
+    });
+    return {
+      primerMes,
+      segundoMesADoce,
+      anual: primerMes + segundoMesADoce * 11,
+    };
+  };
+
   switch (protectWho) {
     case "solo_yo":
-      membersData.main = mainPrice;
+      if (isHDI) {
+        membersData.main = generateHDIPrice();
+      } else {
+        membersData.main = mainPrice;
+      }
       break;
 
     case "mi_pareja_y_yo":
-      membersData.main = mainPrice;
-      membersData.partner = faker.number.float({
-        min: 8000,
-        max: 15000,
-        fractionDigits: 2,
-      });
-      break;
-
-    case "familia":
-    case "mis_hijos_y_yo":
-      membersData.main = mainPrice;
-      if (additionalInfo.partnerAge) {
+      if (isHDI) {
+        membersData.main = generateHDIPrice();
+        membersData.partner = generateHDIPrice();
+      } else {
+        membersData.main = mainPrice;
         membersData.partner = faker.number.float({
           min: 8000,
           max: 15000,
           fractionDigits: 2,
         });
       }
-      if (additionalInfo.children) {
-        membersData.children = additionalInfo.children.map(() =>
-          faker.number.float({ min: 5000, max: 10000, fractionDigits: 2 })
-        );
+      break;
+
+    case "familia":
+    case "mis_hijos_y_yo":
+      if (isHDI) {
+        membersData.main = generateHDIPrice();
+        if (additionalInfo.partnerAge) {
+          membersData.partner = generateHDIPrice();
+        }
+        if (additionalInfo.children) {
+          membersData.children = additionalInfo.children.map(() =>
+            generateHDIPrice()
+          );
+        }
+      } else {
+        membersData.main = mainPrice;
+        if (additionalInfo.partnerAge) {
+          membersData.partner = faker.number.float({
+            min: 8000,
+            max: 15000,
+            fractionDigits: 2,
+          });
+        }
+        if (additionalInfo.children) {
+          membersData.children = additionalInfo.children.map(() =>
+            faker.number.float({ min: 5000, max: 10000, fractionDigits: 2 })
+          );
+        }
       }
       break;
 
     case "solo_mis_hijos":
       if (additionalInfo.children) {
-        membersData.children = additionalInfo.children.map(() =>
-          faker.number.float({ min: 5000, max: 10000, fractionDigits: 2 })
-        );
+        if (isHDI) {
+          membersData.children = additionalInfo.children.map(() =>
+            generateHDIPrice()
+          );
+        } else {
+          membersData.children = additionalInfo.children.map(() =>
+            faker.number.float({ min: 5000, max: 10000, fractionDigits: 2 })
+          );
+        }
       }
       break;
 
     case "mis_padres":
       membersData.parents = [];
       if (additionalInfo.momAge) {
-        membersData.parents.push({
-          name: additionalInfo.momName,
-          price: faker.number.float({
-            min: 12000,
-            max: 20000,
-            fractionDigits: 2,
-          }),
-        });
+        if (isHDI) {
+          const hdiPrice = generateHDIPrice();
+          membersData.parents.push({
+            name: additionalInfo.momName,
+            price: hdiPrice.anual,
+            primerMes: hdiPrice.primerMes,
+            segundoMesADoce: hdiPrice.segundoMesADoce,
+          });
+        } else {
+          membersData.parents.push({
+            name: additionalInfo.momName,
+            price: faker.number.float({
+              min: 12000,
+              max: 20000,
+              fractionDigits: 2,
+            }),
+          });
+        }
       }
       if (additionalInfo.dadAge) {
-        membersData.parents.push({
-          name: additionalInfo.dadName,
-          price: faker.number.float({
-            min: 12000,
-            max: 20000,
-            fractionDigits: 2,
-          }),
-        });
+        if (isHDI) {
+          const hdiPrice = generateHDIPrice();
+          membersData.parents.push({
+            name: additionalInfo.dadName,
+            price: hdiPrice.anual,
+            primerMes: hdiPrice.primerMes,
+            segundoMesADoce: hdiPrice.segundoMesADoce,
+          });
+        } else {
+          membersData.parents.push({
+            name: additionalInfo.dadName,
+            price: faker.number.float({
+              min: 12000,
+              max: 20000,
+              fractionDigits: 2,
+            }),
+          });
+        }
       }
       break;
 
     case "otros":
       if (additionalInfo.protectedPersons) {
-        membersData.others = additionalInfo.protectedPersons.map(
-          (person: any) => ({
-            name: person.relationship,
-            price: faker.number.float({
-              min: 8000,
-              max: 15000,
-              fractionDigits: 2,
-            }),
-          })
-        );
+        if (isHDI) {
+          membersData.others = additionalInfo.protectedPersons.map(
+            (person: any) => {
+              const hdiPrice = generateHDIPrice();
+              return {
+                name: person.relationship,
+                price: hdiPrice.anual,
+                primerMes: hdiPrice.primerMes,
+                segundoMesADoce: hdiPrice.segundoMesADoce,
+              };
+            }
+          );
+        } else {
+          membersData.others = additionalInfo.protectedPersons.map(
+            (person: any) => ({
+              name: person.relationship,
+              price: faker.number.float({
+                min: 8000,
+                max: 15000,
+                fractionDigits: 2,
+              }),
+            })
+          );
+        }
       }
       break;
   }
@@ -349,8 +433,10 @@ export const seedQuotes = async (
       fractionDigits: 2,
     });
 
-    // Determinar si se utilizará coaseguro múltiple (solo para GNP)
-    const isMultipleCoInsurance = useGnp && faker.datatype.boolean(0.7); // 70% de probabilidad para planes GNP
+    // Para GNP, siempre utilizamos múltiple coaseguro, múltiple deducible y tope de coaseguro
+    // Para HDI, mantenemos formato estándar sin múltiples opciones
+    const isMultipleCoInsurance = useGnp; // Siempre true para GNP
+    const isMultipleDeductible = useGnp; // Siempre true para GNP
 
     const prospect = await prisma.prospect.create({
       data: {
@@ -365,11 +451,11 @@ export const seedQuotes = async (
     });
 
     // Preparar datos de coaseguro según la aseguradora
-    const coInsuranceData = isMultipleCoInsurance
+    const coInsuranceData = useGnp
       ? createCoInsuranceData(baseCoInsurance)
       : null;
 
-    const coInsuranceCapData = isMultipleCoInsurance
+    const coInsuranceCapData = useGnp
       ? createCoInsuranceCapData(baseCoInsuranceCap)
       : null;
 
@@ -390,12 +476,10 @@ export const seedQuotes = async (
         ]),
         // Nuevos campos
         coverageFee,
-        paymentType: faker.helpers.arrayElement([
-          "Anual",
-          "Semestral",
-          "Trimestral",
-          "Mensual",
-        ]),
+        // Para HDI solo usamos pago mensual, para GNP puede ser mensual o anual
+        paymentType: useGnp
+          ? faker.helpers.arrayElement(["Anual", "Mensual"])
+          : "Mensual",
         sumInsured:
           selectedPlan.sumInsured ||
           faker.number.float({
@@ -406,11 +490,14 @@ export const seedQuotes = async (
         deductible: baseDeductible,
         coInsurance: baseCoInsurance,
         coInsuranceCap: baseCoInsuranceCap,
-        membersData: createMembersData(protectWho, additionalInfo),
-        isMultipleDeductible: useGnp && faker.datatype.boolean(0.7), // Solo para GNP con 70% de probabilidad
+        // Pasar isHDI como true para cotizaciones HDI
+        membersData: createMembersData(protectWho, additionalInfo, !useGnp),
+        // GNP siempre tiene múltiple deducible
+        isMultipleDeductible: isMultipleDeductible,
         deductiblesData: useGnp
           ? createDeductiblesData(baseDeductible)
           : Prisma.JsonNull,
+        // GNP siempre tiene múltiple coaseguro
         isMultipleCoInsurance: isMultipleCoInsurance,
         coInsuranceData: coInsuranceData || Prisma.JsonNull,
         coInsuranceCapData: coInsuranceCapData || Prisma.JsonNull,

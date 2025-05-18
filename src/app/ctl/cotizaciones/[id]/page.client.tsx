@@ -47,39 +47,67 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
     if (!membersData) return [];
 
     const members = [];
+
+    // Verificar si tenemos formato con precios diferenciados (primerMes y segundoMesADoce)
+    // Este formato puede estar presente en HDI u otras aseguradoras que usen precios iniciales diferentes
+    const hasDifferentiatedPrices = membersData && typeof membersData === 'object' &&
+      (membersData.main && typeof membersData.main === 'object' && membersData.main.primerMes !== undefined ||
+        membersData.partner && typeof membersData.partner === 'object' && membersData.partner.primerMes !== undefined ||
+        (membersData.children && membersData.children[0] &&
+          typeof membersData.children[0] === 'object' && membersData.children[0].primerMes !== undefined));
+
+    // Función auxiliar para procesar cada miembro con formato consistente
+    const processMember = (member: any, type: string, id: string, name?: string) => {
+      if (hasDifferentiatedPrices && typeof member === 'object' && member.primerMes !== undefined) {
+        return {
+          id,
+          type,
+          name,
+          price: member.price || member.anual || 0,
+          primerMes: member.primerMes,
+          segundoMesADoce: member.segundoMesADoce
+        };
+      } else if (typeof member === 'object' && member.price !== undefined) {
+        return {
+          id,
+          type,
+          name,
+          price: member.price
+        };
+      } else {
+        return {
+          id,
+          type,
+          name,
+          price: member
+        };
+      }
+    };
+
+    // Procesar titular
     if (membersData.main) {
-      members.push({
-        id: 'main',
-        type: 'Titular',
-        price: membersData.main
-      });
+      members.push(processMember(membersData.main, 'Titular', 'main'));
     }
+
+    // Procesar pareja
     if (membersData.partner) {
-      members.push({
-        id: 'partner',
-        type: 'Pareja',
-        price: membersData.partner
-      });
+      members.push(processMember(membersData.partner, 'Pareja', 'partner'));
     }
+
+    // Procesar hijos
     if (membersData.children) {
-      membersData.children.forEach((price: number, index: number) => {
-        members.push({
-          id: `child-${index}`,
-          type: `Hijo/a ${index + 1}`,
-          price: price
-        });
+      membersData.children.forEach((child: any, index: number) => {
+        members.push(processMember(child, `Hijo/a ${index + 1}`, `child-${index}`));
       });
     }
+
+    // Procesar padres
     if (membersData.parents) {
-      membersData.parents.forEach((parent: { name: string, price: number }, index: number) => {
-        members.push({
-          id: `parent-${index}`,
-          type: 'Padre/Madre',
-          name: parent.name,
-          price: parent.price
-        });
+      membersData.parents.forEach((parent: any, index: number) => {
+        members.push(processMember(parent, 'Padre/Madre', `parent-${index}`, parent.name));
       });
     }
+
     return members;
   };
 
@@ -257,15 +285,50 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
 
                   {/* Prima Total */}
                   <div className="border-t border-border pt-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-muted-foreground">Prima Total:</span>
-                      <span className="text-2xl font-bold text-primary">
-                        {formatCurrency(quote?.coverageFee)}
-                      </span>
-                    </div>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Recurrencia de Pago: {quote?.paymentType}
-                    </p>
+                    {members.some(m => m.primerMes !== undefined && m.segundoMesADoce !== undefined) ? (
+                      <>
+                        <div className="space-y-2 mb-3">
+                          <div className="flex justify-between items-center">
+                            <span className="text-muted-foreground">Pago Inicial (Mes 1):</span>
+                            <span className="font-bold text-primary">
+                              {formatCurrency(members.reduce((sum, m) => sum + (m.primerMes || 0), 0))}
+                            </span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-muted-foreground">Pago Mensual (Meses 2-12):</span>
+                            <span className="font-bold text-primary">
+                              {formatCurrency(members.reduce((sum, m) => sum + (m.segundoMesADoce || 0), 0))}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex justify-between items-center border-t border-border pt-2">
+                          <span className="text-muted-foreground">Prima Total Anual:</span>
+                          <span className="text-2xl font-bold text-primary">
+                            {formatCurrency(quote?.coverageFee)}
+                          </span>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Recurrencia de Pago: {quote?.paymentType}
+                        </p>
+                        <div className="bg-muted/30 rounded-md p-2 mt-2 text-xs">
+                          <p className="text-muted-foreground font-medium">
+                            * Esta cotización muestra precios diferenciados
+                          </p>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex justify-between items-center">
+                          <span className="text-muted-foreground">Prima Total:</span>
+                          <span className="text-2xl font-bold text-primary">
+                            {formatCurrency(quote?.coverageFee)}
+                          </span>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          Recurrencia de Pago: {quote?.paymentType}
+                        </p>
+                      </>
+                    )}
                   </div>
 
                   {/* Botón de Actualizar */}
