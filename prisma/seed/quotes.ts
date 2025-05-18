@@ -1,4 +1,4 @@
-import { PrismaClient, QuoteStatus } from "@prisma/client";
+import { PrismaClient, QuoteStatus, Prisma } from "@prisma/client";
 import { faker } from "@faker-js/faker/locale/es";
 
 const PROTECT_WHO_OPTIONS = [
@@ -278,12 +278,52 @@ const createDeductiblesData = (baseDeductible: number) => {
   return deductibles;
 };
 
+const createCoInsuranceData = (baseCoInsurance: number) => {
+  const coInsurance = {
+    opcion_2: {
+      A: baseCoInsurance,
+      B: baseCoInsurance + 5,
+      C: baseCoInsurance + 10,
+      D: baseCoInsurance + 15,
+    },
+    opcion_4: {
+      A: baseCoInsurance + 5,
+      B: baseCoInsurance + 10,
+      C: baseCoInsurance + 15,
+      D: baseCoInsurance + 20,
+    },
+  };
+  return coInsurance;
+};
+
+const createCoInsuranceCapData = (baseCoInsuranceCap: number) => {
+  const coInsuranceCap = {
+    opcion_2: {
+      A: baseCoInsuranceCap,
+      B: baseCoInsuranceCap * 1.25,
+      C: baseCoInsuranceCap * 1.5,
+      D: baseCoInsuranceCap * 1.75,
+    },
+    opcion_4: {
+      A: baseCoInsuranceCap * 1.25,
+      B: baseCoInsuranceCap * 1.5,
+      C: baseCoInsuranceCap * 1.75,
+      D: baseCoInsuranceCap * 2,
+    },
+  };
+  return coInsuranceCap;
+};
+
 export const seedQuotes = async (
   prisma: PrismaClient,
   advisors: any[],
   plans: any[]
 ) => {
   const QUOTES_TO_CREATE = 50;
+
+  // Obtener los planes por compañía
+  const gnpPlans = plans.filter((plan) => plan.company.name === "GNP Seguros");
+  const hdiPlans = plans.filter((plan) => plan.company.name === "HDI Seguros");
 
   for (let i = 0; i < QUOTES_TO_CREATE; i++) {
     const protectWho = faker.helpers.arrayElement(PROTECT_WHO_OPTIONS);
@@ -294,6 +334,23 @@ export const seedQuotes = async (
       max: 100000,
       fractionDigits: 2,
     });
+
+    // Determinar si esta cotización será para GNP o HDI
+    const useGnp = i % 3 !== 0; // 2/3 de las cotizaciones serán de GNP
+    const selectedPlan = useGnp
+      ? faker.helpers.arrayElement(gnpPlans)
+      : faker.helpers.arrayElement(hdiPlans);
+
+    // Valores básicos de coaseguro
+    const baseCoInsurance = faker.helpers.arrayElement([5, 10, 15]);
+    const baseCoInsuranceCap = faker.number.float({
+      min: 30000,
+      max: 60000,
+      fractionDigits: 2,
+    });
+
+    // Determinar si se utilizará coaseguro múltiple (solo para GNP)
+    const isMultipleCoInsurance = useGnp && faker.datatype.boolean(0.7); // 70% de probabilidad para planes GNP
 
     const prospect = await prisma.prospect.create({
       data: {
@@ -307,10 +364,19 @@ export const seedQuotes = async (
       },
     });
 
+    // Preparar datos de coaseguro según la aseguradora
+    const coInsuranceData = isMultipleCoInsurance
+      ? createCoInsuranceData(baseCoInsurance)
+      : null;
+
+    const coInsuranceCapData = isMultipleCoInsurance
+      ? createCoInsuranceCapData(baseCoInsuranceCap)
+      : null;
+
     const quote = await prisma.quote.create({
       data: {
         prospectId: prospect.id,
-        planData: faker.helpers.arrayElement(plans),
+        planData: selectedPlan,
         userId: faker.helpers.arrayElement(advisors).id,
         totalPrice: coverageFee,
         protectWho,
@@ -330,21 +396,24 @@ export const seedQuotes = async (
           "Trimestral",
           "Mensual",
         ]),
-        sumInsured: faker.number.float({
-          min: 5000000,
-          max: 15000000,
-          fractionDigits: 2,
-        }),
+        sumInsured:
+          selectedPlan.sumInsured ||
+          faker.number.float({
+            min: 5000000,
+            max: 15000000,
+            fractionDigits: 2,
+          }),
         deductible: baseDeductible,
-        coInsurance: faker.helpers.arrayElement([10, 20, 30]),
-        coInsuranceCap: faker.number.float({
-          min: 30000,
-          max: 60000,
-          fractionDigits: 2,
-        }),
+        coInsurance: baseCoInsurance,
+        coInsuranceCap: baseCoInsuranceCap,
         membersData: createMembersData(protectWho, additionalInfo),
-        isMultipleDeductible: faker.datatype.boolean(),
-        deductiblesData: createDeductiblesData(baseDeductible),
+        isMultipleDeductible: useGnp && faker.datatype.boolean(0.7), // Solo para GNP con 70% de probabilidad
+        deductiblesData: useGnp
+          ? createDeductiblesData(baseDeductible)
+          : Prisma.JsonNull,
+        isMultipleCoInsurance: isMultipleCoInsurance,
+        coInsuranceData: coInsuranceData || Prisma.JsonNull,
+        coInsuranceCapData: coInsuranceCapData || Prisma.JsonNull,
       },
     });
 

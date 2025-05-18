@@ -2,13 +2,26 @@ import { hash } from "bcrypt";
 import prisma from "../../src/lib/prisma";
 
 async function main() {
-  // Eliminamos registros anteriores para prevenir duplicados
-  await prisma.plan.deleteMany();
-  await prisma.planType.deleteMany();
-  await prisma.insurance.deleteMany();
+  console.log("🧹 Limpiando base de datos...");
+
+  // Eliminamos todos los registros anteriores para prevenir duplicados
+  // El orden es importante para respetar las restricciones de claves foráneas
+
+  // Primero eliminamos registros que tienen dependencias
   await prisma.trackingNumber.deleteMany();
   await prisma.quote.deleteMany();
+  await prisma.plan.deleteMany();
+
+  // Luego eliminamos registros intermedios
   await prisma.prospect.deleteMany();
+  await prisma.planType.deleteMany();
+  await prisma.insurance.deleteMany();
+
+  // Finalmente eliminamos usuarios (excepto el admin si deseamos preservarlo)
+  // Para un seed limpio, eliminamos todos los usuarios
+  await prisma.user.deleteMany();
+
+  console.log("✅ Base de datos limpiada exitosamente");
 
   // Creamos el usuario administrador
   const adminPassword = "AdminPass123";
@@ -293,7 +306,37 @@ async function main() {
     },
   });
 
-  console.log("Seed completed successfully");
+  // Creamos algunos asesores para asignar a las cotizaciones
+  console.log("👨‍💼 Creando asesores...");
+
+  const asesores = [];
+  for (let i = 0; i < 5; i++) {
+    const asesor = await prisma.user.create({
+      data: {
+        name: `Asesor ${i + 1}`,
+        email: `asesor${i + 1}@livestar.com`,
+        password: await hash("Asesor123", 10),
+        role: "ASESOR",
+        status: "ACTIVO",
+      },
+    });
+    asesores.push(asesor);
+  }
+
+  // Obtener todos los planes creados
+  const planes = await prisma.plan.findMany({
+    include: {
+      planType: true,
+      company: true,
+    },
+  });
+
+  // Cargar cotizaciones
+  console.log("📋 Creando cotizaciones...");
+  const { seedQuotes } = require("./quotes");
+  await seedQuotes(prisma, asesores, planes);
+
+  console.log("✅ Seed completed successfully");
 }
 
 main()
