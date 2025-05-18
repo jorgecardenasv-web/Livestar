@@ -7,6 +7,7 @@ import { InfoCard } from "../cards/info-card";
 import { deleteSelectedPlan } from "@/features/plans/actions/set-cookies";
 import { FC } from "react";
 import MultipleDeductibleModal from "../modals/MultipleDeductibleModal";
+import MultipleCoInsuranceModal from "../modals/MultipleCoInsuranceModal";
 import { formatCurrency } from "@/shared/utils";
 import { useQuoteSumaryActions } from "../../hooks/use-quote-sumary-actions";
 import { Modal } from "@/shared/components/ui/modal";
@@ -33,14 +34,19 @@ export const QuoteSummary: FC<
     paymentType,
     isMultipleString,
     deductiblesJson,
+    isMultipleCoInsurance,
+    coInsuranceJson,
+    coInsuranceCapJson,
     protectedWho,
   } = props;
   const isMultiple = isMultipleString === "true" ? true : false;
+  const isMultipleCoIns = isMultipleCoInsurance === "true" ? true : false;
   const {
     isOpen,
     modalType,
     openModalMoreInformation,
     openModalMultipleDeductible,
+    openModal,
   } = useQuoteSumaryActions();
 
   const optionsBtn = [
@@ -159,16 +165,31 @@ export const QuoteSummary: FC<
             htmlElement={<div className="pl-8"></div>}
           />
         </div>
-        <InfoCard
-          icon={<Percent className="w-4 h-4 sm:w-5 sm:h-5" />}
-          title="Coaseguro"
-          value={`${coInsurance}%`}
-        />
-        <InfoCard
-          icon={<Heart className="w-4 h-4 sm:w-5 sm:h-5" />}
-          title="Tope coaseguro"
-          value={formatCurrency(coInsuranceCap)}
-        />
+        <div className="flex justify-between">
+          <InfoCard
+            icon={<Percent className="w-4 h-4 sm:w-5 sm:h-5" />}
+            title="Coaseguro"
+            value={`${isMultipleCoIns ? `desde ${coInsurance}%` : `${coInsurance}%`}`}
+            useHtml={isMultipleCoIns}
+            htmlElement={
+              <button
+                onClick={() => openModal("multipleCoInsurance", { coInsurance: coInsuranceJson, coInsuranceCap: coInsuranceCapJson })}
+                className="text-xs font-bold text-blue-600 hover:underline mt-2 ml-8"
+              >
+                Ver tabla de coaseguros
+              </button>
+            }
+          />
+        </div>
+        <div className="flex justify-between">
+          <InfoCard
+            icon={<Heart className="w-4 h-4 sm:w-5 sm:h-5" />}
+            title="Tope coaseguro"
+            value={`${isMultipleCoIns ? `desde ${formatCurrency(coInsuranceCap)}` : formatCurrency(coInsuranceCap)}`}
+            useHtml={isMultipleCoIns}
+            htmlElement={<div className="pl-8"></div>}
+          />
+        </div>
       </div>
       <div className="flex justify-center">
         {filteredOpt.length > 1 ? (
@@ -194,6 +215,7 @@ export const QuoteSummary: FC<
         <Modal title="" size="6xl">
           {modalType === "multipleDeducible" && <MultipleDeductibleModal />}
           {modalType === "moreInformationQuote" && <MoreInformationQuote />}
+          {modalType === "multipleCoInsurance" && <MultipleCoInsuranceModal />}
         </Modal>
       )}
     </div>

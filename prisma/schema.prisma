@@ -104,8 +104,8 @@ model Plan {
   company        Insurance  @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId      String     @db.Uuid
   sumInsured     Float
-  coInsurance    Float
-  coInsuranceCap Float?
+  coInsurance    Json
+  coInsuranceCap Json?
   status         PlanStatus @default(ACTIVO)
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
@@ -142,31 +142,34 @@ enum QuoteStatus {
 }
 
 model Quote {
-  id                   String          @id @default(uuid()) @db.Uuid
-  prospect             Prospect        @relation(fields: [prospectId], references: [id], onDelete: Cascade)
-  prospectId           String          @db.Uuid
-  planData             Json
-  totalPrice           Float
-  status               QuoteStatus     @default(NUEVO)
-  createdAt            DateTime        @default(now())
-  updatedAt            DateTime        @updatedAt
-  trackingNumber       TrackingNumber?
-  expirationDate       DateTime?
-  protectWho           String
-  additionalInfo       Json?
-  medicalHistories     Json[]
-  userId               String?         @db.Uuid
-  user                 User?           @relation(fields: [userId], references: [id])
-  lastContactDate      DateTime?
-  coverageFee          Float
-  paymentType          String
-  sumInsured           Float
-  deductible           Float
-  coInsurance          Float
-  coInsuranceCap       Float
-  membersData          Json? // Almacenará el array de miembros con sus precios
-  isMultipleDeductible Boolean         @default(false)
-  deductiblesData      Json? // Para almacenar múltiples deducibles si aplica
+  id                    String          @id @default(uuid()) @db.Uuid
+  prospect              Prospect        @relation(fields: [prospectId], references: [id], onDelete: Cascade)
+  prospectId            String          @db.Uuid
+  planData              Json
+  totalPrice            Float
+  status                QuoteStatus     @default(NUEVO)
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  trackingNumber        TrackingNumber?
+  expirationDate        DateTime?
+  protectWho            String
+  additionalInfo        Json?
+  medicalHistories      Json[]
+  userId                String?         @db.Uuid
+  user                  User?           @relation(fields: [userId], references: [id])
+  lastContactDate       DateTime?
+  coverageFee           Float
+  paymentType           String
+  sumInsured            Float
+  deductible            Float
+  coInsurance           Float
+  coInsuranceCap        Float
+  membersData           Json? // Almacenará el array de miembros con sus precios
+  isMultipleDeductible  Boolean         @default(false)
+  deductiblesData       Json? // Para almacenar múltiples deducibles si aplica
+  isMultipleCoInsurance Boolean         @default(false)
+  coInsuranceData       Json? // Para almacenar múltiples coaseguros si aplica
+  coInsuranceCapData    Json? // Para almacenar múltiples topes de coaseguro si aplica
 
   @@schema("public")
 }

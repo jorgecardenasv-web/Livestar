@@ -28,6 +28,12 @@ interface Deductibles {
   opcion_4?: { A: number; B: number; C: number; D: number };
 }
 
+interface CoInsuranceValues {
+  value?: number;
+  opcion_2?: { A: number; B: number; C: number; D: number };
+  opcion_4?: { A: number; B: number; C: number; D: number };
+}
+
 export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   company,
   plan,
@@ -36,8 +42,11 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 }) => {
   const { prospect, protectWho, additionalInfo } = await getProspect();
   const deductibles: Deductibles = plan.deductibles;
+  const coInsuranceData: CoInsuranceValues = plan.coInsurance;
+  const coInsuranceCapData: CoInsuranceValues = plan.coInsuranceCap || { value: 0 };
 
   const isMultiple = typeof deductibles["default"] === "number" ? false : true;
+  const isMultipleCoInsurance = coInsuranceData.value !== undefined ? false : true;
 
   const minor = typeof deductibles["default"] === "number"
     ? deductibles["default"]
@@ -111,12 +120,12 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
           <InfoItem
             icon={<Percent className="w-5 h-5" />}
             title="Coaseguro"
-            value={`${plan.coInsurance}%`}
+            value={getCoInsuranceValue(plan.coInsurance)}
           />
           <InfoItem
             icon={<Heart className="w-5 h-5" />}
             title="Tope coaseguro"
-            value={`${formatCurrency(plan.coInsuranceCap || 0)}`}
+            value={getCoInsuranceCapValue(plan.coInsuranceCap)}
           />
         </div>
 
@@ -127,11 +136,42 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
           <input type="hidden" name="paymentType" value={paymentType} />
           <input type="hidden" name="sumInsured" value={plan.sumInsured} />
           <input type="hidden" name="deductible" value={minor} />
-          <input type="hidden" name="coInsurance" value={plan.coInsurance} />
+          <input
+            type="hidden"
+            name="coInsurance"
+            value={typeof plan.coInsurance === 'object' && plan.coInsurance.value !== undefined
+              ? plan.coInsurance.value
+              : typeof plan.coInsurance === 'number'
+                ? plan.coInsurance
+                : 0}
+          />
           <input
             type="hidden"
             name="coInsuranceCap"
-            value={plan.coInsuranceCap || 0}
+            value={typeof plan.coInsuranceCap === 'object' && plan.coInsuranceCap?.value !== undefined
+              ? plan.coInsuranceCap.value
+              : typeof plan.coInsuranceCap === 'number'
+                ? plan.coInsuranceCap
+                : 0}
+          />
+          <input
+            type="hidden"
+            name="isMultipleCoInsurance"
+            value={
+              typeof plan.coInsurance === 'object' &&
+                (plan.coInsurance.opcion_2 || plan.coInsurance.opcion_4) ?
+                'true' : 'false'
+            }
+          />
+          <input
+            type="hidden"
+            name="coInsuranceJson"
+            value={JSON.stringify(plan.coInsurance)}
+          />
+          <input
+            type="hidden"
+            name="coInsuranceCapJson"
+            value={JSON.stringify(plan.coInsuranceCap)}
           />
           <input type="hidden" name="coverage_fee" value={coverage_fee} />
           <input
@@ -192,6 +232,60 @@ function getMinimumValue(
 
   const valores = Object.values(option);
   return valores.length > 0 ? Math.min(...valores) : 0;
+}
+
+function getCoInsuranceValue(coInsurance: any): string {
+  if (!coInsurance) return "0%";
+
+  // Si es un valor simple
+  if (typeof coInsurance === 'number') return `${coInsurance}%`;
+
+  // Si tiene value (formato simple)
+  if (coInsurance.value !== undefined) return `${coInsurance.value}%`;
+
+  // Si es múltiple, buscamos el valor mínimo
+  let minValue = 100;
+
+  if (coInsurance.opcion_2) {
+    const values = Object.values(coInsurance.opcion_2) as number[];
+    const min = Math.min(...values);
+    minValue = Math.min(minValue, min);
+  }
+
+  if (coInsurance.opcion_4) {
+    const values = Object.values(coInsurance.opcion_4) as number[];
+    const min = Math.min(...values);
+    minValue = Math.min(minValue, min);
+  }
+
+  return `DESDE ${minValue}%`;
+}
+
+function getCoInsuranceCapValue(coInsuranceCap: any): string {
+  if (!coInsuranceCap) return formatCurrency(0);
+
+  // Si es un valor simple
+  if (typeof coInsuranceCap === 'number') return formatCurrency(coInsuranceCap);
+
+  // Si tiene value (formato simple)
+  if (coInsuranceCap.value !== undefined) return formatCurrency(coInsuranceCap.value);
+
+  // Si es múltiple, buscamos el valor mínimo
+  let minValue = Number.MAX_SAFE_INTEGER;
+
+  if (coInsuranceCap.opcion_2) {
+    const values = Object.values(coInsuranceCap.opcion_2) as number[];
+    const min = Math.min(...values);
+    minValue = Math.min(minValue, min);
+  }
+
+  if (coInsuranceCap.opcion_4) {
+    const values = Object.values(coInsuranceCap.opcion_4) as number[];
+    const min = Math.min(...values);
+    minValue = Math.min(minValue, min);
+  }
+
+  return `DESDE ${formatCurrency(minValue === Number.MAX_SAFE_INTEGER ? 0 : minValue)}`;
 }
 
 function getFormattedValue(key: string, value: any, protectWho: any) {

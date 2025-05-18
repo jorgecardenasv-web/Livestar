@@ -8,6 +8,8 @@ export const useInsurancePlanForm = (
 ) => {
   const [prices, setPrices] = useState<any[]>([]);
   const [isMultiple, setIsMultiple] = useState<boolean>(false);
+  const [isMultipleCoInsurance, setIsMultipleCoInsurance] =
+    useState<boolean>(false);
   const [isRecommended, setIsRecommended] = useState<boolean>(false);
   const [isHDI, setIsHDI] = useState(false);
   const { openModal } = useModalStore();
@@ -16,6 +18,10 @@ export const useInsurancePlanForm = (
   const handleSubmit = async (formData: FormData) => {
     formData.append("prices", JSON.stringify(prices));
     formData.append("isMultiple", JSON.stringify(isMultiple));
+    formData.append(
+      "isMultipleCoInsurance",
+      JSON.stringify(isMultipleCoInsurance)
+    );
     formData.append("isHDI", JSON.stringify(isHDI));
     formData.append("isRecommended", JSON.stringify(isRecommended));
     const { message, success } = await serverAction(formData);
@@ -34,6 +40,8 @@ export const useInsurancePlanForm = (
     setPrices,
     isMultiple,
     setIsMultiple,
+    isMultipleCoInsurance,
+    setIsMultipleCoInsurance,
     isHDI,
     setIsHDI,
     isRecommended,

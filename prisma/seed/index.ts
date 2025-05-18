@@ -146,8 +146,8 @@ async function main() {
       planTypeId: "9af3201f-06da-4805-99e0-e3f4dc6900f1", // Plan Intermedio
       companyId: "975a629c-c2c0-4fd4-b92c-aacfee8cb164", // GNP
       sumInsured: 10000000,
-      coInsurance: 10,
-      coInsuranceCap: 40000,
+      coInsurance: { value: 10 },
+      coInsuranceCap: { value: 40000 },
       status: "ACTIVO",
       isRecommended: true,
       prices: generarPreciosSeguros(),
@@ -177,8 +177,8 @@ async function main() {
       planTypeId: "333fada3-537a-4596-b1b7-87fb724d9671", // Plan Plus
       companyId: "975a629c-c2c0-4fd4-b92c-aacfee8cb164", // GNP
       sumInsured: 20000000,
-      coInsurance: 5,
-      coInsuranceCap: 30000,
+      coInsurance: { value: 5 },
+      coInsuranceCap: { value: 30000 },
       status: "ACTIVO",
       isRecommended: false,
       prices: generarPreciosSeguros(),
@@ -208,8 +208,8 @@ async function main() {
       planTypeId: "ce4ec4e3-e706-44c3-af00-ab16a07bcd69", // Híbrido
       companyId: "f1647fe3-40d6-4446-814b-c1916a2ae982", // HDI
       sumInsured: 5000000,
-      coInsurance: 0,
-      coInsuranceCap: 0,
+      coInsurance: { value: 0 },
+      coInsuranceCap: { value: 0 },
       status: "ACTIVO",
       isRecommended: true,
       prices: generarPreciosHDI(),
@@ -228,8 +228,8 @@ async function main() {
       planTypeId: "3d9a1e51-9612-43a4-a0bf-4b68523d272c", // Plan Básico
       companyId: "f1647fe3-40d6-4446-814b-c1916a2ae982", // HDI
       sumInsured: 3000000,
-      coInsurance: 5,
-      coInsuranceCap: 20000,
+      coInsurance: { value: 5 },
+      coInsuranceCap: { value: 20000 },
       status: "ACTIVO",
       isRecommended: false,
       prices: generarPreciosHDI(),
