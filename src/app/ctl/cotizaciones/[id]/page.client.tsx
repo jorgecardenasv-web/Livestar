@@ -245,9 +245,9 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
                         <div className="pt-2">
                           <DeductiblesAccordion
                             deductiblesData={quote.deductiblesData as DeductiblesData}
-                            additionalInfo={quote.additionalInfo as AdditionalInfo}
+                            additionalInfo={{ ...quote.additionalInfo as AdditionalInfo, age: Number(formData.age) }}
                             protectWho={quote.protectWho}
-                            mainAge={quote?.prospect?.age ?? null}
+                            mainAge={Number(formData.age) || quote?.prospect?.age || 0}
                           />
                         </div>
                       )}
@@ -260,16 +260,19 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
                           <CoInsuranceAccordion
                             coInsuranceData={quote.coInsuranceData as CoInsuranceData}
                             coInsuranceCapData={quote.coInsuranceCapData as CoInsuranceCapData}
-                            additionalInfo={quote.additionalInfo as AdditionalInfo}
+                            additionalInfo={{ ...quote.additionalInfo as AdditionalInfo, age: Number(formData.age) }}
                             protectWho={quote.protectWho}
-                            mainAge={quote?.prospect?.age ?? null}
+                            mainAge={Number(formData.age) || quote?.prospect?.age || 0}
                           />
                         </div>
                       )}
-                      <div className="flex justify-between">
-                        <dt className="text-muted-foreground">Tope de Coaseguro:</dt>
-                        <dd className="font-medium">{getCoInsuranceCapText(quote)}</dd>
-                      </div>
+                      {/* Solo mostrar el tope de coaseguro como línea separada cuando no es múltiple */}
+                      {!quote?.isMultipleCoInsurance && (
+                        <div className="flex justify-between">
+                          <dt className="text-muted-foreground">Tope de Coaseguro:</dt>
+                          <dd className="font-medium">{formatCurrency(quote?.coInsuranceCap || 0)}</dd>
+                        </div>
+                      )}
                     </dl>
                   </div>
 

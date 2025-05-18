@@ -10,8 +10,8 @@ import { User, Users } from "lucide-react"
 import { CoInsuranceAccordionProps, Member } from "../../types"
 
 const OPTION_LABELS: { [key: string]: string } = {
-  opcion_2: "Coaseguro (0-44 años)",
-  opcion_4: "Coaseguro (45+ años)",
+  opcion_2: "Coaseguro y tope (0-44 años)",
+  opcion_4: "Coaseguro y tope (45+ años)",
 }
 
 const LEVEL_LABELS: { [key: string]: string } = {
@@ -125,18 +125,20 @@ export function CoInsuranceAccordion({
             </AccordionTrigger>
             <AccordionContent>
               <div className="space-y-2 text-sm bg-muted/50 rounded-lg p-3 mb-3">
-                {Object.entries(coInsurances).map(([levelKey, value]) => (
-                  <div key={levelKey} className="flex justify-between items-center py-1">
+                {Object.entries(coInsurances).map(([levelKey, value]) => (<div key={levelKey} className="flex flex-col gap-1 py-1">
+                  <div className="flex justify-between items-center">
                     <span className="text-muted-foreground">{LEVEL_LABELS[levelKey]}:</span>
-                    <div className="flex gap-2 items-center">
-                      <span className="font-medium text-primary">{formatPercentage(Number(value))}</span>
-                      {coInsuranceCaps && (
-                        <span className="text-xs text-muted-foreground">
-                          (Tope: {formatCurrency(coInsuranceCaps[levelKey as keyof typeof coInsuranceCaps])})
-                        </span>
-                      )}
-                    </div>
+                    <span className="font-medium text-primary">{formatPercentage(Number(value))}</span>
                   </div>
+                  {coInsuranceCaps && (
+                    <div className="flex justify-between items-center pl-4">
+                      <span className="text-xs text-muted-foreground">Tope de Coaseguro:</span>
+                      <span className="text-xs font-medium text-primary">
+                        {formatCurrency(coInsuranceCaps[levelKey as keyof typeof coInsuranceCaps])}
+                      </span>
+                    </div>
+                  )}
+                </div>
                 ))}
               </div>
               <div className="space-y-2">
