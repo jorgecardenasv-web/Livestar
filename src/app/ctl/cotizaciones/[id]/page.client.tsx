@@ -220,10 +220,10 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
                   <div className="flex items-center space-x-4">
                     <div className="flex-1">
                       <h3 className="text-xl font-bold text-primary">
-                        {quote?.planData?.planTypeName}
+                        {quote?.planData?.planTypeName || "Plan no disponible"}
                       </h3>
                       <p className="text-muted-foreground">
-                        {quote?.planData?.companyName}
+                        {quote?.planData?.companyName || "Compañía no disponible"}
                       </p>
                     </div>
                   </div>
