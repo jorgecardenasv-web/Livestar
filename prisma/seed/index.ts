@@ -139,15 +139,41 @@ async function main() {
   // Creación de planes
   console.log("🏥 Creando planes...");
 
-  // Plan GNP con múltiples deducibles
+  // Plan GNP con múltiples deducibles y coaseguros
   await prisma.plan.create({
     data: {
       id: "73f9d6f3-0e64-4f67-ba12-60f0b070c028",
       planTypeId: "9af3201f-06da-4805-99e0-e3f4dc6900f1", // Plan Intermedio
       companyId: "975a629c-c2c0-4fd4-b92c-aacfee8cb164", // GNP
       sumInsured: 10000000,
-      coInsurance: { value: 10 },
-      coInsuranceCap: { value: 40000 },
+      coInsurance: {
+        opcion_2: {
+          A: 10,
+          B: 15,
+          C: 20,
+          D: 25,
+        },
+        opcion_4: {
+          A: 15,
+          B: 20,
+          C: 25,
+          D: 30,
+        },
+      },
+      coInsuranceCap: {
+        opcion_2: {
+          A: 40000,
+          B: 50000,
+          C: 60000,
+          D: 70000,
+        },
+        opcion_4: {
+          A: 50000,
+          B: 60000,
+          C: 70000,
+          D: 80000,
+        },
+      },
       status: "ACTIVO",
       isRecommended: true,
       prices: generarPreciosSeguros(),
@@ -170,15 +196,41 @@ async function main() {
     },
   });
 
-  // Plan GNP Plus con múltiples deducibles
+  // Plan GNP Plus con múltiples deducibles y coaseguros
   await prisma.plan.create({
     data: {
       id: "91a8d7e5-3b42-4c9f-b6a1-5d2e8f1c9e0d",
       planTypeId: "333fada3-537a-4596-b1b7-87fb724d9671", // Plan Plus
       companyId: "975a629c-c2c0-4fd4-b92c-aacfee8cb164", // GNP
       sumInsured: 20000000,
-      coInsurance: { value: 5 },
-      coInsuranceCap: { value: 30000 },
+      coInsurance: {
+        opcion_2: {
+          A: 5,
+          B: 10,
+          C: 15,
+          D: 20,
+        },
+        opcion_4: {
+          A: 10,
+          B: 15,
+          C: 20,
+          D: 25,
+        },
+      },
+      coInsuranceCap: {
+        opcion_2: {
+          A: 30000,
+          B: 40000,
+          C: 50000,
+          D: 60000,
+        },
+        opcion_4: {
+          A: 40000,
+          B: 50000,
+          C: 60000,
+          D: 70000,
+        },
+      },
       status: "ACTIVO",
       isRecommended: false,
       prices: generarPreciosSeguros(),
