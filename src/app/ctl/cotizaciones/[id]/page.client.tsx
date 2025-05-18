@@ -149,7 +149,7 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
 
   return (
     <>
-      <div className="flex items-center justify-between gap-2 mb-6">
+      <div className="flex items-center justify-between gap-2">
         <Breadcrumbs
           items={[
             { label: "Cotizaciones", href: `${prefix}/cotizaciones` },
