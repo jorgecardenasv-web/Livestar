@@ -5,7 +5,7 @@ import { updateQuote } from "@/features/quote/actions/update-quote"
 import { ContactInfoSection } from "@/features/quote/components/forms/contact-info-section"
 import { PersonalInfoSection } from "@/features/quote/components/forms/personal-info-section"
 import { useGetQuoteForm } from "@/features/quote/hooks/use-get-quote-form"
-import type { AdditionalInfo, DeductiblesData, Quote } from "@/features/quote/types"
+import type { AdditionalInfo, DeductiblesData, Quote, CoInsuranceData, CoInsuranceCapData } from "@/features/quote/types"
 import { Card, CardContent } from "@/shared/components/ui/card"
 import { SubmitButton } from "@/shared/components/ui/submit-button"
 import { useEffect } from "react"
@@ -15,8 +15,9 @@ import { QUESTIONS } from "@/features/quote/data"
 import { Breadcrumbs } from "@/shared/components/layout/breadcrumbs"
 import { prefix } from "@/features/layout/nav-config/constants"
 import { MembersTable } from "@/features/quote/components/tables/members-table"
-import { formatCurrency } from "@/shared/utils"
+import { formatCurrency, formatPercentage } from "@/shared/utils"
 import { DeductiblesAccordion } from "@/features/quote/components/accodions/deductibles-accordion"
+import { CoInsuranceAccordion } from "@/features/quote/components/accodions/co-insurance-accordion"
 
 export function QuotePageClient({ quote }: { quote: Quote }) {
   const { formData, errors, handleChildChange, handleInputChange, handleProtectedPersonChange, forms, setForms } =
@@ -85,11 +86,33 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
   // Función para obtener el texto del deducible
   const getDeductibleText = (quote: Quote | null) => {
     if (!quote) return '';
-    
+
     if (quote.isMultipleDeductible) {
       return "Múltiples opciones";
     } else {
       return formatCurrency(quote.deductible);
+    }
+  };
+
+  // Función para obtener el texto del coaseguro
+  const getCoInsuranceText = (quote: Quote | null) => {
+    if (!quote) return '';
+
+    if (quote.isMultipleCoInsurance) {
+      return "Múltiples opciones";
+    } else {
+      return formatPercentage(quote.coInsurance);
+    }
+  };
+
+  // Función para obtener el texto del tope de coaseguro
+  const getCoInsuranceCapText = (quote: Quote | null) => {
+    if (!quote) return '';
+
+    if (quote.isMultipleCoInsurance) {
+      return "Múltiples opciones";
+    } else {
+      return formatCurrency(quote.coInsuranceCap);
     }
   };
 
@@ -202,11 +225,22 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
                       )}
                       <div className="flex justify-between">
                         <dt className="text-muted-foreground">Coaseguro:</dt>
-                        <dd className="font-medium">{quote?.coInsurance}%</dd>
+                        <dd className="font-medium">{getCoInsuranceText(quote)}</dd>
                       </div>
+                      {quote?.isMultipleCoInsurance && quote?.coInsuranceData && (
+                        <div className="pt-2">
+                          <CoInsuranceAccordion
+                            coInsuranceData={quote.coInsuranceData as CoInsuranceData}
+                            coInsuranceCapData={quote.coInsuranceCapData as CoInsuranceCapData}
+                            additionalInfo={quote.additionalInfo as AdditionalInfo}
+                            protectWho={quote.protectWho}
+                            mainAge={quote?.prospect?.age ?? null}
+                          />
+                        </div>
+                      )}
                       <div className="flex justify-between">
                         <dt className="text-muted-foreground">Tope de Coaseguro:</dt>
-                        <dd className="font-medium">{formatCurrency(quote?.coInsuranceCap)}</dd>
+                        <dd className="font-medium">{getCoInsuranceCapText(quote)}</dd>
                       </div>
                     </dl>
                   </div>

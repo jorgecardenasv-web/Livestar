@@ -86,7 +86,7 @@ async function main() {
       },
       {
         id: "333fada3-537a-4596-b1b7-87fb724d9671",
-        name: "Plan Plus",
+        name: "Plan Superior",
         status: "ACTIVO",
         orderIndex: 2,
         createdAt: new Date(),
@@ -94,7 +94,7 @@ async function main() {
       },
       {
         id: "ce4ec4e3-e706-44c3-af00-ab16a07bcd69",
-        name: "Híbrido",
+        name: "Gastos Menores",
         status: "ACTIVO",
         orderIndex: 3,
         createdAt: new Date(),
@@ -152,10 +152,67 @@ async function main() {
   // Creación de planes
   console.log("🏥 Creando planes...");
 
-  // Plan GNP con múltiples deducibles y coaseguros
+  // Plan GNP Básico con múltiples coaseguros
   await prisma.plan.create({
     data: {
       id: "73f9d6f3-0e64-4f67-ba12-60f0b070c028",
+      planTypeId: "3d9a1e51-9612-43a4-a0bf-4b68523d272c", // Plan Básico
+      companyId: "975a629c-c2c0-4fd4-b92c-aacfee8cb164", // GNP
+      sumInsured: 5000000,
+      coInsurance: {
+        opcion_2: {
+          A: 15,
+          B: 20,
+          C: 25,
+          D: 30,
+        },
+        opcion_4: {
+          A: 20,
+          B: 25,
+          C: 30,
+          D: 35,
+        },
+      },
+      coInsuranceCap: {
+        opcion_2: {
+          A: 50000,
+          B: 60000,
+          C: 70000,
+          D: 80000,
+        },
+        opcion_4: {
+          A: 60000,
+          B: 70000,
+          C: 80000,
+          D: 90000,
+        },
+      },
+      status: "ACTIVO",
+      isRecommended: false,
+      prices: generarPreciosSeguros(),
+      deductibles: {
+        opcion_2: {
+          A: 30000,
+          B: 40000,
+          C: 50000,
+          D: 60000,
+        },
+        opcion_4: {
+          A: 60000,
+          B: 70000,
+          C: 80000,
+          D: 90000,
+        },
+      },
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  });
+
+  // Plan GNP Intermedio con múltiples coaseguros
+  await prisma.plan.create({
+    data: {
+      id: "91a8d7e5-3b42-4c9f-b6a1-5d2e8f1c9e0d",
       planTypeId: "9af3201f-06da-4805-99e0-e3f4dc6900f1", // Plan Intermedio
       companyId: "975a629c-c2c0-4fd4-b92c-aacfee8cb164", // GNP
       sumInsured: 10000000,
@@ -209,11 +266,11 @@ async function main() {
     },
   });
 
-  // Plan GNP Plus con múltiples deducibles y coaseguros
+  // Plan GNP Superior con múltiples coaseguros
   await prisma.plan.create({
     data: {
-      id: "91a8d7e5-3b42-4c9f-b6a1-5d2e8f1c9e0d",
-      planTypeId: "333fada3-537a-4596-b1b7-87fb724d9671", // Plan Plus
+      id: "5e6b7c8d-9f1a-2b3c-4d5e-6f7a8b9c0d1e",
+      planTypeId: "333fada3-537a-4596-b1b7-87fb724d9671", // Plan Superior
       companyId: "975a629c-c2c0-4fd4-b92c-aacfee8cb164", // GNP
       sumInsured: 20000000,
       coInsurance: {
@@ -266,40 +323,20 @@ async function main() {
     },
   });
 
-  // Plan HDI con su estructura específica de precios
+  // Plan HDI Gastos Menores
   await prisma.plan.create({
     data: {
       id: "24ec1aba-d7d9-4090-9c61-fa9a324b96bb",
-      planTypeId: "ce4ec4e3-e706-44c3-af00-ab16a07bcd69", // Híbrido
+      planTypeId: "ce4ec4e3-e706-44c3-af00-ab16a07bcd69", // Gastos Menores
       companyId: "f1647fe3-40d6-4446-814b-c1916a2ae982", // HDI
       sumInsured: 5000000,
-      coInsurance: { value: 0 },
-      coInsuranceCap: { value: 0 },
+      coInsurance: { value: 5 },
+      coInsuranceCap: { value: 25000 },
       status: "ACTIVO",
       isRecommended: true,
       prices: generarPreciosHDI(),
       deductibles: {
         default: 25000,
-      },
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    },
-  });
-
-  // Plan HDI Básico
-  await prisma.plan.create({
-    data: {
-      id: "56e2c1d9-a8f3-4b7e-9c2d-1e5a7f8b9c0d",
-      planTypeId: "3d9a1e51-9612-43a4-a0bf-4b68523d272c", // Plan Básico
-      companyId: "f1647fe3-40d6-4446-814b-c1916a2ae982", // HDI
-      sumInsured: 3000000,
-      coInsurance: { value: 5 },
-      coInsuranceCap: { value: 20000 },
-      status: "ACTIVO",
-      isRecommended: false,
-      prices: generarPreciosHDI(),
-      deductibles: {
-        default: 35000,
       },
       createdAt: new Date(),
       updatedAt: new Date(),
