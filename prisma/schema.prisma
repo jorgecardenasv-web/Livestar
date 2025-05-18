@@ -145,7 +145,7 @@ model Quote {
   id                   String          @id @default(uuid()) @db.Uuid
   prospect             Prospect        @relation(fields: [prospectId], references: [id], onDelete: Cascade)
   prospectId           String          @db.Uuid
-  planData             Json            
+  planData             Json
   totalPrice           Float
   status               QuoteStatus     @default(NUEVO)
   createdAt            DateTime        @default(now())
