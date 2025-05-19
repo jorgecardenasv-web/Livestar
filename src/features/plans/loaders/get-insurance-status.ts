@@ -23,7 +23,7 @@ export async function getInsuranceState() {
 
   return {
     planTypeId: cookieStore.get("planTypeId")?.value,
-    activePaymentType: cookieStore.get("activePaymentType")?.value || "Anual",
+    activePaymentType: cookieStore.get("activePaymentType")?.value || "Mensual",
     selectedPlan,
   };
 }

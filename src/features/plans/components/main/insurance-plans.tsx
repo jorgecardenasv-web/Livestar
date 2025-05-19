@@ -5,7 +5,7 @@ import { PaymentSelector } from "../selectors/payment-selector";
 import { PlanSelector } from "../selectors/plan-selector";
 import { InsuranceCardSkeleton } from "../skeletons/insurance-card-skeleton";
 import { PlansContent } from "./plans-content";
-import { Suspense } from 'react';
+import { Suspense } from "react";
 
 export const Plans = async () => {
   const {
@@ -16,9 +16,9 @@ export const Plans = async () => {
     status: PlanTypeStatus.ACTIVO,
   });
 
-  const selectorPlanTypes = planTypes
-    .filter(planType => !['hibrido', 'híbrido'].includes(planType.name.toLowerCase()))
-    .sort((a, b) => a.orderIndex - b.orderIndex);
+  const selectorPlanTypes = planTypes.sort(
+    (a, b) => a.orderIndex - b.orderIndex
+  );
 
   if (planTypes.length === 0) {
     return (
@@ -31,7 +31,9 @@ export const Plans = async () => {
   const defaultPlanType = selectorPlanTypes[0];
   const { planTypeId, activePaymentType } = await getInsuranceState();
   const currentPlanTypeId = planTypeId ?? defaultPlanType?.id;
-  const currentPlanType = selectorPlanTypes.find(planType => planType.id === currentPlanTypeId) ?? defaultPlanType;
+  const currentPlanType =
+    selectorPlanTypes.find((planType) => planType.id === currentPlanTypeId) ??
+    defaultPlanType;
 
   const paymentTypes = ["Mensual", "Anual"];
 
