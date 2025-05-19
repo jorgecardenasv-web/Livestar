@@ -20,6 +20,8 @@ export const updatePlanType = async (
       success: true,
     };
   } catch (error) {
+    console.log("Error al actualizar el tipo de plan:", error);
+
     return {
       success: false,
       message:

@@ -33,7 +33,7 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
       isUpdate,
       isHDI,
       isRecommended,
-      isMultipleCoInsurance, // Extraemos este campo explícitamente para no enviarlo a Prisma
+      isMultipleCoInsurance,
       ...rest
     } = data;
 
@@ -55,21 +55,23 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
     };
 
     try {
-      const serviceResult = await (isUpdate && planId
+      await (isUpdate && planId
         ? updatePlanService(planData, planId)
         : createPlanService(planData));
 
       // Redirigir solo si la operación fue exitosa
       revalidatePath(`${prefix}/planes`);
-      redirect(`${prefix}/planes`);
 
-      // Esto no se ejecutará debido al redirect, pero TypeScript lo necesita
-      return {
-        success: true,
-        message: isUpdate
-          ? "Plan actualizado exitosamente"
-          : "Plan creado exitosamente",
-      };
+      // Retornar un mensaje para evitar el redirect automático cuando estamos actualizando
+      if (isUpdate) {
+        return {
+          success: true,
+          message: "Plan actualizado exitosamente",
+        };
+      }
+
+      // Solo redirigir en caso de creación
+      redirect(`${prefix}/planes`);
     } catch (err) {
       // Devolver un mensaje amigable para el usuario
       return {
@@ -81,6 +83,7 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
       };
     }
   } catch (error) {
+    console.log("Error al crear el tipo de plan:", error);
     return {
       success: false,
       message:

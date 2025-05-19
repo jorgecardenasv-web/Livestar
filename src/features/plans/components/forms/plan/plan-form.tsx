@@ -502,19 +502,6 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
               name="additionalInfoHtml"
               value={additionalInfoHtml || ""}
             />
-            {/* Indicador de estado del contenido del editor */}
-            <div className="mt-4">
-              <div className="p-3 border border-border rounded bg-muted/30 text-sm">
-                <p className="text-muted-foreground flex items-center justify-between">
-                  <span>Contenido HTML:</span>
-                  <span className={`${additionalInfoHtml && additionalInfoHtml !== '<p></p>' ? 'text-primary font-medium' : 'text-muted-foreground'}`}>
-                    {additionalInfoHtml && additionalInfoHtml !== '<p></p>'
-                      ? `${additionalInfoHtml.length} caracteres`
-                      : "Vacío"}
-                  </span>
-                </p>
-              </div>
-            </div>
           </CardContent>
         </Card>
       </div>

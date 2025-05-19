@@ -15,6 +15,8 @@ import {
   ListOrdered,
   Heading1,
   Heading2,
+  PilcrowSquare,
+  RemoveFormatting,
 } from 'lucide-react';
 import { cn } from '@/shared/utils/cn';
 
@@ -69,6 +71,18 @@ const MenuBar = ({ editor }: MenuBarProps) => {
       action: () => editor.chain().focus().toggleOrderedList().run(),
       isActive: () => editor.isActive('orderedList'),
     },
+    {
+      icon: <PilcrowSquare className="w-4 h-4" />,
+      title: 'Insertar párrafo',
+      action: () => editor.chain().focus().setHardBreak().run(),
+      isActive: () => false,
+    },
+    {
+      icon: <RemoveFormatting className="w-4 h-4" />,
+      title: 'Limpiar formato',
+      action: () => editor.chain().focus().unsetAllMarks().run(),
+      isActive: () => false,
+    },
   ];
 
   return (
@@ -94,14 +108,41 @@ const MenuBar = ({ editor }: MenuBarProps) => {
 export const TipTapEditor = ({ content, onChange }: TipTapEditorProps) => {
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        paragraph: {
+          HTMLAttributes: {
+            class: 'leading-relaxed mb-5',
+          },
+        },
+        horizontalRule: {
+          HTMLAttributes: {
+            class: 'my-6 border-t border-gray-300',
+          },
+        },
+      }),
       Heading.configure({
         levels: [1, 2],
+        HTMLAttributes: {
+          1: {
+            class: 'text-2xl font-semibold leading-tight mt-8 mb-4',
+          },
+          2: {
+            class: 'text-xl font-medium leading-tight mt-6 mb-3',
+          },
+        },
       }),
       Bold,
       Italic,
-      BulletList,
-      OrderedList,
+      BulletList.configure({
+        HTMLAttributes: {
+          class: 'space-y-3 my-5 pl-5',
+        },
+      }),
+      OrderedList.configure({
+        HTMLAttributes: {
+          class: 'space-y-3 my-5 pl-5',
+        },
+      }),
     ],
     content: content || '',  // Nos aseguramos de que siempre haya un valor inicial válido
     onUpdate: ({ editor }) => {
@@ -115,6 +156,8 @@ export const TipTapEditor = ({ content, onChange }: TipTapEditorProps) => {
         class: 'prose focus:outline-none max-w-none',
       },
     },
+    // Configuración de espaciado entre párrafos
+    editable: true,
   });
 
   // Este efecto se asegura de que el contenido del editor se actualice
@@ -133,8 +176,33 @@ export const TipTapEditor = ({ content, onChange }: TipTapEditorProps) => {
       <MenuBar editor={editor} />
       <EditorContent
         editor={editor}
-        className="prose max-w-none p-4 min-h-[200px] focus:outline-none"
+        className="prose prose-lg max-w-none p-4 min-h-[200px] focus:outline-none 
+          [&>div]:leading-8
+          [&_p]:my-5 [&_p]:leading-8
+          [&_li]:my-3 [&_li]:leading-7
+          [&_li>p]:my-1 [&_li>p]:leading-7
+          [&_h1]:mt-8 [&_h1]:mb-5 [&_h1]:leading-tight
+          [&_h2]:mt-7 [&_h2]:mb-4 [&_h2]:leading-tight
+          [&_ul]:space-y-3 [&_ul]:my-5 [&_ul]:pl-5
+          [&_ol]:space-y-3 [&_ol]:my-5 [&_ol]:pl-5"
       />
+      <div className="px-4 py-3 bg-muted/30 text-xs text-muted-foreground border-t border-input">
+        <p className="flex items-center flex-wrap gap-1">
+          <span>Para mejorar el interlineado:</span>
+          <span className="bg-muted/70 px-1.5 py-0.5 rounded inline-flex items-center">
+            <PilcrowSquare className="inline w-3 h-3 mr-1" /> Insertar salto de línea
+          </span>
+          <span>o</span>
+          <span className="bg-muted/70 px-1.5 py-0.5 rounded inline-flex items-center">
+            <Heading1 className="inline w-3 h-3 mr-1" /> Usar encabezados
+          </span>
+          <span>para secciones. Usa</span>
+          <span className="bg-muted/70 px-1.5 py-0.5 rounded inline-flex items-center">
+            <RemoveFormatting className="inline w-3 h-3 mr-1" /> Limpiar formato
+          </span>
+          <span>para eliminar estilos.</span>
+        </p>
+      </div>
     </div>
   );
 };

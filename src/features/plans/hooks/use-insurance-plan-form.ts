@@ -1,6 +1,6 @@
 import { FormState } from "@/shared/types";
 import { useModalStore } from "@/shared/store/modal-store";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNotificationStore } from "@/features/notification/store/notification-store";
 
 export const useInsurancePlanForm = (

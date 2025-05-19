@@ -65,7 +65,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 
   return (
     <div
-      className={`bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${isRecommended ? "ring-4 ring-[#00a5e3] " : ""
+      className={`bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl w-72 ${isRecommended ? "ring-4 ring-[#00a5e3] " : ""
         }`}
     >
       {isRecommended && (
@@ -73,7 +73,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
           RECOMENDADO
         </div>
       )}
-      <div className="p-6">
+      <div className="p-6 overflow-hidden">
         <div className="flex flex-col items-center mb-6">
           <Image
             src={logoSrc?.base64 || '/fallback-image.png'}
@@ -203,12 +203,33 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 
         {/* Sección de información adicional con mejor estilizado */}
         {plan.additionalInfoHtml && plan.additionalInfoHtml !== '<p></p>' && (
-          <div className="mt-6 border-t border-gray-200 pt-4 animate-fadeIn">
-            <h3 className="text-lg font-semibold mb-2 text-sky-600">Información Adicional</h3>
-            <div
-              className="prose prose-sm max-w-none prose-headings:text-sky-600 prose-a:text-blue-600 prose-strong:text-gray-700 prose-ul:pl-5 prose-ul:list-disc prose-ol:pl-5 prose-ol:list-decimal"
-              dangerouslySetInnerHTML={{ __html: plan.additionalInfoHtml }}
-            />
+          <div className="mt-4 border-t border-gray-200 pt-3 animate-fadeIn">
+            <h3 className="text-base font-semibold mb-2 text-sky-600 flex items-center gap-2">
+              <div className="w-1 h-5 bg-sky-500 rounded-full"></div>
+              Información Adicional
+            </h3>
+            <div className="bg-blue-50/30 rounded-lg p-2.5 overflow-hidden">
+              <div
+                className="prose prose-sm max-w-none w-full break-words overflow-wrap-anywhere
+                  leading-normal text-sm text-gray-700
+                  prose-headings:text-sky-600 prose-headings:break-words prose-headings:hyphens-auto
+                  prose-h1:text-base prose-h1:font-semibold prose-h1:mt-2 prose-h1:mb-1 prose-h1:leading-tight
+                  prose-h2:text-sm prose-h2:font-medium prose-h2:mt-1.5 prose-h2:mb-1 prose-h2:leading-tight
+                  prose-p:my-0.5 prose-p:leading-normal prose-p:break-words prose-p:hyphens-auto
+                  prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-a:break-words prose-a:inline-block prose-a:max-w-full
+                  prose-strong:text-gray-700 prose-strong:font-medium
+                  prose-ul:pl-4 prose-ul:list-disc prose-ul:my-0.5 prose-ul:space-y-0
+                  prose-ol:pl-4 prose-ol:list-decimal prose-ol:my-0.5 prose-ol:space-y-0
+                  prose-li:my-0 prose-li:leading-tight prose-li:mb-0 prose-li:break-words
+                  prose-li>prose-p:my-0 prose-li>prose-p:leading-normal
+                  [&_ul>li::marker]:text-sky-500 [&_ul>li]:my-0.5 
+                  [&_ol>li]:my-0.5 [&_*]:break-words [&_*]:hyphens-auto
+                  [&_img]:max-w-full [&_img]:h-auto [&_table]:table-fixed [&_table]:w-full
+                  [&_td]:break-words [&_th]:break-words [&_td]:p-1 [&_th]:p-1
+                  [&_pre]:overflow-x-auto [&_pre]:max-w-full [&_code]:break-words"
+                dangerouslySetInnerHTML={{ __html: plan.additionalInfoHtml }}
+              />
+            </div>
           </div>
         )}
 
