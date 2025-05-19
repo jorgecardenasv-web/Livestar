@@ -14,24 +14,16 @@ import { revalidatePath } from "next/cache";
 export const createPlan = async (formData: FormData): Promise<FormState> => {
   try {
     const rawFormData = Object.fromEntries(formData);
-    console.log("Datos recibidos en el formulario:", rawFormData);
 
     const { data, success, error } = createPlanSchema.safeParse(rawFormData);
 
     if (!success) {
-      console.error("Error de validación:", error.format());
-      console.error(
-        "Campos con error:",
-        JSON.stringify(error.format(), null, 2)
-      );
       return {
         success: false,
         message: "Error en la validación de los datos.",
         inputErrors: simplifyZodErrors(error),
       };
     }
-
-    console.log("Validación exitosa, datos procesados:", data);
 
     const {
       planTypeId,
@@ -49,20 +41,6 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
     const additionalInfoHtml =
       formData.get("additionalInfoHtml")?.toString() || null;
 
-    console.log("Valor de additionalInfoHtml:", additionalInfoHtml);
-    console.log(
-      "Longitud de additionalInfoHtml:",
-      additionalInfoHtml?.length || 0
-    );
-    console.log(
-      "Primeros 100 caracteres:",
-      additionalInfoHtml?.substring(0, 100)
-    );
-    console.log(
-      "Campo isMultipleCoInsurance (será ignorado):",
-      isMultipleCoInsurance
-    );
-
     // Eliminamos cualquier campo adicional que no esté en el modelo de Prisma
     const planData = {
       ...rest,
@@ -76,25 +54,13 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
       additionalInfoHtml,
     };
 
-    console.log("Datos a enviar al servicio:", planData);
-    console.log("Es actualización:", isUpdate, "ID del plan:", planId);
-
     try {
       const serviceResult = await (isUpdate && planId
         ? updatePlanService(planData, planId)
         : createPlanService(planData));
-      console.log("Operación completada con éxito:", serviceResult);
 
       // Redirigir solo si la operación fue exitosa
-      // Invalidamos explícitamente el cache del plan para asegurarnos de que los cambios se reflejen
-      revalidatePath(`${prefix}/planes`, "page");
-      revalidatePath("/", "layout");
-
-      // También invalidamos cualquier cache individual del plan
-      if (isUpdate && planId) {
-        revalidatePath(`${prefix}/planes/editar/${planId}`, "page");
-      }
-
+      revalidatePath(`${prefix}/planes`);
       redirect(`${prefix}/planes`);
 
       // Esto no se ejecutará debido al redirect, pero TypeScript lo necesita
@@ -105,8 +71,6 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
           : "Plan creado exitosamente",
       };
     } catch (err) {
-      console.error("Error detallado al llamar al servicio:", err);
-
       // Devolver un mensaje amigable para el usuario
       return {
         success: false,
@@ -117,7 +81,6 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
       };
     }
   } catch (error) {
-    console.error("Error general en createPlan:", error);
     return {
       success: false,
       message:

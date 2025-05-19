@@ -520,8 +520,4 @@ export const seedQuotes = async (
       },
     });
   }
-
-  console.log(
-    `✅ Created ${QUOTES_TO_CREATE} quotes with prospects and tracking numbers`
-  );
 };

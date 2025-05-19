@@ -16,15 +16,9 @@ export const useInsurancePlanForm = (
   const { showNotification } = useNotificationStore();
 
   const handleSubmit = async (formData: FormData) => {
-    console.log("Hook - Ejecutando handleSubmit");
-
     try {
       // Verifica si additionalInfoHtml existe en formData
       const additionalInfoHtml = formData.get("additionalInfoHtml");
-      console.log(
-        "Hook - additionalInfoHtml del formData:",
-        additionalInfoHtml
-      );
 
       formData.append("prices", JSON.stringify(prices));
       formData.append("isMultiple", JSON.stringify(isMultiple));
@@ -34,18 +28,10 @@ export const useInsurancePlanForm = (
       );
       formData.append("isHDI", JSON.stringify(isHDI));
       formData.append("isRecommended", JSON.stringify(isRecommended));
-
-      // Log all form data keys for debugging
-      console.log("Hook - FormData keys:", Array.from(formData.keys()));
-
-      console.log("Hook - Enviando datos al servidor");
       const { message, success } = await serverAction(formData);
 
       if (!success) {
-        console.log("Hook - Error en la operación:", message);
         showNotification(message, "error");
-      } else {
-        console.log("Hook - Operación exitosa");
       }
     } catch (error) {
       console.error("Hook - Error inesperado:", error);

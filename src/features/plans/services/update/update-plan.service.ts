@@ -7,12 +7,6 @@ export const updatePlanService = async (
   planId: string
 ) => {
   try {
-    console.log(
-      "Service - Datos recibidos para actualización:",
-      JSON.stringify(data, null, 2)
-    );
-    console.log("Service - Plan ID:", planId);
-
     // Primero verificamos que el plan exista
     const existingPlan = await prisma.plan.findUnique({
       where: {
@@ -23,8 +17,6 @@ export const updatePlanService = async (
     if (!existingPlan) {
       throw new Error(`El plan con ID ${planId} no existe`);
     }
-
-    console.log("Service - Plan encontrado:", existingPlan.id);
 
     // Extraemos los campos que necesitamos para la actualización
     const { companyId, planTypeId, ...updateDataWithExtra } = data;
@@ -48,17 +40,6 @@ export const updatePlanService = async (
     if (!planType) {
       throw new Error(`El tipo de plan con ID ${planTypeId} no existe`);
     }
-
-    console.log(
-      "Service - Datos a actualizar (sin procesar):",
-      JSON.stringify(updateDataRaw, null, 2)
-    );
-    console.log("Service - Company válida:", company.name);
-    console.log("Service - PlanType válido:", planType.name);
-    console.log(
-      "Service - Campo isMultipleCoInsurance (será ignorado):",
-      isMultipleCoInsurance
-    );
 
     // Asegurarnos de que los datos JSON sean objetos válidos y eliminar campos que no existen en el modelo
     const sanitizedData = {
@@ -85,11 +66,6 @@ export const updatePlanService = async (
       additionalInfoHtml: updateDataRaw.additionalInfoHtml || null,
     };
 
-    console.log(
-      "Service - Datos sanitizados:",
-      JSON.stringify(sanitizedData, null, 2)
-    );
-
     const updatedPlan = await prisma.plan.update({
       where: {
         id: planId,
@@ -108,8 +84,6 @@ export const updatePlanService = async (
         },
       },
     });
-
-    console.log("Service - Plan actualizado correctamente:", updatedPlan.id);
 
     return {
       success: true,

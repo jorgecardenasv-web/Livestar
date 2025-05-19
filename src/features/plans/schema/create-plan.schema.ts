@@ -167,12 +167,6 @@ export const createPlanSchema = z
         : { value: data.coInsuranceCap || 0 }
       : { value: data.coInsuranceCap || 0 };
 
-    // Asegurémonos de que additionalInfoHtml se preserve en la transformación
-    console.log(
-      "Schema transform - additionalInfoHtml:",
-      rest.additionalInfoHtml
-    );
-
     const result = {
       ...rest,
       deductibles,
@@ -180,6 +174,5 @@ export const createPlanSchema = z
       coInsuranceCap,
     };
 
-    console.log("Schema transform - Resultado final:", result);
     return result;
   });

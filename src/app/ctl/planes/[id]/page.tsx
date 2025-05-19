@@ -18,10 +18,6 @@ export default async function EditPlan({
     getInsurancePlanById(id),
   ]);
 
-  // Verificar si el plan tiene información adicional HTML
-  console.log(`Plan ID ${id} cargado con additionalInfoHtml:`,
-    insurancePlan.additionalInfoHtml ? `${insurancePlan.additionalInfoHtml.length} caracteres` : "No presente");
-
   const { data: { items } } = planTypesResult;
 
   return (
