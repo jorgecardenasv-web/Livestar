@@ -19,15 +19,17 @@ interface CustomizableOptions {
   coInsuranceOptions: number[];
 }
 
+export type IndividualPriceDetails = number | HDIPriceDetails;
+
 export interface InsurancePriceResult {
   coverage_fee: number;
   individualPrices: {
-    main: number;
-    partner?: number;
-    children?: number[];
-    parents?: Parents[];
-    others?: { relationship: string; price: number }[];
-    protectWho?: string;
+    main: IndividualPriceDetails;
+    partner: IndividualPriceDetails | null;
+    children: IndividualPriceDetails[];
+    parents: { name: string; price: IndividualPriceDetails }[];
+    others?: { relationship: string; price: IndividualPriceDetails }[];
+    protectWho: string;
   };
 }
 
@@ -62,6 +64,16 @@ export interface GenderPrices {
 
 export interface PriceTable {
   [age: string]: GenderPrices;
+}
+
+export interface HDIPriceDetails {
+  anual: number;
+  primerMes: number;
+  segundoMesADoce: number;
+}
+
+export interface HDIPriceTable {
+  [age: string]: HDIPriceDetails;
 }
 
 export interface Child {

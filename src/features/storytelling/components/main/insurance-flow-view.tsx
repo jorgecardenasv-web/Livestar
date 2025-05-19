@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ArrowLeft } from "lucide-react";
+import { ArrowRight, ArrowLeft, SkipForward } from "lucide-react";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Button } from "@/shared/components/ui/button";
 import { steps } from "../data/steps";
@@ -64,10 +64,15 @@ export function InsuranceFlow() {
                       className="w-full md:w-auto text-center"
                     >
                       <Button
-                        variant="link"
+                        variant="outline"
                         onClick={() => setStep(() => steps.length - 1)}
-                        className="text-primary"
+                        className="text-primary border-primary hover:bg-primary/70 hover:text-white"
                       >
+                        <SkipForward
+                          size={24}
+                          /* strokeWidth={3} */
+                          /* className="animate-ping" */
+                        />
                         Saltar introducción
                       </Button>
                     </motion.div>
@@ -105,7 +110,9 @@ export function InsuranceFlow() {
                   >
                     <Button
                       onClick={() =>
-                        setStep((prev) => (prev - 1 + steps.length) % steps.length)
+                        setStep(
+                          (prev) => (prev - 1 + steps.length) % steps.length
+                        )
                       }
                       className="bg-primary text-white size-12 rounded-full my-auto"
                       disabled={step === 0}
@@ -119,7 +126,9 @@ export function InsuranceFlow() {
                     transition={{ duration: 0.4, delay: 0.2 }}
                   >
                     <Button
-                      onClick={() => setStep((prev) => (prev + 1) % steps.length)}
+                      onClick={() =>
+                        setStep((prev) => (prev + 1) % steps.length)
+                      }
                       className="bg-primary text-white size-12 rounded-full my-auto"
                       disabled={step === steps.length - 1}
                     >
