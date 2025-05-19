@@ -92,10 +92,6 @@ const MenuBar = ({ editor }: MenuBarProps) => {
 };
 
 export const TipTapEditor = ({ content, onChange }: TipTapEditorProps) => {
-  // Log para depuración
-  React.useEffect(() => {
-    console.log('TipTap: Componente montado con contenido:', { content });
-  }, []);
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -110,7 +106,6 @@ export const TipTapEditor = ({ content, onChange }: TipTapEditorProps) => {
     content: content || '',  // Nos aseguramos de que siempre haya un valor inicial válido
     onUpdate: ({ editor }) => {
       const html = editor.getHTML();
-      console.log('TipTap: Contenido actualizado:', { html });
       onChange(html);
     },
     // Configuramos immediatelyRender como false para evitar errores de hidratación en SSR
@@ -126,7 +121,6 @@ export const TipTapEditor = ({ content, onChange }: TipTapEditorProps) => {
   // cuando cambia la prop de contenido proporcionada externamente
   React.useEffect(() => {
     if (editor && content !== undefined && content !== editor.getHTML()) {
-      console.log('TipTap: Actualizando contenido del editor', { content, editorContent: editor.getHTML() });
       // Aseguramos que el contenido se establezca correctamente
       setTimeout(() => {
         editor.commands.setContent(content);

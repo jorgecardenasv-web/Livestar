@@ -29,7 +29,6 @@ const PlansGrid = ({
               plan={activePlan}
               paymentType={activePaymentType}
               isRecommended={plan.isRecommended}
-              showDebug={process.env.NODE_ENV === 'development'}
             />
           )
         );

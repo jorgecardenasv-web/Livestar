@@ -43,7 +43,6 @@ const isHDIPriceFormat = (prices: any[]): boolean => {
 };
 
 export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
-  console.log('InsurancePlanForm: Inicializando componente', { planId: plan?.id });
   const isUpdateMode = plan ? true : false;
   // Inicializamos con el valor del plan si existe
   const [additionalInfoHtml, setAdditionalInfoHtml] = useState<string>(plan?.additionalInfoHtml || "");
@@ -52,10 +51,6 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
   // después de que el componente se monte para evitar problemas de hidratación
   useEffect(() => {
     if (plan?.additionalInfoHtml) {
-      console.log('Plan Form: Actualizando contenido del editor con:', {
-        planContent: plan.additionalInfoHtml,
-        currentContent: additionalInfoHtml
-      });
       // Para asegurarnos de que se actualiza correctamente, usamos un timeout
       setTimeout(() => {
         setAdditionalInfoHtml(plan.additionalInfoHtml);
@@ -75,13 +70,9 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
     setIsRecommended,
     isMultipleCoInsurance,
     setIsMultipleCoInsurance,
-  } = useInsurancePlanForm(createPlan);
-
-  useEffect(() => {
+  } = useInsurancePlanForm(createPlan); useEffect(() => {
     // Solo ejecutar si tenemos un plan (modo edición)
     if (plan) {
-      console.log('Plan Form: Cargando datos del plan para editar', { planId: plan.id });
-
       if (plan.prices?.length > 0) {
         setPrices(plan.prices);
         setIsHDI(isHDIPriceFormat(plan.prices));
@@ -100,7 +91,6 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
       }
 
       if (plan.additionalInfoHtml) {
-        console.log('Plan Form: Inicializando contenido HTML adicional', { content: plan.additionalInfoHtml });
         // Usamos setTimeout para asegurar que se establezca después de que el componente esté montado
         setTimeout(() => {
           setAdditionalInfoHtml(plan.additionalInfoHtml);
@@ -504,7 +494,6 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
             <TipTapEditor
               content={additionalInfoHtml || ""}
               onChange={(html) => {
-                console.log('Plan Form: Contenido actualizado desde TipTap', { html });
                 setAdditionalInfoHtml(html);
               }}
             />
@@ -514,7 +503,7 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
               value={additionalInfoHtml || ""}
             />
             {/* Indicador de estado del contenido del editor */}
-            <div className="mt-4 space-y-2">
+            <div className="mt-4">
               <div className="p-3 border border-border rounded bg-muted/30 text-sm">
                 <p className="text-muted-foreground flex items-center justify-between">
                   <span>Contenido HTML:</span>
@@ -525,17 +514,6 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
                   </span>
                 </p>
               </div>
-
-              {/* Vista previa */}
-              {additionalInfoHtml && additionalInfoHtml !== '<p></p>' && (
-                <div className="border border-border rounded-md p-4 mt-2">
-                  <h4 className="text-sm font-medium mb-2">Vista previa:</h4>
-                  <div
-                    className="prose prose-sm max-w-none prose-headings:text-primary prose-a:text-blue-600"
-                    dangerouslySetInnerHTML={{ __html: additionalInfoHtml }}
-                  />
-                </div>
-              )}
             </div>
           </CardContent>
         </Card>

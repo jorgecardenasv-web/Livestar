@@ -11,7 +11,6 @@ import {
 } from "../../types";
 import { Plan } from "../../types/plan";
 import { CoInsuranceData, CoInsuranceCapData } from "../../../quote/types";
-import { DebugPlan } from "../debug/debug-plan";
 
 interface InsuranceCardProps {
   company: {
@@ -22,7 +21,6 @@ interface InsuranceCardProps {
   plan: Plan;
   paymentType: string;
   isRecommended: boolean;
-  showDebug?: boolean;
 }
 
 interface Deductibles {
@@ -42,16 +40,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   plan,
   paymentType,
   isRecommended,
-  showDebug = false,
 }) => {
-  // Log para depuración - sólo en desarrollo
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`InsuranceCard - Plan ID: ${plan.id}`);
-    console.log(`InsuranceCard - additionalInfoHtml presente: ${Boolean(plan.additionalInfoHtml)}`);
-    if (plan.additionalInfoHtml) {
-      console.log(`InsuranceCard - additionalInfoHtml length: ${plan.additionalInfoHtml.length}`);
-    }
-  }
 
   const { prospect, protectWho, additionalInfo } = await getProspect();
   const deductibles: Deductibles = plan.deductibles;
@@ -223,8 +212,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
           </div>
         )}
 
-        {/* Componente de depuración solo visible en desarrollo */}
-        {showDebug && <DebugPlan plan={plan} />}
+
       </div>
     </div>
   );
