@@ -103,7 +103,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 
   return (
     <div
-      className={`md:min-w-[350px] bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${isRecommended ? "ring-4 ring-[#00a5e3] " : ""
+      className={`bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl w-80 ${isRecommended ? "ring-4 ring-[#00a5e3] " : ""
         }`}
     >
       {isRecommended && (
