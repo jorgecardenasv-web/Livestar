@@ -13,8 +13,18 @@ export const createPlanSchema = z
     planTypeId: z.string(),
     companyId: z.string(),
     sumInsured: z.string().transform((val) => Number(val)),
-    coInsurance: z.string().transform((val) => Number(val)),
-    coInsuranceCap: z.string().transform((val) => Number(val)),
+    coInsurance: z
+      .string()
+      .optional()
+      .transform((val) =>
+        val === undefined || val === null || val === "" ? 0 : Number(val)
+      ),
+    coInsuranceCap: z
+      .string()
+      .optional()
+      .transform((val) =>
+        val === undefined || val === null || val === "" ? 0 : Number(val)
+      ),
     prices: z.string(),
     isMultiple: z.string().transform((val) => val === "true"),
     isMultipleCoInsurance: z
@@ -23,6 +33,7 @@ export const createPlanSchema = z
       .optional()
       .default("false"),
     isHDI: z.string().transform((val) => val === "true"),
+    additionalInfoHtml: z.string().optional().nullable(),
     "coaseguro.opcion_2.A": deductibleSchema,
     "coaseguro.opcion_2.B": deductibleSchema,
     "coaseguro.opcion_2.C": deductibleSchema,
@@ -142,18 +153,33 @@ export const createPlanSchema = z
       ...rest
     } = data;
 
+    // Asegurarse de que siempre haya un objeto de coInsurance válido
     const coInsurance = data.isMultipleCoInsurance
-      ? coInsuranceValues
-      : { value: data.coInsurance };
+      ? Object.keys(coInsuranceValues).length > 0
+        ? coInsuranceValues
+        : { value: data.coInsurance || 0 }
+      : { value: data.coInsurance || 0 };
 
+    // Asegurarse de que siempre haya un objeto de coInsuranceCap válido
     const coInsuranceCap = data.isMultipleCoInsurance
-      ? coInsuranceCapValues
-      : { value: data.coInsuranceCap };
+      ? Object.keys(coInsuranceCapValues).length > 0
+        ? coInsuranceCapValues
+        : { value: data.coInsuranceCap || 0 }
+      : { value: data.coInsuranceCap || 0 };
 
-    return {
+    // Asegurémonos de que additionalInfoHtml se preserve en la transformación
+    console.log(
+      "Schema transform - additionalInfoHtml:",
+      rest.additionalInfoHtml
+    );
+
+    const result = {
       ...rest,
       deductibles,
       coInsurance,
       coInsuranceCap,
     };
+
+    console.log("Schema transform - Resultado final:", result);
+    return result;
   });

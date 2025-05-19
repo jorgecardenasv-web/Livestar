@@ -1,12 +1,12 @@
 "use client";
 
-import { DollarSign, Percent } from "lucide-react";
+import { DollarSign, Percent, Info } from "lucide-react";
 import { PriceTableForm } from "./price-table-form";
 import { createPlan } from "../../../actions/create-plan";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { SelectInput } from "@/shared/components/ui/select-input";
 import { useInsurancePlanForm } from "../../../hooks/use-insurance-plan-form";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PlanType } from "@prisma/client";
 import {
   TableCell,
@@ -23,6 +23,7 @@ import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import { Label } from "@/shared/components/ui/label";
 import { Callout } from "@/shared/components/ui/callout";
+import { TipTapEditor } from "@/shared/components/editors/tiptap-editor";
 
 interface Insurance {
   id: string;
@@ -42,7 +43,26 @@ const isHDIPriceFormat = (prices: any[]): boolean => {
 };
 
 export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
+  console.log('InsurancePlanForm: Inicializando componente', { planId: plan?.id });
   const isUpdateMode = plan ? true : false;
+  // Inicializamos con el valor del plan si existe
+  const [additionalInfoHtml, setAdditionalInfoHtml] = useState<string>(plan?.additionalInfoHtml || "");
+
+  // Utilizamos useEffect para establecer el contenido inicial del editor
+  // después de que el componente se monte para evitar problemas de hidratación
+  useEffect(() => {
+    if (plan?.additionalInfoHtml) {
+      console.log('Plan Form: Actualizando contenido del editor con:', {
+        planContent: plan.additionalInfoHtml,
+        currentContent: additionalInfoHtml
+      });
+      // Para asegurarnos de que se actualiza correctamente, usamos un timeout
+      setTimeout(() => {
+        setAdditionalInfoHtml(plan.additionalInfoHtml);
+      }, 0);
+    }
+  }, [plan?.id, plan?.additionalInfoHtml]);
+
   const {
     prices,
     setPrices,
@@ -58,20 +78,36 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
   } = useInsurancePlanForm(createPlan);
 
   useEffect(() => {
-    if (plan?.prices?.length > 0) {
-      setPrices(plan.prices);
-      setIsHDI(isHDIPriceFormat(plan.prices));
+    // Solo ejecutar si tenemos un plan (modo edición)
+    if (plan) {
+      console.log('Plan Form: Cargando datos del plan para editar', { planId: plan.id });
+
+      if (plan.prices?.length > 0) {
+        setPrices(plan.prices);
+        setIsHDI(isHDIPriceFormat(plan.prices));
+      }
+
+      if (plan.deductibles) {
+        setIsMultiple(!(plan.deductibles.default >= 0));
+      }
+
+      if (plan.coInsurance && typeof plan.coInsurance === 'object') {
+        setIsMultipleCoInsurance(!!(plan.coInsurance.opcion_2 || plan.coInsurance.opcion_4));
+      }
+
+      if (plan.isRecommended) {
+        setIsRecommended(plan.isRecommended);
+      }
+
+      if (plan.additionalInfoHtml) {
+        console.log('Plan Form: Inicializando contenido HTML adicional', { content: plan.additionalInfoHtml });
+        // Usamos setTimeout para asegurar que se establezca después de que el componente esté montado
+        setTimeout(() => {
+          setAdditionalInfoHtml(plan.additionalInfoHtml);
+        }, 100);
+      }
     }
-    if (plan?.deductibles) {
-      setIsMultiple(!(plan.deductibles.default >= 0));
-    }
-    if (plan?.coInsurance && typeof plan.coInsurance === 'object') {
-      setIsMultipleCoInsurance(!!(plan.coInsurance.opcion_2 || plan.coInsurance.opcion_4));
-    }
-    if (plan?.isRecommended) {
-      setIsRecommended(plan.isRecommended);
-    }
-  }, [plan, setPrices, setIsMultiple, setIsMultipleCoInsurance, setIsHDI]);
+  }, [plan?.id]);
 
   const planTypeOptions = useMemo(
     () =>
@@ -450,6 +486,57 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
             ) : (
               <PriceTableForm prices={prices} setPrices={setPrices} />
             )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Sección de información adicional */}
+      <div className="rounded-xl bg-muted/50 p-5">
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center mb-4">
+              <Info className="w-5 h-5 mr-2 text-primary" />
+              <h3 className="text-lg font-medium">Información Adicional</h3>
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">
+              Esta información se mostrará en la tarjeta del seguro para proporcionar detalles adicionales a los usuarios.
+            </p>
+            <TipTapEditor
+              content={additionalInfoHtml || ""}
+              onChange={(html) => {
+                console.log('Plan Form: Contenido actualizado desde TipTap', { html });
+                setAdditionalInfoHtml(html);
+              }}
+            />
+            <input
+              type="hidden"
+              name="additionalInfoHtml"
+              value={additionalInfoHtml || ""}
+            />
+            {/* Indicador de estado del contenido del editor */}
+            <div className="mt-4 space-y-2">
+              <div className="p-3 border border-border rounded bg-muted/30 text-sm">
+                <p className="text-muted-foreground flex items-center justify-between">
+                  <span>Contenido HTML:</span>
+                  <span className={`${additionalInfoHtml && additionalInfoHtml !== '<p></p>' ? 'text-primary font-medium' : 'text-muted-foreground'}`}>
+                    {additionalInfoHtml && additionalInfoHtml !== '<p></p>'
+                      ? `${additionalInfoHtml.length} caracteres`
+                      : "Vacío"}
+                  </span>
+                </p>
+              </div>
+
+              {/* Vista previa */}
+              {additionalInfoHtml && additionalInfoHtml !== '<p></p>' && (
+                <div className="border border-border rounded-md p-4 mt-2">
+                  <h4 className="text-sm font-medium mb-2">Vista previa:</h4>
+                  <div
+                    className="prose prose-sm max-w-none prose-headings:text-primary prose-a:text-blue-600"
+                    dangerouslySetInnerHTML={{ __html: additionalInfoHtml }}
+                  />
+                </div>
+              )}
+            </div>
           </CardContent>
         </Card>
       </div>

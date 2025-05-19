@@ -11,6 +11,7 @@ import {
 } from "../../types";
 import { Plan } from "../../types/plan";
 import { CoInsuranceData, CoInsuranceCapData } from "../../../quote/types";
+import { DebugPlan } from "../debug/debug-plan";
 
 interface InsuranceCardProps {
   company: {
@@ -21,6 +22,7 @@ interface InsuranceCardProps {
   plan: Plan;
   paymentType: string;
   isRecommended: boolean;
+  showDebug?: boolean;
 }
 
 interface Deductibles {
@@ -40,7 +42,17 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   plan,
   paymentType,
   isRecommended,
+  showDebug = false,
 }) => {
+  // Log para depuración - sólo en desarrollo
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`InsuranceCard - Plan ID: ${plan.id}`);
+    console.log(`InsuranceCard - additionalInfoHtml presente: ${Boolean(plan.additionalInfoHtml)}`);
+    if (plan.additionalInfoHtml) {
+      console.log(`InsuranceCard - additionalInfoHtml length: ${plan.additionalInfoHtml.length}`);
+    }
+  }
+
   const { prospect, protectWho, additionalInfo } = await getProspect();
   const deductibles: Deductibles = plan.deductibles;
   const coInsuranceData: CoInsuranceValues = plan.coInsurance as CoInsuranceValues;
@@ -199,6 +211,20 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             className="w-full bg-[#223E99] text-white py-3 rounded font-bold text-lg hover:bg-primary transition duration-300"
           />
         </form>
+
+        {/* Sección de información adicional con mejor estilizado */}
+        {plan.additionalInfoHtml && plan.additionalInfoHtml !== '<p></p>' && (
+          <div className="mt-6 border-t border-gray-200 pt-4 animate-fadeIn">
+            <h3 className="text-lg font-semibold mb-2 text-sky-600">Información Adicional</h3>
+            <div
+              className="prose prose-sm max-w-none prose-headings:text-sky-600 prose-a:text-blue-600 prose-strong:text-gray-700 prose-ul:pl-5 prose-ul:list-disc prose-ol:pl-5 prose-ol:list-decimal"
+              dangerouslySetInnerHTML={{ __html: plan.additionalInfoHtml }}
+            />
+          </div>
+        )}
+
+        {/* Componente de depuración solo visible en desarrollo */}
+        {showDebug && <DebugPlan plan={plan} />}
       </div>
     </div>
   );

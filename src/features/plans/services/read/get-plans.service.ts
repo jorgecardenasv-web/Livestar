@@ -18,10 +18,16 @@ export const getPlansService = async ({
   const pageSize = Number(offset);
   const skip = (Number(page) - 1) * pageSize;
 
+  // Eliminar campos que no son compatibles con el filtrado de Prisma
+  const { additionalInfoHtml, ...filterable } = whereOptions;
+
   const where =
     filterOptionsToWhere<
-      Omit<PlanPrisma, "prices" | "deductibles" | "planType">
-    >(whereOptions);
+      Omit<
+        PlanPrisma,
+        "prices" | "deductibles" | "planType" | "coInsurance" | "coInsuranceCap"
+      >
+    >(filterable);
 
   const whereText = query
     ? textSearchFilterBuilder(query, [], {
