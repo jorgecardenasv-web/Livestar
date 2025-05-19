@@ -1,12 +1,12 @@
 "use client";
 
-import { DollarSign, Percent } from "lucide-react";
+import { DollarSign, Percent, Info } from "lucide-react";
 import { PriceTableForm } from "./price-table-form";
 import { createPlan } from "../../../actions/create-plan";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { SelectInput } from "@/shared/components/ui/select-input";
 import { useInsurancePlanForm } from "../../../hooks/use-insurance-plan-form";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PlanType } from "@prisma/client";
 import {
   TableCell,
@@ -23,6 +23,7 @@ import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import { Label } from "@/shared/components/ui/label";
 import { Callout } from "@/shared/components/ui/callout";
+import { TipTapEditor } from "@/shared/components/editors/tiptap-editor";
 
 interface Insurance {
   id: string;
@@ -43,6 +44,20 @@ const isHDIPriceFormat = (prices: any[]): boolean => {
 
 export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
   const isUpdateMode = plan ? true : false;
+  // Inicializamos con el valor del plan si existe
+  const [additionalInfoHtml, setAdditionalInfoHtml] = useState<string>(plan?.additionalInfoHtml || "");
+
+  // Utilizamos useEffect para establecer el contenido inicial del editor
+  // después de que el componente se monte para evitar problemas de hidratación
+  useEffect(() => {
+    if (plan?.additionalInfoHtml) {
+      // Para asegurarnos de que se actualiza correctamente, usamos un timeout
+      setTimeout(() => {
+        setAdditionalInfoHtml(plan.additionalInfoHtml);
+      }, 0);
+    }
+  }, [plan?.id, plan?.additionalInfoHtml]);
+
   const {
     prices,
     setPrices,
@@ -53,20 +68,36 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
     setIsHDI,
     isRecommended,
     setIsRecommended,
-  } = useInsurancePlanForm(createPlan);
+    isMultipleCoInsurance,
+    setIsMultipleCoInsurance,
+  } = useInsurancePlanForm(createPlan); useEffect(() => {
+    // Solo ejecutar si tenemos un plan (modo edición)
+    if (plan) {
+      if (plan.prices?.length > 0) {
+        setPrices(plan.prices);
+        setIsHDI(isHDIPriceFormat(plan.prices));
+      }
 
-  useEffect(() => {
-    if (plan?.prices?.length > 0) {
-      setPrices(plan.prices);
-      setIsHDI(isHDIPriceFormat(plan.prices));
+      if (plan.deductibles) {
+        setIsMultiple(!(plan.deductibles.default >= 0));
+      }
+
+      if (plan.coInsurance && typeof plan.coInsurance === 'object') {
+        setIsMultipleCoInsurance(!!(plan.coInsurance.opcion_2 || plan.coInsurance.opcion_4));
+      }
+
+      if (plan.isRecommended) {
+        setIsRecommended(plan.isRecommended);
+      }
+
+      if (plan.additionalInfoHtml) {
+        // Usamos setTimeout para asegurar que se establezca después de que el componente esté montado
+        setTimeout(() => {
+          setAdditionalInfoHtml(plan.additionalInfoHtml);
+        }, 100);
+      }
     }
-    if (plan?.deductibles) {
-      setIsMultiple(!(plan.deductibles.default >= 0));
-    }
-    if (plan?.isRecommended) {
-      setIsRecommended(plan.isRecommended);
-    }
-  }, [plan, setPrices, setIsMultiple, setIsHDI]);
+  }, [plan?.id]);
 
   const planTypeOptions = useMemo(
     () =>
@@ -92,14 +123,14 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
       <div className="rounded-xl bg-muted/50 p-5">
         <Card>
           <CardContent className="space-y-6 p-6">
-            
-              <SelectInput
-                name="planTypeId"
-                label="Tipo de Plan"
-                options={planTypeOptions}
-                defaultValue={plan?.planType?.id}
-                required
-              />
+
+            <SelectInput
+              name="planTypeId"
+              label="Tipo de Plan"
+              options={planTypeOptions}
+              defaultValue={plan?.planType?.id}
+              required
+            />
 
             <SelectInput
               name="companyId"
@@ -118,25 +149,29 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
               required
             />
 
-            <NumberInput
-              name="coInsurance"
-              label="Coaseguro"
-              icon={<Percent className="w-4 h-4 text-gray-500" />}
-              step="1"
-              min={0}
-              max={100}
-              defaultValue={plan?.coInsurance}
-              placeholder="Ej: 20%"
-              required
-            />
+            {!isMultipleCoInsurance && (
+              <>
+                <NumberInput
+                  name="coInsurance"
+                  label="Coaseguro"
+                  icon={<Percent className="w-4 h-4 text-gray-500" />}
+                  step="1"
+                  min={0}
+                  max={100}
+                  defaultValue={plan?.coInsurance?.value || plan?.coInsurance}
+                  placeholder="Ej: 20%"
+                  required={!isMultipleCoInsurance}
+                />
 
-            <NumberInput
-              name="coInsuranceCap"
-              label="Tope de Coaseguro"
-              icon={<DollarSign className="w-4 h-4 text-gray-500" />}
-              placeholder="Ingrese tope de coaseguro"
-              defaultValue={plan?.coInsuranceCap}
-            />
+                <NumberInput
+                  name="coInsuranceCap"
+                  label="Tope de Coaseguro"
+                  icon={<DollarSign className="w-4 h-4 text-gray-500" />}
+                  placeholder="Ingrese tope de coaseguro"
+                  defaultValue={plan?.coInsuranceCap?.value || plan?.coInsuranceCap}
+                />
+              </>
+            )}
 
             <div className="space-y-4">
               <div className="h-[1px] bg-border" /> {/* Divisor */}
@@ -254,6 +289,157 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
       </div>
 
       {/* ------------------------------------------------------------------------- */}
+      {/* Sección de Coaseguros Múltiples */}
+      <div className="rounded-xl bg-muted/50 p-5">
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between px-2 py-4 rounded-lg bg-secondary/50 mb-4">
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="multipleCoInsurance"
+                  checked={Boolean(isMultipleCoInsurance)}
+                  onCheckedChange={(checked) => setIsMultipleCoInsurance(checked === true)}
+                  className="h-5 w-5 border-primary"
+                />
+                <Label htmlFor="multipleCoInsurance" className="font-medium">
+                  Múltiples opciones de coaseguro
+                </Label>
+              </div>
+              <div className="text-sm text-muted-foreground">
+                Permite configurar diferentes coaseguros por nivel hospitalario
+              </div>
+            </div>
+
+            {isMultipleCoInsurance ? (
+              <div className="space-y-8">
+                {/* Coaseguro */}
+                <ScrollArea className="overflow-x-auto px-5">
+                  <div className="rounded-xl bg-muted/50 p-5">
+                    <Card>
+                      <CardContent>
+                        <h3 className="text-lg font-semibold mb-4">Coaseguros</h3>
+                        <Table className="w-full text-center border-collapse min-w-[600px]">
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead className="w-48"></TableHead>
+                              <TableHead className="w-1/2">Opción 2 (0-44 años)</TableHead>
+                              <TableHead className="w-1/2">Opción 4 (45+ años)</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {["A", "B", "C", "D"].map((nivel) => (
+                              <TableRow key={nivel}>
+                                <TableCell className="font-medium text-left whitespace-nowrap">
+                                  Nivel Hospitalario {nivel}
+                                </TableCell>
+                                <TableCell>
+                                  <div className="mx-auto">
+                                    <NumberInput
+                                      name={`coaseguro.opcion_2.${nivel}`}
+                                      icon={
+                                        <Percent className="w-4 h-4 text-gray-500" />
+                                      }
+                                      placeholder="Ingrese coaseguro"
+                                      defaultValue={plan?.coInsurance?.opcion_2?.[nivel]}
+                                      className="w-full"
+                                      step="1"
+                                      min={0}
+                                      max={100}
+                                    />
+                                  </div>
+                                </TableCell>
+                                <TableCell>
+                                  <div className="mx-auto">
+                                    <NumberInput
+                                      name={`coaseguro.opcion_4.${nivel}`}
+                                      icon={
+                                        <Percent className="w-4 h-4 text-gray-500" />
+                                      }
+                                      placeholder="Ingrese coaseguro"
+                                      defaultValue={plan?.coInsurance?.opcion_4?.[nivel]}
+                                      className="w-full"
+                                      step="1"
+                                      min={0}
+                                      max={100}
+                                    />
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </ScrollArea>
+
+                {/* Tope de Coaseguro */}
+                <ScrollArea className="overflow-x-auto px-5">
+                  <div className="rounded-xl bg-muted/50 p-5">
+                    <Card>
+                      <CardContent>
+                        <h3 className="text-lg font-semibold mb-4">Topes de Coaseguro</h3>
+                        <Table className="w-full text-center border-collapse min-w-[600px]">
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead className="w-48"></TableHead>
+                              <TableHead className="w-1/2">Opción 2 (0-44 años)</TableHead>
+                              <TableHead className="w-1/2">Opción 4 (45+ años)</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {["A", "B", "C", "D"].map((nivel) => (
+                              <TableRow key={nivel}>
+                                <TableCell className="font-medium text-left whitespace-nowrap">
+                                  Nivel Hospitalario {nivel}
+                                </TableCell>
+                                <TableCell>
+                                  <div className="mx-auto">
+                                    <NumberInput
+                                      name={`tope.opcion_2.${nivel}`}
+                                      icon={
+                                        <DollarSign className="w-4 h-4 text-gray-500" />
+                                      }
+                                      placeholder="Ingrese tope"
+                                      defaultValue={plan?.coInsuranceCap?.opcion_2?.[nivel]}
+                                      className="w-full"
+                                    />
+                                  </div>
+                                </TableCell>
+                                <TableCell>
+                                  <div className="mx-auto">
+                                    <NumberInput
+                                      name={`tope.opcion_4.${nivel}`}
+                                      icon={
+                                        <DollarSign className="w-4 h-4 text-gray-500" />
+                                      }
+                                      placeholder="Ingrese tope"
+                                      defaultValue={plan?.coInsuranceCap?.opcion_4?.[nivel]}
+                                      className="w-full"
+                                    />
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </ScrollArea>
+              </div>
+            ) : (
+              <div className="space-y-4 mx-12 my-8">
+                <Callout className="my-4 p-3">
+                  Utiliza los campos de coaseguro y tope de coaseguro en la sección superior para planes con coaseguro único
+                </Callout>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* ------------------------------------------------------------------------- */}
       <input type="hidden" name="isUpdate" value={isUpdateMode.toString()} />
       {
         isUpdateMode && (
@@ -290,6 +476,32 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
             ) : (
               <PriceTableForm prices={prices} setPrices={setPrices} />
             )}
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Sección de información adicional */}
+      <div className="rounded-xl bg-muted/50 p-5">
+        <Card>
+          <CardContent className="p-6">
+            <div className="flex items-center mb-4">
+              <Info className="w-5 h-5 mr-2 text-primary" />
+              <h3 className="text-lg font-medium">Información Adicional</h3>
+            </div>
+            <p className="text-sm text-muted-foreground mb-4">
+              Esta información se mostrará en la tarjeta del seguro para proporcionar detalles adicionales a los usuarios.
+            </p>
+            <TipTapEditor
+              content={additionalInfoHtml || ""}
+              onChange={(html) => {
+                setAdditionalInfoHtml(html);
+              }}
+            />
+            <input
+              type="hidden"
+              name="additionalInfoHtml"
+              value={additionalInfoHtml || ""}
+            />
           </CardContent>
         </Card>
       </div>

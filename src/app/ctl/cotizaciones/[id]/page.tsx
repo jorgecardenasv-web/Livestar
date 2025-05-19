@@ -4,7 +4,6 @@ import { prefix } from "@/features/layout/nav-config/constants";
 import { getAdvisors } from "@/features/prospects/loaders/get-advisors";
 import { ModalQuoteActions } from "@/features/quote/components/modals/modal-quote-actions";
 import { getQuoteByIdLoader } from "@/features/quote/loaders/get-quote-by-id.loader";
-import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 
 export default async function QuotesPage({

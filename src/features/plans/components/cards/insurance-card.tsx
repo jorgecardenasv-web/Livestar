@@ -15,16 +15,9 @@ import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { getProspect } from "../../loaders/get-prospect";
 import { getImage } from "../../../../shared/services/get-image.service";
 import { formatCurrency } from "@/shared/utils";
-import type { PriceTable } from "../../types";
+import type { HDIPriceTable, PriceTable } from "../../types";
 import type { Plan } from "../../types/plan";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/shared/components/ui/accordion";
-import { cookies } from "next/headers";
-import type { HDIPriceTable } from "../../types";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/shared/components/ui/accordion";
 
 interface InsuranceCardProps {
   company: {
@@ -43,15 +36,21 @@ interface Deductibles {
   opcion_4?: { A: number; B: number; C: number; D: number };
 }
 
+interface CoInsuranceValues {
+  value?: number;
+  opcion_2?: { A: number; B: number; C: number; D: number };
+  opcion_4?: { A: number; B: number; C: number; D: number };
+}
+
 export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   company,
   plan,
   paymentType,
   isRecommended,
 }) => {
+
   const { prospect, protectWho, additionalInfo } = await getProspect();
   const deductibles: Deductibles = plan.deductibles;
-
   const isMultiple = typeof deductibles.default !== "number";
 
   const minor =
@@ -104,16 +103,15 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 
   return (
     <div
-      className={`md:min-w-[350px] bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${
-        isRecommended ? "ring-4 ring-[#00a5e3] " : ""
-      }`}
+      className={`md:min-w-[350px] bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl ${isRecommended ? "ring-4 ring-[#00a5e3] " : ""
+        }`}
     >
       {isRecommended && (
         <div className="bg-[#00a5e3] text-white text-center py-2 text-sm font-bold">
           RECOMENDADO
         </div>
       )}
-      <div className="p-6">
+      <div className="p-6 overflow-hidden">
         <div className="flex flex-col items-center mb-6">
           <Image
             src={logoSrc?.base64 || "/fallback-image.png"}
@@ -207,12 +205,12 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
           <InfoItem
             icon={<Percent className="w-5 h-5" />}
             title="Coaseguro"
-            value={`${plan.coInsurance}%`}
+            value={getCoInsuranceValue(plan.coInsurance)}
           />
           <InfoItem
             icon={<Heart className="w-5 h-5" />}
             title="Tope coaseguro"
-            value={`${formatCurrency(plan.coInsuranceCap || 0)}`}
+            value={getCoInsuranceCapValue(plan.coInsuranceCap)}
           />
         </div>
 
@@ -223,11 +221,42 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
           <input type="hidden" name="paymentType" value={paymentType} />
           <input type="hidden" name="sumInsured" value={plan.sumInsured} />
           <input type="hidden" name="deductible" value={minor} />
-          <input type="hidden" name="coInsurance" value={plan.coInsurance} />
+          <input
+            type="hidden"
+            name="coInsurance"
+            value={typeof plan.coInsurance === 'object' && plan.coInsurance.value !== undefined
+              ? plan.coInsurance.value
+              : typeof plan.coInsurance === 'number'
+                ? plan.coInsurance
+                : 0}
+          />
           <input
             type="hidden"
             name="coInsuranceCap"
-            value={plan.coInsuranceCap || 0}
+            value={typeof plan.coInsuranceCap === 'object' && plan.coInsuranceCap?.value !== undefined
+              ? plan.coInsuranceCap.value
+              : typeof plan.coInsuranceCap === 'number'
+                ? plan.coInsuranceCap
+                : 0}
+          />
+          <input
+            type="hidden"
+            name="isMultipleCoInsurance"
+            value={
+              typeof plan.coInsurance === 'object' &&
+                (plan.coInsurance.opcion_2 || plan.coInsurance.opcion_4) ?
+                'true' : 'false'
+            }
+          />
+          <input
+            type="hidden"
+            name="coInsuranceJson"
+            value={JSON.stringify(plan.coInsurance)}
+          />
+          <input
+            type="hidden"
+            name="coInsuranceCapJson"
+            value={JSON.stringify(plan.coInsuranceCap)}
           />
           <input type="hidden" name="coverage_fee" value={coverage_fee} />
           <input
@@ -254,6 +283,40 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             className="w-full bg-[#223E99] text-white py-3 rounded font-bold text-lg hover:bg-primary transition duration-300"
           />
         </form>
+
+        {/* Sección de información adicional con mejor estilizado */}
+        {plan.additionalInfoHtml && plan.additionalInfoHtml !== '<p></p>' && (
+          <div className="mt-4 border-t border-gray-200 pt-3 animate-fadeIn">
+            <h3 className="text-base font-semibold mb-2 text-sky-600 flex items-center gap-2">
+              <div className="w-1 h-5 bg-sky-500 rounded-full"></div>
+              Información Adicional
+            </h3>
+            <div className="bg-blue-50/30 rounded-lg p-2.5 overflow-hidden">
+              <div
+                className="prose prose-sm max-w-none w-full break-words overflow-wrap-anywhere
+                  leading-normal text-sm text-gray-700
+                  prose-headings:text-sky-600 prose-headings:break-words prose-headings:hyphens-auto
+                  prose-h1:text-base prose-h1:font-semibold prose-h1:mt-2 prose-h1:mb-1 prose-h1:leading-tight
+                  prose-h2:text-sm prose-h2:font-medium prose-h2:mt-1.5 prose-h2:mb-1 prose-h2:leading-tight
+                  prose-p:my-0.5 prose-p:leading-normal prose-p:break-words prose-p:hyphens-auto
+                  prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-a:break-words prose-a:inline-block prose-a:max-w-full
+                  prose-strong:text-gray-700 prose-strong:font-medium
+                  prose-ul:pl-4 prose-ul:list-disc prose-ul:my-0.5 prose-ul:space-y-0
+                  prose-ol:pl-4 prose-ol:list-decimal prose-ol:my-0.5 prose-ol:space-y-0
+                  prose-li:my-0 prose-li:leading-tight prose-li:mb-0 prose-li:break-words
+                  prose-li>prose-p:my-0 prose-li>prose-p:leading-normal
+                  [&_ul>li::marker]:text-sky-500 [&_ul>li]:my-0.5 
+                  [&_ol>li]:my-0.5 [&_*]:break-words [&_*]:hyphens-auto
+                  [&_img]:max-w-full [&_img]:h-auto [&_table]:table-fixed [&_table]:w-full
+                  [&_td]:break-words [&_th]:break-words [&_td]:p-1 [&_th]:p-1
+                  [&_pre]:overflow-x-auto [&_pre]:max-w-full [&_code]:break-words"
+                dangerouslySetInnerHTML={{ __html: plan.additionalInfoHtml }}
+              />
+            </div>
+          </div>
+        )}
+
+
       </div>
     </div>
   );
@@ -288,6 +351,60 @@ function getMinimumValue(
 
   const valores = Object.values(option);
   return valores.length > 0 ? Math.min(...valores) : 0;
+}
+
+function getCoInsuranceValue(coInsurance: any): string {
+  if (!coInsurance) return "0%";
+
+  // Si es un valor simple
+  if (typeof coInsurance === 'number') return `${coInsurance}%`;
+
+  // Si tiene value (formato simple)
+  if (coInsurance.value !== undefined) return `${coInsurance.value}%`;
+
+  // Si es múltiple, buscamos el valor mínimo
+  let minValue = 100;
+
+  if (coInsurance.opcion_2) {
+    const values = Object.values(coInsurance.opcion_2) as number[];
+    const min = Math.min(...values);
+    minValue = Math.min(minValue, min);
+  }
+
+  if (coInsurance.opcion_4) {
+    const values = Object.values(coInsurance.opcion_4) as number[];
+    const min = Math.min(...values);
+    minValue = Math.min(minValue, min);
+  }
+
+  return `DESDE ${minValue}%`;
+}
+
+function getCoInsuranceCapValue(coInsuranceCap: any): string {
+  if (!coInsuranceCap) return formatCurrency(0);
+
+  // Si es un valor simple
+  if (typeof coInsuranceCap === 'number') return formatCurrency(coInsuranceCap);
+
+  // Si tiene value (formato simple)
+  if (coInsuranceCap.value !== undefined) return formatCurrency(coInsuranceCap.value);
+
+  // Si es múltiple, buscamos el valor mínimo
+  let minValue = Number.MAX_SAFE_INTEGER;
+
+  if (coInsuranceCap.opcion_2) {
+    const values = Object.values(coInsuranceCap.opcion_2) as number[];
+    const min = Math.min(...values);
+    minValue = Math.min(minValue, min);
+  }
+
+  if (coInsuranceCap.opcion_4) {
+    const values = Object.values(coInsuranceCap.opcion_4) as number[];
+    const min = Math.min(...values);
+    minValue = Math.min(minValue, min);
+  }
+
+  return `DESDE ${formatCurrency(minValue === Number.MAX_SAFE_INTEGER ? 0 : minValue)}`;
 }
 
 function getFormattedValue(

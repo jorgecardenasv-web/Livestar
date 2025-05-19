@@ -32,7 +32,7 @@ export interface PlanData {
   [key: string]: any; // Añadimos un índice de firma para hacerlo compatible con JsonObject
 }
 
-export interface Quote extends Omit<PrismaQuote, 'planData'> {
+export interface Quote extends Omit<PrismaQuote, "planData"> {
   user: User | null;
   prospect: Prospect | null;
   planData: PlanData;
@@ -49,6 +49,23 @@ export type DeductibleLevel = {
 export type DeductiblesData = {
   opcion_2?: DeductibleLevel;
   opcion_4?: DeductibleLevel;
+};
+
+export type CoInsuranceLevel = {
+  A: number;
+  B: number;
+  C: number;
+  D: number;
+};
+
+export type CoInsuranceData = {
+  opcion_2?: CoInsuranceLevel;
+  opcion_4?: CoInsuranceLevel;
+};
+
+export type CoInsuranceCapData = {
+  opcion_2?: CoInsuranceLevel;
+  opcion_4?: CoInsuranceLevel;
 };
 
 // Tipos más específicos para la información adicional
@@ -84,6 +101,14 @@ export interface Member {
 
 export interface DeductiblesAccordionProps {
   deductiblesData: DeductiblesData | null;
+  additionalInfo: AdditionalInfo | null;
+  protectWho: string;
+  mainAge: number | null;
+}
+
+export interface CoInsuranceAccordionProps {
+  coInsuranceData: CoInsuranceData | null;
+  coInsuranceCapData: CoInsuranceCapData | null;
   additionalInfo: AdditionalInfo | null;
   protectWho: string;
   mainAge: number | null;

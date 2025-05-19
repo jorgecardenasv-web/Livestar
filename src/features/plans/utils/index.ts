@@ -293,6 +293,7 @@ export const normalizePlanData = (plan: any) => {
   return {
     ...plan,
     deductibles: plan.deductibles || {},
+    additionalInfoHtml: plan.additionalInfoHtml || null,
     company: {
       id: plan.company?.id || "",
       name: plan.company?.name || "",

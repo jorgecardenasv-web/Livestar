@@ -11,6 +11,9 @@ export interface InsuranceQuoteData {
   protectedWho: string;
   isMultipleString?: string;
   deductiblesJson?: string;
+  isMultipleCoInsurance?: string;
+  coInsuranceJson?: string;
+  coInsuranceCapJson?: string;
   individualPricesJson?: string;
   imgCompanyLogo: string;
 }
@@ -32,4 +35,7 @@ export interface QuotePDFData {
   }[];
   isMultipleDeductible: boolean;
   deductibles?: Record<string, Record<string, number>>;
+  isMultipleCoInsurance?: boolean;
+  coInsuranceData?: Record<string, Record<string, number>>;
+  coInsuranceCapData?: Record<string, Record<string, number>>;
 }

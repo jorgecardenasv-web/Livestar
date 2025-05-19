@@ -16,6 +16,9 @@ interface CreateQuoteParams {
     individualPricesJson?: string;
     isMultipleString?: string;
     deductiblesJson?: string;
+    isMultipleCoInsurance?: string;
+    coInsuranceJson?: string;
+    coInsuranceCapJson?: string;
     companyId?: string;
     companyLogo?: string;
     planTypeId?: string;
@@ -69,12 +72,38 @@ export const createQuoteService = async (
     sumInsured: parseFloat(plan.sumInsured.toString()),
     coInsurance: parseFloat(plan.coInsurance.toString()),
     coInsuranceCap: parseFloat(plan.coInsuranceCap.toString()),
-    prices: plan.prices || (plan.individualPricesJson ? JSON.parse(plan.individualPricesJson) : null),
-    deductibles: plan.deductibles || (plan.deductiblesJson ? JSON.parse(plan.deductiblesJson) : null),
+    prices:
+      plan.prices ||
+      (plan.individualPricesJson
+        ? JSON.parse(plan.individualPricesJson)
+        : null),
+    deductibles:
+      plan.deductibles ||
+      (plan.deductiblesJson ? JSON.parse(plan.deductiblesJson) : null),
     isRecommended: plan.isRecommended || false,
     paymentType: plan.paymentType,
     coverageFee: parseFloat(plan.coverage_fee.toString()),
   };
+
+  // Preparar datos de coaseguro múltiple
+  let coInsuranceData;
+  let coInsuranceCapData;
+
+  if (plan.isMultipleCoInsurance === "true" && plan.coInsuranceJson) {
+    try {
+      coInsuranceData = JSON.parse(plan.coInsuranceJson);
+    } catch (e) {
+      console.error("Error parsing coInsuranceJson:", e);
+    }
+  }
+
+  if (plan.isMultipleCoInsurance === "true" && plan.coInsuranceCapJson) {
+    try {
+      coInsuranceCapData = JSON.parse(plan.coInsuranceCapJson);
+    } catch (e) {
+      console.error("Error parsing coInsuranceCapJson:", e);
+    }
+  }
 
   const quoteData = {
     prospectId: prospect.id,
@@ -92,6 +121,9 @@ export const createQuoteService = async (
     membersData: membersData,
     isMultipleDeductible: plan.isMultipleString === "true",
     deductiblesData: deductiblesData,
+    isMultipleCoInsurance: plan.isMultipleCoInsurance === "true",
+    coInsuranceData: coInsuranceData,
+    coInsuranceCapData: coInsuranceCapData,
     additionalInfo,
   };
 

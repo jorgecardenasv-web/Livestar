@@ -4,9 +4,20 @@ import {
   jsonPricesToFlatPricesHDI,
   normalizePlanData,
 } from "../utils";
+import { unstable_cache } from "next/cache";
+
+// Cache la consulta del plan para mejorar el rendimiento
+const getCachedPlan = unstable_cache(
+  async (id: string) => {
+    return await getInsurancePlanByIdService(id);
+  },
+  ["plan-details"], // clave del cache
+  { tags: ["plan"], revalidate: 60 } // revalidar cada minuto
+);
 
 export const getInsurancePlanById = async (id: string) => {
-  const insurancePlan = await getInsurancePlanByIdService(id);
+  // Usamos la versión en caché para mejorar el rendimiento
+  const insurancePlan = await getCachedPlan(id);
   if (!insurancePlan || !insurancePlan.prices) {
     throw new Error("El plan o los precios del plan no se encuentran");
   }

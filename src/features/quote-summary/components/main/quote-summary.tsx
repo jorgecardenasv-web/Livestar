@@ -7,6 +7,8 @@ import { InfoCard } from "../cards/info-card";
 import { deleteSelectedPlan } from "@/features/plans/actions/set-cookies";
 import { FC } from "react";
 import MultipleDeductibleModal from "../modals/MultipleDeductibleModal";
+import MultipleCoInsuranceModal from "../modals/MultipleCoInsuranceModal";
+import CombinedInfoModal from "../modals/CombinedInfoModal";
 import { formatCurrency } from "@/shared/utils";
 import { useQuoteSumaryActions } from "../../hooks/use-quote-sumary-actions";
 import { Modal } from "@/shared/components/ui/modal";
@@ -33,26 +35,29 @@ export const QuoteSummary: FC<
     paymentType,
     isMultipleString,
     deductiblesJson,
+    isMultipleCoInsurance,
+    coInsuranceJson,
+    coInsuranceCapJson,
     protectedWho,
   } = props;
   const isMultiple = isMultipleString === "true" ? true : false;
+  const isMultipleCoIns = isMultipleCoInsurance === "true" ? true : false;
   const {
     isOpen,
     modalType,
     openModalMoreInformation,
     openModalMultipleDeductible,
+    openModal,
   } = useQuoteSumaryActions();
 
   const optionsBtn = [
     {
-      buttonLabel: "Ver Detalles de Deducibles",
-      action: () =>
-        openModalMultipleDeductible(
-          "¿Cuáles serán los gastos en caso de accidente o padecimiento?",
-          `Si llegaras a tener un padecimiento o accidente, podrás acudir a un hospital
-  de cualquier nivel y tu participación sería de acuerdo a tu elección:`,
-          deductiblesJson
-        ),
+      buttonLabel: "Ver Deducibles y Coaseguros",
+      action: () => openModal("combinedInfo", {
+        deductibles: deductiblesJson,
+        coInsurance: coInsuranceJson,
+        coInsuranceCap: coInsuranceCapJson
+      }),
     },
     {
       buttonLabel: "Ver Desglose de mensualidad",
@@ -67,12 +72,14 @@ export const QuoteSummary: FC<
       buttonLabel: "Descargar Cotización",
       action: () => handleGeneratePDF(),
     },
-  ];
+  ]; const filteredOpt: typeof optionsBtn = [];
+  optionsBtn.forEach((opt) => {
+    // Filtra la opción "Ver Deducibles y Coaseguros" si no hay datos múltiples
+    if (opt.buttonLabel === "Ver Deducibles y Coaseguros" && !isMultiple && !isMultipleCoIns) return;
 
-  const filteredOpt: typeof optionsBtn = [];
-  optionsBtn.forEach((opt, index) => {
-    if (!isMultiple && index === 0) return;
-    if (protectedWho === "solo_yo" && index === 1) return;
+    // Filtra la opción "Ver Desglose de mensualidad" si es un solo asegurado
+    if (opt.buttonLabel === "Ver Desglose de mensualidad" && protectedWho === "solo_yo") return;
+
     filteredOpt.push(opt);
   });
   //! -------------------------------------------------------------------
@@ -159,16 +166,24 @@ export const QuoteSummary: FC<
             htmlElement={<div className="pl-8"></div>}
           />
         </div>
-        <InfoCard
-          icon={<Percent className="w-4 h-4 sm:w-5 sm:h-5" />}
-          title="Coaseguro"
-          value={`${coInsurance}%`}
-        />
-        <InfoCard
-          icon={<Heart className="w-4 h-4 sm:w-5 sm:h-5" />}
-          title="Tope coaseguro"
-          value={formatCurrency(coInsuranceCap)}
-        />
+        <div className="flex justify-between">
+          <InfoCard
+            icon={<Percent className="w-4 h-4 sm:w-5 sm:h-5" />}
+            title="Coaseguro"
+            value={`${isMultipleCoIns ? `desde ${coInsurance}%` : `${coInsurance}%`}`}
+            useHtml={isMultipleCoIns}
+            htmlElement={<div className="pl-8"></div>}
+          />
+        </div>
+        <div className="flex justify-between">
+          <InfoCard
+            icon={<Heart className="w-4 h-4 sm:w-5 sm:h-5" />}
+            title="Tope coaseguro"
+            value={`${isMultipleCoIns ? `desde ${formatCurrency(coInsuranceCap)}` : formatCurrency(coInsuranceCap)}`}
+            useHtml={isMultipleCoIns}
+            htmlElement={<div className="pl-8"></div>}
+          />
+        </div>
       </div>
       <div className="flex justify-center">
         {filteredOpt.length > 1 ? (
@@ -194,6 +209,8 @@ export const QuoteSummary: FC<
         <Modal title="" size="6xl">
           {modalType === "multipleDeducible" && <MultipleDeductibleModal />}
           {modalType === "moreInformationQuote" && <MoreInformationQuote />}
+          {modalType === "multipleCoInsurance" && <MultipleCoInsuranceModal />}
+          {modalType === "combinedInfo" && <CombinedInfoModal />}
         </Modal>
       )}
     </div>

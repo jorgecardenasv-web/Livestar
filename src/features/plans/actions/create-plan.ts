@@ -14,6 +14,7 @@ import { revalidatePath } from "next/cache";
 export const createPlan = async (formData: FormData): Promise<FormState> => {
   try {
     const rawFormData = Object.fromEntries(formData);
+
     const { data, success, error } = createPlanSchema.safeParse(rawFormData);
 
     if (!success) {
@@ -32,9 +33,15 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
       isUpdate,
       isHDI,
       isRecommended,
+      isMultipleCoInsurance,
       ...rest
     } = data;
 
+    // Obtener la información adicional HTML directamente del formulario
+    const additionalInfoHtml =
+      formData.get("additionalInfoHtml")?.toString() || null;
+
+    // Eliminamos cualquier campo adicional que no esté en el modelo de Prisma
     const planData = {
       ...rest,
       prices: prices
@@ -44,20 +51,47 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
         : {},
       planTypeId,
       isRecommended,
+      additionalInfoHtml,
     };
 
-    await (isUpdate && planId
-      ? updatePlanService(planData, planId)
-      : createPlanService(planData));
+    try {
+      await (isUpdate && planId
+        ? updatePlanService(planData, planId)
+        : createPlanService(planData));
+
+      // Redirigir solo si la operación fue exitosa
+      revalidatePath(`${prefix}/planes`);
+
+      // Retornar un mensaje para evitar el redirect automático cuando estamos actualizando
+      if (isUpdate) {
+        return {
+          success: true,
+          message: "Plan actualizado exitosamente",
+        };
+      }
+
+      // Solo redirigir en caso de creación
+      redirect(`${prefix}/planes`);
+    } catch (err) {
+      // Devolver un mensaje amigable para el usuario
+      return {
+        success: false,
+        message:
+          err instanceof Error
+            ? err.message
+            : "Error al procesar la solicitud. Por favor, intenta de nuevo.",
+      };
+    }
   } catch (error) {
+    console.log("Error al crear el tipo de plan:", error);
     return {
       success: false,
       message:
         error instanceof PrismaError
           ? error.message
-          : "Error al crear el plan.",
+          : error instanceof Error
+            ? error.message
+            : "Error al crear el plan.",
     };
   }
-  revalidatePath(`${prefix}/planes`);
-  redirect(`${prefix}/planes`);
 };
