@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Shield, DollarSign, Percent, Heart, ArrowLeft } from "lucide-react";
+import { Shield, DollarSign, Percent, Heart, ArrowLeft, FileText, Download, Users } from "lucide-react";
 import { ContractForm } from "../forms/confirm-form";
 import { InfoCard } from "../cards/info-card";
 import { deleteSelectedPlan } from "@/features/plans/actions/set-cookies";
@@ -13,7 +13,6 @@ import { formatCurrency } from "@/shared/utils";
 import { useQuoteSumaryActions } from "../../hooks/use-quote-sumary-actions";
 import { Modal } from "@/shared/components/ui/modal";
 import MoreInformationQuote from "../modals/MoreInformationModal";
-import { DropdownOptions } from "@/shared/components/dropdown-options";
 import { Button } from "@/shared/components/ui/button";
 import { generatePDFAction } from "../../actions/generate-pdf";
 import { processPDFData } from "../../utils/process-pdf-data.util"
@@ -50,38 +49,7 @@ export const QuoteSummary: FC<
     openModal,
   } = useQuoteSumaryActions();
 
-  const optionsBtn = [
-    {
-      buttonLabel: "Ver Deducibles y Coaseguros",
-      action: () => openModal("combinedInfo", {
-        deductibles: deductiblesJson,
-        coInsurance: coInsuranceJson,
-        coInsuranceCap: coInsuranceCapJson
-      }),
-    },
-    {
-      buttonLabel: "Ver Desglose de mensualidad",
-      action: () => openModalMoreInformation(JSON.parse(individualPricesJson!)),
-    },
-    // TODO: Detalles de PDF cargado por un Asesor
-    // {
-    //   buttonLabel: "Ver detalles del plan",
-    //   action: () => handleGeneratePDF(),
-    // },
-    {
-      buttonLabel: "Descargar Cotización",
-      action: () => handleGeneratePDF(),
-    },
-  ]; const filteredOpt: typeof optionsBtn = [];
-  optionsBtn.forEach((opt) => {
-    // Filtra la opción "Ver Deducibles y Coaseguros" si no hay datos múltiples
-    if (opt.buttonLabel === "Ver Deducibles y Coaseguros" && !isMultiple && !isMultipleCoIns) return;
-
-    // Filtra la opción "Ver Desglose de mensualidad" si es un solo asegurado
-    if (opt.buttonLabel === "Ver Desglose de mensualidad" && protectedWho === "solo_yo") return;
-
-    filteredOpt.push(opt);
-  });
+  // Ya no necesitamos el menú desplegable de opciones ya que ahora mostramos los botones directamente
   //! -------------------------------------------------------------------
   const handleGeneratePDF = async () => {
     try {
@@ -185,22 +153,64 @@ export const QuoteSummary: FC<
           />
         </div>
       </div>
-      <div className="flex justify-center">
-        {filteredOpt.length > 1 ? (
-          <DropdownOptions
-            label="Más información"
-            className="w-full max-w-[200px] mt-2"
-            buttonData={filteredOpt}
-          />
-        ) : (
-          <Button
-            className="w-[200px] gap-2 bg-white hover:bg-blue-50 hover:text-blue-600 hover:border-blue-100 transition-all duration-200"
-            variant="outline"
+      <div className="mt-5 border-t border-gray-100 pt-4">
+        <div className="flex flex-wrap justify-center gap-3 text-sm">
+          {/* Botón de descarga de PDF siempre visible */}
+          <button
+            className="text-sky-600 hover:text-sky-800 font-medium flex items-center gap-1.5 px-3 py-1.5 transition-colors"
             onClick={handleGeneratePDF}
           >
+            <Download className="w-4 h-4" />
             Descargar Cotización
-          </Button>
-        )}
+          </button>
+
+          {/* Separador vertical si hay botón de deducibles */}
+          {(isMultiple || isMultipleCoIns) && (
+            <div className="h-6 w-px bg-gray-200 self-center hidden sm:block"></div>
+          )}
+
+          {/* Botón para ver Deducibles y Coaseguros - solo si hay datos múltiples */}
+          {(isMultiple || isMultipleCoIns) && (
+            <button
+              className="text-sky-600 hover:text-sky-800 font-medium flex items-center gap-1.5 px-3 py-1.5 transition-colors"
+              onClick={() => openModal("combinedInfo", {
+                deductibles: deductiblesJson,
+                coInsurance: coInsuranceJson,
+                coInsuranceCap: coInsuranceCapJson
+              })}
+            >
+              <FileText className="w-4 h-4" />
+              Ver Deducibles y Coaseguros
+            </button>
+          )}
+
+          {/* Separador vertical antes del botón de desglose de mensualidad */}
+          {protectedWho !== "solo_yo" && (
+            <div className="h-6 w-px bg-gray-200 self-center hidden sm:block"></div>
+          )}
+
+          {/* Si no hay deducibles múltiples pero hay desglose mensual */}
+          {!(isMultiple || isMultipleCoIns) && protectedWho !== "solo_yo" && (
+            <button
+              className="text-sky-600 hover:text-sky-800 font-medium flex items-center gap-1.5 px-3 py-1.5 transition-colors"
+              onClick={() => openModalMoreInformation(JSON.parse(individualPricesJson!))}
+            >
+              <Users className="w-4 h-4" />
+              Ver Desglose de mensualidad
+            </button>
+          )}
+
+          {/* Si es una pantalla más ancha y hay ambos botones */}
+          {(isMultiple || isMultipleCoIns) && protectedWho !== "solo_yo" && (
+            <button
+              className="text-sky-600 hover:text-sky-800 font-medium flex items-center gap-1.5 px-3 py-1.5 transition-colors"
+              onClick={() => openModalMoreInformation(JSON.parse(individualPricesJson!))}
+            >
+              <Users className="w-4 h-4" />
+              Ver Desglose de mensualidad
+            </button>
+          )}
+        </div>
       </div>
       <div id="pdfIngnore">
         <ContractForm />
