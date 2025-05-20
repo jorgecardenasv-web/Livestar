@@ -52,9 +52,9 @@ export function InsuranceFlow() {
               className="flex flex-col items-center gap-y-4 sm:gap-y-6 mt-6 sm:mt-12"
             >
               <div className="flex flex-col md:flex-row justify-between items-center w-full gap-y-4 sm:gap-y-6 md:gap-y-0">
-                {/* Skip Intro Button */}
+                {/* Skip Intro or Quote Button */}
                 <AnimatePresence mode="wait">
-                  {step === 0 && (
+                  {step === 0 ? (
                     <motion.div
                       key="skip-intro"
                       initial={{ opacity: 0, x: -20 }}
@@ -66,41 +66,34 @@ export function InsuranceFlow() {
                       <Button
                         variant="outline"
                         onClick={() => setStep(() => steps.length - 1)}
-                        className="text-primary border-primary hover:bg-primary/70 hover:text-white"
+                        className="text-primary border-primary hover:bg-primary/70 hover:text-white text-base px-5 h-12"
                       >
-                        <SkipForward
-                          size={24}
-                          /* strokeWidth={3} */
-                          /* className="animate-ping" */
-                        />
-                        Saltar introducción
+                        <SkipForward className="animate-pulse" size={22} />
+                        <span className="ml-2">Saltar introducción</span>
+                      </Button>
+                    </motion.div>
+                  ) : step === steps.length - 1 && (
+                    <motion.div
+                      key="quote-button"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -20 }}
+                      transition={{ duration: 0.4 }}
+                      className="w-full md:w-auto text-center"
+                    >
+                      <Button
+                        onClick={openModalStorytelling}
+                        className="bg-primary text-white rounded px-5 my-auto hover:bg-primary/90 h-12"
+                      >
+                        <span className="text-lg font-medium">Cotizar ahora</span>
+                        <ArrowRight className="ml-2 animate-pulse" size={30} />
                       </Button>
                     </motion.div>
                   )}
                 </AnimatePresence>
 
-                {/* Navigation Buttons */}
-                <div className="flex-1 flex justify-center">
-                  {/* Quote */}
-                  <AnimatePresence mode="wait">
-                    {step === steps.length - 1 && (
-                      <motion.div
-                        key="quote-button"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        transition={{ duration: 0.4 }}
-                      >
-                        <Button
-                          onClick={openModalStorytelling}
-                          className="bg-primary text-white rounded p-6 my-auto"
-                        >
-                          <span className="text-xl">Cotizar ahora</span>
-                        </Button>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                {/* Middle Space */}
+                <div className="flex-1"></div>
 
                 <div className="flex-1 flex justify-end items-center gap-x-4">
                   <motion.div
