@@ -18,6 +18,7 @@ import { formatCurrency } from "@/shared/utils";
 import type { HDIPriceTable, PriceTable } from "../../types";
 import type { Plan } from "../../types/plan";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/shared/components/ui/accordion";
+import AdditionalInfoCollapsible from "./additional-info-collapsible";
 
 interface InsuranceCardProps {
   company: {
@@ -103,7 +104,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 
   return (
     <div
-      className={`bg-white rounded shadow-lg overflow-hidden transition-all duration-300 hover:shadow-xl w-80 ${isRecommended ? "ring-4 ring-[#00a5e3] " : ""
+      className={`bg-white rounded shadow-lg overflow-hidden w-80 ${isRecommended ? "ring-4 ring-[#00a5e3] " : ""
         }`}
     >
       {isRecommended && (
@@ -284,35 +285,10 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
           />
         </form>
 
-        {/* Sección de información adicional con mejor estilizado */}
+        {/* Sección de información adicional con mejor estilizado - Plegable */}
         {plan.additionalInfoHtml && plan.additionalInfoHtml !== '<p></p>' && (
           <div className="mt-4 border-t border-gray-200 pt-3 animate-fadeIn">
-            <h3 className="text-base font-semibold mb-2 text-sky-600 flex items-center gap-2">
-              <div className="w-1 h-5 bg-sky-500 rounded-full"></div>
-              Información Adicional
-            </h3>
-            <div className="bg-blue-50/30 rounded-lg p-2.5 overflow-hidden">
-              <div
-                className="prose prose-sm max-w-none w-full break-words overflow-wrap-anywhere
-                  leading-normal text-sm text-gray-700
-                  prose-headings:text-sky-600 prose-headings:break-words prose-headings:hyphens-auto
-                  prose-h1:text-base prose-h1:font-semibold prose-h1:mt-2 prose-h1:mb-1 prose-h1:leading-tight
-                  prose-h2:text-sm prose-h2:font-medium prose-h2:mt-1.5 prose-h2:mb-1 prose-h2:leading-tight
-                  prose-p:my-0.5 prose-p:leading-normal prose-p:break-words prose-p:hyphens-auto
-                  prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-a:break-words prose-a:inline-block prose-a:max-w-full
-                  prose-strong:text-gray-700 prose-strong:font-medium
-                  prose-ul:pl-4 prose-ul:list-disc prose-ul:my-0.5 prose-ul:space-y-0
-                  prose-ol:pl-4 prose-ol:list-decimal prose-ol:my-0.5 prose-ol:space-y-0
-                  prose-li:my-0 prose-li:leading-tight prose-li:mb-0 prose-li:break-words
-                  prose-li>prose-p:my-0 prose-li>prose-p:leading-normal
-                  [&_ul>li::marker]:text-sky-500 [&_ul>li]:my-0.5 
-                  [&_ol>li]:my-0.5 [&_*]:break-words [&_*]:hyphens-auto
-                  [&_img]:max-w-full [&_img]:h-auto [&_table]:table-fixed [&_table]:w-full
-                  [&_td]:break-words [&_th]:break-words [&_td]:p-1 [&_th]:p-1
-                  [&_pre]:overflow-x-auto [&_pre]:max-w-full [&_code]:break-words"
-                dangerouslySetInnerHTML={{ __html: plan.additionalInfoHtml }}
-              />
-            </div>
+            <AdditionalInfoCollapsible additionalInfoHtml={plan.additionalInfoHtml} />
           </div>
         )}
 
@@ -331,7 +307,7 @@ const InfoItem = ({
   title: string;
   value: string;
 }) => (
-  <div className="bg-white rounded-xl p-4 shadow-sm flex items-center space-x-3 hover:shadow-md transition-all ease-in-out duration-200">
+  <div className="bg-white rounded-xl p-4 shadow-sm flex items-center space-x-3">
     <div className="bg-sky-100 p-2 rounded-lg text-sky-600">{icon}</div>
     <div>
       <p className="text-xs text-sky-600 font-semibold uppercase">{title}</p>
