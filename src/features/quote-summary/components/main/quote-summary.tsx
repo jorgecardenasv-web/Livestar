@@ -193,7 +193,13 @@ export const QuoteSummary: FC<
           {!(isMultiple || isMultipleCoIns) && protectedWho !== "solo_yo" && (
             <button
               className="text-sky-600 hover:text-sky-800 font-medium flex items-center gap-1.5 px-3 py-1.5 transition-colors"
-              onClick={() => openModalMoreInformation(JSON.parse(individualPricesJson!))}
+              onClick={() => {
+                const pricesData = JSON.parse(individualPricesJson!);
+                openModalMoreInformation({
+                  ...pricesData,
+                  protectWho: protectedWho
+                });
+              }}
             >
               <Users className="w-4 h-4" />
               Ver Desglose de mensualidad
@@ -204,7 +210,13 @@ export const QuoteSummary: FC<
           {(isMultiple || isMultipleCoIns) && protectedWho !== "solo_yo" && (
             <button
               className="text-sky-600 hover:text-sky-800 font-medium flex items-center gap-1.5 px-3 py-1.5 transition-colors"
-              onClick={() => openModalMoreInformation(JSON.parse(individualPricesJson!))}
+              onClick={() => {
+                const pricesData = JSON.parse(individualPricesJson!);
+                openModalMoreInformation({
+                  ...pricesData,
+                  protectWho: protectedWho
+                });
+              }}
             >
               <Users className="w-4 h-4" />
               Ver Desglose de mensualidad
