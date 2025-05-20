@@ -2,7 +2,6 @@
 
 import { prefix } from "@/features/layout/nav-config/constants";
 import { createPlanService } from "../services/create/create-plan.service";
-import { redirect } from "next/navigation";
 import { flatPricesToJsonPrices, flatPricesToJsonPricesHDI } from "../utils";
 import { createPlanSchema } from "../schema/create-plan.schema";
 import { FormState } from "@/shared/types";
@@ -70,8 +69,13 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
         };
       }
 
-      // Solo redirigir en caso de creación
-      redirect(`${prefix}/planes`);
+      // Para creación, devolver un objeto con indicador de redirección
+      return {
+        success: true,
+        message: "Plan creado exitosamente",
+        shouldRedirect: true,
+        redirectUrl: `${prefix}/planes`,
+      };
     } catch (err) {
       // Devolver un mensaje amigable para el usuario
       return {

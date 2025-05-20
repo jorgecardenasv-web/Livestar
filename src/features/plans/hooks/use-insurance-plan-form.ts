@@ -2,6 +2,7 @@ import { FormState } from "@/shared/types";
 import { useModalStore } from "@/shared/store/modal-store";
 import { useState } from "react";
 import { useNotificationStore } from "@/features/notification/store/notification-store";
+import { useRouter } from "next/navigation";
 
 export const useInsurancePlanForm = (
   serverAction: (formData: FormData) => Promise<FormState>
@@ -14,6 +15,7 @@ export const useInsurancePlanForm = (
   const [isHDI, setIsHDI] = useState(false);
   const { openModal } = useModalStore();
   const { showNotification } = useNotificationStore();
+  const router = useRouter();
 
   const handleSubmit = async (formData: FormData) => {
     try {
@@ -28,9 +30,18 @@ export const useInsurancePlanForm = (
       );
       formData.append("isHDI", JSON.stringify(isHDI));
       formData.append("isRecommended", JSON.stringify(isRecommended));
-      const { message, success } = await serverAction(formData);
 
-      if (!success) {
+      const response = await serverAction(formData);
+      const { message, success, shouldRedirect, redirectUrl } = response;
+
+      if (success) {
+        showNotification(message, "success");
+
+        // Si se indica que debe redirigir, hacemos la redirección desde el cliente
+        if (shouldRedirect && redirectUrl) {
+          router.push(redirectUrl);
+        }
+      } else {
         showNotification(message, "error");
       }
     } catch (error) {

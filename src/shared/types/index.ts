@@ -6,6 +6,8 @@ export type FormState = {
   message: string;
   success: boolean;
   inputErrors?: Record<string, string>;
+  shouldRedirect?: boolean;
+  redirectUrl?: string;
 };
 
 export interface GetAllResponse<T> {
