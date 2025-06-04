@@ -37,12 +37,6 @@ interface Deductibles {
   opcion_4?: { A: number; B: number; C: number; D: number };
 }
 
-interface CoInsuranceValues {
-  value?: number;
-  opcion_2?: { A: number; B: number; C: number; D: number };
-  opcion_4?: { A: number; B: number; C: number; D: number };
-}
-
 export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   company,
   plan,

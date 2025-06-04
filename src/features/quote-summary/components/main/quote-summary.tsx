@@ -13,10 +13,10 @@ import { formatCurrency } from "@/shared/utils";
 import { useQuoteSumaryActions } from "../../hooks/use-quote-sumary-actions";
 import { Modal } from "@/shared/components/ui/modal";
 import MoreInformationQuote from "../modals/MoreInformationModal";
-import { Button } from "@/shared/components/ui/button";
 import { generatePDFAction } from "../../actions/generate-pdf";
 import { processPDFData } from "../../utils/process-pdf-data.util"
 import { InsuranceQuoteData } from "../../types";
+import { getProspect } from "@/features/plans/loaders/get-prospect";
 
 export const QuoteSummary: FC<
   InsuranceQuoteData
@@ -45,7 +45,6 @@ export const QuoteSummary: FC<
     isOpen,
     modalType,
     openModalMoreInformation,
-    openModalMultipleDeductible,
     openModal,
   } = useQuoteSumaryActions();
 
@@ -53,9 +52,8 @@ export const QuoteSummary: FC<
   //! -------------------------------------------------------------------
   const handleGeneratePDF = async () => {
     try {
-      console.log("Generando PDF con los siguientes datos:", props);
-
-      const pdfData = processPDFData(props);
+      const prospectData = await getProspect();
+      const pdfData = processPDFData(props, prospectData);
       const result = await generatePDFAction(pdfData);
 
       if (result.success && result.data) {

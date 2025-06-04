@@ -2,13 +2,13 @@
 
 import { QuotePDFData } from "../types";
 import { generatePDFService } from "../services/generate-pdf.service";
+import { getProspect } from "@/features/plans/loaders/get-prospect";
 
 export async function generatePDFAction(
   data: QuotePDFData
 ): Promise<{ success: boolean; data?: string; error?: string }> {
   try {
-    console.log("Datos recibidos para generar el PDF:", data);
-
+    console.log("datos de prospecto:", await getProspect());
     const pdfData = generatePDFService(data, "datauri");
 
     if (!pdfData) {

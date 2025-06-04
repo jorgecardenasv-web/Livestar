@@ -36,22 +36,18 @@
         font-family: "Arial", sans-serif;
         line-height: 1.6;
         color: var(--text-dark);
-        background-color: var(--white);
-        width: 215.9mm;
-        min-height: 279.4mm;
-        margin: 0;
-        padding: 0;
+        background-color: #053a66;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
-      .emma-logo {
-        height: 100px;
-        width: auto;
-      }
-
+      /* Contenedor principal y utilidades */
       .wrapper {
-        background-color: var(--white);
+        background-color: var(--background-gray);
+        border-radius: var(--border-radius);
         width: 100%;
-        height: 100%;
         position: relative;
       }
 
@@ -91,6 +87,13 @@
         font-weight: bold;
         line-height: 1.2;
         max-width: 500px;
+      }
+
+      .company-logos {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 15px;
       }
 
       .livestar-logo {
@@ -133,16 +136,15 @@
       .content-section {
         padding: 10px;
         border-radius: var(--border-radius);
-        width: 100%;
-        max-width: 900px;
+        width: 700px;
       }
 
       .section-title {
         background: var(--primary-blue);
         color: var(--white);
-        padding: 10px 20px;
+        padding: 12px 20px;
         border-radius: 13px 13px 0 0;
-        font-size: 1px;
+        font-size: 18px;
         font-weight: bold;
         display: flex;
         align-items: center;
@@ -202,7 +204,7 @@
         display: flex;
         flex-direction: column;
         gap: 40px;
-        padding: 30px;
+        padding: 20px;
         justify-content: center;
         height: 100%;
         background-color: var(--white);
@@ -211,8 +213,8 @@
       .detail-item {
         display: flex;
         align-items: center;
-        gap: 20px;
-        font-size: 18px;
+        gap: 10px;
+        font-size: 16px;
       }
 
       .detail-item img {
@@ -247,6 +249,7 @@
         white-space: nowrap;
         background-color: var(--white);
         border: 1px solid var(--border-gray);
+        height: 100%;
       }
 
       .protected-persons-table {
@@ -283,7 +286,7 @@
       .data-table th {
         background: var(--white);
         color: var(--text-dark);
-        padding: 2px 12px;
+        padding: 5px 12px;
         text-align: left;
         font-size: 16px;
         font-weight: bold;
@@ -293,7 +296,7 @@
       }
 
       .data-table td {
-        padding: 18px;
+        padding: 12px;
         color: var(--text-dark);
       }
 
@@ -307,7 +310,7 @@
       }
 
       .protected-persons-table td {
-        padding: 12px;
+        padding: 10px;
         color: var(--text-dark);
         border-bottom: 1px solid var(--border-gray);
       }
@@ -333,9 +336,8 @@
         text-align: center;
       }
 
-      /* Estilos para resumen de costos */
       .cost-summary {
-        padding: 15px;
+        padding: 10px;
         border-radius: var(--border-radius-small);
         margin-top: 15px;
         display: flex;
@@ -368,7 +370,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 8px 12px;
+        padding: 15px 12px;
         border-bottom: 1px solid var(--border-gray);
         background-color: var(--white);
       }
@@ -385,7 +387,6 @@
         font-size: 18px;
       }
 
-      /* Tabla de deducibles */
       .deductible-table th {
         text-align: center;
         font-size: 16px;
@@ -408,7 +409,6 @@
         font-weight: bold;
       }
 
-      /* Estilos de accesibilidad */
       @media (prefers-reduced-motion: reduce) {
         * {
           animation-duration: 0.01ms !important;
@@ -437,7 +437,6 @@
         }
       }
 
-      /* Estilos de impresión */
       @media print {
         body {
           background: var(--white);
@@ -452,49 +451,6 @@
         .main-header {
           background: var(--primary-blue) !important;
         }
-      }
-
-      .deductibles-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-        background: var(--white);
-        border-radius: var(--border-radius);
-        overflow: hidden;
-        box-shadow: var(--shadow);
-      }
-
-      .deductibles-table th,
-      .deductibles-table td {
-        padding: 8px;
-        text-align: left;
-        border-bottom: 1px solid var(--border-gray);
-      }
-
-      .deductibles-table th {
-        background-color: var(--primary-blue);
-        color: var(--white);
-        font-weight: bold;
-      }
-
-      .deductibles-table tr:last-child td {
-        border-bottom: none;
-      }
-
-      .deductibles-table tr:nth-child(even) {
-        background-color: var(--background-gray);
-      }
-
-      .nivel-column {
-        width: 25%;
-      }
-
-      .deductible-column {
-        width: 25%;
-      }
-
-      .coinsurance-column {
-        width: 25%;
       }
     </style>
   </head>
@@ -525,26 +481,40 @@
           </section>
 
           <div class="main-content">
-            {{#if members.length}}
             <section class="content-section">
               <h2 class="section-title">
                 <span class="section-icon" aria-hidden="true">👥</span>
-                DESGLOSE DE ASEGURADOS
+                PERSONAS A PROTEGER
               </h2>
-              <table class="protected-persons-table border-top">
-                <tbody>
-                  {{#each members}}
-                  <tr>
-                    <td class="table-name">
-                      {{#if name}}{{name}}{{else}}{{type}}{{/if}}
-                    </td>
-                    <td class="table-price">{{formatCurrency price}}</td>
-                  </tr>
-                  {{/each}}
-                </tbody>
-              </table>
+              <div class="border-top layout-60-40">
+                <div class="contractor-details">
+                  <div class="detail-item">
+                    <img src="{{userIconPath}}" alt="Icono de usuario" />
+                    <div>
+                      <div class="detail-label">Contratante</div>
+                      <div>{{contractorName}}</div>
+                    </div>
+                  </div>
+                  <div class="detail-item">
+                    <img src="{{cpIconPath}}" alt="icono codigo postal" />
+                    <div>
+                      <div class="detail-label">Código Postal</div>
+                      <div>{{postalCode}}</div>
+                    </div>
+                  </div>
+                </div>
+                <table class="protected-persons-table">
+                  <tbody>
+                    {{#each members}}
+                    <tr>
+                      <td>{{type}}</td>
+                      <td>{{age}}</td>
+                    </tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+              </div>
             </section>
-            {{/if}}
 
             <section class="content-section">
               <h2 class="section-title">
@@ -555,19 +525,39 @@
                 <table class="data-table">
                   <thead>
                     <tr>
-                      <th>Forma de Pago</th>
-                      <th>Prima {{paymentType}}</th>
+                      <th scope="col">Asegurado</th>
+                      <th scope="col">Prima anual individual</th>
+                      <th scope="col">Prima mensual individual</th>
                     </tr>
                   </thead>
                   <tbody>
+                    {{#each members}}
                     <tr>
-                      <td class="table-name">{{paymentType}}</td>
-                      <td class="table-price">
-                        {{formatCurrency coverageFee}}
+                      <td class="table-name">
+                        {{#if name}}{{name}}{{else}}{{type}}{{/if}}
                       </td>
+                      <td class="table-price">
+                        {{formatCurrency (multiply price 12)}}
+                      </td>
+                      <td class="table-price">{{formatCurrency price}}</td>
                     </tr>
+                    {{/each}}
                   </tbody>
                 </table>
+                <div class="cost-summary">
+                  <div class="summary-box annual-total">
+                    <div class="summary-label">Prima Total Anual</div>
+                    <div class="summary-amount">
+                      {{formatCurrency (multiply coverageFee 12)}}
+                    </div>
+                  </div>
+                  <div class="summary-box monthly-total">
+                    <div class="summary-label">Prima Total Mensual</div>
+                    <div class="summary-amount">
+                      {{formatCurrency coverageFee}}
+                    </div>
+                  </div>
+                </div>
               </div>
             </section>
 
@@ -629,14 +619,6 @@
             </section>
           </div>
         </div>
-
-        <footer class="footer">
-          <p>
-            Este documento es únicamente informativo y no constituye una póliza
-            de seguro. Los términos y condiciones específicos están sujetos a la
-            póliza emitida por la aseguradora.
-          </p>
-        </footer>
       </main>
     </div>
   </body>

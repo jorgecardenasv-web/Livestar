@@ -16,6 +16,8 @@ export interface InsuranceQuoteData {
   coInsuranceCapJson?: string;
   individualPricesJson?: string;
   imgCompanyLogo: string;
+  postalCode?: string;
+  contractorName?: string;
 }
 
 export interface QuotePDFData {
@@ -32,10 +34,13 @@ export interface QuotePDFData {
     price: number;
     name?: string;
     relationship?: string;
+    age?: number;
   }[];
   isMultipleDeductible: boolean;
   deductibles?: Record<string, Record<string, number>>;
   isMultipleCoInsurance?: boolean;
   coInsuranceData?: Record<string, Record<string, number>>;
   coInsuranceCapData?: Record<string, Record<string, number>>;
+  postalCode?: string;
+  contractorName?: string;
 }

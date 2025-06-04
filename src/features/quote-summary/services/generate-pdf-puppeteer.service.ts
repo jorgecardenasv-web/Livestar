@@ -80,17 +80,19 @@ export const generatePDFWithPuppeteer = async (
   format: "datauri" | "arraybuffer" = "datauri"
 ): Promise<string | ArrayBuffer> => {
   try {
-    console.log("Datos recibidos para generar el PDF - Servicio:", data);
-
     // Procesar los deducibles usando la función existente
     const processedDeductibles = processDeductibles(data);
 
     // Leer y convertir las imágenes a base64
     const logoBuffer = await fs.readFile(getImagePath("logo.svg"));
     const emmaLogoBuffer = await fs.readFile(getImagePath("emma.svg"));
+    const userIcon = await fs.readFile(getImagePath("user-icon.svg"));
+    const cpIcon = await fs.readFile(getImagePath("cp.svg"));
 
     const logoBase64 = `data:image/svg+xml;base64,${logoBuffer.toString("base64")}`;
     const emmaLogoBase64 = `data:image/svg+xml;base64,${emmaLogoBuffer.toString("base64")}`;
+    const userIconBase64 = `data:image/svg+xml;base64,${userIcon.toString("base64")}`;
+    const cpIconBase64 = `data:image/svg+xml;base64,${cpIcon.toString("base64")}`;
 
     // Preparar los datos incluyendo las imágenes en base64
     const processedData = {
@@ -98,6 +100,8 @@ export const generatePDFWithPuppeteer = async (
       processedDeductibles,
       logoPath: logoBase64,
       emmaLogoPath: emmaLogoBase64,
+      userIconPath: userIconBase64,
+      cpIconPath: cpIconBase64,
     };
 
     // Leer la plantilla HTML
@@ -172,14 +176,36 @@ export const generatePDFWithPuppeteer = async (
           .map((sheet) => sheet.href),
       };
     });
-    console.log("Estado de carga de recursos:", recursos);
+
+    // Establecer color de fondo para toda la página
+    await page.evaluate(() => {
+      document.body.style.backgroundColor = "#f5f7f9";
+      document.body.style.width = "215.9mm";
+      document.body.style.minHeight = "279.4mm";
+      document.body.style.margin = "0 auto";
+    });
 
     // Generar el PDF
     const pdfBuffer = await page.pdf({
       format: "Letter",
       printBackground: true,
+      margin: {
+        top: "0",
+        bottom: "45px",
+        left: "0",
+        right: "0",
+      },
+      displayHeaderFooter: true,
+      // footerTemplate: `
+      //   <div style="width: 100%; font-size: 12px; padding: 5px 20px; text-align: center; position: absolute; bottom: 5px; background-color: #f5f7f9;">
+      //     <p style="color: #666; margin: 0; font-family: Arial, sans-serif;">
+      //       Este documento es únicamente informativo y no constituye una póliza de seguro.
+      //       Los términos y condiciones específicos están sujetos a la póliza emitida por la aseguradora.
+      //     </p>
+      //   </div>
+      // `,
+      headerTemplate: "<div></div>",
       preferCSSPageSize: true,
-      timeout: 30000,
     });
 
     await browser.close();
