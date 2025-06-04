@@ -53,6 +53,8 @@ export const QuoteSummary: FC<
   //! -------------------------------------------------------------------
   const handleGeneratePDF = async () => {
     try {
+      console.log("Generando PDF con los siguientes datos:", props);
+
       const pdfData = processPDFData(props);
       const result = await generatePDFAction(pdfData);
 
@@ -91,9 +93,9 @@ export const QuoteSummary: FC<
         </div>
         <Image
           src={imgCompanyLogo}
-          width={120}
+          width={80}
           height={60}
-          className="h-32 w-auto object-contain"
+          className="h-12 w-auto object-contain"
           alt={`Logo de ${company}`}
         />
       </div>

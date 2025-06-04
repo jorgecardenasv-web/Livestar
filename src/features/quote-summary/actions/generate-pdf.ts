@@ -7,6 +7,8 @@ export async function generatePDFAction(
   data: QuotePDFData
 ): Promise<{ success: boolean; data?: string; error?: string }> {
   try {
+    console.log("Datos recibidos para generar el PDF:", data);
+
     const pdfData = generatePDFService(data, "datauri");
 
     if (!pdfData) {
@@ -15,7 +17,7 @@ export async function generatePDFAction(
 
     return {
       success: true,
-      data: pdfData as string,
+      data: (await pdfData) as string,
     };
   } catch (error) {
     console.error("Error detallado:", error);

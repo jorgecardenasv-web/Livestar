@@ -8,9 +8,9 @@ async function main() {
   // El orden es importante para respetar las restricciones de claves foráneas
 
   // Primero eliminamos registros que tienen dependencias
-  await prisma.trackingNumber.deleteMany();
   await prisma.quote.deleteMany();
   await prisma.plan.deleteMany();
+  await prisma.trackingNumber.deleteMany();
 
   // Luego eliminamos registros intermedios
   await prisma.prospect.deleteMany();
