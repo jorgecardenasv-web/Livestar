@@ -5,7 +5,7 @@ import { Shield, DollarSign, Percent, Heart, ArrowLeft, FileText, Download, User
 import { ContractForm } from "../forms/confirm-form";
 import { InfoCard } from "../cards/info-card";
 import { deleteSelectedPlan } from "@/features/plans/actions/set-cookies";
-import { FC } from "react";
+import { FC, useState } from "react";
 import MultipleDeductibleModal from "../modals/MultipleDeductibleModal";
 import MultipleCoInsuranceModal from "../modals/MultipleCoInsuranceModal";
 import CombinedInfoModal from "../modals/CombinedInfoModal";
@@ -47,13 +47,22 @@ export const QuoteSummary: FC<
     openModalMoreInformation,
     openModal,
   } = useQuoteSumaryActions();
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   // Ya no necesitamos el menú desplegable de opciones ya que ahora mostramos los botones directamente
   //! -------------------------------------------------------------------
   const handleGeneratePDF = async () => {
+    setIsGeneratingPDF(true);
     try {
       const prospectData = await getProspect();
-      const pdfData = processPDFData(props, prospectData);
+      console.log("Datos antes de procesar PDF:", {
+        props,
+        prospectData
+      });
+      const pdfData = processPDFData({
+        ...props,
+        protectedWho: protectedWho // asegurar que protectedWho se pase explícitamente
+      }, prospectData);
       const result = await generatePDFAction(pdfData);
 
       if (result.success && result.data) {
@@ -68,6 +77,8 @@ export const QuoteSummary: FC<
       }
     } catch (error) {
       console.error("Error en la descarga:", error);
+    } finally {
+      setIsGeneratingPDF(false);
     }
   };
   //! -------------------------------------------------------------------
@@ -157,11 +168,23 @@ export const QuoteSummary: FC<
         <div className="flex flex-wrap justify-center gap-3 text-sm">
           {/* Botón de descarga de PDF siempre visible */}
           <button
-            className="text-sky-600 hover:text-sky-800 font-medium flex items-center gap-1.5 px-3 py-1.5 transition-colors"
+            className={`font-medium flex items-center gap-1.5 px-3 py-1.5 transition-colors ${isGeneratingPDF
+              ? 'text-sky-400 cursor-not-allowed'
+              : 'text-sky-600 hover:text-sky-800'}`}
             onClick={handleGeneratePDF}
+            disabled={isGeneratingPDF}
           >
-            <Download className="w-4 h-4" />
-            Descargar Cotización
+            {isGeneratingPDF ? (
+              <>
+                <span className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-sky-600 mr-1"></span>
+                Generando PDF...
+              </>
+            ) : (
+              <>
+                <Download className="w-4 h-4" />
+                Descargar Cotización
+              </>
+            )}
           </button>
 
           {/* Separador vertical si hay botón de deducibles */}

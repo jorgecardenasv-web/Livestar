@@ -101,7 +101,7 @@ function getPriceForPerson(
   age: number,
   priceTable: PriceTable | HDIPriceTable, //we need to pass priceTable here so we can check wtf we will return to calculate
   paymentType = "mensual",
-  gender?: "mujer" | "hombre",
+  gender?: "mujer" | "hombre"
 ): IndividualPriceDetails {
   if (age >= 0 && age <= 84) {
     const ageKey = age.toString();
@@ -113,19 +113,19 @@ function getPriceForPerson(
       //return the full HDIPriceDetails object
       return prices;
     }
-      //or just return the single number
-      return roundPrice(
-        priceTable[ageKey]?.[gender || "hombre"]?.[
-          paymentType.toLowerCase() as "anual" | "mensual"
-        ] || 0
-      );
+    //or just return the single number
+    return roundPrice(
+      priceTable[ageKey]?.[gender || "hombre"]?.[
+        paymentType.toLowerCase() as "anual" | "mensual"
+      ] || 0
+    );
   }
   return 0;
 }
 
 export function calculateInsurancePrice(
   data: InsuranceData,
-  priceTable: PriceTable | HDIPriceTable, // Accept both types
+  priceTable: PriceTable | HDIPriceTable,
   paymentType: string
 ): InsurancePriceResult {
   let totalPrice = 0;
@@ -138,6 +138,11 @@ export function calculateInsurancePrice(
     protectWho: data.protectWho,
   };
 
+  console.log("Calculando precio del seguro:", {
+    protectWho: data.protectWho,
+    additionalInfo: data.additionalInfo,
+  });
+
   if (data.protectWho === "mis_padres") {
     individualPrices.parents = [];
 
@@ -146,16 +151,19 @@ export function calculateInsurancePrice(
         data.additionalInfo.dadAge,
         priceTable,
         paymentType,
-        isHDIPriceTable(priceTable) ? undefined : "hombre",
+        isHDIPriceTable(priceTable) ? undefined : "hombre"
       );
       individualPrices.parents.push({
         name: "Padre",
         price: dadPriceDetails,
       });
-      if (isHDIPriceTable(priceTable) && typeof dadPriceDetails !== 'number') {
-         totalPrice += paymentType.toLowerCase() === "anual" ? dadPriceDetails.anual : dadPriceDetails.primerMes;
-      } else if (typeof dadPriceDetails === 'number') {
-         totalPrice += dadPriceDetails;
+      if (isHDIPriceTable(priceTable) && typeof dadPriceDetails !== "number") {
+        totalPrice +=
+          paymentType.toLowerCase() === "anual"
+            ? dadPriceDetails.anual
+            : dadPriceDetails.primerMes;
+      } else if (typeof dadPriceDetails === "number") {
+        totalPrice += dadPriceDetails;
       }
     }
 
@@ -164,16 +172,19 @@ export function calculateInsurancePrice(
         data.additionalInfo.momAge,
         priceTable,
         paymentType,
-        isHDIPriceTable(priceTable) ? undefined : "mujer",
+        isHDIPriceTable(priceTable) ? undefined : "mujer"
       );
       individualPrices.parents.push({
         name: "Madre",
         price: momPriceDetails, // Store the details
       });
-      if (isHDIPriceTable(priceTable) && typeof momPriceDetails !== 'number') {
-         totalPrice += paymentType.toLowerCase() === "anual" ? momPriceDetails.anual : momPriceDetails.primerMes;
-      } else if (typeof momPriceDetails === 'number') {
-         totalPrice += momPriceDetails;
+      if (isHDIPriceTable(priceTable) && typeof momPriceDetails !== "number") {
+        totalPrice +=
+          paymentType.toLowerCase() === "anual"
+            ? momPriceDetails.anual
+            : momPriceDetails.primerMes;
+      } else if (typeof momPriceDetails === "number") {
+        totalPrice += momPriceDetails;
       }
     }
   } else if (
@@ -185,13 +196,19 @@ export function calculateInsurancePrice(
         child.age,
         priceTable,
         paymentType,
-        isHDIPriceTable(priceTable) ? undefined : child.gender,
+        isHDIPriceTable(priceTable) ? undefined : child.gender
       );
-       //here we calculate total price based on payment type if HDI, otherwise we use the single price
-      if (isHDIPriceTable(priceTable) && typeof childPriceDetails !== 'number') {
-         totalPrice += paymentType.toLowerCase() === "anual" ? childPriceDetails.anual : childPriceDetails.primerMes;
-      } else if (typeof childPriceDetails === 'number') {
-         totalPrice += childPriceDetails;
+      //here we calculate total price based on payment type if HDI, otherwise we use the single price
+      if (
+        isHDIPriceTable(priceTable) &&
+        typeof childPriceDetails !== "number"
+      ) {
+        totalPrice +=
+          paymentType.toLowerCase() === "anual"
+            ? childPriceDetails.anual
+            : childPriceDetails.primerMes;
+      } else if (typeof childPriceDetails === "number") {
+        totalPrice += childPriceDetails;
       }
       return childPriceDetails;
     });
@@ -200,15 +217,17 @@ export function calculateInsurancePrice(
       data.age,
       priceTable,
       paymentType,
-      isHDIPriceTable(priceTable) ? undefined : data.gender || "hombre",
+      isHDIPriceTable(priceTable) ? undefined : data.gender || "hombre"
     );
     individualPrices.main = mainPriceDetails;
-    if (isHDIPriceTable(priceTable) && typeof mainPriceDetails !== 'number') {
-       totalPrice += paymentType.toLowerCase() === "anual" ? mainPriceDetails.anual : mainPriceDetails.primerMes;
-    } else if (typeof mainPriceDetails === 'number') {
-       totalPrice += mainPriceDetails;
+    if (isHDIPriceTable(priceTable) && typeof mainPriceDetails !== "number") {
+      totalPrice +=
+        paymentType.toLowerCase() === "anual"
+          ? mainPriceDetails.anual
+          : mainPriceDetails.primerMes;
+    } else if (typeof mainPriceDetails === "number") {
+      totalPrice += mainPriceDetails;
     }
-
 
     const validProtectWhoOptions = [
       "familia",
@@ -217,25 +236,48 @@ export function calculateInsurancePrice(
     ];
 
     if (validProtectWhoOptions.includes(data.protectWho)) {
+      console.log("Procesando precio para caso válido:", data.protectWho);
+
       if (
         data.additionalInfo?.partnerAge &&
         data.additionalInfo?.partnerGender
       ) {
+        console.log("Información de pareja encontrada:", {
+          age: data.additionalInfo.partnerAge,
+          gender: data.additionalInfo.partnerGender,
+        });
+
         const partnerPriceDetails = getPriceForPerson(
           data.additionalInfo.partnerAge,
           priceTable,
           paymentType,
           isHDIPriceTable(priceTable)
             ? undefined
-            : data.additionalInfo.partnerGender,
+            : data.additionalInfo.partnerGender
         );
+
+        console.log(
+          "Detalles de precio calculados para pareja:",
+          partnerPriceDetails
+        );
+
         individualPrices.partner = partnerPriceDetails;
-         //same as above, and will use the same logic below to calculate total price
-        if (isHDIPriceTable(priceTable) && typeof partnerPriceDetails !== 'number') {
-           totalPrice += paymentType.toLowerCase() === "anual" ? partnerPriceDetails.anual : partnerPriceDetails.primerMes;
-        } else if (typeof partnerPriceDetails === 'number') {
-           totalPrice += partnerPriceDetails;
+
+        if (
+          isHDIPriceTable(priceTable) &&
+          typeof partnerPriceDetails !== "number"
+        ) {
+          totalPrice +=
+            paymentType.toLowerCase() === "anual"
+              ? partnerPriceDetails.anual
+              : partnerPriceDetails.primerMes;
+        } else if (typeof partnerPriceDetails === "number") {
+          totalPrice += partnerPriceDetails;
         }
+      } else {
+        console.log(
+          "No se encontró información de la pareja en additionalInfo"
+        );
       }
 
       if (data.additionalInfo?.children) {
@@ -245,12 +287,18 @@ export function calculateInsurancePrice(
               child.age,
               priceTable,
               paymentType,
-              isHDIPriceTable(priceTable) ? undefined : child.gender,
+              isHDIPriceTable(priceTable) ? undefined : child.gender
             );
-            if (isHDIPriceTable(priceTable) && typeof childPriceDetails !== 'number') {
-               totalPrice += paymentType.toLowerCase() === "anual" ? childPriceDetails.anual : childPriceDetails.primerMes;
-            } else if (typeof childPriceDetails === 'number') {
-               totalPrice += childPriceDetails;
+            if (
+              isHDIPriceTable(priceTable) &&
+              typeof childPriceDetails !== "number"
+            ) {
+              totalPrice +=
+                paymentType.toLowerCase() === "anual"
+                  ? childPriceDetails.anual
+                  : childPriceDetails.primerMes;
+            } else if (typeof childPriceDetails === "number") {
+              totalPrice += childPriceDetails;
             }
             return childPriceDetails;
           }
@@ -261,20 +309,35 @@ export function calculateInsurancePrice(
     if (data.protectWho === "otros") {
       individualPrices.others = [];
       data.additionalInfo?.protectedPersons?.map((other) => {
-        const otherPriceDetails = getPriceForPerson(other.age, priceTable, other.gender);
+        const otherPriceDetails = getPriceForPerson(
+          other.age,
+          priceTable,
+          other.gender
+        );
         individualPrices?.others?.push({
           relationship: other.relationship || "Otro",
           price: otherPriceDetails,
         });
-        if (isHDIPriceTable(priceTable) && typeof otherPriceDetails !== 'number') {
-           totalPrice += paymentType.toLowerCase() === "anual" ? otherPriceDetails.anual : otherPriceDetails.primerMes;
-        } else if (typeof otherPriceDetails === 'number') {
-           totalPrice += otherPriceDetails;
+        if (
+          isHDIPriceTable(priceTable) &&
+          typeof otherPriceDetails !== "number"
+        ) {
+          totalPrice +=
+            paymentType.toLowerCase() === "anual"
+              ? otherPriceDetails.anual
+              : otherPriceDetails.primerMes;
+        } else if (typeof otherPriceDetails === "number") {
+          totalPrice += otherPriceDetails;
         }
         return;
       });
     }
   }
+
+  console.log("Resultado final del cálculo:", {
+    totalPrice,
+    individualPrices,
+  });
 
   return {
     coverage_fee: roundPrice(totalPrice),
