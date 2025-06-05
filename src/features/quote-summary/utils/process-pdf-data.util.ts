@@ -8,31 +8,55 @@ export const processPDFData = (
   console.log("Datos del prospecto:", prospect);
   const members = [];
 
-  // Si tenemos datos del prospecto, los usamos para los miembros
   if (prospect) {
-    console.log(
-      "Datos completos del prospecto:",
-      JSON.stringify(prospect, null, 2)
-    );
+    console.log("Datos del prospecto:", JSON.stringify(prospect, null, 2));
     console.log("Tipo de protección:", prospect.protectWho);
-    console.log("Información adicional:", prospect.additionalInfo);
 
-    members.push({
-      type: "Titular",
-      price: data.coverage_fee,
-      age: prospect.prospect.age,
-    });
-
-    // Agregar datos de pareja para "familia" o "mi_pareja_y_yo"
-    if (
-      (prospect.protectWho === "familia" ||
-        prospect.protectWho === "mi_pareja_y_yo") &&
-      prospect.additionalInfo
+    // Caso mis_padres
+    if (prospect.protectWho === "mis_padres" && prospect.additionalInfo) {
+      if (prospect.additionalInfo.dadAge) {
+        members.push({
+          type: "Padre",
+          price: data.coverage_fee,
+          age: prospect.additionalInfo.dadAge,
+        });
+      }
+      if (prospect.additionalInfo.momAge) {
+        members.push({
+          type: "Madre",
+          price: data.coverage_fee,
+          age: prospect.additionalInfo.momAge,
+        });
+      }
+    }
+    // Caso solo_mis_hijos
+    else if (
+      prospect.protectWho === "solo_mis_hijos" &&
+      prospect.additionalInfo?.children
     ) {
-      console.log(
-        `Detectado protectWho: ${prospect.protectWho}, intentando agregar pareja...`
-      );
-      if (prospect.additionalInfo.partnerAge) {
+      prospect.additionalInfo.children.forEach((child: any, index: number) => {
+        members.push({
+          type: `Hijo/a ${index + 1}`,
+          price: data.coverage_fee,
+          age: child.age,
+        });
+      });
+    }
+    // Casos que incluyen al titular
+    else {
+      // Agregar titular en todos los casos excepto mis_padres y solo_mis_hijos
+      members.push({
+        type: "Titular",
+        price: data.coverage_fee,
+        age: prospect.prospect.age,
+      });
+
+      // Casos con pareja
+      if (
+        (prospect.protectWho === "familia" ||
+          prospect.protectWho === "mi_pareja_y_yo") &&
+        prospect.additionalInfo?.partnerAge
+      ) {
         members.push({
           type: "Pareja",
           price: data.coverage_fee,
@@ -40,43 +64,57 @@ export const processPDFData = (
         });
       }
 
-      // Para "familia", también agregar los hijos
+      // Casos con hijos
       if (
-        prospect.protectWho === "familia" &&
-        prospect.additionalInfo.children
+        (prospect.protectWho === "familia" ||
+          prospect.protectWho === "mis_hijos_y_yo") &&
+        prospect.additionalInfo?.children
       ) {
         prospect.additionalInfo.children.forEach(
           (child: any, index: number) => {
             members.push({
-              type: "Hijo/a",
+              type: `Hijo/a ${index + 1}`,
               price: data.coverage_fee,
               age: child.age,
             });
           }
         );
       }
+
+      // Caso otros
+      if (
+        prospect.protectWho === "otros" &&
+        prospect.additionalInfo?.protectedPersons
+      ) {
+        prospect.additionalInfo.protectedPersons.forEach((person: any) => {
+          members.push({
+            type: person.relationship || "Otro",
+            price: data.coverage_fee,
+            age: person.age,
+          });
+        });
+      }
     }
   } else if (data.individualPricesJson) {
-    console.log("Usando fallback de individualPricesJson");
-    // Fallback al comportamiento anterior si no hay datos del prospecto
+    // Fallback usando individualPricesJson
     const prices = JSON.parse(data.individualPricesJson);
-    console.log("Datos de precios parseados:", prices);
-    console.log("protectedWho desde data:", data.protectedWho);
-    console.log("Datos de precios individuales:", prices);
-    console.log("Tipo de protección:", data.protectedWho);
-    if (prices.main)
+
+    if (prices.main) {
       members.push({
         type: "Titular",
         price: prices.main,
         age: prices.mainAge || undefined,
       });
-    // Agregar pareja si está disponible o si protectedWho es mi_pareja_y_yo
-    if (prices.partner || data.protectedWho === "mi_pareja_y_yo")
+    }
+
+    if (prices.partner) {
       members.push({
         type: "Pareja",
-        price: prices.partner || prices.main, // Si no hay precio específico, usar el mismo que el titular
+        price: prices.partner,
         age: prices.partnerAge || undefined,
       });
+    }
+
     if (prices.children) {
       prices.children.forEach(
         (price: number | { price: number; age: number }, index: number) => {
@@ -90,12 +128,12 @@ export const processPDFData = (
         }
       );
     }
+
     if (prices.parents) {
       prices.parents.forEach(
         (parent: { name: string; price: number; age?: number }) => {
           members.push({
-            type: "Padre/Madre",
-            name: parent.name,
+            type: parent.name === "Padre" ? "Padre" : "Madre",
             price: parent.price,
             age: parent.age,
           });
@@ -103,47 +141,16 @@ export const processPDFData = (
       );
     }
 
-    // Agregamos logs específicos para la pareja
-    console.log(
-      "Procesando datos para PDF - Modo de protección:",
-      data.protectedWho
-    );
-
-    if (data.individualPricesJson) {
-      console.log("Datos de precios individuales encontrados");
-      const prices = JSON.parse(data.individualPricesJson);
-      console.log("Datos de la pareja:", prices.partner);
-
-      if (data.protectedWho === "mi_pareja_y_yo") {
-        console.log(
-          "Detectado modo mi_pareja_y_yo, verificando datos de la pareja"
-        );
-      }
-
-      const members: any[] = [];
-
-      // Precio principal
-      if (prices.main) {
-        members.push({
-          type: "Titular",
-          price:
-            typeof prices.main === "number"
-              ? prices.main
-              : prices.main.mensual || prices.main.primerMes,
-        });
-      }
-
-      // Precio de la pareja
-      if (prices.partner) {
-        console.log("Agregando información de la pareja al PDF");
-        members.push({
-          type: "Pareja",
-          price:
-            typeof prices.partner === "number"
-              ? prices.partner
-              : prices.partner.mensual || prices.partner.primerMes,
-        });
-      }
+    if (prices.others) {
+      prices.others.forEach(
+        (other: { relationship: string; price: number; age?: number }) => {
+          members.push({
+            type: other.relationship || "Otro",
+            price: other.price,
+            age: other.age,
+          });
+        }
+      );
     }
   }
 

@@ -56,6 +56,15 @@
         position: relative;
       }
 
+      /* Grupos de página para controlar el flujo */
+      .page-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+
       .quote-container {
         padding: 10px;
         overflow: hidden;
@@ -147,9 +156,21 @@
         border-radius: var(--border-radius);
         width: 100%;
         max-width: 900px;
+        margin-bottom: 35px;
+      }
+
+      /* Secciones específicas que no deben romperse */
+      .content-section:first-child,
+      .content-section:nth-child(2) {
         page-break-inside: avoid;
         break-inside: avoid;
         margin-bottom: 20px;
+      }
+
+      /* Ajuste para la sección de coberturas principales */
+      .content-section:nth-child(3) {
+        margin-top: 40px;
+        margin-bottom: 40px;
       }
 
       .section-title {
@@ -494,10 +515,12 @@
           </section>
 
           <div class="main-content">
-            <section class="content-section">
-              <h2 class="section-title">
-                <span class="section-icon" aria-hidden="true">👥</span>
-                PERSONAS A PROTEGER
+            <!-- Grupo 1: Información principal -->
+            <div class="page-group">
+              <section class="content-section">
+                <h2 class="section-title">
+                  <span class="section-icon" aria-hidden="true">👥</span>
+                  PERSONAS A PROTEGER
               </h2>
               <div class="border-top layout-60-40">
                 <div class="contractor-details">
@@ -587,23 +610,6 @@
                 <span class="coverage-name">Suma Asegurada</span>
                 <span class="coverage-amount"
                   >{{formatCurrency sumInsured}}</span
-                >
-              </div>
-              <div class="coverage-item">
-                <span class="coverage-name">Deducible</span>
-                <span class="coverage-amount">
-                  {{#if isMultipleDeductible}}desde {{/if}}{{formatCurrency
-                  deductible}}
-                </span>
-              </div>
-              <div class="coverage-item">
-                <span class="coverage-name">Coaseguro</span>
-                <span class="coverage-amount">{{coInsurance}}%</span>
-              </div>
-              <div class="coverage-item">
-                <span class="coverage-name">Tope de Coaseguro</span>
-                <span class="coverage-amount"
-                  >{{formatCurrency coInsuranceCap}}</span
                 >
               </div>
             </section>

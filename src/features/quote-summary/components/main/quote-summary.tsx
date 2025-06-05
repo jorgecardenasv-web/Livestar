@@ -49,7 +49,6 @@ export const QuoteSummary: FC<
   } = useQuoteSumaryActions();
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-  // Ya no necesitamos el menú desplegable de opciones ya que ahora mostramos los botones directamente
   //! -------------------------------------------------------------------
   const handleGeneratePDF = async () => {
     setIsGeneratingPDF(true);
@@ -61,7 +60,7 @@ export const QuoteSummary: FC<
       });
       const pdfData = processPDFData({
         ...props,
-        protectedWho: protectedWho // asegurar que protectedWho se pase explícitamente
+        protectedWho: protectedWho
       }, prospectData);
       const result = await generatePDFAction(pdfData);
 

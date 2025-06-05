@@ -184,34 +184,74 @@ export const generatePDFWithPuppeteer = async (
       document.body.style.minHeight = "279.4mm";
       document.body.style.margin = "0 auto";
 
-      // Función para verificar la altura de las secciones
+      // Función para verificar la altura de las secciones y ajustar los saltos de página
       const checkSectionHeights = () => {
         const sections = document.querySelectorAll(".content-section");
         const pageHeight = 279.4; // altura de página Letter en mm
-        const marginTop = 20; // margen superior en mm
-        const marginBottom = 45; // margen inferior en mm
+        const marginTop = 30; // margen superior aumentado
+        const marginBottom = 30; // margen inferior aumentado
+        const sectionSpacing = 25; // espacio entre secciones aumentado
         const effectivePageHeight = pageHeight - marginTop - marginBottom;
         let currentPageHeight = 0;
+        let lastSectionWasLarge = false;
 
-        sections.forEach((section) => {
+        // Asegurar que el contenedor principal tenga padding
+        const mainContent = document.querySelector(
+          ".main-content"
+        ) as HTMLElement;
+        if (mainContent) {
+          mainContent.style.padding = "20px 0";
+        }
+
+        sections.forEach((section, index) => {
           const element = section as HTMLElement;
           const sectionHeight = element.getBoundingClientRect().height;
+          const sectionHeightMM = sectionHeight / 3.779528; // Convertir px a mm
 
-          // Convertir de píxeles a mm (1mm ≈ 3.779528px)
-          const sectionHeightMM = sectionHeight / 3.779528;
+          // Espaciado base para todas las secciones
+          element.style.marginBottom = "30px";
 
-          // Si la sección actual haría que se exceda la altura efectiva de la página
-          if (currentPageHeight + sectionHeightMM > effectivePageHeight) {
-            // Solo forzar salto de página si la sección no cabe en el espacio restante
-            // y si no es la primera sección de la página
-            if (currentPageHeight > 0) {
-              element.style.pageBreakBefore = "always";
-              element.style.breakBefore = "page";
-              currentPageHeight = sectionHeightMM;
-            }
-          } else {
-            currentPageHeight += sectionHeightMM;
+          // Ajustes específicos por sección
+          if (index === 0) {
+            // PERSONAS A PROTEGER
+            element.style.marginTop = "20px";
+            element.style.marginBottom = "40px";
           }
+
+          if (index === 1) {
+            // RESUMEN DE COSTOS
+            element.style.marginTop = "30px";
+            element.style.marginBottom = "50px"; // Aumentado para dar más espacio
+          }
+
+          // COBERTURAS PRINCIPALES
+          if (index === 2) {
+            element.style.marginTop = "40px"; // Más espacio antes
+            element.style.marginBottom = "40px";
+            element.style.pageBreakInside = "avoid"; // Evitar corte
+          }
+
+          // Calcular si la sección cabe en la página actual
+          const willFitInPage =
+            currentPageHeight + sectionHeightMM <= effectivePageHeight;
+          const isFirstSection = currentPageHeight === 0;
+          const isLargeSection = sectionHeightMM > effectivePageHeight * 0.6;
+
+          // Reglas de salto de página
+          if (!willFitInPage && !isFirstSection) {
+            element.style.pageBreakBefore = "always";
+            element.style.breakBefore = "page";
+            element.style.marginTop = "30px";
+            currentPageHeight = sectionHeightMM;
+          } else {
+            // Si la sección anterior era grande, agregar más espacio
+            if (lastSectionWasLarge) {
+              element.style.marginTop = "40px";
+            }
+            currentPageHeight += sectionHeightMM + sectionSpacing;
+          }
+
+          lastSectionWasLarge = isLargeSection;
         });
       };
 
@@ -227,15 +267,16 @@ export const generatePDFWithPuppeteer = async (
       format: "Letter",
       printBackground: true,
       margin: {
-        top: "20px",
-        bottom: "45px",
-        left: "20px",
-        right: "20px",
+        top: "30px",
+        bottom: "30px",
+        left: "25px",
+        right: "25px",
       },
       displayHeaderFooter: true,
       headerTemplate: "<div></div>",
+      footerTemplate: "<div></div>",
       preferCSSPageSize: true,
-      scale: 0.98, // Ligera reducción de escala para evitar desbordamientos
+      scale: 0.95, // Reducción de escala un poco mayor para asegurar mejor distribución
     });
 
     await browser.close();
