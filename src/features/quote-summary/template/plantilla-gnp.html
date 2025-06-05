@@ -15,7 +15,7 @@
         --secondary-blue: #376fa0;
         --accent-cyan: #00bcd4;
         --light-blue: #2196f3;
-        --background-gray: #f5f7f9;
+        --background-gray: #f9f8f9;
         --border-gray: #dfe1e4;
         --text-gray: #666;
         --text-dark: #376fa0;
@@ -23,6 +23,11 @@
         --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
         --border-radius: 13px;
         --border-radius-small: 8px;
+      }
+
+      @page {
+        size: letter;
+        margin: 0;
       }
 
       /* Reset y estilos base */
@@ -71,6 +76,8 @@
         align-items: center;
         flex-wrap: wrap;
         gap: 10px;
+        page-break-after: avoid;
+        break-after: avoid;
       }
 
       .header-content {
@@ -106,6 +113,8 @@
         margin: 10px auto;
         width: 100%;
         max-width: 900px;
+        page-break-after: avoid;
+        break-after: avoid;
       }
 
       .plan-details {
@@ -136,7 +145,11 @@
       .content-section {
         padding: 10px;
         border-radius: var(--border-radius);
-        width: 700px;
+        width: 100%;
+        max-width: 900px;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        margin-bottom: 20px;
       }
 
       .section-title {
@@ -186,17 +199,18 @@
       .layout-costs {
         display: flex;
         background-color: white;
-        height: 100%;
-        justify-content: space-center;
-        align-items: center;
+        width: 100%;
+        gap: 20px;
       }
 
       .layout-costs > *:first-child {
-        flex: 0 0 75%;
+        flex: 1;
+        min-width: 0;
       }
 
       .layout-costs > *:last-child {
-        flex: 0 0 25%;
+        width: 200px;
+        flex-shrink: 0;
       }
 
       /* Detalles del contratante */
@@ -244,12 +258,9 @@
       .data-table {
         width: 100%;
         border-collapse: collapse;
-        overflow-x: auto;
-        display: block;
-        white-space: nowrap;
         background-color: var(--white);
         border: 1px solid var(--border-gray);
-        height: 100%;
+        table-layout: fixed;
       }
 
       .protected-persons-table {
@@ -260,16 +271,13 @@
       }
 
       .data-table thead,
-      .data-table tbody,
-      .data-table tr {
-        display: table;
+      .data-table tbody {
         width: 100%;
-        table-layout: fixed;
       }
 
       .data-table th,
       .data-table td {
-        width: auto;
+        padding: 12px;
       }
 
       .data-table th:first-child,
@@ -280,6 +288,11 @@
       .data-table th:not(:first-child),
       .data-table td:not(:first-child) {
         width: 27.5%;
+        text-align: center;
+      }
+
+      .data-table-th {
+        text-align: center;
       }
 
       /* Estilos de celdas y encabezados de tabla */
@@ -476,7 +489,7 @@
           <section class="plan-info">
             <div class="plan-details">
               <span>{{plan}} • {{company}}</span>
-              <img src="{{emmaLogoPath}}" alt="EMMA Logo" class="emma-logo" />
+              <img src="{{emmaLogoPath}}" alt="EMMA Logo" />
             </div>
           </section>
 
@@ -526,8 +539,12 @@
                   <thead>
                     <tr>
                       <th scope="col">Asegurado</th>
-                      <th scope="col">Prima anual individual</th>
-                      <th scope="col">Prima mensual individual</th>
+                      <th scope="col" class="data-table-th">
+                        Prima anual individual
+                      </th>
+                      <th scope="col" class="data-table-th">
+                        Prima mensual individual
+                      </th>
                     </tr>
                   </thead>
                   <tbody>

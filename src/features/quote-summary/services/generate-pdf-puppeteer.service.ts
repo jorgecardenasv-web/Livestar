@@ -179,33 +179,63 @@ export const generatePDFWithPuppeteer = async (
 
     // Establecer color de fondo para toda la página
     await page.evaluate(() => {
-      document.body.style.backgroundColor = "#f5f7f9";
+      document.body.style.backgroundColor = "#f9f8f9";
       document.body.style.width = "215.9mm";
       document.body.style.minHeight = "279.4mm";
       document.body.style.margin = "0 auto";
+
+      // Función para verificar la altura de las secciones
+      const checkSectionHeights = () => {
+        const sections = document.querySelectorAll(".content-section");
+        const pageHeight = 279.4; // altura de página Letter en mm
+        const marginTop = 20; // margen superior en mm
+        const marginBottom = 45; // margen inferior en mm
+        const effectivePageHeight = pageHeight - marginTop - marginBottom;
+        let currentPageHeight = 0;
+
+        sections.forEach((section) => {
+          const element = section as HTMLElement;
+          const sectionHeight = element.getBoundingClientRect().height;
+
+          // Convertir de píxeles a mm (1mm ≈ 3.779528px)
+          const sectionHeightMM = sectionHeight / 3.779528;
+
+          // Si la sección actual haría que se exceda la altura efectiva de la página
+          if (currentPageHeight + sectionHeightMM > effectivePageHeight) {
+            // Solo forzar salto de página si la sección no cabe en el espacio restante
+            // y si no es la primera sección de la página
+            if (currentPageHeight > 0) {
+              element.style.pageBreakBefore = "always";
+              element.style.breakBefore = "page";
+              currentPageHeight = sectionHeightMM;
+            }
+          } else {
+            currentPageHeight += sectionHeightMM;
+          }
+        });
+      };
+
+      // Ejecutar la verificación después de que todo el contenido esté cargado
+      checkSectionHeights();
     });
+
+    // Esperar a que se apliquen los ajustes
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Generar el PDF
     const pdfBuffer = await page.pdf({
       format: "Letter",
       printBackground: true,
       margin: {
-        top: "0",
+        top: "20px",
         bottom: "45px",
-        left: "0",
-        right: "0",
+        left: "20px",
+        right: "20px",
       },
       displayHeaderFooter: true,
-      // footerTemplate: `
-      //   <div style="width: 100%; font-size: 12px; padding: 5px 20px; text-align: center; position: absolute; bottom: 5px; background-color: #f5f7f9;">
-      //     <p style="color: #666; margin: 0; font-family: Arial, sans-serif;">
-      //       Este documento es únicamente informativo y no constituye una póliza de seguro.
-      //       Los términos y condiciones específicos están sujetos a la póliza emitida por la aseguradora.
-      //     </p>
-      //   </div>
-      // `,
       headerTemplate: "<div></div>",
       preferCSSPageSize: true,
+      scale: 0.98, // Ligera reducción de escala para evitar desbordamientos
     });
 
     await browser.close();
