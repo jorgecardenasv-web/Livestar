@@ -75,6 +75,63 @@ const getImagePath = (imageName: string) => {
   return path.join(process.cwd(), "public", imageName);
 };
 
+// Función para generar el template del header
+const generateHeaderTemplate = (
+  data: QuotePDFData,
+  logoBase64: string,
+  emmaLogoBase64: string
+) => {
+  return `
+    <div style="
+      background-color: #1e3c72 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      color: #ffffff;
+      padding: 20px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+      font-size: 11px;
+      margin: 0;
+      height: 120px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+    ">
+      <div style="
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+      ">
+        <div style="
+          font-size: clamp(20px, 4vw, 28px);
+          font-weight: bold;
+          line-height: 1.2;
+          max-width: 500px;
+        ">
+          COTIZACIÓN DE SEGURO<br />DE GASTOS MÉDICOS
+        </div>
+        <div style="
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 10px;
+        ">
+          <img src="${logoBase64}" alt="Logo ${data.company}" style="width: auto; height: 70px;" />
+        </div>
+      </div>
+    </div>
+  `;
+};
+
 export const generatePDFWithPuppeteer = async (
   data: QuotePDFData,
   format: "datauri" | "arraybuffer" = "datauri"
@@ -116,6 +173,13 @@ export const generatePDFWithPuppeteer = async (
 
     // Generar el HTML con los datos
     const html = template(processedData);
+
+    // Generar el template del header
+    const headerTemplate = generateHeaderTemplate(
+      data,
+      logoBase64,
+      emmaLogoBase64
+    );
 
     // 4. Generar el PDF usando Puppeteer con configuración optimizada
     const browser = await puppeteer.launch({
@@ -177,30 +241,43 @@ export const generatePDFWithPuppeteer = async (
       };
     });
 
-    // Establecer color de fondo para toda la página
+    // Establecer color de fondo para toda la página y ajustar el margen superior
     await page.evaluate(() => {
       document.body.style.backgroundColor = "#f9f8f9";
       document.body.style.width = "215.9mm";
       document.body.style.minHeight = "279.4mm";
       document.body.style.margin = "0 auto";
 
+      // AJUSTE CRÍTICO: Agregar margen superior para evitar superposición con el header
+      document.body.style.paddingTop = "120px"; // Espacio para el header
+
       // Función para verificar la altura de las secciones y ajustar los saltos de página
       const checkSectionHeights = () => {
         const sections = document.querySelectorAll(".content-section");
         const pageHeight = 279.4; // altura de página Letter en mm
-        const marginTop = 30; // margen superior aumentado
-        const marginBottom = 30; // margen inferior aumentado
-        const sectionSpacing = 25; // espacio entre secciones aumentado
-        const effectivePageHeight = pageHeight - marginTop - marginBottom;
+        const marginTop = 30; // margen superior
+        const marginBottom = 30; // margen inferior
+        const headerHeight = 30; // altura aproximada del header en mm
+        const sectionSpacing = 25; // espacio entre secciones
+        const effectivePageHeight =
+          pageHeight - marginTop - marginBottom - headerHeight;
         let currentPageHeight = 0;
         let lastSectionWasLarge = false;
 
-        // Asegurar que el contenedor principal tenga padding
+        // Asegurar que el contenedor principal tenga padding ajustado para el header
         const mainContent = document.querySelector(
           ".main-content"
         ) as HTMLElement;
         if (mainContent) {
-          mainContent.style.padding = "20px 0";
+          mainContent.style.padding = "40px 0"; // Aumentado para dar más espacio
+          mainContent.style.marginTop = "20px"; // Margen adicional desde el header
+        }
+
+        // Ajustar la sección de información del plan
+        const planInfo = document.querySelector(".plan-info") as HTMLElement;
+        if (planInfo) {
+          planInfo.style.marginTop = "20px"; // Espacio desde el header
+          planInfo.style.marginBottom = "20px";
         }
 
         sections.forEach((section, index) => {
@@ -214,21 +291,21 @@ export const generatePDFWithPuppeteer = async (
           // Ajustes específicos por sección
           if (index === 0) {
             // PERSONAS A PROTEGER
-            element.style.marginTop = "20px";
+            element.style.marginTop = "30px"; // Aumentado desde 20px
             element.style.marginBottom = "40px";
           }
 
           if (index === 1) {
             // RESUMEN DE COSTOS
             element.style.marginTop = "30px";
-            element.style.marginBottom = "50px"; // Aumentado para dar más espacio
+            element.style.marginBottom = "50px";
           }
 
           // COBERTURAS PRINCIPALES
           if (index === 2) {
-            element.style.marginTop = "40px"; // Más espacio antes
+            element.style.marginTop = "40px";
             element.style.marginBottom = "40px";
-            element.style.pageBreakInside = "avoid"; // Evitar corte
+            element.style.pageBreakInside = "avoid";
           }
 
           // Calcular si la sección cabe en la página actual
@@ -241,7 +318,7 @@ export const generatePDFWithPuppeteer = async (
           if (!willFitInPage && !isFirstSection) {
             element.style.pageBreakBefore = "always";
             element.style.breakBefore = "page";
-            element.style.marginTop = "30px";
+            element.style.marginTop = "140px"; // Espacio para el header en nueva página
             currentPageHeight = sectionHeightMM;
           } else {
             // Si la sección anterior era grande, agregar más espacio
@@ -262,21 +339,21 @@ export const generatePDFWithPuppeteer = async (
     // Esperar a que se apliquen los ajustes
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    // Generar el PDF
+    // Generar el PDF con header personalizado
     const pdfBuffer = await page.pdf({
       format: "Letter",
       printBackground: true,
       margin: {
-        top: "30px",
+        top: "140px",
         bottom: "30px",
         left: "25px",
         right: "25px",
       },
       displayHeaderFooter: true,
-      headerTemplate: "<div></div>",
+      headerTemplate: headerTemplate,
       footerTemplate: "<div></div>",
       preferCSSPageSize: true,
-      scale: 0.95, // Reducción de escala un poco mayor para asegurar mejor distribución
+      scale: 0.95,
     });
 
     await browser.close();

@@ -89,22 +89,6 @@
         break-after: avoid;
       }
 
-      .header-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 10px;
-        width: 100%;
-        max-width: 900px;
-      }
-
-      .header-title {
-        font-size: clamp(20px, 4vw, 28px);
-        font-weight: bold;
-        line-height: 1.2;
-        max-width: 500px;
-      }
-
       .company-logos {
         display: flex;
         flex-direction: column;
@@ -491,21 +475,6 @@
   <body>
     <div class="wrapper">
       <main class="quote-container">
-        <header class="main-header">
-          <div class="header-content">
-            <h1 class="header-title">
-              COTIZACIÓN DE SEGURO<br />DE GASTOS MÉDICOS
-            </h1>
-            <div class="company-logos">
-              <img
-                src="{{logoPath}}"
-                alt="Logo {{company}}"
-                class="livestar-logo"
-              />
-            </div>
-          </div>
-        </header>
-
         <div class="quote-content">
           <section class="plan-info">
             <div class="plan-details">
