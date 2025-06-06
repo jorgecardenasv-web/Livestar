@@ -161,10 +161,10 @@ export const generatePDFWithPuppeteer = async (
       cpIconPath: cpIconBase64,
     };
 
-    // Leer la plantilla HTML
+    // Seleccionar la plantilla basada en el tipo de precios
     const templatePath = path.join(
       process.cwd(),
-      "src/features/quote-summary/template/plantilla-gnp.html"
+      `src/features/quote-summary/template/plantilla-${data.hasDetailedPricing ? "hdi" : "gnp"}.html`
     );
     const templateContent = await fs.readFile(templatePath, "utf-8");
 

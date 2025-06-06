@@ -35,6 +35,9 @@ export interface QuotePDFData {
     name?: string;
     relationship?: string;
     age?: number;
+    anual?: number;
+    primerMes?: number;
+    segundoMesADoce?: number;
   }[];
   isMultipleDeductible: boolean;
   deductibles?: Record<string, Record<string, number>>;
@@ -43,4 +46,9 @@ export interface QuotePDFData {
   coInsuranceCapData?: Record<string, Record<string, number>>;
   postalCode?: string;
   contractorName?: string;
+  hasDetailedPricing?: boolean;
+  totalAnual?: number;
+  totalPrimerMes?: number;
+  totalSegundoMesADoce?: number;
+  individualPricesJson?: string;
 }
