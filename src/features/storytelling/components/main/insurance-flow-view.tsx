@@ -15,7 +15,7 @@ export function InsuranceFlow() {
   const progress = ((step + 1) / steps.length) * 100;
 
   return (
-    <div className="bg-gradient-to-b from-white to-blue-50 pb-6 sm:pb-10 px-2 sm:px-6">
+    <div className="pb-6 sm:pb-10 px-2 sm:px-6">
       <Card className="max-w-6xl mx-auto bg-white overflow-hidden">
         <CardContent className="pt-4 sm:pt-6 px-2 sm:px-6">
           {/* Progress Bar */}
@@ -49,7 +49,7 @@ export function InsuranceFlow() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3, delay: 0.1 }}
-              className="flex flex-col items-center gap-y-4 sm:gap-y-6 mt-6 sm:mt-12"
+              className="flex flex-col items-center gap-y-4 sm:gap-y-6 mt-6 sm:mt-12 px-10"
             >
               <div className="flex flex-col md:flex-row justify-between items-center w-full gap-y-4 sm:gap-y-6 md:gap-y-0">
                 {/* Skip Intro or Quote Button */}
@@ -65,7 +65,7 @@ export function InsuranceFlow() {
                     >
                       <Button
                         variant="outline"
-                        onClick={() => setStep(() => steps.length - 1)}
+                        onClick={openModalStorytelling}
                         className="text-primary border-primary hover:bg-primary/70 hover:text-white text-base px-5 h-12"
                       >
                         <SkipForward className="animate-pulse" size={22} />
