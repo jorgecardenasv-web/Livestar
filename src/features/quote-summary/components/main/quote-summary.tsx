@@ -54,10 +54,6 @@ export const QuoteSummary: FC<
     setIsGeneratingPDF(true);
     try {
       const prospectData = await getProspect();
-      console.log("Datos antes de procesar PDF:", {
-        props,
-        prospectData
-      });
       const pdfData = processPDFData({
         ...props,
         protectedWho: protectedWho

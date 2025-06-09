@@ -14,7 +14,6 @@ export default async function QuotesPage({
   const quote = await getQuoteByIdLoader(id);
   const advisors = await getAdvisors();
 
-  // Si la cotización no existe, mostrar un 404 personalizado
   if (!quote) {
     return (
       <>

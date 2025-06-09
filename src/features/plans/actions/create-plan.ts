@@ -36,11 +36,9 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
       ...rest
     } = data;
 
-    // Obtener la información adicional HTML directamente del formulario
     const additionalInfoHtml =
       formData.get("additionalInfoHtml")?.toString() || null;
 
-    // Eliminamos cualquier campo adicional que no esté en el modelo de Prisma
     const planData = {
       ...rest,
       prices: prices
@@ -58,10 +56,8 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
         ? updatePlanService(planData, planId)
         : createPlanService(planData));
 
-      // Redirigir solo si la operación fue exitosa
       revalidatePath(`${prefix}/planes`);
 
-      // Retornar un mensaje para evitar el redirect automático cuando estamos actualizando
       if (isUpdate) {
         return {
           success: true,
@@ -69,7 +65,6 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
         };
       }
 
-      // Para creación, devolver un objeto con indicador de redirección
       return {
         success: true,
         message: "Plan creado exitosamente",
@@ -77,7 +72,6 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
         redirectUrl: `${prefix}/planes`,
       };
     } catch (err) {
-      // Devolver un mensaje amigable para el usuario
       return {
         success: false,
         message:
@@ -87,7 +81,7 @@ export const createPlan = async (formData: FormData): Promise<FormState> => {
       };
     }
   } catch (error) {
-    console.log("Error al crear el tipo de plan:", error);
+    console.error("Error al crear el tipo de plan:", error);
     return {
       success: false,
       message:

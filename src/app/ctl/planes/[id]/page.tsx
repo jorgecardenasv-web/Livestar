@@ -8,7 +8,6 @@ export default async function EditPlan({
 }: {
   params: { id: string };
 }) {
-  // Realizar las solicitudes en paralelo para mejorar el rendimiento
   const [insuranceCompanies, planTypesResult, insurancePlan] = await Promise.all([
     getInsuranceCompany(),
     getPlanTypes({

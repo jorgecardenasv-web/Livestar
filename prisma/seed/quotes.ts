@@ -32,19 +32,16 @@ const createMedicalHistory = (protectWho: string, additionalInfo: any) => {
         protectWho === "otros" &&
         additionalInfo.protectedPersons?.length > 0
       ) {
-        // Obtener el relationship y contar cuántas veces aparece
         const firstPerson = additionalInfo.protectedPersons[0];
         const sameRelationshipCount = additionalInfo.protectedPersons.filter(
           (p: any) => p.relationship === firstPerson.relationship
         ).length;
 
-        // Si hay más de uno con el mismo relationship, agregar un número
         persona =
           sameRelationshipCount > 1
             ? `${firstPerson.relationship} 1`
             : firstPerson.relationship;
       } else {
-        // El resto del código para otros casos se mantiene igual
         const personaMapping: Record<string, string> = {
           solo_yo: "Yo",
           mi_pareja_y_yo: "Yo",
@@ -182,7 +179,6 @@ const createMembersData = (
     fractionDigits: 2,
   });
 
-  // Función para generar datos HDI con formato diferente
   const generateHDIPrice = () => {
     const primerMes = faker.number.float({
       min: 2500,
@@ -405,7 +401,6 @@ export const seedQuotes = async (
 ) => {
   const QUOTES_TO_CREATE = 50;
 
-  // Obtener los planes por compañía
   const gnpPlans = plans.filter((plan) => plan.company.name === "GNP Seguros");
   const hdiPlans = plans.filter((plan) => plan.company.name === "HDI Seguros");
 
@@ -419,13 +414,11 @@ export const seedQuotes = async (
       fractionDigits: 2,
     });
 
-    // Determinar si esta cotización será para GNP o HDI
-    const useGnp = i % 3 !== 0; // 2/3 de las cotizaciones serán de GNP
+    const useGnp = i % 3 !== 0;
     const selectedPlan = useGnp
       ? faker.helpers.arrayElement(gnpPlans)
       : faker.helpers.arrayElement(hdiPlans);
 
-    // Valores básicos de coaseguro
     const baseCoInsurance = faker.helpers.arrayElement([5, 10, 15]);
     const baseCoInsuranceCap = faker.number.float({
       min: 30000,
@@ -433,10 +426,8 @@ export const seedQuotes = async (
       fractionDigits: 2,
     });
 
-    // Para GNP, siempre utilizamos múltiple coaseguro, múltiple deducible y tope de coaseguro
-    // Para HDI, mantenemos formato estándar sin múltiples opciones
-    const isMultipleCoInsurance = useGnp; // Siempre true para GNP
-    const isMultipleDeductible = useGnp; // Siempre true para GNP
+    const isMultipleCoInsurance = useGnp;
+    const isMultipleDeductible = useGnp;
 
     const prospect = await prisma.prospect.create({
       data: {
@@ -450,7 +441,6 @@ export const seedQuotes = async (
       },
     });
 
-    // Preparar datos de coaseguro según la aseguradora
     const coInsuranceData = useGnp
       ? createCoInsuranceData(baseCoInsurance)
       : null;
@@ -474,9 +464,9 @@ export const seedQuotes = async (
           QuoteStatus.EN_PROGRESO,
           QuoteStatus.CERRADO,
         ]),
-        // Nuevos campos
+
         coverageFee,
-        // Para HDI solo usamos pago mensual, para GNP puede ser mensual o anual
+
         paymentType: useGnp
           ? faker.helpers.arrayElement(["Anual", "Mensual"])
           : "Mensual",
@@ -490,14 +480,14 @@ export const seedQuotes = async (
         deductible: baseDeductible,
         coInsurance: baseCoInsurance,
         coInsuranceCap: baseCoInsuranceCap,
-        // Pasar isHDI como true para cotizaciones HDI
+
         membersData: createMembersData(protectWho, additionalInfo, !useGnp),
-        // GNP siempre tiene múltiple deducible
+
         isMultipleDeductible: isMultipleDeductible,
         deductiblesData: useGnp
           ? createDeductiblesData(baseDeductible)
           : Prisma.JsonNull,
-        // GNP siempre tiene múltiple coaseguro
+
         isMultipleCoInsurance: isMultipleCoInsurance,
         coInsuranceData: coInsuranceData || Prisma.JsonNull,
         coInsuranceCapData: coInsuranceCapData || Prisma.JsonNull,

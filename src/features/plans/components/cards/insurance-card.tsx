@@ -56,7 +56,6 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   const prices: PriceTable | HDIPriceTable =
     (plan.prices as unknown as PriceTable | HDIPriceTable) || {};
 
-  // Use the type guard here
   const isHDIPrice = isHDIPriceTable(prices);
 
   const { coverage_fee, individualPrices } = calculateInsurancePrice(
@@ -326,13 +325,10 @@ function getMinimumValue(
 function getCoInsuranceValue(coInsurance: any): string {
   if (!coInsurance) return "0%";
 
-  // Si es un valor simple
   if (typeof coInsurance === 'number') return `${coInsurance}%`;
 
-  // Si tiene value (formato simple)
   if (coInsurance.value !== undefined) return `${coInsurance.value}%`;
 
-  // Si es múltiple, buscamos el valor mínimo
   let minValue = 100;
 
   if (coInsurance.opcion_2) {
@@ -353,13 +349,10 @@ function getCoInsuranceValue(coInsurance: any): string {
 function getCoInsuranceCapValue(coInsuranceCap: any): string {
   if (!coInsuranceCap) return formatCurrency(0);
 
-  // Si es un valor simple
   if (typeof coInsuranceCap === 'number') return formatCurrency(coInsuranceCap);
 
-  // Si tiene value (formato simple)
   if (coInsuranceCap.value !== undefined) return formatCurrency(coInsuranceCap.value);
 
-  // Si es múltiple, buscamos el valor mínimo
   let minValue = Number.MAX_SAFE_INTEGER;
 
   if (coInsuranceCap.opcion_2) {

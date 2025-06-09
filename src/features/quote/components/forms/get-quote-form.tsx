@@ -4,6 +4,7 @@ import { useGetQuoteForm } from "../../hooks/use-get-quote-form";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { PersonalInfoSection } from "./personal-info-section";
 import { ContactInfoSection } from "./contact-info-section";
+import { Button } from "@/shared/components/ui/button";
 
 export const GetQuoteForm: React.FC<{
   prospect: any;
@@ -16,6 +17,7 @@ export const GetQuoteForm: React.FC<{
     handleChildChange,
     handleProtectedPersonChange,
     handleSubmit,
+    isSubmitting
   } = useGetQuoteForm(prospect);
 
   return (
@@ -36,12 +38,11 @@ export const GetQuoteForm: React.FC<{
         />
       )}
 
-      <SubmitButton
-        type="submit"
-        label="Cotizar"
-        labelPending="Cotizando..."
-        className="bg-primary text-white p-6 rounded font-bold text-lg w-full mt-6 hover:bg-[#223E99]"
-      />
+      <Button type="submit" disabled={isSubmitting} className="bg-primary text-white p-6 rounded font-bold text-lg w-full mt-6 hover:bg-[#223E99]">
+        {
+          isSubmitting ? "Cotizando..." : "Cotizar"
+        }
+      </Button>
     </form>
   );
 };

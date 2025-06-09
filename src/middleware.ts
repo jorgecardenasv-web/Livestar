@@ -28,7 +28,6 @@ export async function middleware(request: NextRequest) {
   const pathWithoutQuery = path.split("?")[0];
   const session = await getSession();
 
-  // Manejo de rutas de cotización
   if (pathWithoutQuery.startsWith("/cotizar")) {
     const prospect = request.cookies.get("prospect")?.value;
     const selectedPlan = request.cookies.get("selectedPlan")?.value;
@@ -64,7 +63,6 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  // Manejo de autenticación
   if (!session.isLoggedIn) {
     if (
       publicPaths.includes(pathWithoutQuery) ||

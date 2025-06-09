@@ -25,7 +25,6 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
 
   const { showNotification } = useNotificationStore()
 
-  // Asegurarnos de que quote no sea nulo antes de acceder a sus propiedades
   const updateUserWithId = quote?.id ? updateQuote.bind(null, quote.id) : null
 
   const [state, formAction] = useFormState(
@@ -48,15 +47,12 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
 
     const members = [];
 
-    // Verificar si tenemos formato con precios diferenciados (primerMes y segundoMesADoce)
-    // Este formato puede estar presente en HDI u otras aseguradoras que usen precios iniciales diferentes
     const hasDifferentiatedPrices = membersData && typeof membersData === 'object' &&
       (membersData.main && typeof membersData.main === 'object' && membersData.main.primerMes !== undefined ||
         membersData.partner && typeof membersData.partner === 'object' && membersData.partner.primerMes !== undefined ||
         (membersData.children && membersData.children[0] &&
           typeof membersData.children[0] === 'object' && membersData.children[0].primerMes !== undefined));
 
-    // Función auxiliar para procesar cada miembro con formato consistente
     const processMember = (member: any, type: string, id: string, name?: string) => {
       if (hasDifferentiatedPrices && typeof member === 'object' && member.primerMes !== undefined) {
         return {
@@ -84,24 +80,20 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
       }
     };
 
-    // Procesar titular
     if (membersData.main) {
       members.push(processMember(membersData.main, 'Titular', 'main'));
     }
 
-    // Procesar pareja
     if (membersData.partner) {
       members.push(processMember(membersData.partner, 'Pareja', 'partner'));
     }
 
-    // Procesar hijos
     if (membersData.children) {
       membersData.children.forEach((child: any, index: number) => {
         members.push(processMember(child, `Hijo/a ${index + 1}`, `child-${index}`));
       });
     }
 
-    // Procesar padres
     if (membersData.parents) {
       membersData.parents.forEach((parent: any, index: number) => {
         members.push(processMember(parent, 'Padre/Madre', `parent-${index}`, parent.name));
@@ -111,7 +103,6 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
     return members;
   };
 
-  // Función para obtener el texto del deducible
   const getDeductibleText = (quote: Quote | null) => {
     if (!quote) return '';
 
@@ -122,7 +113,6 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
     }
   };
 
-  // Función para obtener el texto del coaseguro
   const getCoInsuranceText = (quote: Quote | null) => {
     if (!quote) return '';
 
@@ -133,7 +123,6 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
     }
   };
 
-  // Función para obtener el texto del tope de coaseguro
   const getCoInsuranceCapText = (quote: Quote | null) => {
     if (!quote) return '';
 
@@ -144,7 +133,6 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
     }
   };
 
-  // Procesar los miembros desde la data real
   const members = processMembers(quote?.membersData);
 
   return (

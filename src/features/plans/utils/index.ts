@@ -138,11 +138,6 @@ export function calculateInsurancePrice(
     protectWho: data.protectWho,
   };
 
-  console.log("Calculando precio del seguro:", {
-    protectWho: data.protectWho,
-    additionalInfo: data.additionalInfo,
-  });
-
   if (data.protectWho === "mis_padres") {
     individualPrices.parents = [];
 
@@ -236,17 +231,10 @@ export function calculateInsurancePrice(
     ];
 
     if (validProtectWhoOptions.includes(data.protectWho)) {
-      console.log("Procesando precio para caso válido:", data.protectWho);
-
       if (
         data.additionalInfo?.partnerAge &&
         data.additionalInfo?.partnerGender
       ) {
-        console.log("Información de pareja encontrada:", {
-          age: data.additionalInfo.partnerAge,
-          gender: data.additionalInfo.partnerGender,
-        });
-
         const partnerPriceDetails = getPriceForPerson(
           data.additionalInfo.partnerAge,
           priceTable,
@@ -254,11 +242,6 @@ export function calculateInsurancePrice(
           isHDIPriceTable(priceTable)
             ? undefined
             : data.additionalInfo.partnerGender
-        );
-
-        console.log(
-          "Detalles de precio calculados para pareja:",
-          partnerPriceDetails
         );
 
         individualPrices.partner = partnerPriceDetails;
@@ -274,10 +257,6 @@ export function calculateInsurancePrice(
         } else if (typeof partnerPriceDetails === "number") {
           totalPrice += partnerPriceDetails;
         }
-      } else {
-        console.log(
-          "No se encontró información de la pareja en additionalInfo"
-        );
       }
 
       if (data.additionalInfo?.children) {
@@ -333,11 +312,6 @@ export function calculateInsurancePrice(
       });
     }
   }
-
-  console.log("Resultado final del cálculo:", {
-    totalPrice,
-    individualPrices,
-  });
 
   return {
     coverage_fee: roundPrice(totalPrice),

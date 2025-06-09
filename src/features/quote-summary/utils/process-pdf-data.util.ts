@@ -4,21 +4,16 @@ export const processPDFData = (
   data: InsuranceQuoteData,
   prospect?: any
 ): QuotePDFData => {
-  console.log("Procesando datos del PDF:", data);
-  console.log("Datos del prospecto:", prospect);
   const members = [];
   let hasDetailedPricing = false;
   let totalAnual = 0;
   let totalPrimerMes = 0;
   let totalSegundoMesADoce = 0;
 
-  // Primero procesamos los precios si existen
   if (data.individualPricesJson) {
     const prices = JSON.parse(data.individualPricesJson);
-    console.log("Precios parseados:", prices);
 
     if (prices.main?.anual !== undefined) {
-      // Estructura de precios detallada (HDI)
       hasDetailedPricing = true;
       const mainMember = {
         type: "Titular",
@@ -90,12 +85,7 @@ export const processPDFData = (
     }
   }
 
-  // Si no hay precios detallados o son precios simples, usamos la lógica tradicional
   if (prospect) {
-    console.log("Datos del prospecto:", JSON.stringify(prospect, null, 2));
-    console.log("Tipo de protección:", prospect.protectWho);
-
-    // Caso mis_padres
     if (prospect.protectWho === "mis_padres" && prospect.additionalInfo) {
       if (prospect.additionalInfo.dadAge) {
         members.push({
@@ -111,9 +101,7 @@ export const processPDFData = (
           age: prospect.additionalInfo.momAge,
         });
       }
-    }
-    // Caso solo_mis_hijos
-    else if (
+    } else if (
       prospect.protectWho === "solo_mis_hijos" &&
       prospect.additionalInfo?.children
     ) {
@@ -124,17 +112,13 @@ export const processPDFData = (
           age: child.age,
         });
       });
-    }
-    // Casos que incluyen al titular
-    else {
-      // Agregar titular en todos los casos excepto mis_padres y solo_mis_hijos
+    } else {
       members.push({
         type: "Titular",
         price: data.coverage_fee,
         age: prospect.prospect.age,
       });
 
-      // Casos con pareja
       if (
         (prospect.protectWho === "familia" ||
           prospect.protectWho === "mi_pareja_y_yo") &&
@@ -147,7 +131,6 @@ export const processPDFData = (
         });
       }
 
-      // Casos con hijos
       if (
         (prospect.protectWho === "familia" ||
           prospect.protectWho === "mis_hijos_y_yo") &&
@@ -164,7 +147,6 @@ export const processPDFData = (
         );
       }
 
-      // Caso otros
       if (
         prospect.protectWho === "otros" &&
         prospect.additionalInfo?.protectedPersons
@@ -179,7 +161,6 @@ export const processPDFData = (
       }
     }
   } else if (data.individualPricesJson) {
-    // Fallback usando individualPricesJson
     const prices = JSON.parse(data.individualPricesJson);
 
     if (prices.main) {
@@ -237,11 +218,10 @@ export const processPDFData = (
     }
   }
 
-  // Calcular los totales para precios no detallados
   if (!hasDetailedPricing) {
     const totalMensual = members.reduce((sum, m) => sum + m.price, 0);
     totalAnual = totalMensual * 12;
-    // Para precios no detallados, el primer mes y los meses subsiguientes son iguales
+
     totalPrimerMes = totalMensual;
     totalSegundoMesADoce = totalMensual;
   }

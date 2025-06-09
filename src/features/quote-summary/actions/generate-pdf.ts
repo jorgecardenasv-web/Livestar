@@ -8,7 +8,6 @@ export async function generatePDFAction(
   data: QuotePDFData
 ): Promise<{ success: boolean; data?: string; error?: string }> {
   try {
-    console.log("datos de prospecto:", await getProspect());
     const pdfData = generatePDFService(data, "datauri");
 
     if (!pdfData) {

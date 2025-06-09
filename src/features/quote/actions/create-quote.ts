@@ -32,7 +32,7 @@ export const createQuoteAction = async (payload: any) => {
 
       try {
         const pdfData = processPDFData(parsedPlan);
-        const pdfBuffer = generatePDFService(pdfData, "arraybuffer");
+        const pdfBuffer = await generatePDFService(pdfData, "arraybuffer");
         const buffer = Buffer.from(new Uint8Array(pdfBuffer as ArrayBuffer));
 
         await sendQuoteEmailService({
@@ -45,8 +45,6 @@ export const createQuoteAction = async (payload: any) => {
           advisorName: advisor?.name,
           advisorEmail: advisor?.email ?? "emma@livestar.mx",
         });
-
-        console.log("Emails enviados correctamente");
       } catch (pdfError) {
         console.error("Error generando o enviando PDF:", pdfError);
       }
