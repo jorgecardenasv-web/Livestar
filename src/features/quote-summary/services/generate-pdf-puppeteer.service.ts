@@ -3,6 +3,12 @@ import Handlebars from "handlebars";
 import fs from "fs/promises";
 import path from "path";
 import { QuotePDFData } from "../types";
+import {
+  CP_ICON_BASE64,
+  EMMA_SVG_BASE64,
+  LOGO_SVG_BASE64,
+  USER_ICON_BASE64,
+} from "../constants/assets-base64";
 
 // Registrar los helpers de Handlebars
 Handlebars.registerHelper("formatCurrency", function (amount: number) {
@@ -146,10 +152,10 @@ export const generatePDFWithPuppeteer = async (
     const userIcon = await fs.readFile(getImagePath("user-icon.svg"));
     const cpIcon = await fs.readFile(getImagePath("cp.svg"));
 
-    const logoBase64 = `data:image/svg+xml;base64,${logoBuffer.toString("base64")}`;
-    const emmaLogoBase64 = `data:image/svg+xml;base64,${emmaLogoBuffer.toString("base64")}`;
-    const userIconBase64 = `data:image/svg+xml;base64,${userIcon.toString("base64")}`;
-    const cpIconBase64 = `data:image/svg+xml;base64,${cpIcon.toString("base64")}`;
+    const logoBase64 = LOGO_SVG_BASE64;
+    const emmaLogoBase64 = EMMA_SVG_BASE64;
+    const userIconBase64 = USER_ICON_BASE64;
+    const cpIconBase64 = CP_ICON_BASE64;
 
     // Preparar los datos incluyendo las imágenes en base64
     const processedData = {
