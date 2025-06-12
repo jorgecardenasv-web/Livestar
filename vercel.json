@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "src/app/**/*.ts": {
+      "maxDuration": 60
+    },
+    "src/app/**/*.js": {
+      "maxDuration": 60
+    }
+  },
+  "regions": ["cle1"],
+  "env": {
+    "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true"
+  }
+}
