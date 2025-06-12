@@ -591,7 +591,7 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
             <section class="content-section">
               <h2 class="section-title">
                 <span class="section-icon" aria-hidden="true">💉</span>
-                DEDUCIBLES Y COASEGURO
+                DEDUCIBLES Y COASEGUR
               </h2>
               <table class="data-table deductible-table border-top">
                 <thead>
@@ -658,17 +658,6 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-      }
-
-      body {
-        font-family: "Arial", sans-serif;
-        line-height: 1.6;
-        color: var(--text-dark);
-        background-color: #053a66;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
       }
 
       body {
@@ -921,22 +910,23 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
 
       .data-table th,
       .data-table td {
-        padding: 12px;
+        padding: 8px;
       }
 
       .data-table th:first-child,
       .data-table td:first-child {
-        width: 45%;
+        width: 35%;
       }
 
       .data-table th:not(:first-child),
       .data-table td:not(:first-child) {
-        width: 27.5%;
+        width: 21.67%;
         text-align: center;
       }
 
       .data-table-th {
         text-align: center;
+        font-size: 14px;
       }
 
       /* Estilos de celdas y encabezados de tabla */
@@ -994,9 +984,9 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
       }
 
       .cost-summary {
-        padding: 10px;
+        padding: 3px;
         border-radius: var(--border-radius-small);
-        margin-top: 15px;
+        margin-top: 5px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -1006,19 +996,19 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
 
       .summary-box {
         text-align: center;
-        padding: 12px;
-        margin-bottom: 8px;
+        padding: 5px;
+        margin-bottom: 3px;
       }
 
       .summary-label {
         color: var(--secondary-blue);
         font-weight: 600;
-        font-size: 14px;
-        margin-bottom: 4px;
+        font-size: 12px;
+        margin-bottom: 2px;
       }
 
       .summary-amount {
-        font-size: 24px;
+        font-size: 20px;
         text-decoration: underline;
       }
 
@@ -1027,21 +1017,25 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 15px 12px;
+        padding: 8px 12px;
         border-bottom: 1px solid var(--border-gray);
         background-color: var(--white);
+        height: auto;
+        min-height: 0;
       }
 
       .coverage-name {
         color: var(--secondary-blue);
         font-weight: 500;
-        font-size: 16px;
+        font-size: 14px;
+        white-space: nowrap;
       }
 
       .coverage-amount {
         color: var(--secondary-blue);
         font-weight: bold;
-        font-size: 18px;
+        font-size: 16px;
+        white-space: nowrap;
       }
 
       @media (prefers-reduced-motion: reduce) {
@@ -1148,9 +1142,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
                   <thead>
                     <tr>
                       <th scope="col">Asegurado</th>
-                      <th scope="col" class="data-table-th">
-                        Anual
-                      </th>
+                      <th scope="col" class="data-table-th">Anual</th>
                       <th scope="col" class="data-table-th">
                         Pago inicial (Primer Mes)
                       </th>
