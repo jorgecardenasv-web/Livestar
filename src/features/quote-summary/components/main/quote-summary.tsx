@@ -244,10 +244,27 @@ export const QuoteSummary: FC<
         <ContractForm />
       </div>
       {isOpen && (
-        <Modal title="" size="6xl">
-          {modalType === "moreInformationQuote" && <MoreInformationQuote />}
-          {modalType === "combinedInfo" && <DeductibleAndCoInsuranceInfoModal />}
-        </Modal>
+        <>
+          {modalType === "moreInformationQuote" && (
+            <Modal
+              title="Detalles de Prima"
+              size="3xl"
+              fullScreenOnMobile={true}
+            >
+              <MoreInformationQuote />
+            </Modal>
+          )}
+          {modalType === "combinedInfo" && (
+            <Modal
+              title="Deducibles y Coaseguros"
+              size="4xl"
+              fullScreenOnMobile={true}
+              maxHeight="90vh"
+            >
+              <DeductibleAndCoInsuranceInfoModal />
+            </Modal>
+          )}
+        </>
       )}
     </div>
   );

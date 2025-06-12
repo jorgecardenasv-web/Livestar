@@ -37,8 +37,8 @@ export const ModalQuoteActions = ({ advisors }: { advisors: Advisor[] }) => {
       )}
 
       {isOpen && modalType === "deleteQuote" && (
-        <Modal 
-          title="Eliminar Cotización" 
+        <Modal
+          title="Eliminar Cotización"
           description="¿Estás seguro de que deseas eliminar esta cotización? Esta acción también podría eliminar el prospecto asociado si no tiene otras cotizaciones."
           size="lg"
         >
