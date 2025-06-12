@@ -22,9 +22,9 @@ const sizeClasses = {
   lg: "max-w-lg",
   xl: "max-w-xl",
   "2xl": "max-w-2xl",
-  "3xl": "max-w-3xl h-[500px]",
-  "4xl": "max-w-4xl h-[600px]",
-  "6xl": "max-w-6xl h-[600px]",
+  "3xl": "max-w-3xl h-fit",
+  "4xl": "max-w-4xl h-fit",
+  "6xl": "max-w-6xl h-fit",
 };
 
 export const Modal: React.FC<ModalProps> = ({
@@ -37,12 +37,12 @@ export const Modal: React.FC<ModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
-      <DialogContent className={`${sizeClasses[size]} max-h-[600px]`}>
+      <DialogContent className={`${sizeClasses[size]}`}>
         <DialogHeader className="px-4 py-2">
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <ScrollArea className="h-full max-h-[500px]">
+        <ScrollArea className="h-full">
           <div className="space-y-4 py-4 px-2 w-full">{children}</div>
         </ScrollArea>
       </DialogContent>

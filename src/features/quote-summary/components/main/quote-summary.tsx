@@ -6,9 +6,7 @@ import { ContractForm } from "../forms/confirm-form";
 import { InfoCard } from "../cards/info-card";
 import { deleteSelectedPlan } from "@/features/plans/actions/set-cookies";
 import { FC, useState } from "react";
-import MultipleDeductibleModal from "../modals/MultipleDeductibleModal";
-import MultipleCoInsuranceModal from "../modals/MultipleCoInsuranceModal";
-import CombinedInfoModal from "../modals/CombinedInfoModal";
+import { DeductibleAndCoInsuranceInfoModal } from "../modals/CombinedInfoModal";
 import { formatCurrency } from "@/shared/utils";
 import { useQuoteSumaryActions } from "../../hooks/use-quote-sumary-actions";
 import { Modal } from "@/shared/components/ui/modal";
@@ -247,10 +245,8 @@ export const QuoteSummary: FC<
       </div>
       {isOpen && (
         <Modal title="" size="6xl">
-          {modalType === "multipleDeducible" && <MultipleDeductibleModal />}
           {modalType === "moreInformationQuote" && <MoreInformationQuote />}
-          {modalType === "multipleCoInsurance" && <MultipleCoInsuranceModal />}
-          {modalType === "combinedInfo" && <CombinedInfoModal />}
+          {modalType === "combinedInfo" && <DeductibleAndCoInsuranceInfoModal />}
         </Modal>
       )}
     </div>
