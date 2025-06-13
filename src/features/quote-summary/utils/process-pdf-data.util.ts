@@ -4,8 +4,6 @@ export const processPDFData = (
   data: InsuranceQuoteData,
   prospect?: any
 ): QuotePDFData => {
-  console.log("Processing PDF data:", data, prospect);
-
   const members = [];
   let hasDetailedPricing = false;
   let totalAnual = 0;
@@ -194,61 +192,71 @@ export const processPDFData = (
         }
       );
     }
-  } else if (data.individualPricesJson) {
-    const prices = JSON.parse(data.individualPricesJson);
+  } else if (!hasDetailedPricing) {
+    // Solo procesar si no se han procesado los precios detallados antes
+    if (data.individualPricesJson) {
+      try {
+        const prices = JSON.parse(data.individualPricesJson);
 
-    if (prices.main) {
-      members.push({
-        type: "Titular",
-        price: prices.main,
-        age: prices.mainAge || undefined,
-      });
-    }
-
-    if (prices.partner) {
-      members.push({
-        type: "Pareja",
-        price: prices.partner,
-        age: prices.partnerAge || undefined,
-      });
-    }
-
-    if (prices.children) {
-      prices.children.forEach(
-        (price: number | { price: number; age: number }, index: number) => {
-          const childPrice = typeof price === "number" ? price : price.price;
-          const childAge = typeof price === "number" ? undefined : price.age;
+        // Procesar precios solo si no son del formato HDI (con anual, primerMes, etc.)
+        if (prices.main && !prices.main.anual) {
           members.push({
-            type: `Hijo/a ${index + 1}`,
-            price: childPrice,
-            age: childAge,
+            type: "Titular",
+            price: prices.main,
+            age: prices.mainAge || undefined,
           });
         }
-      );
-    }
 
-    if (prices.parents) {
-      prices.parents.forEach(
-        (parent: { name: string; price: number; age?: number }) => {
+        if (prices.partner && !prices.partner.anual) {
           members.push({
-            type: parent.name === "Padre" ? "Padre" : "Madre",
-            price: parent.price,
-            age: parent.age,
+            type: "Pareja",
+            price: prices.partner,
+            age: prices.partnerAge || undefined,
           });
         }
-      );
-    }
 
-    if (prices.others) {
-      prices.others.forEach(
-        (other: { relationship: string; price: number; age?: number }) => {
-          members.push({
-            type: other.relationship || "Otro",
-            price: other.price,
-            age: other.age,
-          });
+        if (prices.children && !prices.children[0]?.anual) {
+          prices.children.forEach(
+            (price: number | { price: number; age: number }, index: number) => {
+              const childPrice =
+                typeof price === "number" ? price : price.price;
+              const childAge =
+                typeof price === "number" ? undefined : price.age;
+              members.push({
+                type: `Hijo/a ${index + 1}`,
+                price: childPrice,
+                age: childAge,
+              });
+            }
+          );
         }
-      );
+
+        if (prices.parents) {
+          prices.parents.forEach(
+            (parent: { name: string; price: number; age?: number }) => {
+              members.push({
+                type: parent.name === "Padre" ? "Padre" : "Madre",
+                price: parent.price,
+                age: parent.age,
+              });
+            }
+          );
+        }
+
+        if (prices.others) {
+          prices.others.forEach(
+            (other: { relationship: string; price: number; age?: number }) => {
+              members.push({
+                type: other.relationship || "Otro",
+                price: other.price,
+                age: other.age,
+              });
+            }
+          );
+        }
+      } catch (error) {
+        console.error("Error processing non-HDI individual prices:", error);
+      }
     }
   }
 
@@ -260,34 +268,10 @@ export const processPDFData = (
     totalSegundoMesADoce = totalMensual;
   }
 
-  console.log("data:", {
-    company: data.company,
-    plan: data.plan,
-    coverageFee: data.coverage_fee,
-    paymentType: data.paymentType,
-    sumInsured: data.sumInsured,
-    deductible: data.deductible,
-    coInsurance: data.coInsurance,
-    coInsuranceCap: data.coInsuranceCap,
-    members,
-    isMultipleDeductible: data.isMultipleString === "true",
-    deductibles: data.deductiblesJson
-      ? JSON.parse(data.deductiblesJson)
-      : undefined,
-    contractorName: prospect?.prospect?.name || "",
-    postalCode: prospect?.prospect?.postalCode || "",
-    hasDetailedPricing,
-    individualPricesJson: data.individualPricesJson,
-    totalAnual,
-    totalPrimerMes,
-    totalSegundoMesADoce,
-  });
-
-  // Return para el caso GNP (sin precios detallados)
   return {
     company: data.company,
     plan: data.plan,
-    coverageFee: defaultMonthlyPrice,
+    coverageFee: hasDetailedPricing ? data.coverage_fee : defaultMonthlyPrice,
     paymentType: data.paymentType,
     sumInsured: ensureValidNumber(data.sumInsured),
     deductible: ensureValidNumber(data.deductible),
@@ -300,7 +284,7 @@ export const processPDFData = (
       : undefined,
     contractorName: prospect?.prospect?.name || "",
     postalCode: prospect?.prospect?.postalCode || "",
-    hasDetailedPricing: false,
+    hasDetailedPricing,
     individualPricesJson: data.individualPricesJson,
     totalAnual,
     totalPrimerMes,
