@@ -4,47 +4,70 @@ export const processPDFData = (
   data: InsuranceQuoteData,
   prospect?: any
 ): QuotePDFData => {
+  console.log("Processing PDF data:", data, prospect);
+
   const members = [];
   let hasDetailedPricing = false;
   let totalAnual = 0;
   let totalPrimerMes = 0;
   let totalSegundoMesADoce = 0;
 
-  if (data.individualPricesJson) {
-    const prices = JSON.parse(data.individualPricesJson);
+  // Función helper para asegurar que tengamos números válidos
+  const ensureValidNumber = (value: any): number => {
+    const num = Number(value);
+    return isNaN(num) ? 0 : num;
+  };
 
-    if (prices.main?.anual !== undefined) {
-      hasDetailedPricing = true;
+  // Procesar precios individuales si existen
+  let individualPrices: any = null;
+  if (data.individualPricesJson) {
+    try {
+      individualPrices = JSON.parse(data.individualPricesJson);
+    } catch (error) {
+      console.error("Error parsing individualPricesJson:", error);
+    }
+  }
+
+  // Convertir el coverage_fee a número y calcular los precios base
+  const defaultMonthlyPrice = ensureValidNumber(data.coverage_fee);
+  const defaultYearlyPrice = defaultMonthlyPrice * 12;
+
+  // Si tenemos precios detallados (HDI)
+  if (
+    data.individualPricesJson &&
+    individualPrices?.main?.anual !== undefined
+  ) {
+    try {
       const mainMember = {
         type: "Titular",
-        price: prices.main.anual,
-        anual: prices.main.anual,
-        primerMes: prices.main.primerMes,
-        segundoMesADoce: prices.main.segundoMesADoce,
+        price: individualPrices.main.anual,
+        anual: individualPrices.main.anual,
+        primerMes: individualPrices.main.primerMes,
+        segundoMesADoce: individualPrices.main.segundoMesADoce,
         age: prospect?.prospect?.age,
       };
-      totalAnual += prices.main.anual;
-      totalPrimerMes += prices.main.primerMes;
-      totalSegundoMesADoce += prices.main.segundoMesADoce;
+      totalAnual += individualPrices.main.anual;
+      totalPrimerMes += individualPrices.main.primerMes;
+      totalSegundoMesADoce += individualPrices.main.segundoMesADoce;
       members.push(mainMember);
 
-      if (prices.partner) {
+      if (individualPrices.partner) {
         const partnerMember = {
           type: "Pareja",
-          price: prices.partner.anual,
-          anual: prices.partner.anual,
-          primerMes: prices.partner.primerMes,
-          segundoMesADoce: prices.partner.segundoMesADoce,
+          price: individualPrices.partner.anual,
+          anual: individualPrices.partner.anual,
+          primerMes: individualPrices.partner.primerMes,
+          segundoMesADoce: individualPrices.partner.segundoMesADoce,
           age: prospect?.additionalInfo?.partnerAge,
         };
-        totalAnual += prices.partner.anual;
-        totalPrimerMes += prices.partner.primerMes;
-        totalSegundoMesADoce += prices.partner.segundoMesADoce;
+        totalAnual += individualPrices.partner.anual;
+        totalPrimerMes += individualPrices.partner.primerMes;
+        totalSegundoMesADoce += individualPrices.partner.segundoMesADoce;
         members.push(partnerMember);
       }
 
-      if (prices.children?.length) {
-        prices.children.forEach((child: any, index: number) => {
+      if (individualPrices.children?.length) {
+        individualPrices.children.forEach((child: any, index: number) => {
           const childMember = {
             type: `Hijo/a ${index + 1}`,
             price: child.anual,
@@ -60,75 +83,92 @@ export const processPDFData = (
         });
       }
 
-      return {
-        company: data.company,
-        plan: data.plan,
-        coverageFee: data.coverage_fee,
-        paymentType: data.paymentType,
-        sumInsured: data.sumInsured,
-        deductible: data.deductible,
-        coInsurance: data.coInsurance,
-        coInsuranceCap: data.coInsuranceCap,
-        members,
-        isMultipleDeductible: data.isMultipleString === "true",
-        deductibles: data.deductiblesJson
-          ? JSON.parse(data.deductiblesJson)
-          : undefined,
-        contractorName: prospect?.prospect?.name || "",
-        postalCode: prospect?.prospect?.postalCode || "",
-        hasDetailedPricing: true,
-        individualPricesJson: data.individualPricesJson,
-        totalAnual,
-        totalPrimerMes,
-        totalSegundoMesADoce,
-      };
+      hasDetailedPricing = true;
+    } catch (error) {
+      console.error("Error processing HDI prices:", error);
+      hasDetailedPricing = false;
     }
   }
 
-  if (prospect) {
+  // Procesar miembros cuando no hay precios detallados (GNP)
+  if (!hasDetailedPricing && prospect) {
+    const addMember = (
+      type: string,
+      age: any,
+      memberType: "main" | "partner" | "children" | "parents" | "others",
+      index?: number
+    ) => {
+      let monthlyPrice = defaultMonthlyPrice;
+      let yearlyPrice = defaultYearlyPrice;
+
+      // Si hay precios individuales, usarlos
+      if (individualPrices) {
+        let individualPrice = 0;
+        switch (memberType) {
+          case "main":
+            individualPrice = ensureValidNumber(individualPrices.main);
+            break;
+          case "partner":
+            individualPrice = ensureValidNumber(individualPrices.partner);
+            break;
+          case "children":
+            individualPrice = ensureValidNumber(
+              individualPrices.children?.[index || 0]
+            );
+            break;
+          case "parents":
+            individualPrice = ensureValidNumber(
+              individualPrices.parents?.[index || 0]
+            );
+            break;
+          case "others":
+            individualPrice = ensureValidNumber(
+              individualPrices.others?.[index || 0]
+            );
+            break;
+        }
+        monthlyPrice = individualPrice;
+        yearlyPrice = monthlyPrice * 12;
+      }
+
+      members.push({
+        type,
+        price: monthlyPrice,
+        age: ensureValidNumber(age),
+        anual: yearlyPrice,
+        primerMes: monthlyPrice,
+        segundoMesADoce: monthlyPrice,
+      });
+      totalAnual += yearlyPrice;
+      totalPrimerMes += monthlyPrice;
+      totalSegundoMesADoce += monthlyPrice;
+    };
+
     if (prospect.protectWho === "mis_padres" && prospect.additionalInfo) {
       if (prospect.additionalInfo.dadAge) {
-        members.push({
-          type: "Padre",
-          price: data.coverage_fee,
-          age: prospect.additionalInfo.dadAge,
-        });
+        addMember("Padre", prospect.additionalInfo.dadAge, "parents", 0);
       }
       if (prospect.additionalInfo.momAge) {
-        members.push({
-          type: "Madre",
-          price: data.coverage_fee,
-          age: prospect.additionalInfo.momAge,
-        });
+        addMember("Madre", prospect.additionalInfo.momAge, "parents", 1);
       }
     } else if (
       prospect.protectWho === "solo_mis_hijos" &&
       prospect.additionalInfo?.children
     ) {
       prospect.additionalInfo.children.forEach((child: any, index: number) => {
-        members.push({
-          type: `Hijo/a ${index + 1}`,
-          price: data.coverage_fee,
-          age: child.age,
-        });
+        addMember(`Hijo/a ${index + 1}`, child.age, "children", index);
       });
     } else {
-      members.push({
-        type: "Titular",
-        price: data.coverage_fee,
-        age: prospect.prospect.age,
-      });
+      if (prospect.prospect?.age) {
+        addMember("Titular", prospect.prospect.age, "main");
+      }
 
       if (
         (prospect.protectWho === "familia" ||
           prospect.protectWho === "mi_pareja_y_yo") &&
         prospect.additionalInfo?.partnerAge
       ) {
-        members.push({
-          type: "Pareja",
-          price: data.coverage_fee,
-          age: prospect.additionalInfo.partnerAge,
-        });
+        addMember("Pareja", prospect.additionalInfo.partnerAge, "partner");
       }
 
       if (
@@ -138,27 +178,21 @@ export const processPDFData = (
       ) {
         prospect.additionalInfo.children.forEach(
           (child: any, index: number) => {
-            members.push({
-              type: `Hijo/a ${index + 1}`,
-              price: data.coverage_fee,
-              age: child.age,
-            });
+            addMember(`Hijo/a ${index + 1}`, child.age, "children", index);
           }
         );
       }
+    }
 
-      if (
-        prospect.protectWho === "otros" &&
-        prospect.additionalInfo?.protectedPersons
-      ) {
-        prospect.additionalInfo.protectedPersons.forEach((person: any) => {
-          members.push({
-            type: person.relationship || "Otro",
-            price: data.coverage_fee,
-            age: person.age,
-          });
-        });
-      }
+    if (
+      prospect.protectWho === "otros" &&
+      prospect.additionalInfo?.protectedPersons
+    ) {
+      prospect.additionalInfo.protectedPersons.forEach(
+        (person: any, index: number) => {
+          addMember(person.relationship || "Otro", person.age, "others", index);
+        }
+      );
     }
   } else if (data.individualPricesJson) {
     const prices = JSON.parse(data.individualPricesJson);
@@ -226,7 +260,7 @@ export const processPDFData = (
     totalSegundoMesADoce = totalMensual;
   }
 
-  return {
+  console.log("data:", {
     company: data.company,
     plan: data.plan,
     coverageFee: data.coverage_fee,
@@ -243,6 +277,30 @@ export const processPDFData = (
     contractorName: prospect?.prospect?.name || "",
     postalCode: prospect?.prospect?.postalCode || "",
     hasDetailedPricing,
+    individualPricesJson: data.individualPricesJson,
+    totalAnual,
+    totalPrimerMes,
+    totalSegundoMesADoce,
+  });
+
+  // Return para el caso GNP (sin precios detallados)
+  return {
+    company: data.company,
+    plan: data.plan,
+    coverageFee: defaultMonthlyPrice,
+    paymentType: data.paymentType,
+    sumInsured: ensureValidNumber(data.sumInsured),
+    deductible: ensureValidNumber(data.deductible),
+    coInsurance: ensureValidNumber(data.coInsurance),
+    coInsuranceCap: ensureValidNumber(data.coInsuranceCap),
+    members,
+    isMultipleDeductible: data.isMultipleString === "true",
+    deductibles: data.deductiblesJson
+      ? JSON.parse(data.deductiblesJson)
+      : undefined,
+    contractorName: prospect?.prospect?.name || "",
+    postalCode: prospect?.prospect?.postalCode || "",
+    hasDetailedPricing: false,
     individualPricesJson: data.individualPricesJson,
     totalAnual,
     totalPrimerMes,
