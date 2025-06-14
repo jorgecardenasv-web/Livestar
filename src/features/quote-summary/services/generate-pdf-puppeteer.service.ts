@@ -11,6 +11,9 @@ import {
   EMMA_SVG_BASE64,
   LOGO_SVG_BASE64,
   USER_ICON_BASE64,
+  MONEY_ICON_BASE64,
+  CHECK_ICON_BASE64,
+  MEDICAL_ICON_BASE64,
 } from "../constants/assets-base64";
 import {
   GNP_TEMPLATE_HTML,
@@ -162,6 +165,9 @@ export const generatePDFWithPuppeteer = async (
     const emmaLogoBase64 = EMMA_SVG_BASE64;
     const userIconBase64 = USER_ICON_BASE64;
     const cpIconBase64 = CP_ICON_BASE64;
+    const moneyIconBase64 = MONEY_ICON_BASE64;
+    const checkIconBase64 = CHECK_ICON_BASE64;
+    const medicalIconBase64 = MEDICAL_ICON_BASE64;
 
     // Preparar los datos incluyendo las imágenes en base64
     const processedData = {
@@ -171,6 +177,9 @@ export const generatePDFWithPuppeteer = async (
       emmaLogoPath: emmaLogoBase64,
       userIconPath: userIconBase64,
       cpIconPath: cpIconBase64,
+      moneyIconPath: moneyIconBase64,
+      checkIconPath: checkIconBase64,
+      medicalIconPath: medicalIconBase64,
     };
 
     // Seleccionar la plantilla basada en el tipo de precios

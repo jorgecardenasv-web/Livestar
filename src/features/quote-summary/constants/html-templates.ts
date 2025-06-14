@@ -493,7 +493,6 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
             <div class="page-group">
               <section class="content-section">
                 <h2 class="section-title">
-                  <span class="section-icon" aria-hidden="true">👥</span>
                   PERSONAS A PROTEGER
               </h2>
               <div class="border-top layout-60-40">
@@ -528,7 +527,7 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
 
             <section class="content-section">
               <h2 class="section-title">
-                <span class="section-icon" aria-hidden="true">$</span>
+                <img src="{{moneyIconPath}}" alt="Icono Dinero" />
                 RESUMEN DE COSTOS
               </h2>
               <div class="border-top layout-costs">
@@ -577,7 +576,7 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
 
             <section class="content-section">
               <h2 class="section-title">
-                <span class="section-icon" aria-hidden="true">✓</span>
+                <img src="{{checkIconPath}}" alt="Icono Check" />
                 COBERTURAS PRINCIPALES
               </h2>
               <div class="coverage-item border-top">
@@ -590,7 +589,7 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
 
             <section class="content-section">
               <h2 class="section-title">
-                <span class="section-icon" aria-hidden="true">💉</span>
+                <img src="{{medicalIconPath}}" alt="Icono Medico" />
                 DEDUCIBLES Y COASEGUR
               </h2>
               <table class="data-table deductible-table border-top">
@@ -1099,7 +1098,6 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
             <div class="page-group">
               <section class="content-section">
                 <h2 class="section-title">
-                  <span class="section-icon" aria-hidden="true">👥</span>
                   PERSONAS A PROTEGER
               </h2>
               <div class="border-top layout-60-40">
@@ -1134,7 +1132,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
 
             <section class="content-section">
               <h2 class="section-title">
-                <span class="section-icon" aria-hidden="true">$</span>
+                <img src="{{moneyIconPath}}" alt="Icono Dinero" />
                 RESUMEN DE COSTOS
               </h2>
               <div class="border-top layout-costs">
@@ -1195,7 +1193,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
 
             <section class="content-section">
               <h2 class="section-title">
-                <span class="section-icon" aria-hidden="true">✓</span>
+                <img src="{{checkIconPath}}" alt="Icono Check" />
                 COBERTURAS PRINCIPALES
               </h2>
               <div class="coverage-item border-top">
