@@ -90,6 +90,63 @@ const processDeductibles = (data: QuotePDFData): ProcessedDeductible[] => {
   }
 };
 
+// Función para calcular espaciados dinámicos basados en la cantidad de miembros
+const calculateDynamicSpacing = (membersCount: number) => {
+  // Espaciados base para diferentes cantidades de miembros
+  if (membersCount <= 2) {
+    return {
+      mainContentPadding: "40px 0",
+      mainContentMarginTop: "20px",
+      planInfoMarginTop: "20px",
+      planInfoMarginBottom: "20px",
+      sectionMarginBottom: "35px",
+      firstSectionMarginTop: "30px",
+      firstSectionMarginBottom: "40px",
+      secondSectionMarginTop: "30px",
+      secondSectionMarginBottom: "50px",
+      thirdSectionMarginTop: "40px",
+      thirdSectionMarginBottom: "40px",
+      sectionSpacing: 25,
+      mainContentGap: "10px",
+      contentSectionPadding: "10px",
+    };
+  } else if (membersCount <= 4) {
+    return {
+      mainContentPadding: "30px 0",
+      mainContentMarginTop: "15px",
+      planInfoMarginTop: "15px",
+      planInfoMarginBottom: "15px",
+      sectionMarginBottom: "25px",
+      firstSectionMarginTop: "20px",
+      firstSectionMarginBottom: "30px",
+      secondSectionMarginTop: "20px",
+      secondSectionMarginBottom: "35px",
+      thirdSectionMarginTop: "30px",
+      thirdSectionMarginBottom: "30px",
+      sectionSpacing: 20,
+      mainContentGap: "8px",
+      contentSectionPadding: "8px",
+    };
+  } else {
+    return {
+      mainContentPadding: "20px 0",
+      mainContentMarginTop: "10px",
+      planInfoMarginTop: "10px",
+      planInfoMarginBottom: "10px",
+      sectionMarginBottom: "20px",
+      firstSectionMarginTop: "15px",
+      firstSectionMarginBottom: "25px",
+      secondSectionMarginTop: "15px",
+      secondSectionMarginBottom: "25px",
+      thirdSectionMarginTop: "20px",
+      thirdSectionMarginBottom: "25px",
+      sectionSpacing: 15,
+      mainContentGap: "5px",
+      contentSectionPadding: "8px",
+    };
+  }
+};
+
 // Función para generar el template del header
 const generateHeaderTemplate = (
   data: QuotePDFData,
@@ -160,6 +217,10 @@ export const generatePDFWithPuppeteer = async (
     // Procesar los deducibles usando la función existente
     const processedDeductibles = processDeductibles(data);
 
+    // Calcular espaciados dinámicos basados en la cantidad de miembros
+    const membersCount = data.members?.length || 0;
+    const spacing = calculateDynamicSpacing(membersCount);
+
     // Usar las imágenes ya convertidas a base64 desde las constantes
     const logoBase64 = LOGO_SVG_BASE64;
     const emmaLogoBase64 = EMMA_SVG_BASE64;
@@ -169,7 +230,7 @@ export const generatePDFWithPuppeteer = async (
     const checkIconBase64 = CHECK_ICON_BASE64;
     const medicalIconBase64 = MEDICAL_ICON_BASE64;
 
-    // Preparar los datos incluyendo las imágenes en base64
+    // Preparar los datos incluyendo las imágenes en base64 y espaciados dinámicos
     const processedData = {
       ...data,
       processedDeductibles,
@@ -180,6 +241,7 @@ export const generatePDFWithPuppeteer = async (
       moneyIconPath: moneyIconBase64,
       checkIconPath: checkIconBase64,
       medicalIconPath: medicalIconBase64,
+      spacing, // Agregar espaciados dinámicos
     };
 
     // Seleccionar la plantilla basada en el tipo de precios
@@ -275,20 +337,20 @@ export const generatePDFWithPuppeteer = async (
     });
 
     // Optimizaciones específicas para PDF usando el tipo genérico
-    await (page as any).evaluate(() => {
+    await (page as any).evaluate((spacingData: any) => {
       document.body.style.backgroundColor = "#f9f8f9";
       document.body.style.width = "215.9mm";
       document.body.style.minHeight = "279.4mm";
       document.body.style.margin = "0 auto";
       document.body.style.paddingTop = "120px";
 
-      // Función optimizada para ajustes de secciones
+      // Función optimizada para ajustes de secciones con espaciados dinámicos
       const sections = document.querySelectorAll(".content-section");
       const pageHeight = 279.4;
       const marginTop = 30;
       const marginBottom = 30;
       const headerHeight = 30;
-      const sectionSpacing = 25;
+      const sectionSpacing = spacingData.sectionSpacing;
       const effectivePageHeight =
         pageHeight - marginTop - marginBottom - headerHeight;
       let currentPageHeight = 0;
@@ -297,14 +359,15 @@ export const generatePDFWithPuppeteer = async (
         ".main-content"
       ) as HTMLElement;
       if (mainContent) {
-        mainContent.style.padding = "40px 0";
-        mainContent.style.marginTop = "20px";
+        mainContent.style.padding = spacingData.mainContentPadding;
+        mainContent.style.marginTop = spacingData.mainContentMarginTop;
+        mainContent.style.gap = spacingData.mainContentGap;
       }
 
       const planInfo = document.querySelector(".plan-info") as HTMLElement;
       if (planInfo) {
-        planInfo.style.marginTop = "20px";
-        planInfo.style.marginBottom = "20px";
+        planInfo.style.marginTop = spacingData.planInfoMarginTop;
+        planInfo.style.marginBottom = spacingData.planInfoMarginBottom;
       }
 
       sections.forEach((section, index) => {
@@ -312,21 +375,23 @@ export const generatePDFWithPuppeteer = async (
         const rect = element.getBoundingClientRect();
         const sectionHeightMM = rect.height / 3.779528;
 
-        element.style.marginBottom = "30px";
+        // Aplicar padding dinámico a todas las secciones
+        element.style.padding = spacingData.contentSectionPadding;
+        element.style.marginBottom = spacingData.sectionMarginBottom;
 
         if (index === 0) {
-          element.style.marginTop = "30px";
-          element.style.marginBottom = "40px";
+          element.style.marginTop = spacingData.firstSectionMarginTop;
+          element.style.marginBottom = spacingData.firstSectionMarginBottom;
         }
 
         if (index === 1) {
-          element.style.marginTop = "30px";
-          element.style.marginBottom = "50px";
+          element.style.marginTop = spacingData.secondSectionMarginTop;
+          element.style.marginBottom = spacingData.secondSectionMarginBottom;
         }
 
         if (index === 2) {
-          element.style.marginTop = "40px";
-          element.style.marginBottom = "40px";
+          element.style.marginTop = spacingData.thirdSectionMarginTop;
+          element.style.marginBottom = spacingData.thirdSectionMarginBottom;
           element.style.pageBreakInside = "avoid";
         }
 
@@ -343,7 +408,7 @@ export const generatePDFWithPuppeteer = async (
           currentPageHeight += sectionHeightMM + sectionSpacing;
         }
       });
-    });
+    }, spacing);
 
     // Esperar menos tiempo en serverless
     await new Promise((resolve) => setTimeout(resolve, 500));

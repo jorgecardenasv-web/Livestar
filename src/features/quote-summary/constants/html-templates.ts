@@ -106,15 +106,6 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
         height: 80px;
       }
 
-      .plan-info {
-        padding: 20px 30px;
-        margin: 10px auto;
-        width: 100%;
-        max-width: 900px;
-        page-break-after: avoid;
-        break-after: avoid;
-      }
-
       .plan-details {
         color: var(--secondary-blue);
         font-size: 20px;
@@ -137,15 +128,17 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 10px;
+        gap: {{spacing.mainContentGap}};
+        padding: {{spacing.mainContentPadding}};
+        margin-top: {{spacing.mainContentMarginTop}};
       }
 
       .content-section {
-        padding: 10px;
+        padding: {{spacing.contentSectionPadding}};
         border-radius: var(--border-radius);
         width: 100%;
         max-width: 900px;
-        margin-bottom: 35px;
+        margin-bottom: {{spacing.sectionMarginBottom}};
       }
 
       /* Secciones específicas que no deben romperse */
@@ -153,13 +146,24 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
       .content-section:nth-child(2) {
         page-break-inside: avoid;
         break-inside: avoid;
-        margin-bottom: 20px;
+        margin-bottom: {{spacing.firstSectionMarginBottom}};
       }
 
       /* Ajuste para la sección de coberturas principales */
       .content-section:nth-child(3) {
-        margin-top: 40px;
-        margin-bottom: 40px;
+        margin-top: {{spacing.thirdSectionMarginTop}};
+        margin-bottom: {{spacing.thirdSectionMarginBottom}};
+      }
+
+      .plan-info {
+        padding: 20px 30px;
+        margin: 10px auto;
+        width: 100%;
+        max-width: 900px;
+        margin-top: {{spacing.planInfoMarginTop}};
+        margin-bottom: {{spacing.planInfoMarginBottom}};
+        page-break-after: avoid;
+        break-after: avoid;
       }
 
       .section-title {
@@ -733,6 +737,8 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         margin: 10px auto;
         width: 100%;
         max-width: 900px;
+        margin-top: {{spacing.planInfoMarginTop}};
+        margin-bottom: {{spacing.planInfoMarginBottom}};
         page-break-after: avoid;
         break-after: avoid;
       }
@@ -759,15 +765,17 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 5px;
+        gap: {{spacing.mainContentGap}};
+        padding: {{spacing.mainContentPadding}};
+        margin-top: {{spacing.mainContentMarginTop}};
       }
 
       .content-section {
-        padding: 8px;
+        padding: {{spacing.contentSectionPadding}};
         border-radius: var(--border-radius);
         width: 100%;
         max-width: 900px;
-        margin-bottom: 15px;
+        margin-bottom: {{spacing.sectionMarginBottom}};
       }
 
       /* Secciones específicas que no deben romperse */
@@ -775,13 +783,13 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
       .content-section:nth-child(2) {
         page-break-inside: avoid;
         break-inside: avoid;
-        margin-bottom: 10px;
+        margin-bottom: {{spacing.firstSectionMarginBottom}};
       }
 
       /* Ajuste para la sección de coberturas principales */
       .content-section:nth-child(3) {
-        margin-top: 10px;
-        margin-bottom: 15px;
+        margin-top: {{spacing.thirdSectionMarginTop}};
+        margin-bottom: {{spacing.thirdSectionMarginBottom}};
       }
 
       .section-title {
