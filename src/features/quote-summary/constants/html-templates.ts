@@ -1,6 +1,6 @@
 /**
- * HTML Templates for Quote Summary
- * Converted from original HTML template files to TypeScript constants
+ * HTML Templates for Quote Summary - Optimized Version with Coberturas Fix
+ * Unified spacing system that works consistently across both templates
  */
 
 export const GNP_TEMPLATE_HTML = `<!doctype html>
@@ -51,6 +51,9 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
         display: flex;
         align-items: center;
         justify-content: center;
+        /* AGREGADO: Mejorar el manejo de páginas */
+        page-break-before: auto;
+        page-break-after: auto;
       }
 
       /* Contenedor principal y utilidades */
@@ -59,15 +62,6 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
         border-radius: var(--border-radius);
         width: 100%;
         position: relative;
-      }
-
-      /* Grupos de página para controlar el flujo */
-      .page-group {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        page-break-inside: avoid;
-        break-inside: avoid;
       }
 
       .quote-container {
@@ -80,30 +74,68 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
         border-top: 3px solid var(--primary-blue);
       }
 
-      /* Estilos del encabezado */
-      .main-header {
-        background: var(--primary-blue);
-        color: var(--white);
-        padding: 30px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-        page-break-after: avoid;
-        break-after: avoid;
-      }
-
-      .company-logos {
+      /* Contenido principal y secciones - Sin espaciados hardcodeados */
+      .main-content {
+        background: var(--background-gray);
         display: flex;
         flex-direction: column;
-        align-items: flex-end;
-        gap: 15px;
+        align-items: center;
+        /* AGREGADO: Espaciado mejorado para evitar solapamiento con header */
+        padding-top: 20px;
+        padding-bottom: 80px !important; /* Espacio extra al final */
+        min-height: calc(100vh - 200px) !important;
+        /* Los espaciados se aplicarán vía JavaScript */
       }
 
-      .livestar-logo {
-        width: auto;
-        height: 80px;
+      .content-section {
+        border-radius: var(--border-radius);
+        width: 100%;
+        max-width: 900px;
+        display: block !important;
+        position: relative !important;
+        overflow: visible !important;
+        /* Los márgenes y padding se aplicarán vía JavaScript */
+      }
+
+      /* Estilos específicos para la sección de coberturas principales */
+      .content-section:last-child {
+        /* Forzar visibilidad de la última sección */
+        position: relative !important;
+        z-index: 10 !important;
+        background-color: var(--white) !important;
+        border: 1px solid var(--border-gray) !important;
+        border-radius: var(--border-radius) !important;
+        box-shadow: var(--shadow) !important;
+        
+        /* Espaciado garantizado */
+        margin-bottom: 50px !important;
+        min-height: 120px !important;
+        
+        /* Evitar que se corte */
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        page-break-before: auto !important;
+        break-before: auto !important;
+        
+        /* Asegurar que no se oculte */
+        overflow: visible !important;
+        display: block !important;
+      }
+
+      /* Asegurar espaciado apropiado entre secciones */
+      .content-section + .content-section {
+        margin-top: 25px !important;
+      }
+
+      .plan-info {
+        padding: 20px 30px;
+        width: 100%;
+        max-width: 900px;
+        /* Los márgenes se aplicarán vía JavaScript */
+        page-break-after: avoid;
+        break-after: avoid;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
       }
 
       .plan-details {
@@ -122,50 +154,6 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
         font-size: 30px;
       }
 
-      /* Contenido principal y secciones */
-      .main-content {
-        background: var(--background-gray);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: {{spacing.mainContentGap}};
-        padding: {{spacing.mainContentPadding}};
-        margin-top: {{spacing.mainContentMarginTop}};
-      }
-
-      .content-section {
-        padding: {{spacing.contentSectionPadding}};
-        border-radius: var(--border-radius);
-        width: 100%;
-        max-width: 900px;
-        margin-bottom: {{spacing.sectionMarginBottom}};
-      }
-
-      /* Secciones específicas que no deben romperse */
-      .content-section:first-child,
-      .content-section:nth-child(2) {
-        page-break-inside: avoid;
-        break-inside: avoid;
-        margin-bottom: {{spacing.firstSectionMarginBottom}};
-      }
-
-      /* Ajuste para la sección de coberturas principales */
-      .content-section:nth-child(3) {
-        margin-top: {{spacing.thirdSectionMarginTop}};
-        margin-bottom: {{spacing.thirdSectionMarginBottom}};
-      }
-
-      .plan-info {
-        padding: 20px 30px;
-        margin: 10px auto;
-        width: 100%;
-        max-width: 900px;
-        margin-top: {{spacing.planInfoMarginTop}};
-        margin-bottom: {{spacing.planInfoMarginBottom}};
-        page-break-after: avoid;
-        break-after: avoid;
-      }
-
       .section-title {
         background: var(--primary-blue);
         color: var(--white);
@@ -177,6 +165,23 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
         align-items: center;
         gap: 10px;
         width: fit-content;
+      }
+
+      /* Mejorar el título de la sección de coberturas */
+      .content-section:last-child .section-title {
+        background: var(--primary-blue) !important;
+        color: var(--white) !important;
+        padding: 12px 20px !important;
+        border-radius: 13px 13px 0 0 !important;
+        font-size: 18px !important;
+        font-weight: bold !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        width: 100% !important;
+        margin: 0 !important;
+        z-index: 20 !important;
+        position: relative !important;
       }
 
       .section-icon {
@@ -192,14 +197,15 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
         font-weight: bold;
       }
 
-      /* Estilos de diseño y layouts */
+      /* Layouts responsivos */
       .layout-60-40 {
         display: flex;
         background-color: white;
-        height: 100%;
-        display: flex;
-        justify-content: space-center;
-        align-items: center;
+        min-height: 200px;
+        align-items: stretch;
+        /* AGREGADO: Evitar saltos en layouts */
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
       }
 
       .layout-60-40 > *:first-child {
@@ -215,6 +221,11 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
         background-color: white;
         width: 100%;
         gap: 20px;
+        min-height: 250px;
+        align-items: stretch;
+        /* AGREGADO: Evitar saltos en layouts */
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
       }
 
       .layout-costs > *:first-child {
@@ -231,10 +242,9 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
       .contractor-details {
         display: flex;
         flex-direction: column;
-        gap: 40px;
+        gap: 30px;
         padding: 20px;
         justify-content: center;
-        height: 100%;
         background-color: var(--white);
       }
 
@@ -250,19 +260,6 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
         height: auto;
       }
 
-      .detail-icon {
-        width: 40px;
-        height: 40px;
-        background: var(--secondary-blue);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--white);
-        font-size: 18px;
-        flex-shrink: 0;
-      }
-
       .detail-label {
         font-weight: bold;
         color: var(--secondary-blue);
@@ -275,6 +272,9 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
         background-color: var(--white);
         border: 1px solid var(--border-gray);
         table-layout: fixed;
+        /* AGREGADO: Control de salto de página */
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
       }
 
       .protected-persons-table {
@@ -284,14 +284,15 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
         border: 1px solid var(--border-gray);
       }
 
-      .data-table thead,
-      .data-table tbody {
-        width: 100%;
-      }
-
       .data-table th,
       .data-table td {
-        padding: 12px;
+        /* El padding se aplicará vía JavaScript */
+        border-right: 1px solid var(--border-gray);
+      }
+
+      .data-table th:last-child,
+      .data-table td:last-child {
+        border-right: none;
       }
 
       .data-table th:first-child,
@@ -305,15 +306,9 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
         text-align: center;
       }
 
-      .data-table-th {
-        text-align: center;
-      }
-
-      /* Estilos de celdas y encabezados de tabla */
       .data-table th {
         background: var(--white);
         color: var(--text-dark);
-        padding: 5px 12px;
         text-align: left;
         font-size: 16px;
         font-weight: bold;
@@ -322,17 +317,12 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
         word-wrap: break-word;
       }
 
+      .data-table th.data-table-th {
+        text-align: center;
+      }
+
       .data-table td {
-        padding: 12px;
         color: var(--text-dark);
-      }
-
-      .data-table td:not(:last-child),
-      .data-table th:not(:last-child) {
-        border-right: 1px solid var(--border-gray);
-      }
-
-      .data-table tr:not(:last-child) td:first-child {
         border-bottom: 1px solid var(--border-gray);
       }
 
@@ -363,15 +353,15 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
         text-align: center;
       }
 
+      /* Resumen de costos */
       .cost-summary {
         padding: 10px;
         border-radius: var(--border-radius-small);
-        margin-top: 15px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        height: 100%;
+        background-color: var(--white);
       }
 
       .summary-box {
@@ -389,40 +379,76 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
 
       .summary-amount {
         font-size: 24px;
+        font-weight: bold;
+        color: var(--text-dark);
         text-decoration: underline;
       }
 
-      /* Estilos de coberturas */
+      /* Estilos de coberturas - CORREGIDOS */
       .coverage-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 12px;
-        border-bottom: 1px solid var(--border-gray);
-        background-color: var(--white);
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 20px !important;
+        border-bottom: 1px solid var(--border-gray) !important;
+        background-color: var(--white) !important;
+        min-height: 60px !important;
+        
+        /* Evitar saltos problemáticos */
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        
+        /* Asegurar visibilidad */
+        position: relative !important;
+        z-index: 15 !important;
+        overflow: visible !important;
+        /* El padding se aplicará vía JavaScript */
+      }
+
+      .coverage-item:last-child {
+        border-bottom: none !important;
+        border-radius: 0 0 13px 13px !important;
+        margin-bottom: 0 !important;
+      }
+
+      .coverage-item:first-child {
+        border-top: none !important;
       }
 
       .coverage-name {
-        color: var(--secondary-blue);
-        font-weight: 500;
-        font-size: 16px;
+        color: var(--secondary-blue) !important;
+        font-weight: 500 !important;
+        font-size: 16px !important;
+        flex: 1 !important;
+        text-align: left !important;
       }
 
       .coverage-amount {
-        color: var(--secondary-blue);
-        font-weight: bold;
-        font-size: 18px;
+        color: var(--secondary-blue) !important;
+        font-weight: bold !important;
+        font-size: 18px !important;
+        text-align: right !important;
+        white-space: nowrap !important;
       }
 
+      /* Mejorar el div con border-top dentro de coberturas */
+      .content-section:last-child .border-top {
+        border-top: 3px solid var(--primary-blue) !important;
+        background-color: var(--white) !important;
+        border-radius: 0 0 13px 13px !important;
+        overflow: visible !important;
+        min-height: 80px !important;
+        display: block !important;
+      }
+
+      /* Tabla de deducibles */
       .deductible-table th {
         text-align: center;
         font-size: 16px;
-        padding: 12px 8px;
       }
 
       .deductible-table td {
         text-align: center;
-        padding: 12px 8px;
         font-weight: 500;
       }
 
@@ -436,47 +462,47 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
         font-weight: bold;
       }
 
-      @media (prefers-reduced-motion: reduce) {
-        * {
-          animation-duration: 0.01ms !important;
-          animation-iteration-count: 1 !important;
-          transition-duration: 0.01ms !important;
-        }
+      /* Prevención de saltos de página inadecuados */
+      .page-group {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        /* Evitar huérfanos y viudas */
+        orphans: 3;
+        widows: 3;
       }
 
-      button:focus,
-      a:focus,
-      input:focus,
-      select:focus,
-      textarea:focus {
-        outline: 2px solid var(--accent-cyan);
-        outline-offset: 2px;
-      }
-
-      /* Estilos responsive */
-      @media (max-width: 768px) {
-        .main-header {
-          text-align: center;
-        }
-
-        .company-logos {
-          align-items: center;
-        }
-      }
-
+      /* Prevención adicional de problemas de impresión */
       @media print {
         body {
           background: var(--white);
           padding: 0;
+          /* AGREGADO: Asegurar que el body tenga altura suficiente */
+          min-height: 11in !important; /* Altura completa de página carta */
+          padding-bottom: 1in !important;
         }
 
         .quote-container {
           box-shadow: none;
           max-width: none;
         }
-
-        .main-header {
-          background: var(--primary-blue) !important;
+        
+        .content-section:last-child {
+          /* Forzar que aparezca en impresión */
+          display: block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          position: relative !important;
+          
+          /* Asegurar espacio */
+          margin-bottom: 50px !important;
+          padding-bottom: 30px !important;
+        }
+        
+        .coverage-item {
+          /* Asegurar visibilidad en impresión */
+          display: flex !important;
+          visibility: visible !important;
+          opacity: 1 !important;
         }
       }
     </style>
@@ -493,11 +519,10 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
           </section>
 
           <div class="main-content">
-            <!-- Grupo 1: Información principal -->
-            <div class="page-group">
-              <section class="content-section">
-                <h2 class="section-title">
-                  PERSONAS A PROTEGER
+            <!-- Información de personas a proteger -->
+            <section class="content-section page-group">
+              <h2 class="section-title">
+                PERSONAS A PROTEGER
               </h2>
               <div class="border-top layout-60-40">
                 <div class="contractor-details">
@@ -529,7 +554,8 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
               </div>
             </section>
 
-            <section class="content-section">
+            <!-- Resumen de costos -->
+            <section class="content-section page-group">
               <h2 class="section-title">
                 <img src="{{moneyIconPath}}" alt="Icono Dinero" />
                 RESUMEN DE COSTOS
@@ -578,23 +604,23 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
               </div>
             </section>
 
-            <section class="content-section">
+            <!-- Coberturas principales -->
+            <section class="content-section page-group">
               <h2 class="section-title">
                 <img src="{{checkIconPath}}" alt="Icono Check" />
                 COBERTURAS PRINCIPALES
               </h2>
               <div class="coverage-item border-top">
                 <span class="coverage-name">Suma Asegurada</span>
-                <span class="coverage-amount"
-                  >{{formatCurrency sumInsured}}</span
-                >
+                <span class="coverage-amount">{{formatCurrency sumInsured}}</span>
               </div>
             </section>
 
-            <section class="content-section">
+            <!-- Deducibles y coaseguros -->
+            <section class="content-section page-group">
               <h2 class="section-title">
                 <img src="{{medicalIconPath}}" alt="Icono Medico" />
-                DEDUCIBLES Y COASEGUR
+                DEDUCIBLES Y COASEGUROS
               </h2>
               <table class="data-table deductible-table border-top">
                 <thead>
@@ -672,6 +698,9 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         display: flex;
         align-items: center;
         justify-content: center;
+        /* AGREGADO: Mejorar el manejo de páginas */
+        page-break-before: auto;
+        page-break-after: auto;
       }
 
       /* Contenedor principal y utilidades */
@@ -680,15 +709,6 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         border-radius: var(--border-radius);
         width: 100%;
         position: relative;
-      }
-
-      /* Grupos de página para controlar el flujo */
-      .page-group {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        page-break-inside: avoid;
-        break-inside: avoid;
       }
 
       .quote-container {
@@ -706,41 +726,68 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         border-top: 3px solid var(--primary-blue);
       }
 
-      /* Estilos del encabezado */
-      .main-header {
-        background: var(--primary-blue);
-        color: var(--white);
-        padding: 30px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-        page-break-after: avoid;
-        break-after: avoid;
-      }
-
-      .company-logos {
+      /* Contenido principal y secciones - Sin espaciados hardcodeados */
+      .main-content {
+        background: var(--background-gray);
         display: flex;
         flex-direction: column;
-        align-items: flex-end;
-        gap: 15px;
+        align-items: center;
+        /* AGREGADO: Espaciado mejorado para evitar solapamiento con header */
+        padding-top: 20px;
+        padding-bottom: 80px !important; /* Espacio extra al final */
+        min-height: calc(100vh - 200px) !important;
+        /* Los espaciados se aplicarán vía JavaScript */
       }
 
-      .livestar-logo {
-        width: auto;
-        height: 80px;
+      .content-section {
+        border-radius: var(--border-radius);
+        width: 100%;
+        max-width: 900px;
+        display: block !important;
+        position: relative !important;
+        overflow: visible !important;
+        /* Los márgenes y padding se aplicarán vía JavaScript */
+      }
+
+      /* Estilos específicos para la sección de coberturas principales */
+      .content-section:last-child {
+        /* Forzar visibilidad de la última sección */
+        position: relative !important;
+        z-index: 10 !important;
+        background-color: var(--white) !important;
+        border: 1px solid var(--border-gray) !important;
+        border-radius: var(--border-radius) !important;
+        box-shadow: var(--shadow) !important;
+        
+        /* Espaciado garantizado */
+        margin-bottom: 50px !important;
+        min-height: 120px !important;
+        
+        /* Evitar que se corte */
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        page-break-before: auto !important;
+        break-before: auto !important;
+        
+        /* Asegurar que no se oculte */
+        overflow: visible !important;
+        display: block !important;
+      }
+
+      /* Asegurar espaciado apropiado entre secciones */
+      .content-section + .content-section {
+        margin-top: 25px !important;
       }
 
       .plan-info {
         padding: 20px 30px;
-        margin: 10px auto;
         width: 100%;
         max-width: 900px;
-        margin-top: {{spacing.planInfoMarginTop}};
-        margin-bottom: {{spacing.planInfoMarginBottom}};
+        /* Los márgenes se aplicarán vía JavaScript */
         page-break-after: avoid;
         break-after: avoid;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
       }
 
       .plan-details {
@@ -759,39 +806,6 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         font-size: 30px;
       }
 
-      /* Contenido principal y secciones */
-      .main-content {
-        background: var(--background-gray);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: {{spacing.mainContentGap}};
-        padding: {{spacing.mainContentPadding}};
-        margin-top: {{spacing.mainContentMarginTop}};
-      }
-
-      .content-section {
-        padding: {{spacing.contentSectionPadding}};
-        border-radius: var(--border-radius);
-        width: 100%;
-        max-width: 900px;
-        margin-bottom: {{spacing.sectionMarginBottom}};
-      }
-
-      /* Secciones específicas que no deben romperse */
-      .content-section:first-child,
-      .content-section:nth-child(2) {
-        page-break-inside: avoid;
-        break-inside: avoid;
-        margin-bottom: {{spacing.firstSectionMarginBottom}};
-      }
-
-      /* Ajuste para la sección de coberturas principales */
-      .content-section:nth-child(3) {
-        margin-top: {{spacing.thirdSectionMarginTop}};
-        margin-bottom: {{spacing.thirdSectionMarginBottom}};
-      }
-
       .section-title {
         background: var(--primary-blue);
         color: var(--white);
@@ -803,6 +817,23 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         align-items: center;
         gap: 10px;
         width: fit-content;
+      }
+
+      /* Mejorar el título de la sección de coberturas */
+      .content-section:last-child .section-title {
+        background: var(--primary-blue) !important;
+        color: var(--white) !important;
+        padding: 12px 20px !important;
+        border-radius: 13px 13px 0 0 !important;
+        font-size: 18px !important;
+        font-weight: bold !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        width: 100% !important;
+        margin: 0 !important;
+        z-index: 20 !important;
+        position: relative !important;
       }
 
       .section-icon {
@@ -818,14 +849,15 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         font-weight: bold;
       }
 
-      /* Estilos de diseño y layouts */
+      /* Layouts responsivos */
       .layout-60-40 {
         display: flex;
         background-color: white;
-        height: 100%;
-        display: flex;
-        justify-content: space-center;
-        align-items: center;
+        min-height: 200px;
+        align-items: stretch;
+        /* AGREGADO: Evitar saltos en layouts */
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
       }
 
       .layout-60-40 > *:first-child {
@@ -841,6 +873,11 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         background-color: white;
         width: 100%;
         gap: 20px;
+        min-height: 300px;
+        align-items: stretch;
+        /* AGREGADO: Evitar saltos en layouts */
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
       }
 
       .layout-costs > *:first-child {
@@ -857,10 +894,9 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
       .contractor-details {
         display: flex;
         flex-direction: column;
-        gap: 40px;
+        gap: 30px;
         padding: 20px;
         justify-content: center;
-        height: 100%;
         background-color: var(--white);
       }
 
@@ -876,31 +912,21 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         height: auto;
       }
 
-      .detail-icon {
-        width: 40px;
-        height: 40px;
-        background: var(--secondary-blue);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--white);
-        font-size: 18px;
-        flex-shrink: 0;
-      }
-
       .detail-label {
         font-weight: bold;
         color: var(--secondary-blue);
       }
 
-      /* Estilos de tablas */
+      /* Estilos de tablas - HDI tiene 4 columnas */
       .data-table {
         width: 100%;
         border-collapse: collapse;
         background-color: var(--white);
         border: 1px solid var(--border-gray);
         table-layout: fixed;
+        /* AGREGADO: Control de salto de página */
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
       }
 
       .protected-persons-table {
@@ -910,16 +936,18 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         border: 1px solid var(--border-gray);
       }
 
-      .data-table thead,
-      .data-table tbody {
-        width: 100%;
-      }
-
       .data-table th,
       .data-table td {
-        padding: 8px;
+        /* El padding se aplicará vía JavaScript */
+        border-right: 1px solid var(--border-gray);
       }
 
+      .data-table th:last-child,
+      .data-table td:last-child {
+        border-right: none;
+      }
+
+      /* Para HDI - 4 columnas */
       .data-table th:first-child,
       .data-table td:first-child {
         width: 35%;
@@ -931,35 +959,24 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         text-align: center;
       }
 
-      .data-table-th {
-        text-align: center;
-        font-size: 14px;
-      }
-
-      /* Estilos de celdas y encabezados de tabla */
       .data-table th {
         background: var(--white);
         color: var(--text-dark);
-        padding: 5px 12px;
         text-align: left;
-        font-size: 16px;
+        font-size: 14px; /* Más pequeño para HDI */
         font-weight: bold;
         border-bottom: 1px solid var(--border-gray);
         white-space: normal;
         word-wrap: break-word;
       }
 
+      .data-table th.data-table-th {
+        text-align: center;
+        font-size: 12px; /* Aún más pequeño para los headers largos */
+      }
+
       .data-table td {
-        padding: 12px;
         color: var(--text-dark);
-      }
-
-      .data-table td:not(:last-child),
-      .data-table th:not(:last-child) {
-        border-right: 1px solid var(--border-gray);
-      }
-
-      .data-table tr:not(:last-child) td:first-child {
         border-bottom: 1px solid var(--border-gray);
       }
 
@@ -990,102 +1007,136 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         text-align: center;
       }
 
+      /* Resumen de costos - HDI tiene 3 totales */
       .cost-summary {
-        padding: 3px;
+        padding: 8px;
         border-radius: var(--border-radius-small);
-        margin-top: 5px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        height: 100%;
+        background-color: var(--white);
       }
 
       .summary-box {
         text-align: center;
-        padding: 5px;
-        margin-bottom: 3px;
+        padding: 8px;
+        margin-bottom: 6px;
       }
 
       .summary-label {
         color: var(--secondary-blue);
         font-weight: 600;
         font-size: 12px;
-        margin-bottom: 2px;
+        margin-bottom: 4px;
       }
 
       .summary-amount {
-        font-size: 20px;
+        font-size: 18px; /* Más pequeño para HDI */
+        font-weight: bold;
+        color: var(--text-dark);
         text-decoration: underline;
       }
 
-      /* Estilos de coberturas */
+      /* Estilos de coberturas - CORREGIDOS */
       .coverage-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 12px;
-        border-bottom: 1px solid var(--border-gray);
-        background-color: var(--white);
-        height: auto;
-        min-height: 0;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        padding: 20px !important;
+        border-bottom: 1px solid var(--border-gray) !important;
+        background-color: var(--white) !important;
+        min-height: 60px !important;
+        
+        /* Evitar saltos problemáticos */
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        
+        /* Asegurar visibilidad */
+        position: relative !important;
+        z-index: 15 !important;
+        overflow: visible !important;
+        /* El padding se aplicará vía JavaScript */
+      }
+
+      .coverage-item:last-child {
+        border-bottom: none !important;
+        border-radius: 0 0 13px 13px !important;
+        margin-bottom: 0 !important;
+      }
+
+      .coverage-item:first-child {
+        border-top: none !important;
       }
 
       .coverage-name {
-        color: var(--secondary-blue);
-        font-weight: 500;
-        font-size: 14px;
+        color: var(--secondary-blue) !important;
+        font-weight: 500 !important;
+        font-size: 16px !important;
+        flex: 1 !important;
+        text-align: left !important;
         white-space: nowrap;
       }
 
       .coverage-amount {
-        color: var(--secondary-blue);
-        font-weight: bold;
-        font-size: 16px;
-        white-space: nowrap;
+        color: var(--secondary-blue) !important;
+        font-weight: bold !important;
+        font-size: 18px !important;
+        text-align: right !important;
+        white-space: nowrap !important;
       }
 
-      @media (prefers-reduced-motion: reduce) {
-        * {
-          animation-duration: 0.01ms !important;
-          animation-iteration-count: 1 !important;
-          transition-duration: 0.01ms !important;
-        }
+      /* Mejorar el div con border-top dentro de coberturas */
+      .content-section:last-child .border-top {
+        border-top: 3px solid var(--primary-blue) !important;
+        background-color: var(--white) !important;
+        border-radius: 0 0 13px 13px !important;
+        overflow: visible !important;
+        min-height: 80px !important;
+        display: block !important;
       }
 
-      button:focus,
-      a:focus,
-      input:focus,
-      select:focus,
-      textarea:focus {
-        outline: 2px solid var(--accent-cyan);
-        outline-offset: 2px;
+      /* Prevención de saltos de página inadecuados */
+      .page-group {
+        page-break-inside: avoid;
+        break-inside: avoid;
+        /* Evitar huérfanos y viudas */
+        orphans: 3;
+        widows: 3;
       }
 
-      /* Estilos responsive */
-      @media (max-width: 768px) {
-        .main-header {
-          text-align: center;
-        }
-
-        .company-logos {
-          align-items: center;
-        }
-      }
-
+      /* Prevención adicional de problemas de impresión */
       @media print {
         body {
           background: var(--white);
           padding: 0;
+          /* AGREGADO: Asegurar que el body tenga altura suficiente */
+          min-height: 11in !important; /* Altura completa de página carta */
+          padding-bottom: 1in !important;
         }
 
         .quote-container {
           box-shadow: none;
           max-width: none;
         }
-
-        .main-header {
-          background: var(--primary-blue) !important;
+        
+        .content-section:last-child {
+          /* Forzar que aparezca en impresión */
+          display: block !important;
+          visibility: visible !important;
+          opacity: 1 !important;
+          position: relative !important;
+          
+          /* Asegurar espacio */
+          margin-bottom: 50px !important;
+          padding-bottom: 30px !important;
+        }
+        
+        .coverage-item {
+          /* Asegurar visibilidad en impresión */
+          display: flex !important;
+          visibility: visible !important;
+          opacity: 1 !important;
         }
       }
     </style>
@@ -1102,11 +1153,10 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
           </section>
 
           <div class="main-content">
-            <!-- Grupo 1: Información principal -->
-            <div class="page-group">
-              <section class="content-section">
-                <h2 class="section-title">
-                  PERSONAS A PROTEGER
+            <!-- Información de personas a proteger -->
+            <section class="content-section page-group">
+              <h2 class="section-title">
+                PERSONAS A PROTEGER
               </h2>
               <div class="border-top layout-60-40">
                 <div class="contractor-details">
@@ -1138,7 +1188,8 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
               </div>
             </section>
 
-            <section class="content-section">
+            <!-- Resumen de costos HDI con 4 columnas -->
+            <section class="content-section page-group">
               <h2 class="section-title">
                 <img src="{{moneyIconPath}}" alt="Icono Dinero" />
                 RESUMEN DE COSTOS
@@ -1199,16 +1250,15 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
               </div>
             </section>
 
-            <section class="content-section">
+            <!-- Coberturas principales -->
+            <section class="content-section page-group">
               <h2 class="section-title">
                 <img src="{{checkIconPath}}" alt="Icono Check" />
                 COBERTURAS PRINCIPALES
               </h2>
               <div class="coverage-item border-top">
                 <span class="coverage-name">Suma Asegurada</span>
-                <span class="coverage-amount"
-                  >{{formatCurrency sumInsured}}</span
-                >
+                <span class="coverage-amount">{{formatCurrency sumInsured}}</span>
               </div>
             </section>
           </div>
@@ -1218,7 +1268,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
   </body>
 </html>`;
 
-// Type definitions for template variables based on the actual templates
+// Type definitions for template variables
 export interface GNPTemplateVariables {
   plan: string;
   company: string;
@@ -1265,6 +1315,5 @@ export interface HDITemplateVariables {
   sumInsured: number;
 }
 
-// Template type definitions
 export type HTMLTemplate = typeof GNP_TEMPLATE_HTML | typeof HDI_TEMPLATE_HTML;
 export type TemplateVariables = GNPTemplateVariables | HDITemplateVariables;
