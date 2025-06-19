@@ -153,6 +153,7 @@ const generateHeaderTemplate = (
       left: 0;
       right: 0;
       z-index: 1000;
+      margin-bottom: 140px;
     ">
       <div style="
         display: flex;
