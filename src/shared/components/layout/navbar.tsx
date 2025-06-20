@@ -10,11 +10,10 @@ import { usePathname } from "next/navigation";
 
 export const Navbar = () => {
   const pathname = usePathname();
-
   const isQuoteRoute = pathname?.startsWith('/cotizar') || pathname === '/finalizar-cotizacion';
 
   return (
-    <nav className="text-white pt-5 md:pt-8 container">
+    <nav className="text-white md:pt-8 container">
       <div className="flex justify-between items-center h-20">
         {/* Logo */}
         <Link href="/" className="flex-shrink-0">
@@ -23,21 +22,21 @@ export const Navbar = () => {
             alt="Logo Principal"
             width={200}
             height={58}
-            className="w-[160px] sm:w-[180px] lg:w-[200px] 2xl:w-[238px]"
+            className="w-[160px] sm:w-[180px] lg:w-[180px] 2xl:w-[238px]"
             priority
           />
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-4 lg:gap-6 xl:gap-8">
-          <div className="flex items-center gap-4">
+        <div className="hidden lg:flex items-center gap-3 lg:gap-4 xl:gap-8">
+          <div className="flex items-center gap-2 lg:gap-3 xl:gap-4">
             {
               isQuoteRoute &&
               <NewQuoteButton />
             }
 
             <div className="relative group">
-              <button className="flex items-center gap-1 px-4 lg:px-6 py-2 bg-white text-[#223E99] rounded-md hover:bg-opacity-90 transition-colors font-medium text-sm lg:text-base">
+              <button className="flex items-center gap-1 px-3 lg:px-4 xl:px-6 py-2 bg-white text-[#223E99] rounded-md hover:bg-opacity-90 transition-colors font-medium text-sm lg:text-base">
                 <span>Cotizadores</span>
                 <ChevronDown className="w-4 h-4" />
               </button>
@@ -92,14 +91,14 @@ export const Navbar = () => {
           </div>
 
           {/* Navigation Links */}
-          <div className="flex items-center gap-4 lg:gap-6 xl:gap-8 text-sm lg:text-base">
-            <Link href="https://livestar.mx/nosotros/" className="text-white hover:text-gray-200 transition-colors font-medium">
+          <div className="flex items-center gap-3 lg:gap-4 xl:gap-8 text-sm lg:text-base">
+            <Link href="https://livestar.mx/nosotros/" className="text-white hover:text-gray-200 transition-colors font-medium whitespace-nowrap">
               Nosotros
             </Link>
-            <Link href="https://livestar.mx/contacto/" className="text-white hover:text-gray-200 transition-colors font-medium">
+            <Link href="https://livestar.mx/contacto/" className="text-white hover:text-gray-200 transition-colors font-medium whitespace-nowrap">
               Contacto
             </Link>
-            <Link href="https://livestar.mx/en-confianza/" className="text-white hover:text-gray-200 transition-colors font-medium">
+            <Link href="https://livestar.mx/en-confianza/" className="text-white hover:text-gray-200 transition-colors font-medium whitespace-nowrap">
               En confianza
             </Link>
           </div>
