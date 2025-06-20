@@ -14,7 +14,7 @@ export function InsuranceFlow() {
   const progress = ((step + 1) / steps.length) * 100;
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] w-full max-w-7xl mx-auto flex flex-col px-4 sm:px-6 md:px-8 py-6 sm:py-8 lg:border mb-10 rounded-lg">
+    <div className="min-h-[calc(100vh-4rem)] w-full max-w-7xl mx-auto flex flex-col px-4 sm:px-6 md:px-8 py-6 sm:py-8">
       {/* Progress Bar */}
       <div className="w-[90%] sm:w-3/4 md:w-2/3 mx-auto bg-gray-100 h-1.5 sm:h-2 rounded-full mb-6 sm:mb-8">
         <motion.div
