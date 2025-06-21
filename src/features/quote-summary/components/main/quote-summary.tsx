@@ -165,185 +165,177 @@ export const QuoteSummary: FC<
   //! -------------------------------------------------------------------
 
   return (
-    <div
-      id="quote-summary"
-      className="max-w-4xl mx-auto p-3 sm:p-6 rounded-3xl lg:shadow-lg lg:border my-4 sm:m-8"
-    >
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-2 space-y-4 sm:space-y-0">
-        <div className="flex items-center space-x-3 sm:space-x-4">
-          <form id="pdfIngnore" action={deleteSelectedPlan}>
-            <button className="text-tremor-content-emphasis">
-              <ArrowLeft strokeWidth={3} size={26} className="sm:w-8 sm:h-8" />
-            </button>
-          </form>
-          <h2 className="text-lg sm:text-2xl font-bold text-tremor-content-emphasis">
-            Resumen de cotización
-          </h2>
-        </div>
-        <Image
-          src={imgCompanyLogo}
-          width={80}
-          height={60}
-          className="h-10 sm:h-12 w-auto object-contain"
-          alt={`Logo de ${company}`}
-        />
-      </div>
-
-      <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm mb-4">
-        <div className="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
-          <div className="text-center sm:text-left">
-            {!isMultipleCoIns && individualPricesJson && paymentType === "Mensual" ? (
-              <div className="space-y-1">
-                <div>
-                  <p className="text-xs sm:text-sm text-sky-600 font-semibold uppercase">
-                    Primer mes
-                  </p>
-                  <p className="text-3xl sm:text-4xl font-bold text-[#223E99]">
-                    {formatCurrency(getIndividualPrices(individualPricesJson).firstMonth)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-xs sm:text-sm text-sky-600 font-semibold">
-                    Del mes 2 al 12
-                  </p>
-                  <p className="text-lg sm:text-xl font-semibold text-[#223E99]">
-                    {formatCurrency(getIndividualPrices(individualPricesJson).remainingMonths)}
-                  </p>
-                </div>
+    <div className="min-h-screen">
+      <div className="max-w-5xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        <div className="bg-white rounded-2xl lg:shadow-sm lg:border border-gray-200 overflow-hidden">
+          {/* Header */}
+          <div className="lg:p-6 border-b border-gray-100">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+              <div className="flex items-center gap-4">
+                <form id="pdfIngnore" action={deleteSelectedPlan}>
+                  <button className="text-gray-700 hover:text-gray-900 transition-colors">
+                    <ArrowLeft strokeWidth={2.5} size={24} />
+                  </button>
+                </form>
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Resumen de cotización
+                </h2>
               </div>
-            ) : (
-              <div>
-                <p className="text-xs sm:text-sm text-sky-600 font-semibold uppercase">
-                  Total {paymentType === "Anual" ? "Anual" : ""}
+              <Image
+                src={imgCompanyLogo}
+                width={80}
+                height={60}
+                className="h-12 w-auto object-contain"
+                alt={`Logo de ${company}`}
+                priority
+              />
+            </div>
+          </div>
+
+          {/* Contenido Principal */}
+          <div className="p-6 space-y-8">
+            {/* Información de Precios */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start">
+              <div className="text-center sm:text-left">
+                {!isMultipleCoIns && individualPricesJson && paymentType === "Mensual" ? (
+                  <div className="space-y-3">
+                    <div>
+                      <p className="text-sm text-sky-600 font-semibold uppercase">
+                        Primer mes
+                      </p>
+                      <p className="text-4xl font-bold text-[#223E99]">
+                        {formatCurrency(getIndividualPrices(individualPricesJson).firstMonth)}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-sky-600 font-semibold">
+                        Del mes 2 al 12
+                      </p>
+                      <p className="text-xl font-semibold text-[#223E99]">
+                        {formatCurrency(getIndividualPrices(individualPricesJson).remainingMonths)}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-sm text-sky-600 font-semibold uppercase">
+                      Total {paymentType === "Anual" ? "Anual" : ""}
+                    </p>
+                    <p className="text-4xl font-bold text-[#223E99]">
+                      {formatCurrency(coverage_fee)}
+                    </p>
+                  </div>
+                )}
+              </div>
+              <div className="text-center sm:text-right">
+                <p className="text-sm text-sky-600 font-semibold uppercase">
+                  Plan
                 </p>
-                <p className="text-3xl sm:text-4xl font-bold text-[#223E99]">
-                  {formatCurrency(coverage_fee)}
+                <p className="text-xl font-bold text-[#223E99]">
+                  {plan}
                 </p>
               </div>
-            )}
+            </div>
+
+            {/* Tarjetas de Información */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <InfoCard
+                icon={<Shield className="w-5 h-5" />}
+                title="Suma asegurada"
+                value={formatCurrency(sumInsured)}
+              />
+              <InfoCard
+                icon={<DollarSign className="w-5 h-5" />}
+                title="Deducible"
+                value={isMultiple ? `desde ${formatCurrency(deductible)}` : formatCurrency(deductible)}
+                useHtml={isMultiple}
+                htmlElement={<div className="pl-8"></div>}
+              />
+              <InfoCard
+                icon={<Percent className="w-5 h-5" />}
+                title="Coaseguro"
+                value={isMultipleCoIns
+                  ? `desde ${getMinimumValues(coInsuranceJson)}%`
+                  : `${coInsurance}%`}
+                useHtml={isMultipleCoIns}
+                htmlElement={<div className="pl-8"></div>}
+              />
+              <InfoCard
+                icon={<Heart className="w-5 h-5" />}
+                title="Tope coaseguro"
+                value={isMultipleCoIns
+                  ? `desde ${formatCurrency(getMinimumValues(coInsuranceCapJson))}`
+                  : formatCurrency(coInsuranceCap)}
+                useHtml={isMultipleCoIns}
+                htmlElement={<div className="pl-8"></div>}
+              />
+            </div>
+
+            {/* Botones de Acción */}
+            <div className="border-t border-gray-100 pt-6">
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-3">
+                <button
+                  className={`w-full sm:w-auto font-medium flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg transition-colors ${isGeneratingPDF
+                    ? 'bg-sky-50 text-sky-400 cursor-not-allowed'
+                    : 'bg-sky-50 text-sky-600 hover:bg-sky-100'
+                    }`}
+                  onClick={handleGeneratePDF}
+                  disabled={isGeneratingPDF}
+                >
+                  {isGeneratingPDF ? (
+                    <>
+                      <span className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-sky-600"></span>
+                      Generando PDF...
+                    </>
+                  ) : (
+                    <>
+                      <Download className="w-4 h-4" />
+                      Descargar Cotización
+                    </>
+                  )}
+                </button>
+
+                {(isMultiple || isMultipleCoIns) && (
+                  <button
+                    className="w-full sm:w-auto bg-sky-50 text-sky-600 hover:bg-sky-100 font-medium flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg transition-colors"
+                    onClick={() => openModal("combinedInfo", {
+                      deductibles: deductiblesJson,
+                      coInsurance: coInsuranceJson,
+                      coInsuranceCap: coInsuranceCapJson
+                    })}
+                  >
+                    <FileText className="w-4 h-4" />
+                    Ver Deducibles y Coaseguros
+                  </button>
+                )}
+
+                {protectedWho !== "solo_yo" && (
+                  <button
+                    className="w-full sm:w-auto bg-sky-50 text-sky-600 hover:bg-sky-100 font-medium flex items-center justify-center gap-2 px-6 py-2.5 rounded-lg transition-colors"
+                    onClick={() => {
+                      const pricesData = JSON.parse(individualPricesJson!);
+                      openModalMoreInformation({
+                        ...pricesData,
+                        protectWho: protectedWho
+                      });
+                    }}
+                  >
+                    <Users className="w-4 h-4" />
+                    Ver Desglose de mensualidad
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Formulario de Contrato */}
+            <div id="pdfIngnore" className="mt-6">
+              <ContractForm />
+            </div>
           </div>
-          <div>
-            <p className="text-xs sm:text-sm text-sky-600 font-semibold uppercase">
-              Plan
-            </p>
-            <p className="text-lg sm:text-xl font-bold text-[#223E99]">
-              {plan}
-            </p>
-          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
-        <InfoCard
-          icon={<Shield className="w-4 h-4 sm:w-5 sm:h-5" />}
-          title="Suma asegurada"
-          value={formatCurrency(sumInsured)}
-        />
-        <div className="flex justify-between">
-          <InfoCard
-            icon={<DollarSign className="w-4 h-4 sm:w-5 sm:h-5" />}
-            title="Deducible"
-            value={`${isMultiple ? `desde ${formatCurrency(deductible)}` : `${formatCurrency(deductible)}`}`}
-            useHtml={isMultiple}
-            htmlElement={<div className="pl-8"></div>}
-          />
-        </div>
-        <div className="flex justify-between">
-          <InfoCard
-            icon={<Percent className="w-4 h-4 sm:w-5 sm:h-5" />}
-            title="Coaseguro"
-            value={`${isMultipleCoIns
-              ? `desde ${getMinimumValues(coInsuranceJson)}%`
-              : `${coInsurance}%`}`}
-            useHtml={isMultipleCoIns}
-            htmlElement={<div className="pl-8"></div>}
-          />
-        </div>
-        <div className="flex justify-between">
-          <InfoCard
-            icon={<Heart className="w-4 h-4 sm:w-5 sm:h-5" />}
-            title="Tope coaseguro"
-            value={`${isMultipleCoIns
-              ? `desde ${formatCurrency(getMinimumValues(coInsuranceCapJson))}`
-              : formatCurrency(coInsuranceCap)}`}
-            useHtml={isMultipleCoIns}
-            htmlElement={<div className="pl-8"></div>}
-          />
-        </div>
-      </div>
-
-      <div className="mt-4 sm:mt-5 border-t border-gray-100 pt-4">
-        <div className="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-2 sm:gap-3 text-sm">
-          {/* Botón de descarga de PDF */}
-          <button
-            className={`w-full sm:w-auto font-medium flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg transition-colors ${isGeneratingPDF
-              ? 'bg-sky-50 text-sky-400 cursor-not-allowed'
-              : 'bg-sky-50 text-sky-600 hover:bg-sky-100'
-              }`}
-            onClick={handleGeneratePDF}
-            disabled={isGeneratingPDF}
-          >
-            {isGeneratingPDF ? (
-              <>
-                <span className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-sky-600 mr-1"></span>
-                Generando PDF...
-              </>
-            ) : (
-              <>
-                <Download className="w-4 h-4" />
-                Descargar Cotización
-              </>
-            )}
-          </button>
-
-          {/* Separador */}
-          {(isMultiple || isMultipleCoIns) && (
-            <div className="w-full h-px sm:h-6 sm:w-px bg-gray-200 my-2 sm:my-0"></div>
-          )}
-
-          {/* Botón para ver Deducibles y Coaseguros */}
-          {(isMultiple || isMultipleCoIns) && (
-            <button
-              className="w-full sm:w-auto bg-sky-50 text-sky-600 hover:bg-sky-100 font-medium flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg transition-colors"
-              onClick={() => openModal("combinedInfo", {
-                deductibles: deductiblesJson,
-                coInsurance: coInsuranceJson,
-                coInsuranceCap: coInsuranceCapJson
-              })}
-            >
-              <FileText className="w-4 h-4" />
-              Ver Deducibles y Coaseguros
-            </button>
-          )}
-
-          {/* Separador */}
-          {protectedWho !== "solo_yo" && (
-            <div className="w-full h-px sm:h-6 sm:w-px bg-gray-200 my-2 sm:my-0"></div>
-          )}
-
-          {/* Botón de desglose de mensualidad */}
-          {protectedWho !== "solo_yo" && (
-            <button
-              className="w-full sm:w-auto bg-sky-50 text-sky-600 hover:bg-sky-100 font-medium flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg transition-colors"
-              onClick={() => {
-                const pricesData = JSON.parse(individualPricesJson!);
-                openModalMoreInformation({
-                  ...pricesData,
-                  protectWho: protectedWho
-                });
-              }}
-            >
-              <Users className="w-4 h-4" />
-              Ver Desglose de mensualidad
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div id="pdfIngnore">
-        <ContractForm />
-      </div>
-
+      {/* Modales */}
       {isOpen && (
         <>
           {modalType === "moreInformationQuote" && (
@@ -357,10 +349,9 @@ export const QuoteSummary: FC<
           )}
           {modalType === "combinedInfo" && (
             <Modal
-              title="Deducibles y Coaseguros"
-              size="4xl"
+              title="Deducibles y Coaseguro"
+              size="3xl"
               fullScreenOnMobile={true}
-              maxHeight="90vh"
             >
               <DeductibleAndCoInsuranceInfoModal />
             </Modal>
