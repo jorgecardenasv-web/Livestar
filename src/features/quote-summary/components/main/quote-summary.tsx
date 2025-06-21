@@ -16,6 +16,91 @@ import { processPDFData } from "../../utils/process-pdf-data.util"
 import { InsuranceQuoteData } from "../../types";
 import { getProspect } from "@/features/plans/loaders/get-prospect";
 
+interface MemberPrices {
+  primerMes?: number;
+  segundoMesADoce?: number;
+}
+
+const getIndividualPrices = (jsonString: string | undefined): { firstMonth: number, remainingMonths: number } => {
+  if (!jsonString) return { firstMonth: 0, remainingMonths: 0 };
+  try {
+    const data = JSON.parse(jsonString);
+    let totalFirstMonth = 0;
+    let totalRemainingMonths = 0;
+
+    // Suma main
+    if (data.main) {
+      totalFirstMonth += data.main.primerMes || 0;
+      totalRemainingMonths += data.main.segundoMesADoce || 0;
+    }
+
+    // Suma partner
+    if (data.partner) {
+      totalFirstMonth += data.partner.primerMes || 0;
+      totalRemainingMonths += data.partner.segundoMesADoce || 0;
+    }
+
+    // Suma children (array)
+    if (Array.isArray(data.children)) {
+      data.children.forEach((child: MemberPrices) => {
+        totalFirstMonth += child.primerMes || 0;
+        totalRemainingMonths += child.segundoMesADoce || 0;
+      });
+    }
+
+    // Suma parents (array)
+    if (Array.isArray(data.parents)) {
+      data.parents.forEach((parent: MemberPrices) => {
+        totalFirstMonth += parent.primerMes || 0;
+        totalRemainingMonths += parent.segundoMesADoce || 0;
+      });
+    }
+
+    // Suma others (array)
+    if (Array.isArray(data.others)) {
+      data.others.forEach((other: MemberPrices) => {
+        totalFirstMonth += other.primerMes || 0;
+        totalRemainingMonths += other.segundoMesADoce || 0;
+      });
+    }
+
+    return {
+      firstMonth: totalFirstMonth,
+      remainingMonths: totalRemainingMonths
+    };
+  } catch (error) {
+    console.error('Error parsing JSON:', error);
+    return { firstMonth: 0, remainingMonths: 0 };
+  }
+};
+
+const getMinimumValues = (jsonString: string | undefined): number => {
+  if (!jsonString) return 0;
+  try {
+    const data = JSON.parse(jsonString);
+
+    // Si el JSON tiene el formato simple { value: number }
+    if (data.value !== undefined) {
+      return typeof data.value === 'number' ? data.value : 0;
+    }
+
+    // Para el formato complejo con múltiples opciones
+    let minValue = Infinity;
+    Object.keys(data).forEach(option => {
+      Object.values(data[option]).forEach((value: any) => {
+        if (typeof value === 'number' && value < minValue) {
+          minValue = value;
+        }
+      });
+    });
+
+    return minValue === Infinity ? 0 : minValue;
+  } catch (error) {
+    console.error('Error parsing JSON:', error);
+    return 0;
+  }
+};
+
 export const QuoteSummary: FC<
   InsuranceQuoteData
 > = (props) => {
@@ -47,6 +132,9 @@ export const QuoteSummary: FC<
   } = useQuoteSumaryActions();
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
+  console.log("QuoteSummary props:", props);
+
+
   //! -------------------------------------------------------------------
   const handleGeneratePDF = async () => {
     setIsGeneratingPDF(true);
@@ -76,11 +164,10 @@ export const QuoteSummary: FC<
   };
   //! -------------------------------------------------------------------
 
-  const isPriceMonthly = paymentType === "Mensual";
   return (
     <div
       id="quote-summary"
-      className="max-w-4xl mx-auto p-4 sm:p-6 rounded-3xl shadow-lg border m-8"
+      className="max-w-4xl mx-auto p-4 sm:p-6 rounded-3xl lg:shadow-lg lg:border m-8"
     >
       <div className="flex flex-col sm:flex-row justify-between items-center mb-2 space-y-4 sm:space-y-0">
         <div className="flex items-center space-x-4">
@@ -105,12 +192,35 @@ export const QuoteSummary: FC<
       <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm mb-4">
         <div className="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
           <div className="text-center sm:text-left">
-            <p className="text-xs sm:text-sm text-sky-600 font-semibold uppercase">
-              Total {isPriceMonthly ? "Mensual" : "Anual"}
-            </p>
-            <p className="text-3xl sm:text-4xl font-bold text-[#223E99]">
-              {formatCurrency(coverage_fee)}
-            </p>
+            {!isMultipleCoIns && individualPricesJson && paymentType === "Mensual" ? (
+              <div className="space-y-1">
+                <div>
+                  <p className="text-xs sm:text-sm text-sky-600 font-semibold uppercase">
+                    Primer mes
+                  </p>
+                  <p className="text-3xl sm:text-4xl font-bold text-[#223E99]">
+                    {formatCurrency(getIndividualPrices(individualPricesJson).firstMonth)}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs sm:text-sm text-sky-600 font-semibold">
+                    Del mes 2 al 12
+                  </p>
+                  <p className="text-lg sm:text-xl font-semibold text-[#223E99]">
+                    {formatCurrency(getIndividualPrices(individualPricesJson).remainingMonths)}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div>
+                <p className="text-xs sm:text-sm text-sky-600 font-semibold uppercase">
+                  Total {paymentType === "Anual" ? "Anual" : ""}
+                </p>
+                <p className="text-3xl sm:text-4xl font-bold text-[#223E99]">
+                  {formatCurrency(coverage_fee)}
+                </p>
+              </div>
+            )}
           </div>
           <div>
             <p className="text-xs sm:text-sm text-sky-600 font-semibold uppercase">
@@ -142,7 +252,9 @@ export const QuoteSummary: FC<
           <InfoCard
             icon={<Percent className="w-4 h-4 sm:w-5 sm:h-5" />}
             title="Coaseguro"
-            value={`${isMultipleCoIns ? `desde ${coInsurance}%` : `${coInsurance}%`}`}
+            value={`${isMultipleCoIns
+              ? `desde ${getMinimumValues(coInsuranceJson)}%`
+              : `${coInsurance}%`}`}
             useHtml={isMultipleCoIns}
             htmlElement={<div className="pl-8"></div>}
           />
@@ -151,7 +263,9 @@ export const QuoteSummary: FC<
           <InfoCard
             icon={<Heart className="w-4 h-4 sm:w-5 sm:h-5" />}
             title="Tope coaseguro"
-            value={`${isMultipleCoIns ? `desde ${formatCurrency(coInsuranceCap)}` : formatCurrency(coInsuranceCap)}`}
+            value={`${isMultipleCoIns
+              ? `desde ${formatCurrency(getMinimumValues(coInsuranceCapJson))}`
+              : formatCurrency(coInsuranceCap)}`}
             useHtml={isMultipleCoIns}
             htmlElement={<div className="pl-8"></div>}
           />
