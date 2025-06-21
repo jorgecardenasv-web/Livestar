@@ -32,11 +32,13 @@ export async function handleInterestClick(formData: FormData) {
 export async function setActivePlanType(formData: FormData) {
   const planTypeId = formData.get("planTypeId");
   cookies().set("planTypeId", planTypeId as string);
+  revalidatePath("/");
 }
 
 export async function setActivePaymentType(formData: FormData) {
   const paymentType = formData.get("paymentType") as string;
   cookies().set("activePaymentType", paymentType);
+  revalidatePath("/");
 }
 
 export const deleteSelectedPlan = () => {

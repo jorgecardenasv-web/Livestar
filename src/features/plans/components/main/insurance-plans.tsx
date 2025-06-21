@@ -4,7 +4,7 @@ import { getPlanTypes } from "../../loaders/get-plan-types";
 import { PaymentSelector } from "../selectors/payment-selector";
 import { PlanSelector } from "../selectors/plan-selector";
 import { InsuranceCardSkeleton } from "../skeletons/insurance-card-skeleton";
-import { PlansContent } from "./plans-content";
+import { PlansGrid } from "./plans-grid";
 import { Suspense } from "react";
 
 export const Plans = async () => {
@@ -38,8 +38,8 @@ export const Plans = async () => {
   const paymentTypes = ["Mensual", "Anual"];
 
   return (
-    <div className="mx-auto px-4 space-y-4 mb-8">
-      <div className="flex flex-col justify-center items-center">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 space-y-4 mb-6 sm:mb-8">
+      <div className="flex flex-col justify-center items-center w-full">
         <PlanSelector
           planTypes={selectorPlanTypes}
           planTypeId={currentPlanType?.id}
@@ -52,16 +52,18 @@ export const Plans = async () => {
       <Suspense
         key={currentPlanTypeId}
         fallback={
-          <div className="w-11/12 mx-auto flex-col gap-4 xl:grid xl:grid-flow-col justify-center lg:auto-cols-max items-end">
-            {[1, 2].map((i) => (
-              <InsuranceCardSkeleton key={i} />
-            ))}
+          <div className="w-full flex justify-center mx-auto max-w-[1200px]">
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 place-items-center justify-items-center">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="w-full max-w-md">
+                  <InsuranceCardSkeleton />
+                </div>
+              ))}
+            </div>
           </div>
         }
       >
-        <PlansContent
-          planTypeId={currentPlanTypeId}
-          regularPlanTypes={planTypes}
+        <PlansGrid
           currentPlanType={currentPlanType}
           activePaymentType={activePaymentType}
         />

@@ -7,7 +7,7 @@ interface PlansContentProps {
   activePaymentType: string;
 }
 
-export const PlansContent = async ({
+export const PlansGrid = async ({
   currentPlanType,
   activePaymentType,
 }: PlansContentProps) => {
@@ -22,10 +22,10 @@ export const PlansContent = async ({
   }
 
   return (
-    <div className="w-full flex justify-center mx-auto max-w-[1200px]">
-      <div className="w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 place-items-center justify-items-center">
+    <div className="w-full max-w-7xl mx-auto">
+      <div className="flex flex-wrap justify-center gap-6 px-4 sm:px-6">
         {plans.map((plan) => (
-          <div key={plan.id} className="w-full max-w-md">
+          <div key={plan.id} className="w-full sm:w-[calc(50%-12px)] xl:w-[calc(33.33%-16px)] flex justify-center">
             <InsuranceCard
               company={plan.company}
               plan={plan}
