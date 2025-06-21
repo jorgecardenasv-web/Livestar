@@ -15,7 +15,9 @@ export const HeaderSecondary = () => {
           priority
         />
       </div>
-      <Navbar />
+      <div className="relative z-20">
+        <Navbar />
+      </div>
     </header>
   );
 };
