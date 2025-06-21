@@ -167,16 +167,16 @@ export const QuoteSummary: FC<
   return (
     <div
       id="quote-summary"
-      className="max-w-4xl mx-auto p-4 sm:p-6 rounded-3xl lg:shadow-lg lg:border m-8"
+      className="max-w-4xl mx-auto p-3 sm:p-6 rounded-3xl lg:shadow-lg lg:border my-4 sm:m-8"
     >
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-2 space-y-4 sm:space-y-0">
-        <div className="flex items-center space-x-4">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-4 sm:mb-2 space-y-4 sm:space-y-0">
+        <div className="flex items-center space-x-3 sm:space-x-4">
           <form id="pdfIngnore" action={deleteSelectedPlan}>
-            <button className="text-tremor-content-emphasis mt-2">
-              <ArrowLeft strokeWidth={3} size={30} />
+            <button className="text-tremor-content-emphasis">
+              <ArrowLeft strokeWidth={3} size={26} className="sm:w-8 sm:h-8" />
             </button>
           </form>
-          <h2 className="text-xl sm:text-2xl font-bold text-tremor-content-emphasis">
+          <h2 className="text-lg sm:text-2xl font-bold text-tremor-content-emphasis">
             Resumen de cotización
           </h2>
         </div>
@@ -184,12 +184,12 @@ export const QuoteSummary: FC<
           src={imgCompanyLogo}
           width={80}
           height={60}
-          className="h-12 w-auto object-contain"
+          className="h-10 sm:h-12 w-auto object-contain"
           alt={`Logo de ${company}`}
         />
       </div>
 
-      <div className="bg-white rounded-2xl p-4 sm:p-6 shadow-sm mb-4">
+      <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm mb-4">
         <div className="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
           <div className="text-center sm:text-left">
             {!isMultipleCoIns && individualPricesJson && paymentType === "Mensual" ? (
@@ -233,7 +233,7 @@ export const QuoteSummary: FC<
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
         <InfoCard
           icon={<Shield className="w-4 h-4 sm:w-5 sm:h-5" />}
           title="Suma asegurada"
@@ -271,13 +271,15 @@ export const QuoteSummary: FC<
           />
         </div>
       </div>
-      <div className="mt-5 border-t border-gray-100 pt-4">
-        <div className="flex flex-wrap justify-center gap-3 text-sm">
-          {/* Botón de descarga de PDF siempre visible */}
+
+      <div className="mt-4 sm:mt-5 border-t border-gray-100 pt-4">
+        <div className="flex flex-col sm:flex-row flex-wrap justify-center items-center gap-2 sm:gap-3 text-sm">
+          {/* Botón de descarga de PDF */}
           <button
-            className={`font-medium flex items-center gap-1.5 px-3 py-1.5 transition-colors ${isGeneratingPDF
-              ? 'text-sky-400 cursor-not-allowed'
-              : 'text-sky-600 hover:text-sky-800'}`}
+            className={`w-full sm:w-auto font-medium flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg transition-colors ${isGeneratingPDF
+              ? 'bg-sky-50 text-sky-400 cursor-not-allowed'
+              : 'bg-sky-50 text-sky-600 hover:bg-sky-100'
+              }`}
             onClick={handleGeneratePDF}
             disabled={isGeneratingPDF}
           >
@@ -294,15 +296,15 @@ export const QuoteSummary: FC<
             )}
           </button>
 
-          {/* Separador vertical si hay botón de deducibles */}
+          {/* Separador */}
           {(isMultiple || isMultipleCoIns) && (
-            <div className="h-6 w-px bg-gray-200 self-center hidden sm:block"></div>
+            <div className="w-full h-px sm:h-6 sm:w-px bg-gray-200 my-2 sm:my-0"></div>
           )}
 
-          {/* Botón para ver Deducibles y Coaseguros - solo si hay datos múltiples */}
+          {/* Botón para ver Deducibles y Coaseguros */}
           {(isMultiple || isMultipleCoIns) && (
             <button
-              className="text-sky-600 hover:text-sky-800 font-medium flex items-center gap-1.5 px-3 py-1.5 transition-colors"
+              className="w-full sm:w-auto bg-sky-50 text-sky-600 hover:bg-sky-100 font-medium flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg transition-colors"
               onClick={() => openModal("combinedInfo", {
                 deductibles: deductiblesJson,
                 coInsurance: coInsuranceJson,
@@ -314,32 +316,15 @@ export const QuoteSummary: FC<
             </button>
           )}
 
-          {/* Separador vertical antes del botón de desglose de mensualidad */}
+          {/* Separador */}
           {protectedWho !== "solo_yo" && (
-            <div className="h-6 w-px bg-gray-200 self-center hidden sm:block"></div>
+            <div className="w-full h-px sm:h-6 sm:w-px bg-gray-200 my-2 sm:my-0"></div>
           )}
 
-          {/* Si no hay deducibles múltiples pero hay desglose mensual */}
-          {!(isMultiple || isMultipleCoIns) && protectedWho !== "solo_yo" && (
+          {/* Botón de desglose de mensualidad */}
+          {protectedWho !== "solo_yo" && (
             <button
-              className="text-sky-600 hover:text-sky-800 font-medium flex items-center gap-1.5 px-3 py-1.5 transition-colors"
-              onClick={() => {
-                const pricesData = JSON.parse(individualPricesJson!);
-                openModalMoreInformation({
-                  ...pricesData,
-                  protectWho: protectedWho
-                });
-              }}
-            >
-              <Users className="w-4 h-4" />
-              Ver Desglose de mensualidad
-            </button>
-          )}
-
-          {/* Si es una pantalla más ancha y hay ambos botones */}
-          {(isMultiple || isMultipleCoIns) && protectedWho !== "solo_yo" && (
-            <button
-              className="text-sky-600 hover:text-sky-800 font-medium flex items-center gap-1.5 px-3 py-1.5 transition-colors"
+              className="w-full sm:w-auto bg-sky-50 text-sky-600 hover:bg-sky-100 font-medium flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg transition-colors"
               onClick={() => {
                 const pricesData = JSON.parse(individualPricesJson!);
                 openModalMoreInformation({
@@ -354,9 +339,11 @@ export const QuoteSummary: FC<
           )}
         </div>
       </div>
+
       <div id="pdfIngnore">
         <ContractForm />
       </div>
+
       {isOpen && (
         <>
           {modalType === "moreInformationQuote" && (
