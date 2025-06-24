@@ -42,6 +42,7 @@ type ProcessedDeductible = {
   menoresDe45: number;
   mayoresDe45: number;
   coInsurance: string | number;
+  coInsuranceCap?: number;
 };
 
 const processDeductibles = (data: QuotePDFData): ProcessedDeductible[] => {
@@ -53,10 +54,15 @@ const processDeductibles = (data: QuotePDFData): ProcessedDeductible[] => {
   }
 
   const nivelMapping: { [key: string]: string } = {
-    "1": "Nivel 1 - Premium",
-    "2": "Nivel 2 - Estándar",
-    "3": "Nivel 3 - Básico",
+    A: "Nivel A",
+    B: "Nivel B",
+    C: "Nivel C",
+    D: "Nivel D",
   };
+
+  // Procesar coaseguros múltiples si existen
+  let coInsuranceData = data.coInsuranceData;
+  let coInsuranceCapData = data.coInsuranceCapData;
 
   try {
     for (const [nivel, valorMenores] of Object.entries(
@@ -67,11 +73,46 @@ const processDeductibles = (data: QuotePDFData): ProcessedDeductible[] => {
         typeof valorMayores === "number" &&
         typeof valorMenores === "number"
       ) {
+        // Determinar coaseguro y tope de coaseguro para este nivel
+        let coInsuranceValue = data.coInsurance ?? 10;
+        let coInsuranceCapValue = data.coInsuranceCap;
+
+        // Si hay datos de coaseguros múltiples, buscar el valor correspondiente
+        if (
+          coInsuranceData &&
+          coInsuranceData.opcion_2 &&
+          coInsuranceData.opcion_2[nivel]
+        ) {
+          coInsuranceValue = coInsuranceData.opcion_2[nivel];
+        } else if (
+          coInsuranceData &&
+          coInsuranceData.opcion_4 &&
+          coInsuranceData.opcion_4[nivel]
+        ) {
+          coInsuranceValue = coInsuranceData.opcion_4[nivel];
+        }
+
+        // Si hay datos de topes de coaseguro múltiples, buscar el valor correspondiente
+        if (
+          coInsuranceCapData &&
+          coInsuranceCapData.opcion_2 &&
+          coInsuranceCapData.opcion_2[nivel]
+        ) {
+          coInsuranceCapValue = coInsuranceCapData.opcion_2[nivel];
+        } else if (
+          coInsuranceCapData &&
+          coInsuranceCapData.opcion_4 &&
+          coInsuranceCapData.opcion_4[nivel]
+        ) {
+          coInsuranceCapValue = coInsuranceCapData.opcion_4[nivel];
+        }
+
         processedDeductibles.push({
           nivel: nivelMapping[nivel] || `Nivel ${nivel}`,
           menoresDe45: valorMenores,
           mayoresDe45: valorMayores,
-          coInsurance: data.coInsurance ?? 10,
+          coInsurance: coInsuranceValue,
+          coInsuranceCap: coInsuranceCapValue,
         });
       }
     }
@@ -95,8 +136,9 @@ const calculateSpacingConfig = (
   // Configuración base
   const baseConfig = {
     headerHeight: 120,
-    marginTop: 25,
-    marginBottom: 25,
+    // Aumentar margen superior para dar espacio al header en todas las páginas
+    marginTop: 140, // Era 25, ahora 140 para cubrir los 120px del header + espacio
+    marginBottom: 40,
     marginLeft: 25,
     marginRight: 25,
   };
@@ -104,14 +146,13 @@ const calculateSpacingConfig = (
   // Espaciado según cantidad de miembros
   let spacingMultiplier = 1;
   if (membersCount <= 2) {
-    spacingMultiplier = 1.2; // Más espacio para pocas personas
+    spacingMultiplier = 1.2;
   } else if (membersCount <= 4) {
-    spacingMultiplier = 1.0; // Espaciado normal
+    spacingMultiplier = 1.0;
   } else {
-    spacingMultiplier = 0.8; // Menos espacio para muchas personas
+    spacingMultiplier = 0.8;
   }
 
-  // Ajuste adicional para HDI (tiene más columnas, necesita menos espacio vertical)
   if (isDetailedPricing) {
     spacingMultiplier *= 0.9;
   }
@@ -311,31 +352,36 @@ export const generatePDFWithPuppeteer = async (
 
     // Aplicar estilos optimizados con la nueva configuración
     await (page as any).evaluate((config: any) => {
-      // Configuración básica del body
-      document.body.style.backgroundColor = "#f9f8f9";
+      // NO aplicar paddingTop al body ya que @page lo maneja
       document.body.style.width = "215.9mm";
       document.body.style.minHeight = "279.4mm";
       document.body.style.margin = "0 auto";
-      document.body.style.paddingTop = `${config.headerHeight}px`;
+      // Eliminar esta línea: document.body.style.paddingTop = `${config.headerHeight}px`;
 
-      // Aplicar espaciado unificado a las secciones
+      // Para la primera página, aplicar margen al primer elemento
+      const firstSection = document.querySelector(".plan-info") as HTMLElement;
+      if (firstSection) {
+        firstSection.style.marginTop = "20px";
+      }
+
+      // Aplicar espaciado a las secciones
       const sections = document.querySelectorAll(".content-section");
       sections.forEach((section, index) => {
         const element = section as HTMLElement;
 
-        // Espaciado consistente para todas las secciones
+        // Espaciado normal entre secciones
         element.style.marginBottom = `${config.sectionGap}px`;
         element.style.padding = `${config.sectionPadding}px`;
 
-        // Ajustes específicos por posición
-        if (index === 0) {
-          element.style.marginTop = `${config.sectionGap}px`;
-        }
+        // Asegurar que las secciones no se corten
+        element.style.pageBreakInside = "avoid";
+        element.style.breakInside = "avoid";
 
-        // Evitar que la última sección se rompa
-        if (index === sections.length - 1) {
-          element.style.pageBreakInside = "avoid";
-          element.style.breakInside = "avoid";
+        // Para secciones que podrían quedar en la parte superior de una nueva página
+        if (index > 0) {
+          // Agregar un margen superior condicional que solo aplique después de saltos
+          element.style.pageBreakBefore = "auto";
+          // CSS ya maneja el espaciado con @page
         }
       });
 
@@ -388,15 +434,16 @@ export const generatePDFWithPuppeteer = async (
       format: "Letter",
       printBackground: true,
       margin: {
-        top: `${spacingConfig.headerHeight + spacingConfig.marginTop}px`,
-        bottom: `${spacingConfig.marginBottom}px`,
-        left: `${spacingConfig.marginLeft}px`,
-        right: `${spacingConfig.marginRight}px`,
+        // Los márgenes deben coincidir con @page
+        top: "140px",
+        bottom: "40px",
+        left: "25px",
+        right: "25px",
       },
       displayHeaderFooter: true,
       headerTemplate: headerTemplate,
       footerTemplate: "<div></div>",
-      preferCSSPageSize: true,
+      preferCSSPageSize: false, // Cambiar a false para usar nuestros márgenes
       scale: 0.95,
       timeout: 30000,
     });

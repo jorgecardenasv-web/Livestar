@@ -132,9 +132,6 @@ export const QuoteSummary: FC<
   } = useQuoteSumaryActions();
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
-  console.log("QuoteSummary props:", props);
-
-
   //! -------------------------------------------------------------------
   const handleGeneratePDF = async () => {
     setIsGeneratingPDF(true);

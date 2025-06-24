@@ -6,125 +6,142 @@
 export const GNP_TEMPLATE_HTML = `<!doctype html>
 <html lang="es">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Cotización de seguro de gastos médicos - Plan Intermedio GNP"
-    />
-    <title>Cotización Seguro Médico - Plan Intermedio GNP</title>
     <style>
-      /* Variables CSS globales */
-      :root {
-        --primary-blue: #1e3c72;
-        --secondary-blue: #376fa0;
-        --accent-cyan: #00bcd4;
-        --light-blue: #2196f3;
-        --background-gray: #f9f8f9;
-        --border-gray: #dfe1e4;
-        --text-gray: #666;
-        --text-dark: #376fa0;
-        --white: #ffffff;
-        --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-        --border-radius: 13px;
-        --border-radius-small: 8px;
+      /* Variables CSS globales */ 
+      :root { 
+        --primary-blue: #1e3c72; 
+        --secondary-blue: #376fa0; 
+        --accent-cyan: #00bcd4; 
+        --light-blue: #2196f3; 
+        --background-gray: #f9f8f9; 
+        --border-gray: #dfe1e4; 
+        --text-gray: #666; 
+        --text-dark: #376fa0; 
+        --white: #ffffff; 
+        --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); 
+        --border-radius: 13px; 
+        --border-radius-small: 8px; 
       }
 
-      @page {
-        size: letter;
-        margin: 0;
+      /* IMPORTANTE: Reglas @page para manejar márgenes en todas las páginas */ 
+      @page { 
+        size: letter; 
+        /* Margen superior debe ser igual o mayor a la altura del header */ 
+        margin-top: 140px; /* 120px header + 20px espacio */ 
+        margin-bottom: 40px; 
+        margin-left: 25px; 
+        margin-right: 25px; 
       }
 
-      /* Reset y estilos base */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+      /* Reset y estilos base */ 
+      * { 
+        margin: 0; 
+        padding: 0; 
+        box-sizing: border-box; 
       }
 
-      body {
-        font-family: "Arial", sans-serif;
-        line-height: 1.6;
-        color: var(--text-dark);
-        background-color: #053a66;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        /* AGREGADO: Mejorar el manejo de páginas */
-        page-break-before: auto;
-        page-break-after: auto;
+      body { 
+        font-family: "Arial", sans-serif; 
+        line-height: 1.6; 
+        color: var(--text-dark); 
+        background-color: #f9f8f9; 
+        /* No necesitamos padding-top en el body */ 
+        padding: 0; 
+        margin: 0; 
+        page-break-before: auto; 
+        page-break-after: auto; 
       }
 
-      /* Contenedor principal y utilidades */
-      .wrapper {
-        background-color: var(--background-gray);
-        border-radius: var(--border-radius);
-        width: 100%;
-        position: relative;
+      /* Contenedor principal */ 
+      .wrapper { 
+        width: 100%; 
+        position: relative; 
       }
 
-      .quote-container {
-        padding: 10px;
-        overflow: hidden;
-        background-color: var(--background-gray);
+      .quote-container { 
+        padding: 10px; 
+        overflow: hidden; 
+        background-color: var(--background-gray); 
       }
 
       .border-top {
         border-top: 3px solid var(--primary-blue);
       }
 
-      /* Contenido principal y secciones - Sin espaciados hardcodeados */
-      .main-content {
-        background: var(--background-gray);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        /* AGREGADO: Espaciado mejorado para evitar solapamiento con header */
-        padding-top: 20px;
-        padding-bottom: 80px !important; /* Espacio extra al final */
-        min-height: calc(100vh - 200px) !important;
-        /* Los espaciados se aplicarán vía JavaScript */
+      /* Contenido principal */ 
+      .main-content { 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        /* Padding inicial para la primera página */ 
+        padding-top: 20px; 
+        padding-bottom: 40px; 
       }
 
-      .content-section {
-        border-radius: var(--border-radius);
-        width: 100%;
-        max-width: 900px;
-        display: block !important;
-        position: relative !important;
-        overflow: visible !important;
-        /* Los márgenes y padding se aplicarán vía JavaScript */
+      /* Secciones con manejo mejorado de saltos de página */ 
+      .content-section { 
+        border-radius: var(--border-radius); 
+        width: 100%; 
+        max-width: 900px; 
+        display: block; 
+        position: relative; 
+        overflow: visible; 
+        /* Evitar que las secciones se corten */ 
+        page-break-inside: avoid; 
+        break-inside: avoid; 
+        /* Asegurar espacio después de saltos de página */ 
+        page-break-before: auto; 
+        page-break-after: auto; 
       }
 
-      /* Estilos específicos para la sección de coberturas principales */
-      .content-section:last-child {
-        /* Forzar visibilidad de la última sección */
-        position: relative !important;
-        z-index: 10 !important;
-        background-color: var(--white) !important;
-        border: 1px solid var(--border-gray) !important;
-        border-radius: var(--border-radius) !important;
-        box-shadow: var(--shadow) !important;
-        
-        /* Espaciado garantizado */
-        margin-bottom: 50px !important;
-        min-height: 120px !important;
-        
-        /* Evitar que se corte */
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-        page-break-before: auto !important;
-        break-before: auto !important;
-        
-        /* Asegurar que no se oculte */
-        overflow: visible !important;
-        display: block !important;
+      /* Asegurar que después de un salto de página haya espacio */ 
+      .content-section::before { 
+        content: ""; 
+        display: block; 
+        height: 0; 
+        margin: 0; 
+        /* Este pseudo-elemento ayuda a mantener el espaciado */ 
       }
-
+      
+      /* Asegurar que después de un salto de página haya espacio */ 
+      .content-section::before { 
+        content: ""; 
+        display: block; 
+        height: 0; 
+        margin: 0; 
+        /* Este pseudo-elemento ayuda a mantener el espaciado */ 
+      }
+      
       /* Asegurar espaciado apropiado entre secciones */
       .content-section + .content-section {
         margin-top: 25px !important;
+      }
+      
+      /* Reglas específicas para impresión */ 
+      @media print { 
+        body { 
+          background: var(--white); 
+          /* Los márgenes ya están definidos en @page */ 
+        } 
+
+        /* Forzar respeto de márgenes en elementos */ 
+        .main-content { 
+          /* Eliminar padding-top ya que @page lo maneja */ 
+          padding-top: 0; 
+        } 
+
+        /* Primera sección después del plan-info */ 
+        .plan-info + .main-content .content-section:first-child { 
+          /* Asegurar que no se superponga con el header */ 
+          margin-top: 20px; 
+        } 
+
+        /* Asegurar espaciado después de saltos de página */ 
+        .content-section { 
+          /* Orphans y widows para evitar líneas huérfanas */ 
+          orphans: 3; 
+          widows: 3; 
+        } 
       }
 
       .plan-info {
@@ -165,23 +182,6 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
         align-items: center;
         gap: 10px;
         width: fit-content;
-      }
-
-      /* Mejorar el título de la sección de coberturas */
-      .content-section:last-child .section-title {
-        background: var(--primary-blue) !important;
-        color: var(--white) !important;
-        padding: 12px 20px !important;
-        border-radius: 13px 13px 0 0 !important;
-        font-size: 18px !important;
-        font-weight: bold !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 10px !important;
-        width: 100% !important;
-        margin: 0 !important;
-        z-index: 20 !important;
-        position: relative !important;
       }
 
       .section-icon {
@@ -445,10 +445,12 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
       .deductible-table th {
         text-align: center;
         font-size: 16px;
+        padding: 12px 8px;
       }
 
       .deductible-table td {
         text-align: center;
+        padding: 12px 8px;
         font-weight: 500;
       }
 
@@ -617,10 +619,10 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
             </section>
 
             <!-- Deducibles y coaseguros -->
-            <section class="content-section page-group">
+            <section class="content-section">
               <h2 class="section-title">
-                <img src="{{medicalIconPath}}" alt="Icono Medico" />
-                DEDUCIBLES Y COASEGUROS
+                <span class="section-icon" aria-hidden="true">💉</span>
+                DEDUCIBLES Y COASEGURO
               </h2>
               <table class="data-table deductible-table border-top">
                 <thead>
@@ -629,6 +631,7 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
                     <th>< de 45 años</th>
                     <th>> de 45 años</th>
                     <th>Coaseguro</th>
+                    <th>Tope de Coaseguro</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -638,6 +641,7 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
                     <td class="table-price">{{formatCurrency menoresDe45}}</td>
                     <td class="table-price">{{formatCurrency mayoresDe45}}</td>
                     <td class="table-price">{{coInsurance}}%</td>
+                    <td class="table-price">{{formatCurrency coInsuranceCap}}</td>
                   </tr>
                   {{/each}}
                 </tbody>
@@ -661,60 +665,63 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
     />
     <title>Cotización Seguro Médico - HDI Seguros</title>
     <style>
-      /* Variables CSS globales */
-      :root {
-        --primary-blue: #1e3c72;
-        --secondary-blue: #376fa0;
-        --accent-cyan: #00bcd4;
-        --light-blue: #2196f3;
-        --background-gray: #f9f8f9;
-        --border-gray: #dfe1e4;
-        --text-gray: #666;
-        --text-dark: #376fa0;
-        --white: #ffffff;
-        --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-        --border-radius: 13px;
-        --border-radius-small: 8px;
+      /* Variables CSS globales */ 
+      :root { 
+        --primary-blue: #1e3c72; 
+        --secondary-blue: #376fa0; 
+        --accent-cyan: #00bcd4; 
+        --light-blue: #2196f3; 
+        --background-gray: #f9f8f9; 
+        --border-gray: #dfe1e4; 
+        --text-gray: #666; 
+        --text-dark: #376fa0; 
+        --white: #ffffff; 
+        --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); 
+        --border-radius: 13px; 
+        --border-radius-small: 8px; 
       }
 
-      @page {
-        size: letter;
-        margin: 0;
+      /* IMPORTANTE: Reglas @page para manejar márgenes en todas las páginas */ 
+      @page { 
+        size: letter; 
+        /* Margen superior debe ser igual o mayor a la altura del header */ 
+        margin-top: 140px; /* 120px header + 20px espacio */ 
+        margin-bottom: 40px; 
+        margin-left: 25px; 
+        margin-right: 25px; 
       }
 
-      /* Reset y estilos base */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+      /* Reset y estilos base */ 
+      * { 
+        margin: 0; 
+        padding: 0; 
+        box-sizing: border-box; 
       }
 
-      body {
-        font-family: "Arial", sans-serif;
-        line-height: 1.6;
-        color: var(--text-dark);
-        background-color: #053a66;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        /* AGREGADO: Mejorar el manejo de páginas */
-        page-break-before: auto;
-        page-break-after: auto;
+      body { 
+        font-family: "Arial", sans-serif; 
+        line-height: 1.6; 
+        color: var(--text-dark); 
+        background-color: #f9f8f9; 
+        /* No necesitamos padding-top en el body */ 
+        padding: 0; 
+        margin: 0; 
+        page-break-before: auto; 
+        page-break-after: auto; 
       }
 
-      /* Contenedor principal y utilidades */
-      .wrapper {
+      /* Contenedor principal */ 
+      .wrapper { 
         background-color: var(--background-gray);
         border-radius: var(--border-radius);
         width: 100%;
         position: relative;
       }
 
-      .quote-container {
-        padding: 10px;
-        overflow: hidden;
-        background-color: var(--background-gray);
+      .quote-container { 
+        padding: 10px; 
+        overflow: hidden; 
+        background-color: var(--background-gray); 
       }
 
       .quote-content {
@@ -726,52 +733,31 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         border-top: 3px solid var(--primary-blue);
       }
 
-      /* Contenido principal y secciones - Sin espaciados hardcodeados */
-      .main-content {
-        background: var(--background-gray);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        /* AGREGADO: Espaciado mejorado para evitar solapamiento con header */
-        padding-top: 20px;
-        padding-bottom: 80px !important; /* Espacio extra al final */
-        min-height: calc(100vh - 200px) !important;
-        /* Los espaciados se aplicarán vía JavaScript */
+      /* Contenido principal */ 
+      .main-content { 
+        background: var(--background-gray); 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        /* Padding inicial para la primera página */ 
+        padding-top: 20px; 
+        padding-bottom: 40px; 
       }
 
-      .content-section {
-        border-radius: var(--border-radius);
-        width: 100%;
-        max-width: 900px;
-        display: block !important;
-        position: relative !important;
-        overflow: visible !important;
-        /* Los márgenes y padding se aplicarán vía JavaScript */
-      }
-
-      /* Estilos específicos para la sección de coberturas principales */
-      .content-section:last-child {
-        /* Forzar visibilidad de la última sección */
-        position: relative !important;
-        z-index: 10 !important;
-        background-color: var(--white) !important;
-        border: 1px solid var(--border-gray) !important;
-        border-radius: var(--border-radius) !important;
-        box-shadow: var(--shadow) !important;
-        
-        /* Espaciado garantizado */
-        margin-bottom: 50px !important;
-        min-height: 120px !important;
-        
-        /* Evitar que se corte */
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-        page-break-before: auto !important;
-        break-before: auto !important;
-        
-        /* Asegurar que no se oculte */
-        overflow: visible !important;
-        display: block !important;
+      /* Secciones con manejo mejorado de saltos de página */ 
+      .content-section { 
+        border-radius: var(--border-radius); 
+        width: 100%; 
+        max-width: 900px; 
+        display: block; 
+        position: relative; 
+        overflow: visible; 
+        /* Evitar que las secciones se corten */ 
+        page-break-inside: avoid; 
+        break-inside: avoid; 
+        /* Asegurar espacio después de saltos de página */ 
+        page-break-before: auto; 
+        page-break-after: auto; 
       }
 
       /* Asegurar espaciado apropiado entre secciones */
@@ -817,23 +803,6 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         align-items: center;
         gap: 10px;
         width: fit-content;
-      }
-
-      /* Mejorar el título de la sección de coberturas */
-      .content-section:last-child .section-title {
-        background: var(--primary-blue) !important;
-        color: var(--white) !important;
-        padding: 12px 20px !important;
-        border-radius: 13px 13px 0 0 !important;
-        font-size: 18px !important;
-        font-weight: bold !important;
-        display: flex !important;
-        align-items: center !important;
-        gap: 10px !important;
-        width: 100% !important;
-        margin: 0 !important;
-        z-index: 20 !important;
-        position: relative !important;
       }
 
       .section-icon {
@@ -1086,15 +1055,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         white-space: nowrap !important;
       }
 
-      /* Mejorar el div con border-top dentro de coberturas */
-      .content-section:last-child .border-top {
-        border-top: 3px solid var(--primary-blue) !important;
-        background-color: var(--white) !important;
-        border-radius: 0 0 13px 13px !important;
-        overflow: visible !important;
-        min-height: 80px !important;
-        display: block !important;
-      }
+      
 
       /* Prevención de saltos de página inadecuados */
       .page-group {
@@ -1120,17 +1081,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
           max-width: none;
         }
         
-        .content-section:last-child {
-          /* Forzar que aparezca en impresión */
-          display: block !important;
-          visibility: visible !important;
-          opacity: 1 !important;
-          position: relative !important;
-          
-          /* Asegurar espacio */
-          margin-bottom: 50px !important;
-          padding-bottom: 30px !important;
-        }
+        
         
         .coverage-item {
           /* Asegurar visibilidad en impresión */
@@ -1261,6 +1212,36 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
                 <span class="coverage-amount">{{formatCurrency sumInsured}}</span>
               </div>
             </section>
+
+            <!-- Deducibles y coaseguros -->
+            <section class="content-section">
+              <h2 class="section-title">
+                <span class="section-icon" aria-hidden="true">💉</span>
+                DEDUCIBLES Y COASEGURO
+              </h2>
+              <table class="data-table deductible-table border-top">
+                <thead>
+                  <tr>
+                    <th>Nivel Hospitalario</th>
+                    <th>< de 45 años</th>
+                    <th>> de 45 años</th>
+                    <th>Coaseguro</th>
+                    <th>Tope de Coaseguro</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {{#each processedDeductibles}}
+                  <tr>
+                    <td class="table-name">{{nivel}}</td>
+                    <td class="table-price">{{formatCurrency menoresDe45}}</td>
+                    <td class="table-price">{{formatCurrency mayoresDe45}}</td>
+                    <td class="table-price">{{coInsurance}}%</td>
+                    <td class="table-price">{{formatCurrency coInsuranceCap}}</td>
+                  </tr>
+                  {{/each}}
+                </tbody>
+              </table>
+            </section>
           </div>
         </div>
       </main>
@@ -1290,6 +1271,7 @@ export interface GNPTemplateVariables {
     menoresDe45: number;
     mayoresDe45: number;
     coInsurance: number;
+    coInsuranceCap: number;
   }>;
 }
 
@@ -1313,6 +1295,13 @@ export interface HDITemplateVariables {
   totalPrimerMes: number;
   totalSegundoMesADoce: number;
   sumInsured: number;
+  processedDeductibles: Array<{
+    nivel: string;
+    menoresDe45: number;
+    mayoresDe45: number;
+    coInsurance: number;
+    coInsuranceCap: number;
+  }>;
 }
 
 export type HTMLTemplate = typeof GNP_TEMPLATE_HTML | typeof HDI_TEMPLATE_HTML;

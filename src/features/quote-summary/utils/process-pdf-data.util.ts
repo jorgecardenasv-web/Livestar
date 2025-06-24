@@ -4,6 +4,7 @@ export const processPDFData = (
   data: InsuranceQuoteData,
   prospect?: any
 ): QuotePDFData => {
+  console.log("data", data);
   const members = [];
   let hasDetailedPricing = false;
   let totalAnual = 0;
@@ -281,6 +282,13 @@ export const processPDFData = (
     isMultipleDeductible: data.isMultipleString === "true",
     deductibles: data.deductiblesJson
       ? JSON.parse(data.deductiblesJson)
+      : undefined,
+    isMultipleCoInsurance: data.isMultipleCoInsurance === "true",
+    coInsuranceData: data.coInsuranceJson
+      ? JSON.parse(data.coInsuranceJson)
+      : undefined,
+    coInsuranceCapData: data.coInsuranceCapJson
+      ? JSON.parse(data.coInsuranceCapJson)
       : undefined,
     contractorName: prospect?.prospect?.name || "",
     postalCode: prospect?.prospect?.postalCode || "",
