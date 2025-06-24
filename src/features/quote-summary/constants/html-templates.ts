@@ -661,6 +661,13 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
 export const HDI_TEMPLATE_HTML = `<!doctype html>
 <html lang="es">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Cotización de seguro de gastos médicos - HDI Seguros"
+    />
+    <title>Cotización Seguro Médico - HDI Seguros</title>
     <style>
       /* Variables CSS globales */ 
       :root { 
@@ -677,9 +684,10 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         --border-radius: 13px; 
         --border-radius-small: 8px; 
       }
-        html {
-          background-color: #f9f8f9;
-        }
+
+      html {
+        background-color: #f9f8f9;
+      }
 
       /* IMPORTANTE: Reglas @page para manejar márgenes en todas las páginas */ 
       @page { 
@@ -713,8 +721,10 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
 
       /* Contenedor principal */ 
       .wrapper { 
-        width: 100%; 
-        position: relative; 
+        background-color: var(--background-gray);
+        border-radius: var(--border-radius);
+        width: 100%;
+        position: relative;
       }
 
       .quote-container { 
@@ -723,12 +733,18 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         background-color: var(--background-gray); 
       }
 
+      .quote-content {
+        display: flex;
+        flex-direction: column;
+      }
+
       .border-top {
         border-top: 3px solid var(--primary-blue);
       }
 
       /* Contenido principal */ 
       .main-content { 
+        background: var(--background-gray); 
         display: flex; 
         flex-direction: column; 
         align-items: center; 
@@ -753,54 +769,9 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         page-break-after: auto; 
       }
 
-      /* Asegurar que después de un salto de página haya espacio */ 
-      .content-section::before { 
-        content: ""; 
-        display: block; 
-        height: 0; 
-        margin: 0; 
-        /* Este pseudo-elemento ayuda a mantener el espaciado */ 
-      }
-      
-      /* Asegurar que después de un salto de página haya espacio */ 
-      .content-section::before { 
-        content: ""; 
-        display: block; 
-        height: 0; 
-        margin: 0; 
-        /* Este pseudo-elemento ayuda a mantener el espaciado */ 
-      }
-      
       /* Asegurar espaciado apropiado entre secciones */
       .content-section + .content-section {
         margin-top: 25px !important;
-      }
-      
-      /* Reglas específicas para impresión */ 
-      @media print { 
-        body { 
-          background: var(--white); 
-          /* Los márgenes ya están definidos en @page */ 
-        } 
-
-        /* Forzar respeto de márgenes en elementos */ 
-        .main-content { 
-          /* Eliminar padding-top ya que @page lo maneja */ 
-          padding-top: 0; 
-        } 
-
-        /* Primera sección después del plan-info */ 
-        .plan-info + .main-content .content-section:first-child { 
-          /* Asegurar que no se superponga con el header */ 
-          margin-top: 20px; 
-        } 
-
-        /* Asegurar espaciado después de saltos de página */ 
-        .content-section { 
-          /* Orphans y widows para evitar líneas huérfanas */ 
-          orphans: 3; 
-          widows: 3; 
-        } 
       }
 
       .plan-info {
@@ -880,7 +851,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         background-color: white;
         width: 100%;
         gap: 20px;
-        min-height: 250px;
+        min-height: 300px;
         align-items: stretch;
         /* AGREGADO: Evitar saltos en layouts */
         page-break-inside: avoid !important;
@@ -924,7 +895,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         color: var(--secondary-blue);
       }
 
-      /* Estilos de tablas */
+      /* Estilos de tablas - HDI tiene 4 columnas */
       .data-table {
         width: 100%;
         border-collapse: collapse;
@@ -954,14 +925,15 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         border-right: none;
       }
 
+      /* Para HDI - 4 columnas */
       .data-table th:first-child,
       .data-table td:first-child {
-        width: 45%;
+        width: 35%;
       }
 
       .data-table th:not(:first-child),
       .data-table td:not(:first-child) {
-        width: 27.5%;
+        width: 21.67%;
         text-align: center;
       }
 
@@ -969,7 +941,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         background: var(--white);
         color: var(--text-dark);
         text-align: left;
-        font-size: 16px;
+        font-size: 14px; /* Más pequeño para HDI */
         font-weight: bold;
         border-bottom: 1px solid var(--border-gray);
         white-space: normal;
@@ -978,6 +950,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
 
       .data-table th.data-table-th {
         text-align: center;
+        font-size: 12px; /* Aún más pequeño para los headers largos */
       }
 
       .data-table td {
@@ -1012,9 +985,9 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         text-align: center;
       }
 
-      /* Resumen de costos */
+      /* Resumen de costos - HDI tiene 3 totales */
       .cost-summary {
-        padding: 10px;
+        padding: 8px;
         border-radius: var(--border-radius-small);
         display: flex;
         flex-direction: column;
@@ -1025,19 +998,19 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
 
       .summary-box {
         text-align: center;
-        padding: 12px;
-        margin-bottom: 8px;
+        padding: 8px;
+        margin-bottom: 6px;
       }
 
       .summary-label {
         color: var(--secondary-blue);
         font-weight: 600;
-        font-size: 14px;
+        font-size: 12px;
         margin-bottom: 4px;
       }
 
       .summary-amount {
-        font-size: 24px;
+        font-size: 18px; /* Más pequeño para HDI */
         font-weight: bold;
         color: var(--text-dark);
         text-decoration: underline;
@@ -1080,6 +1053,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         font-size: 16px !important;
         flex: 1 !important;
         text-align: left !important;
+        white-space: nowrap;
       }
 
       .coverage-amount {
@@ -1090,38 +1064,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         white-space: nowrap !important;
       }
 
-      /* Mejorar el div con border-top dentro de coberturas */
-      .content-section:last-child .border-top {
-        border-top: 3px solid var(--primary-blue) !important;
-        background-color: var(--white) !important;
-        border-radius: 0 0 13px 13px !important;
-        overflow: visible !important;
-        min-height: 80px !important;
-        display: block !important;
-      }
-
-      /* Tabla de deducibles */
-      .deductible-table th {
-        text-align: center;
-        font-size: 16px;
-        padding: 12px 8px;
-      }
-
-      .deductible-table td {
-        text-align: center;
-        padding: 12px 8px;
-        font-weight: 500;
-      }
-
-      .level-column {
-        font-weight: bold;
-        color: var(--secondary-blue);
-      }
-
-      .price-cell {
-        color: var(--secondary-blue);
-        font-weight: bold;
-      }
+      
 
       /* Prevención de saltos de página inadecuados */
       .page-group {
@@ -1147,17 +1090,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
           max-width: none;
         }
         
-        .content-section:last-child {
-          /* Forzar que aparezca en impresión */
-          display: block !important;
-          visibility: visible !important;
-          opacity: 1 !important;
-          position: relative !important;
-          
-          /* Asegurar espacio */
-          margin-bottom: 50px !important;
-          padding-bottom: 30px !important;
-        }
+        
         
         .coverage-item {
           /* Asegurar visibilidad en impresión */
