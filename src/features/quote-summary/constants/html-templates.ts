@@ -22,6 +22,9 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
         --border-radius: 13px; 
         --border-radius-small: 8px; 
       }
+        html {
+          background-color: #f9f8f9;
+        }
 
       /* IMPORTANTE: Reglas @page para manejar márgenes en todas las páginas */ 
       @page { 
@@ -31,6 +34,7 @@ export const GNP_TEMPLATE_HTML = `<!doctype html>
         margin-bottom: 40px; 
         margin-left: 25px; 
         margin-right: 25px; 
+        background-color: #f9f8f9;
       }
 
       /* Reset y estilos base */ 
@@ -681,6 +685,10 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         --border-radius-small: 8px; 
       }
 
+      html {
+        background-color: #f9f8f9;
+      }
+
       /* IMPORTANTE: Reglas @page para manejar márgenes en todas las páginas */ 
       @page { 
         size: letter; 
@@ -689,6 +697,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         margin-bottom: 40px; 
         margin-left: 25px; 
         margin-right: 25px; 
+        background-color: #f9f8f9;
       }
 
       /* Reset y estilos base */ 
