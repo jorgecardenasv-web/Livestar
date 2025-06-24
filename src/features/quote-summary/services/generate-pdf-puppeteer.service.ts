@@ -5,6 +5,7 @@ import puppeteerCore, {
 } from "puppeteer-core";
 import puppeteer, { Browser, Page } from "puppeteer";
 import Handlebars from "handlebars";
+import { PDFDocument } from "pdf-lib";
 import { QuotePDFData } from "../types";
 import {
   CP_ICON_BASE64,
@@ -14,6 +15,7 @@ import {
   MONEY_ICON_BASE64,
   CHECK_ICON_BASE64,
   MEDICAL_ICON_BASE64,
+  PDF_SGM_BASE64,
 } from "../constants/assets-base64";
 import {
   GNP_TEMPLATE_HTML,
@@ -165,6 +167,42 @@ const calculateSpacingConfig = (
     elementSpacing: Math.round(10 * spacingMultiplier),
     multiplier: spacingMultiplier,
   };
+};
+
+// Función para unir el PDF SGM con el PDF generado por Puppeteer
+const mergePDFs = async (
+  puppeteerPdfBuffer: Buffer | Uint8Array
+): Promise<Buffer> => {
+  try {
+    // Crear un nuevo documento PDF
+    const mergedPdf = await PDFDocument.create();
+
+    // Cargar el PDF SGM desde base64
+    const sgmPdfBytes = Buffer.from(PDF_SGM_BASE64, "base64");
+    const sgmPdf = await PDFDocument.load(sgmPdfBytes);
+
+    // Cargar el PDF generado por Puppeteer
+    const puppeteerPdf = await PDFDocument.load(puppeteerPdfBuffer);
+
+    // Copiar todas las páginas del PDF de Puppeteer primero
+    const puppeteerPages = await mergedPdf.copyPages(
+      puppeteerPdf,
+      puppeteerPdf.getPageIndices()
+    );
+    puppeteerPages.forEach((page) => mergedPdf.addPage(page));
+
+    // Luego copiar todas las páginas del PDF SGM
+    const sgmPages = await mergedPdf.copyPages(sgmPdf, sgmPdf.getPageIndices());
+    sgmPages.forEach((page) => mergedPdf.addPage(page));
+
+    // Generar el PDF final
+    const mergedPdfBytes = await mergedPdf.save();
+    return Buffer.from(mergedPdfBytes);
+  } catch (error) {
+    console.error("Error al unir los PDFs:", error);
+    // En caso de error, devolver solo el PDF de Puppeteer
+    return Buffer.from(puppeteerPdfBuffer);
+  }
 };
 
 // Función para generar el template del header
@@ -434,7 +472,6 @@ export const generatePDFWithPuppeteer = async (
       format: "Letter",
       printBackground: true,
       margin: {
-        // Los márgenes deben coincidir con @page
         top: "140px",
         bottom: "40px",
         left: "25px",
@@ -443,24 +480,27 @@ export const generatePDFWithPuppeteer = async (
       displayHeaderFooter: true,
       headerTemplate: headerTemplate,
       footerTemplate: "<div></div>",
-      preferCSSPageSize: false, // Cambiar a false para usar nuestros márgenes
+      preferCSSPageSize: false,
       scale: 0.95,
       timeout: 30000,
     });
 
     await browser.close();
 
+    // Unir el PDF SGM con el PDF generado por Puppeteer
+    const mergedPdfBuffer = await mergePDFs(Buffer.from(pdfBuffer));
+
     // Devolver resultado
     if (format === "datauri") {
-      return `data:application/pdf;base64,${Buffer.from(pdfBuffer).toString(
-        "base64"
-      )}`;
+      return `data:application/pdf;base64,${Buffer.from(
+        mergedPdfBuffer
+      ).toString("base64")}`;
     }
 
-    const arrayBuffer = new ArrayBuffer(pdfBuffer.length);
+    const arrayBuffer = new ArrayBuffer(mergedPdfBuffer.length);
     const view = new Uint8Array(arrayBuffer);
-    for (let i = 0; i < pdfBuffer.length; i++) {
-      view[i] = pdfBuffer[i];
+    for (let i = 0; i < mergedPdfBuffer.length; i++) {
+      view[i] = mergedPdfBuffer[i];
     }
     return arrayBuffer;
   } catch (error) {
