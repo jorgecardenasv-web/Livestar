@@ -161,6 +161,13 @@ export const QuoteSummary: FC<
   };
   //! -------------------------------------------------------------------
 
+  console.log({
+    coInsuranceCapJson,
+    coInsuranceJson,
+    deductiblesJson,
+  });
+
+
   return (
     <div className="min-h-screen">
       <div className="max-w-5xl mx-auto px-4 py-8 sm:px-6 lg:px-8">

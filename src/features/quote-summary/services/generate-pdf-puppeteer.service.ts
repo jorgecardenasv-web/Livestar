@@ -161,10 +161,10 @@ const calculateSpacingConfig = (
 
   return {
     ...baseConfig,
-    sectionGap: Math.round(20 * spacingMultiplier),
-    sectionPadding: Math.round(15 * spacingMultiplier),
-    tablePadding: Math.round(12 * spacingMultiplier),
-    elementSpacing: Math.round(10 * spacingMultiplier),
+    sectionGap: Math.round(10 * spacingMultiplier),
+    sectionPadding: Math.round(12 * spacingMultiplier),
+    tablePadding: Math.round(10 * spacingMultiplier),
+    elementSpacing: Math.round(2 * spacingMultiplier),
     multiplier: spacingMultiplier,
   };
 };
