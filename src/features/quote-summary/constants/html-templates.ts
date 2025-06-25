@@ -1196,26 +1196,27 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         --border-radius: 13px; 
         --border-radius-small: 8px; 
       }
+        *, *::before, *::after {
+          box-sizing: border-box;
+        }
+        
+        * {
+          margin: 0;
+          
+        }
+
         html {
           background-color: #f9f8f9;
         }
 
       /* IMPORTANTE: Reglas @page para manejar márgenes en todas las páginas */ 
       @page { 
-  size: letter; 
-  /* Asegurar que el margen superior cubra completamente el header */
-  margin-top: 120px; /* Cambiar de 100px a 120px para coincidir con headerHeight */
-  margin-bottom: 40px; 
-  margin-left: 25px; 
-  margin-right: 25px; 
-  background-color: #f9f8f9;
-}
-
-      /* Reset y estilos base */ 
-      * { 
-        margin: 0; 
-        padding: 0; 
-        box-sizing: border-box; 
+        size: letter; 
+        margin-top: 120px;
+        margin-bottom: 0px; 
+        margin-left: 25px; 
+        margin-right: 25px; 
+        background-color: #f9f8f9;
       }
 
       body { 
@@ -1223,23 +1224,8 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         line-height: 1.6; 
         color: var(--text-dark); 
         background-color: #f9f8f9; 
-        /* No necesitamos padding-top en el body */ 
-        padding: 0; 
-        margin: 0; 
         page-break-before: auto; 
-        page-break-after: auto; 
-      }
-
-      /* Contenedor principal */ 
-      .wrapper { 
-        width: 100%; 
-        position: relative; 
-      }
-
-      .quote-container { 
-        padding: 10px; 
-        overflow: hidden; 
-        background-color: var(--background-gray); 
+        page-break-after: auto;
       }
 
       .border-top {
@@ -1251,9 +1237,6 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         display: flex; 
         flex-direction: column; 
         align-items: center; 
-        /* Padding inicial para la primera página */ 
-        padding-top: 20px; 
-        padding-bottom: 40px; 
       }
 
       /* Secciones con manejo mejorado de saltos de página */ 
@@ -1302,7 +1285,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
       }
 
       .logo-emma {
-        height: 80px;
+        height: 100px;
         width: auto;
       }
 
@@ -1590,8 +1573,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
     </style>
   </head>
   <body>
-    <div class="wrapper">
-      <main class="quote-container">
+      <main>
         <div class="quote-content">
           <section class="plan-info">
             <div class="plan-details">
@@ -1712,7 +1694,6 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
           </div>
         </div>
       </main>
-    </div>
   </body>
 </html>`;
 

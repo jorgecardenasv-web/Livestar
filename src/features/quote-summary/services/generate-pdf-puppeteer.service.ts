@@ -140,7 +140,7 @@ const calculateSpacingConfig = (
   const baseConfig = {
     headerHeight: 120,
     // Aumentar margen superior para dar espacio al header en todas las páginas
-    marginTop: 140, // Era 25, ahora 140 para cubrir los 120px del header + espacio
+    marginTop: 120,
     marginBottom: 40,
     marginLeft: 25,
     marginRight: 25,
@@ -392,7 +392,6 @@ export const generatePDFWithPuppeteer = async (
     await (page as any).evaluate((config: any) => {
       // NO aplicar paddingTop al body ya que @page lo maneja
       document.body.style.width = "215.9mm";
-      document.body.style.minHeight = "279.4mm";
       document.body.style.margin = "0 auto";
       // Eliminar esta línea: document.body.style.paddingTop = `${config.headerHeight}px`;
 
