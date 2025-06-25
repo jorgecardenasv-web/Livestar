@@ -18,7 +18,8 @@ import {
   PDF_SGM_BASE64,
 } from "../constants/assets-base64";
 import {
-  GNP_TEMPLATE_HTML,
+  GNP_ANNUAL_TEMPLATE_HTML,
+  GNP_MONTHLY_TEMPLATE_HTML,
   HDI_TEMPLATE_HTML,
 } from "../constants/html-templates";
 
@@ -206,11 +207,7 @@ const mergePDFs = async (
 };
 
 // Función para generar el template del header
-const generateHeaderTemplate = (
-  data: QuotePDFData,
-  logoBase64: string,
-  emmaLogoBase64: string
-) => {
+const generateHeaderTemplate = (data: QuotePDFData, logoBase64: string) => {
   return `
     <div style="
       background-color: #1e3c72 !important;
@@ -267,6 +264,8 @@ export const generatePDFWithPuppeteer = async (
   data: QuotePDFData,
   format: "datauri" | "arraybuffer" = "datauri"
 ): Promise<string | ArrayBuffer> => {
+  console.log("data", data);
+
   const isLocal = process.env.NODE_ENV === "development" || !process.env.VERCEL;
   let browser: BrowserType | null = null;
 
@@ -301,21 +300,24 @@ export const generatePDFWithPuppeteer = async (
       spacingConfig, // Solo una configuración unificada
     };
 
-    // Seleccionar plantilla
-    const templateContent = data.hasDetailedPricing
-      ? HDI_TEMPLATE_HTML
-      : GNP_TEMPLATE_HTML;
+    let templateContent: string;
+
+    if (data.hasDetailedPricing) {
+      templateContent = HDI_TEMPLATE_HTML;
+    } else {
+      if (data.paymentType === "Mensual") {
+        templateContent = GNP_MONTHLY_TEMPLATE_HTML;
+      } else {
+        templateContent = GNP_ANNUAL_TEMPLATE_HTML;
+      }
+    }
 
     // Compilar plantilla
     const template = Handlebars.compile(templateContent);
     const html = template(processedData);
 
     // Generar header
-    const headerTemplate = generateHeaderTemplate(
-      data,
-      logoBase64,
-      emmaLogoBase64
-    );
+    const headerTemplate = generateHeaderTemplate(data, logoBase64);
 
     // Configuración de Chromium optimizada
     const chromiumArgs = [

@@ -263,7 +263,7 @@ export const processPDFData = (
 
   if (!hasDetailedPricing) {
     const totalMensual = members.reduce((sum, m) => sum + m.price, 0);
-    totalAnual = totalMensual * 12;
+    totalAnual = data.paymentType === "Anual" ? totalMensual : totalMensual * 12;
 
     totalPrimerMes = totalMensual;
     totalSegundoMesADoce = totalMensual;
