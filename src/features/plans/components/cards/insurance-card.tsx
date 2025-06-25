@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { calculateInsurancePrice, isHDIPriceTable } from "../../utils";
+import { calculateInsurancePrice, isHDIPriceTable, getMinimumValueByAge } from "../../utils";
 import {
   Shield,
   Percent,
@@ -51,7 +51,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   const minor =
     typeof deductibles.default === "number"
       ? deductibles.default
-      : getMinimumValue(plan.deductibles, prospect.age);
+      : getMinimumValueByAge(plan.deductibles, prospect, additionalInfo);
 
   const prices: PriceTable | HDIPriceTable =
     (plan.prices as unknown as PriceTable | HDIPriceTable) || {};
@@ -199,12 +199,12 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
           <InfoItem
             icon={<Percent className="w-5 h-5" />}
             title="Coaseguro"
-            value={getCoInsuranceValue(plan.coInsurance)}
+            value={getCoInsuranceValue(plan.coInsurance, prospect, additionalInfo)}
           />
           <InfoItem
             icon={<Heart className="w-5 h-5" />}
             title="Tope coaseguro"
-            value={getCoInsuranceCapValue(plan.coInsuranceCap)}
+            value={getCoInsuranceCapValue(plan.coInsuranceCap, prospect, additionalInfo)}
           />
         </div>
 
@@ -309,65 +309,38 @@ const InfoItem = ({
   </div>
 );
 
-function getMinimumValue(
-  options: Record<string, Record<string, number>>,
-  age: number
-): number {
-  if (!options) return 0;
 
-  const option = age < 45 ? options.opcion_2 : options.opcion_4;
-  if (!option) return 0;
 
-  const valores = Object.values(option);
-  return valores.length > 0 ? Math.min(...valores) : 0;
-}
-
-function getCoInsuranceValue(coInsurance: any): string {
+function getCoInsuranceValue(coInsurance: any, prospect: any, additionalInfo: any): string {
   if (!coInsurance) return "0%";
 
   if (typeof coInsurance === 'number') return `${coInsurance}%`;
 
   if (coInsurance.value !== undefined) return `${coInsurance.value}%`;
 
-  let minValue = 100;
-
-  if (coInsurance.opcion_2) {
-    const values = Object.values(coInsurance.opcion_2) as number[];
-    const min = Math.min(...values);
-    minValue = Math.min(minValue, min);
+  // Si tiene opciones múltiples, usar la nueva utilidad
+  if (coInsurance.opcion_2 || coInsurance.opcion_4) {
+    const minValue = getMinimumValueByAge(coInsurance, prospect, additionalInfo);
+    return `DESDE ${minValue}%`;
   }
 
-  if (coInsurance.opcion_4) {
-    const values = Object.values(coInsurance.opcion_4) as number[];
-    const min = Math.min(...values);
-    minValue = Math.min(minValue, min);
-  }
-
-  return `DESDE ${minValue}%`;
+  return "0%";
 }
 
-function getCoInsuranceCapValue(coInsuranceCap: any): string {
+function getCoInsuranceCapValue(coInsuranceCap: any, prospect: any, additionalInfo: any): string {
   if (!coInsuranceCap) return formatCurrency(0);
 
   if (typeof coInsuranceCap === 'number') return formatCurrency(coInsuranceCap);
 
   if (coInsuranceCap.value !== undefined) return formatCurrency(coInsuranceCap.value);
 
-  let minValue = Number.MAX_SAFE_INTEGER;
-
-  if (coInsuranceCap.opcion_2) {
-    const values = Object.values(coInsuranceCap.opcion_2) as number[];
-    const min = Math.min(...values);
-    minValue = Math.min(minValue, min);
+  // Si tiene opciones múltiples, usar la nueva utilidad
+  if (coInsuranceCap.opcion_2 || coInsuranceCap.opcion_4) {
+    const minValue = getMinimumValueByAge(coInsuranceCap, prospect, additionalInfo);
+    return `DESDE ${formatCurrency(minValue)}`;
   }
 
-  if (coInsuranceCap.opcion_4) {
-    const values = Object.values(coInsuranceCap.opcion_4) as number[];
-    const min = Math.min(...values);
-    minValue = Math.min(minValue, min);
-  }
-
-  return `DESDE ${formatCurrency(minValue === Number.MAX_SAFE_INTEGER ? 0 : minValue)}`;
+  return formatCurrency(0);
 }
 
 function getFormattedValue(

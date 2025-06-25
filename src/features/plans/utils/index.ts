@@ -7,6 +7,7 @@ import type {
   PriceDataHDI,
   PriceTable,
 } from "../types";
+import type { Plan } from "../types/plan";
 
 export const flatPricesToJsonPrices = (
   prices: PriceData[]
@@ -99,7 +100,7 @@ function roundPrice(price: number): number {
 
 function getPriceForPerson(
   age: number,
-  priceTable: PriceTable | HDIPriceTable, //we need to pass priceTable here so we can check wtf we will return to calculate
+  priceTable: PriceTable | HDIPriceTable,
   paymentType = "mensual",
   gender?: "mujer" | "hombre"
 ): IndividualPriceDetails {
@@ -108,7 +109,7 @@ function getPriceForPerson(
 
     if (isHDIPriceTable(priceTable)) {
       const prices = priceTable[ageKey];
-      if (!prices) return 0; //should return 0 if we cant find the price, maybe covered by the return 0 at the end
+      if (!prices) return 0;
 
       //return the full HDIPriceDetails object
       return prices;
@@ -326,7 +327,7 @@ export function calculateInsurancePrice(
   };
 }
 
-export const normalizePlanData = (plan: any) => {
+export const transformPlanData = (plan: any): Plan => {
   return {
     ...plan,
     deductibles: plan.deductibles || {},
@@ -341,4 +342,156 @@ export const normalizePlanData = (plan: any) => {
       name: plan.planType?.name || "",
     },
   };
+};
+
+/**
+ * Determina qué opción usar basándose en las edades de los integrantes de la cotización
+ * opcion_2: para menores de 45 años
+ * opcion_4: para mayores de 45 años
+ * Si hay integrantes de ambos grupos, se usa la opción que incluya a todos (opcion_4)
+ */
+export const getAgeBasedOption = (
+  prospect: any,
+  additionalInfo: any
+): "opcion_2" | "opcion_4" => {
+  const ages: number[] = [];
+
+  // Agregar edad del prospecto principal
+  if (prospect?.age) {
+    ages.push(prospect.age);
+  }
+
+  // Agregar edad de la pareja si existe
+  if (additionalInfo?.partnerAge) {
+    ages.push(additionalInfo.partnerAge);
+  }
+
+  // Agregar edades de los hijos si existen
+  if (additionalInfo?.children && Array.isArray(additionalInfo.children)) {
+    additionalInfo.children.forEach((child: any) => {
+      if (child?.age) {
+        ages.push(child.age);
+      }
+    });
+  }
+
+  // Agregar edades de los padres si existen
+  if (additionalInfo?.momAge) {
+    ages.push(additionalInfo.momAge);
+  }
+  if (additionalInfo?.dadAge) {
+    ages.push(additionalInfo.dadAge);
+  }
+
+  // Agregar edades de otras personas protegidas si existen
+  if (
+    additionalInfo?.protectedPersons &&
+    Array.isArray(additionalInfo.protectedPersons)
+  ) {
+    additionalInfo.protectedPersons.forEach((person: any) => {
+      if (person?.age) {
+        ages.push(person.age);
+      }
+    });
+  }
+
+  // Si la persona más joven (edad mínima) tiene menos de 45, usar opcion_2
+  // Si la persona más joven tiene 45 años o más, usar opcion_4
+  const minAge = Math.min(...ages);
+
+  return minAge >= 45 ? "opcion_4" : "opcion_2";
+};
+
+/**
+ * Obtiene el valor apropiado de una estructura con opciones múltiples basado en las edades
+ * Funciona para deducibles, coaseguro y tope de coaseguro
+ */
+export const getValueByAge = (
+  data: any,
+  prospect: any,
+  additionalInfo: any,
+  level: "A" | "B" | "C" | "D" = "A"
+): number => {
+  if (!data) return 0;
+
+  // Si es un valor simple (número), retornarlo
+  if (typeof data === "number") {
+    return data;
+  }
+
+  // Si tiene una propiedad 'value', usarla
+  if (data.value !== undefined) {
+    return data.value;
+  }
+
+  // Si no tiene opciones múltiples, retornar 0
+  if (!data.opcion_2 && !data.opcion_4) {
+    return 0;
+  }
+
+  // Determinar qué opción usar basándose en las edades
+  const option = getAgeBasedOption(prospect, additionalInfo);
+  const selectedOption = data[option];
+
+  if (!selectedOption) {
+    return 0;
+  }
+
+  // Retornar el valor del nivel especificado
+  return selectedOption[level] || 0;
+};
+
+/**
+ * Obtiene el valor mínimo de una estructura con opciones múltiples basado en las edades
+ * Útil para mostrar "desde" en la UI
+ */
+export const getMinimumValueByAge = (
+  data: any,
+  prospect: any,
+  additionalInfo: any
+): number => {
+  if (!data) return 0;
+
+  // Si es un valor simple (número), retornarlo
+  if (typeof data === "number") {
+    return data;
+  }
+
+  // Si tiene una propiedad 'value', usarla
+  if (data.value !== undefined) {
+    return data.value;
+  }
+
+  // Si no tiene opciones múltiples, retornar 0
+  if (!data.opcion_2 && !data.opcion_4) {
+    return 0;
+  }
+
+  // Determinar qué opción usar basándose en las edades
+  const option = getAgeBasedOption(prospect, additionalInfo);
+  const selectedOption = data[option];
+
+  if (!selectedOption) {
+    return 0;
+  }
+
+  // Retornar el valor mínimo de todos los niveles
+  const values = Object.values(selectedOption) as number[];
+  const minValue = values.length > 0 ? Math.min(...values) : 0;
+
+  // Debug temporal - mostrar lógica de selección
+  const ages: number[] = [];
+  if (prospect?.age) ages.push(prospect.age);
+  if (additionalInfo?.partnerAge) ages.push(additionalInfo.partnerAge);
+  if (additionalInfo?.children) {
+    additionalInfo.children.forEach((child: any) => {
+      if (child?.age) ages.push(child.age);
+    });
+  }
+  const minAge = ages.length > 0 ? Math.min(...ages) : 0;
+  console.log(
+    `Edades: [${ages.join(", ")}], Edad mínima: ${minAge}, Opción seleccionada: ${option}, Valores: [${values.join(", ")}], Mínimo: ${minValue}`
+  );
+
+  return minValue;
 };

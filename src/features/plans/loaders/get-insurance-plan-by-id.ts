@@ -2,7 +2,7 @@ import { getInsurancePlanByIdService } from "../services/read/get-insurance-plan
 import {
   jsonPricesToFlatPrices,
   jsonPricesToFlatPricesHDI,
-  normalizePlanData,
+  transformPlanData,
 } from "../utils";
 import { unstable_cache } from "next/cache";
 
@@ -22,7 +22,7 @@ export const getInsurancePlanById = async (id: string) => {
     throw new Error("El plan o los precios del plan no se encuentran");
   }
 
-  const normalizedPlan = normalizePlanData(insurancePlan);
+  const normalizedPlan = transformPlanData(insurancePlan);
   const prices = normalizedPlan.prices;
   const useHDIFormat = isHDIPriceFormat(prices);
 
