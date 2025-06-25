@@ -159,13 +159,12 @@ const calculateSpacingConfig = (
   if (isDetailedPricing) {
     spacingMultiplier *= 0.9;
   }
-
   return {
     ...baseConfig,
     sectionGap: Math.round(10 * spacingMultiplier),
     sectionPadding: Math.round(12 * spacingMultiplier),
     tablePadding: Math.round(10 * spacingMultiplier),
-    elementSpacing: Math.round(2 * spacingMultiplier),
+    elementSpacing: Math.round(10 * spacingMultiplier),
     multiplier: spacingMultiplier,
   };
 };
@@ -223,13 +222,13 @@ const generateHeaderTemplate = (data: QuotePDFData, logoBase64: string) => {
       font-family: 'Arial', sans-serif;
       font-size: 11px;
       margin: 0;
-      height: 120px;
+      height: 80px;
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       z-index: 1000;
-      margin-bottom: 140px;
+      margin-bottom: 100px;
     ">
       <div style="
         display: flex;
@@ -240,7 +239,7 @@ const generateHeaderTemplate = (data: QuotePDFData, logoBase64: string) => {
         margin: 0 auto;
       ">
         <div style="
-          font-size: clamp(20px, 4vw, 28px);
+          font-size: 24px;
           font-weight: bold;
           line-height: 1.2;
           max-width: 500px;
@@ -253,7 +252,7 @@ const generateHeaderTemplate = (data: QuotePDFData, logoBase64: string) => {
           align-items: flex-end;
           gap: 10px;
         ">
-          <img src="${logoBase64}" alt="Logo ${data.company}" style="width: auto; height: 70px;" />
+          <img src="${logoBase64}" alt="Logo ${data.company}" style="width: auto; height: 50px;" />
         </div>
       </div>
     </div>
@@ -399,10 +398,10 @@ export const generatePDFWithPuppeteer = async (
       // Eliminar esta línea: document.body.style.paddingTop = `${config.headerHeight}px`;
 
       // Para la primera página, aplicar margen al primer elemento
-      const firstSection = document.querySelector(".plan-info") as HTMLElement;
-      if (firstSection) {
-        firstSection.style.marginTop = "20px";
-      }
+      // const firstSection = document.querySelector(".plan-info") as HTMLElement;
+      // if (firstSection) {
+      //   firstSection.style.marginTop = "10px";
+      // }
 
       // Aplicar espaciado a las secciones
       const sections = document.querySelectorAll(".content-section");
@@ -445,12 +444,12 @@ export const generatePDFWithPuppeteer = async (
       const tables = document.querySelectorAll(".data-table");
       tables.forEach((table) => {
         const tableElement = table as HTMLElement;
-        tableElement.style.fontSize = config.multiplier >= 1 ? "16px" : "14px";
+        tableElement.style.fontSize = "14px";
 
         const cells = table.querySelectorAll("td, th");
         cells.forEach((cell) => {
           const cellElement = cell as HTMLElement;
-          cellElement.style.padding = `${config.tablePadding}px`;
+          cellElement.style.padding = `10px`;
         });
       });
 
@@ -474,7 +473,7 @@ export const generatePDFWithPuppeteer = async (
       format: "Letter",
       printBackground: true,
       margin: {
-        top: "140px",
+        top: "100px",
         bottom: "40px",
         left: "25px",
         right: "25px",

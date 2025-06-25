@@ -1319,7 +1319,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
       @page { 
         size: letter; 
         /* Margen superior debe ser igual o mayor a la altura del header */ 
-        margin-top: 140px; /* 120px header + 20px espacio */ 
+        margin-top: 100px;
         margin-bottom: 40px; 
         margin-left: 25px; 
         margin-right: 25px; 
@@ -1428,7 +1428,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
       }
 
       .plan-info {
-        padding: 15px 25px;
+        padding: 0px 15px;
         width: 100%;
         max-width: 900px;
         /* Los márgenes se aplicarán vía JavaScript */
@@ -1436,6 +1436,11 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         break-after: avoid;
         page-break-inside: avoid !important;
         break-inside: avoid !important;
+      }
+
+      .logo-emma {
+        height: 80px;
+        width: auto;
       }
 
       .plan-details {
@@ -1457,9 +1462,9 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
       .section-title {
         background: var(--primary-blue);
         color: var(--white);
-        padding: 12px 20px;
+        padding: 8px 16px;
         border-radius: 13px 13px 0 0;
-        font-size: 18px;
+        font-size: 16px;
         font-weight: bold;
         display: flex;
         align-items: center;
@@ -1476,7 +1481,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         align-items: center;
         justify-content: center;
         color: var(--primary-blue);
-        font-size: 12px;
+        font-size: 14px;
         font-weight: bold;
       }
 
@@ -1580,13 +1585,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
 
       .data-table th:first-child,
       .data-table td:first-child {
-        width: 45%;
-      }
-
-      .data-table th:not(:first-child),
-      .data-table td:not(:first-child) {
-        width: 27.5%;
-        text-align: center;
+        width: 35%;
       }
 
       .data-table th {
@@ -1638,7 +1637,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
 
       /* Resumen de costos */
       .cost-summary {
-        padding: 10px;
+        padding: 5px;
         border-radius: var(--border-radius-small);
         display: flex;
         flex-direction: column;
@@ -1649,19 +1648,19 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
 
       .summary-box {
         text-align: center;
-        padding: 12px;
-        margin-bottom: 8px;
+        padding: 6px;
+        margin-bottom: 4px;
       }
 
       .summary-label {
         color: var(--secondary-blue);
         font-weight: 600;
         font-size: 14px;
-        margin-bottom: 4px;
+        margin-bottom: 2px;
       }
 
       .summary-amount {
-        font-size: 20px;
+        font-size: 18px;
         font-weight: bold;
         color: var(--text-dark);
         text-decoration: underline;
@@ -1771,17 +1770,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
           max-width: none;
         }
         
-        .content-section:last-child {
-          /* Forzar que aparezca en impresión */
-          display: block !important;
-          visibility: visible !important;
-          opacity: 1 !important;
-          position: relative !important;
-          
-          /* Asegurar espacio */
-          margin-bottom: 50px !important;
-          padding-bottom: 30px !important;
-        }
+        
         
         .coverage-item {
           /* Asegurar visibilidad en impresión */
@@ -1799,7 +1788,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
           <section class="plan-info">
             <div class="plan-details">
               <span>{{plan}} • {{company}}</span>
-              <img src="{{emmaLogoPath}}" alt="EMMA Logo" />
+              <img src="{{emmaLogoPath}}" alt="EMMA Logo" class="logo-emma" />
             </div>
           </section>
 
