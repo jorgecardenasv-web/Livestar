@@ -120,27 +120,6 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
       .content-section + .content-section {
         margin-top: 25px !important;
       }
-      
-      /* Reglas específicas para impresión */ 
-      @media print { 
-        body { 
-          background: var(--white); 
-          /* Los márgenes ya están definidos en @page */ 
-        } 
-
-        /* Forzar respeto de márgenes en elementos */ 
-        .main-content { 
-          /* Eliminar padding-top ya que @page lo maneja */ 
-          padding-top: 0; 
-        } 
-
-        /* Asegurar espaciado después de saltos de página */ 
-        .content-section { 
-          /* Orphans y widows para evitar líneas huérfanas */ 
-          orphans: 3; 
-          widows: 3; 
-        } 
-      }
 
       .plan-info {
         padding: 20px 30px;
@@ -387,30 +366,18 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
         display: flex !important;
         justify-content: space-between !important;
         align-items: center !important;
-        padding: 20px !important;
+        padding: 15px !important; /* Reducir padding fijo en lugar de dinámico */
         border-bottom: 1px solid var(--border-gray) !important;
         background-color: var(--white) !important;
-        min-height: 60px !important;
+        min-height: 50px !important; /* Reducir altura mínima */
         
-        /* Evitar saltos problemáticos */
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
+        /* SIMPLIFICAR page-break rules */
+        page-break-inside: auto; /* Cambiar de avoid a auto */
+        break-inside: auto;
         
-        /* Asegurar visibilidad */
         position: relative !important;
         z-index: 15 !important;
         overflow: visible !important;
-        /* El padding se aplicará vía JavaScript */
-      }
-
-      .coverage-item:last-child {
-        border-bottom: none !important;
-        border-radius: 0 0 13px 13px !important;
-        margin-bottom: 0 !important;
-      }
-
-      .coverage-item:first-child {
-        border-top: none !important;
       }
 
       .coverage-name {
@@ -433,7 +400,6 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
       .content-section:last-child .border-top {
         border-top: 3px solid var(--primary-blue) !important;
         background-color: var(--white) !important;
-        border-radius: 0 0 13px 13px !important;
         overflow: visible !important;
         min-height: 80px !important;
         display: block !important;
@@ -469,41 +435,6 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
         /* Evitar huérfanos y viudas */
         orphans: 3;
         widows: 3;
-      }
-
-      /* Prevención adicional de problemas de impresión */
-      @media print {
-        body {
-          background: var(--white);
-          padding: 0;
-          /* AGREGADO: Asegurar que el body tenga altura suficiente */
-          min-height: 11in !important; /* Altura completa de página carta */
-          padding-bottom: 1in !important;
-        }
-
-        .quote-container {
-          box-shadow: none;
-          max-width: none;
-        }
-        
-        .content-section:last-child {
-          /* Forzar que aparezca en impresión */
-          display: block !important;
-          visibility: visible !important;
-          opacity: 1 !important;
-          position: relative !important;
-          
-          /* Asegurar espacio */
-          margin-bottom: 50px !important;
-          padding-bottom: 30px !important;
-        }
-        
-        .coverage-item {
-          /* Asegurar visibilidad en impresión */
-          display: flex !important;
-          visibility: visible !important;
-          opacity: 1 !important;
-        }
       }
     </style>
   </head>
@@ -1042,16 +973,6 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
         /* El padding se aplicará vía JavaScript */
       }
 
-      .coverage-item:last-child {
-        border-bottom: none !important;
-        border-radius: 0 0 13px 13px !important;
-        margin-bottom: 0 !important;
-      }
-
-      .coverage-item:first-child {
-        border-top: none !important;
-      }
-
       .coverage-name {
         color: var(--secondary-blue) !important;
         font-weight: 500 !important;
@@ -1072,7 +993,6 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
       .content-section:last-child .border-top {
         border-top: 3px solid var(--primary-blue) !important;
         background-color: var(--white) !important;
-        border-radius: 0 0 13px 13px !important;
         overflow: visible !important;
         min-height: 80px !important;
         display: block !important;
@@ -1108,41 +1028,6 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
         /* Evitar huérfanos y viudas */
         orphans: 3;
         widows: 3;
-      }
-
-      /* Prevención adicional de problemas de impresión */
-      @media print {
-        body {
-          background: var(--white);
-          padding: 0;
-          /* AGREGADO: Asegurar que el body tenga altura suficiente */
-          min-height: 11in !important; /* Altura completa de página carta */
-          padding-bottom: 1in !important;
-        }
-
-        .quote-container {
-          box-shadow: none;
-          max-width: none;
-        }
-        
-        .content-section:last-child {
-          /* Forzar que aparezca en impresión */
-          display: block !important;
-          visibility: visible !important;
-          opacity: 1 !important;
-          position: relative !important;
-          
-          /* Asegurar espacio */
-          margin-bottom: 50px !important;
-          padding-bottom: 30px !important;
-        }
-        
-        .coverage-item {
-          /* Asegurar visibilidad en impresión */
-          display: flex !important;
-          visibility: visible !important;
-          opacity: 1 !important;
-        }
       }
     </style>
   </head>
@@ -1317,14 +1202,14 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
 
       /* IMPORTANTE: Reglas @page para manejar márgenes en todas las páginas */ 
       @page { 
-        size: letter; 
-        /* Margen superior debe ser igual o mayor a la altura del header */ 
-        margin-top: 100px;
-        margin-bottom: 40px; 
-        margin-left: 25px; 
-        margin-right: 25px; 
-        background-color: #f9f8f9;
-      }
+  size: letter; 
+  /* Asegurar que el margen superior cubra completamente el header */
+  margin-top: 120px; /* Cambiar de 100px a 120px para coincidir con headerHeight */
+  margin-bottom: 40px; 
+  margin-left: 25px; 
+  margin-right: 25px; 
+  background-color: #f9f8f9;
+}
 
       /* Reset y estilos base */ 
       * { 
@@ -1404,28 +1289,6 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         margin: 0; 
         /* Este pseudo-elemento ayuda a mantener el espaciado */ 
       }
-      
-      
-      /* Reglas específicas para impresión */ 
-      @media print { 
-        body { 
-          background: var(--white); 
-          /* Los márgenes ya están definidos en @page */ 
-        } 
-
-        /* Forzar respeto de márgenes en elementos */ 
-        .main-content { 
-          /* Eliminar padding-top ya que @page lo maneja */ 
-          padding-top: 0; 
-        } 
-
-        /* Asegurar espaciado después de saltos de página */ 
-        .content-section { 
-          /* Orphans y widows para evitar líneas huérfanas */ 
-          orphans: 3; 
-          widows: 3; 
-        } 
-      }
 
       .plan-info {
         padding: 0px 15px;
@@ -1489,7 +1352,6 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
       .layout-60-40 {
         display: flex;
         background-color: white;
-        min-height: 200px;
         align-items: stretch;
         /* AGREGADO: Evitar saltos en layouts */
         page-break-inside: avoid !important;
@@ -1687,16 +1549,6 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         /* El padding se aplicará vía JavaScript */
       }
 
-      .coverage-item:last-child {
-        border-bottom: none !important;
-        border-radius: 0 0 13px 13px !important;
-        margin-bottom: 0 !important;
-      }
-
-      .coverage-item:first-child {
-        border-top: none !important;
-      }
-
       .coverage-name {
         color: var(--secondary-blue) !important;
         font-weight: 500 !important;
@@ -1711,16 +1563,6 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         font-size: 16px !important;
         text-align: right !important;
         white-space: nowrap !important;
-      }
-
-      /* Mejorar el div con border-top dentro de coberturas */
-      .content-section:last-child .border-top {
-        border-top: 3px solid var(--primary-blue) !important;
-        background-color: var(--white) !important;
-        border-radius: 0 0 13px 13px !important;
-        overflow: visible !important;
-        min-height: 80px !important;
-        display: block !important;
       }
 
       /* Tabla de deducibles */
@@ -1744,40 +1586,6 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
       .price-cell {
         color: var(--secondary-blue);
         font-weight: bold;
-      }
-
-      /* Prevención de saltos de página inadecuados */
-      .page-group {
-        page-break-inside: avoid;
-        break-inside: avoid;
-        /* Evitar huérfanos y viudas */
-        orphans: 3;
-        widows: 3;
-      }
-
-      /* Prevención adicional de problemas de impresión */
-      @media print {
-        body {
-          background: var(--white);
-          padding: 0;
-          /* AGREGADO: Asegurar que el body tenga altura suficiente */
-          min-height: 11in !important; /* Altura completa de página carta */
-          padding-bottom: 1in !important;
-        }
-
-        .quote-container {
-          box-shadow: none;
-          max-width: none;
-        }
-        
-        
-        
-        .coverage-item {
-          /* Asegurar visibilidad en impresión */
-          display: flex !important;
-          visibility: visible !important;
-          opacity: 1 !important;
-        }
       }
     </style>
   </head>
@@ -1891,7 +1699,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
             </section>
 
             <!-- Coberturas principales -->
-            <section class="content-section page-group">
+            <section class="content-section">
               <h2 class="section-title">
                 <img src="{{checkIconPath}}" alt="Icono Check" />
                 COBERTURAS PRINCIPALES

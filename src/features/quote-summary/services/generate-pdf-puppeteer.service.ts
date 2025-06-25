@@ -222,13 +222,12 @@ const generateHeaderTemplate = (data: QuotePDFData, logoBase64: string) => {
       font-family: 'Arial', sans-serif;
       font-size: 11px;
       margin: 0;
-      height: 80px;
+      height: 100px;
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       z-index: 1000;
-      margin-bottom: 100px;
     ">
       <div style="
         display: flex;
@@ -451,13 +450,6 @@ export const generatePDFWithPuppeteer = async (
           const cellElement = cell as HTMLElement;
           cellElement.style.padding = `10px`;
         });
-      });
-
-      // Ajustar elementos de cobertura
-      const coverageItems = document.querySelectorAll(".coverage-item");
-      coverageItems.forEach((item) => {
-        const itemElement = item as HTMLElement;
-        itemElement.style.padding = `${config.tablePadding}px`;
       });
 
       console.log(
