@@ -161,6 +161,11 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
         width: fit-content;
       }
 
+      .section-title img {
+        width: 40px;
+        height: 40px;
+      }
+
       .section-icon {
         width: 20px;
         height: 20px;
@@ -436,6 +441,11 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
         orphans: 3;
         widows: 3;
       }
+
+      .logo-emma {
+        height: 100px;
+        width: auto;
+      }
     </style>
   </head>
   <body>
@@ -445,7 +455,7 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
           <section class="plan-info">
             <div class="plan-details">
               <span>{{plan}} • {{company}}</span>
-              <img src="{{emmaLogoPath}}" alt="EMMA Logo" />
+              <img src="{{emmaLogoPath}}" alt="EMMA Logo" class="logo-emma" />
             </div>
           </section>
 
@@ -540,7 +550,7 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
             <!-- Deducibles y coaseguros -->
             <section class="content-section">
               <h2 class="section-title">
-                <span class="section-icon" aria-hidden="true">💉</span>
+                <img src="{{medicalIconPath}}" alt="Icono Dinero" />
                 DEDUCIBLES Y COASEGURO
               </h2>
               <table class="data-table deductible-table border-top">
@@ -750,6 +760,11 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
         align-items: center;
         gap: 10px;
         width: fit-content;
+      }
+      
+      .section-title img {
+        width: 40px;
+        height: 40px;
       }
 
       .section-icon {
@@ -1029,6 +1044,11 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
         orphans: 3;
         widows: 3;
       }
+
+      .logo-emma {
+        height: 100px;
+        width: auto;
+      }
     </style>
   </head>
   <body>
@@ -1038,7 +1058,7 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
           <section class="plan-info">
             <div class="plan-details">
               <span>{{plan}} • {{company}}</span>
-              <img src="{{emmaLogoPath}}" alt="EMMA Logo" />
+              <img src="{{emmaLogoPath}}" alt="EMMA Logo" class="logo-emma" />
             </div>
           </section>
 
@@ -1144,7 +1164,7 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
             <!-- Deducibles y coaseguros -->
             <section class="content-section">
               <h2 class="section-title">
-                <span class="section-icon" aria-hidden="true">💉</span>
+                <img src="{{medicalIconPath}}" alt="Icono de Dolar" />
                 DEDUCIBLES Y COASEGURO
               </h2>
               <table class="data-table deductible-table border-top">
@@ -1316,6 +1336,11 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         align-items: center;
         gap: 10px;
         width: fit-content;
+      }
+
+      .section-title img {
+        width: 40px;
+        height: 40px;
       }
 
       .section-icon {
