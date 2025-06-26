@@ -19,7 +19,12 @@ interface CustomizableOptions {
   coInsuranceOptions: number[];
 }
 
-export type IndividualPriceDetails = number | HDIPriceDetails;
+export interface StandardPriceDetails {
+  anual: number;
+  mensual: number;
+}
+
+export type IndividualPriceDetails = number | HDIPriceDetails | StandardPriceDetails;
 
 export interface InsurancePriceResult {
   coverage_fee: number;

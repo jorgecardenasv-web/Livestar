@@ -114,12 +114,15 @@ function getPriceForPerson(
       //return the full HDIPriceDetails object
       return prices;
     }
-    //or just return the single number
-    return roundPrice(
-      priceTable[ageKey]?.[gender || "hombre"]?.[
-        paymentType.toLowerCase() as "anual" | "mensual"
-      ] || 0
-    );
+
+    // For non-HDI price tables, return an object with anual and mensual prices
+    const genderPrices = priceTable[ageKey]?.[gender || "hombre"];
+    if (!genderPrices) return 0;
+
+    return {
+      anual: roundPrice(genderPrices.anual),
+      mensual: roundPrice(genderPrices.mensual),
+    };
   }
   return 0;
 }
@@ -153,11 +156,23 @@ export function calculateInsurancePrice(
         name: "Padre",
         price: dadPriceDetails,
       });
-      if (isHDIPriceTable(priceTable) && typeof dadPriceDetails !== "number") {
+      if (
+        isHDIPriceTable(priceTable) &&
+        typeof dadPriceDetails !== "number" &&
+        "primerMes" in dadPriceDetails
+      ) {
         totalPrice +=
           paymentType.toLowerCase() === "anual"
             ? dadPriceDetails.anual
             : dadPriceDetails.primerMes;
+      } else if (
+        typeof dadPriceDetails !== "number" &&
+        "mensual" in dadPriceDetails
+      ) {
+        totalPrice +=
+          paymentType.toLowerCase() === "anual"
+            ? dadPriceDetails.anual
+            : dadPriceDetails.mensual;
       } else if (typeof dadPriceDetails === "number") {
         totalPrice += dadPriceDetails;
       }
@@ -174,11 +189,23 @@ export function calculateInsurancePrice(
         name: "Madre",
         price: momPriceDetails, // Store the details
       });
-      if (isHDIPriceTable(priceTable) && typeof momPriceDetails !== "number") {
+      if (
+        isHDIPriceTable(priceTable) &&
+        typeof momPriceDetails !== "number" &&
+        "primerMes" in momPriceDetails
+      ) {
         totalPrice +=
           paymentType.toLowerCase() === "anual"
             ? momPriceDetails.anual
             : momPriceDetails.primerMes;
+      } else if (
+        typeof momPriceDetails !== "number" &&
+        "mensual" in momPriceDetails
+      ) {
+        totalPrice +=
+          paymentType.toLowerCase() === "anual"
+            ? momPriceDetails.anual
+            : momPriceDetails.mensual;
       } else if (typeof momPriceDetails === "number") {
         totalPrice += momPriceDetails;
       }
@@ -197,12 +224,21 @@ export function calculateInsurancePrice(
       //here we calculate total price based on payment type if HDI, otherwise we use the single price
       if (
         isHDIPriceTable(priceTable) &&
-        typeof childPriceDetails !== "number"
+        typeof childPriceDetails !== "number" &&
+        "primerMes" in childPriceDetails
       ) {
         totalPrice +=
           paymentType.toLowerCase() === "anual"
             ? childPriceDetails.anual
             : childPriceDetails.primerMes;
+      } else if (
+        typeof childPriceDetails !== "number" &&
+        "mensual" in childPriceDetails
+      ) {
+        totalPrice +=
+          paymentType.toLowerCase() === "anual"
+            ? childPriceDetails.anual
+            : childPriceDetails.mensual;
       } else if (typeof childPriceDetails === "number") {
         totalPrice += childPriceDetails;
       }
@@ -216,11 +252,23 @@ export function calculateInsurancePrice(
       isHDIPriceTable(priceTable) ? undefined : data.gender || "hombre"
     );
     individualPrices.main = mainPriceDetails;
-    if (isHDIPriceTable(priceTable) && typeof mainPriceDetails !== "number") {
+    if (
+      isHDIPriceTable(priceTable) &&
+      typeof mainPriceDetails !== "number" &&
+      "primerMes" in mainPriceDetails
+    ) {
       totalPrice +=
         paymentType.toLowerCase() === "anual"
           ? mainPriceDetails.anual
           : mainPriceDetails.primerMes;
+    } else if (
+      typeof mainPriceDetails !== "number" &&
+      "mensual" in mainPriceDetails
+    ) {
+      totalPrice +=
+        paymentType.toLowerCase() === "anual"
+          ? mainPriceDetails.anual
+          : mainPriceDetails.mensual;
     } else if (typeof mainPriceDetails === "number") {
       totalPrice += mainPriceDetails;
     }
@@ -249,12 +297,21 @@ export function calculateInsurancePrice(
 
         if (
           isHDIPriceTable(priceTable) &&
-          typeof partnerPriceDetails !== "number"
+          typeof partnerPriceDetails !== "number" &&
+          "primerMes" in partnerPriceDetails
         ) {
           totalPrice +=
             paymentType.toLowerCase() === "anual"
               ? partnerPriceDetails.anual
               : partnerPriceDetails.primerMes;
+        } else if (
+          typeof partnerPriceDetails !== "number" &&
+          "mensual" in partnerPriceDetails
+        ) {
+          totalPrice +=
+            paymentType.toLowerCase() === "anual"
+              ? partnerPriceDetails.anual
+              : partnerPriceDetails.mensual;
         } else if (typeof partnerPriceDetails === "number") {
           totalPrice += partnerPriceDetails;
         }
@@ -271,12 +328,21 @@ export function calculateInsurancePrice(
             );
             if (
               isHDIPriceTable(priceTable) &&
-              typeof childPriceDetails !== "number"
+              typeof childPriceDetails !== "number" &&
+              "primerMes" in childPriceDetails
             ) {
               totalPrice +=
                 paymentType.toLowerCase() === "anual"
                   ? childPriceDetails.anual
                   : childPriceDetails.primerMes;
+            } else if (
+              typeof childPriceDetails !== "number" &&
+              "mensual" in childPriceDetails
+            ) {
+              totalPrice +=
+                paymentType.toLowerCase() === "anual"
+                  ? childPriceDetails.anual
+                  : childPriceDetails.mensual;
             } else if (typeof childPriceDetails === "number") {
               totalPrice += childPriceDetails;
             }
@@ -300,12 +366,21 @@ export function calculateInsurancePrice(
         });
         if (
           isHDIPriceTable(priceTable) &&
-          typeof otherPriceDetails !== "number"
+          typeof otherPriceDetails !== "number" &&
+          "primerMes" in otherPriceDetails
         ) {
           totalPrice +=
             paymentType.toLowerCase() === "anual"
               ? otherPriceDetails.anual
               : otherPriceDetails.primerMes;
+        } else if (
+          typeof otherPriceDetails !== "number" &&
+          "mensual" in otherPriceDetails
+        ) {
+          totalPrice +=
+            paymentType.toLowerCase() === "anual"
+              ? otherPriceDetails.anual
+              : otherPriceDetails.mensual;
         } else if (typeof otherPriceDetails === "number") {
           totalPrice += otherPriceDetails;
         }

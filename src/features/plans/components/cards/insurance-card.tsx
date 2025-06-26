@@ -66,27 +66,28 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   //we need to calculate the total segundoMesADoce fee if HDI and payment is mensual, looks a little weird though
   let totalSegundoMesADoce = 0;
   if (isHDIPrice && paymentType === "Mensual") {
-    if (typeof individualPrices.main !== "number") {
+    if (typeof individualPrices.main !== "number" && "segundoMesADoce" in individualPrices.main) {
       totalSegundoMesADoce += individualPrices.main?.segundoMesADoce || 0;
     }
     if (
       individualPrices.partner &&
-      typeof individualPrices.partner !== "number"
+      typeof individualPrices.partner !== "number" &&
+      "segundoMesADoce" in individualPrices.partner
     ) {
       totalSegundoMesADoce += individualPrices.partner?.segundoMesADoce || 0;
     }
     individualPrices.children.forEach((childPrice) => {
-      if (typeof childPrice !== "number") {
+      if (typeof childPrice !== "number" && "segundoMesADoce" in childPrice) {
         totalSegundoMesADoce += childPrice?.segundoMesADoce || 0;
       }
     });
     individualPrices.parents.forEach((parent) => {
-      if (typeof parent.price !== "number") {
+      if (typeof parent.price !== "number" && "segundoMesADoce" in parent.price) {
         totalSegundoMesADoce += parent.price?.segundoMesADoce || 0;
       }
     });
     individualPrices.others?.forEach((other) => {
-      if (typeof other.price !== "number") {
+      if (typeof other.price !== "number" && "segundoMesADoce" in other.price) {
         totalSegundoMesADoce += other.price?.segundoMesADoce || 0;
       }
     });
@@ -94,6 +95,8 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   }
 
   const logoSrc = company.logo ? await getImage(company.logo) : null;
+
+  console.log("prices", prices)
 
   return (
     <div
@@ -382,6 +385,29 @@ function getFormattedValue(
               </span>
             </p>
           </div>
+        );
+      }
+      return (
+        <p className="text-lg font-bold text-[#223E99]">
+          {formatCurrency(price.anual)}
+          <span className="text-xs font-normal text-gray-600">/año</span>
+        </p>
+      );
+    }
+
+    // Handle standard price structure (non-HDI)
+    if (
+      price &&
+      typeof price === "object" &&
+      "anual" in price &&
+      "mensual" in price
+    ) {
+      if (paymentType === "Mensual") {
+        return (
+          <p className="text-lg font-bold text-[#223E99]">
+            {formatCurrency(price.mensual)}
+            <span className="text-xs font-normal text-gray-600">/mes</span>
+          </p>
         );
       }
       return (
