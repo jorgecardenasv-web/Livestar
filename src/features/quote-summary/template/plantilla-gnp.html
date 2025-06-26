@@ -601,8 +601,8 @@
                   {{#each processedDeductibles}}
                   <tr>
                     <td class="table-name">{{nivel}}</td>
-                    <td class="table-price">{{formatCurrency menoresDe45}}</td>
-                    <td class="table-price">{{formatCurrency mayoresDe45}}</td>
+                    <td class="table-price">{{formatCurrency deductibleUnder45}}</td>
+                    <td class="table-price">{{formatCurrency deductibleOver45}}</td>
                     <td class="table-price">{{coInsurance}}%</td>
                   </tr>
                   {{/each}}

@@ -42,10 +42,12 @@ Handlebars.registerHelper("multiply", function (a: number, b: number) {
 
 type ProcessedDeductible = {
   nivel: string;
-  menoresDe45: number;
-  mayoresDe45: number;
-  coInsurance: string | number;
-  coInsuranceCap?: number;
+  deductibleUnder45: number;
+  deductibleOver45: number;
+  coInsuranceUnder45: string | number;
+  coInsuranceCapUnder45?: number;
+  coInsuranceOver45: string | number;
+  coInsuranceCapOver45?: number;
 };
 
 const processDeductibles = (data: QuotePDFData): ProcessedDeductible[] => {
@@ -76,46 +78,58 @@ const processDeductibles = (data: QuotePDFData): ProcessedDeductible[] => {
         typeof valorMayores === "number" &&
         typeof valorMenores === "number"
       ) {
-        // Determinar coaseguro y tope de coaseguro para este nivel
-        let coInsuranceValue = data.coInsurance ?? 10;
-        let coInsuranceCapValue = data.coInsuranceCap;
+        // Determinar coaseguro y tope de coaseguro para menores de 45 (opcion_2)
+        let coInsuranceUnder45 = data.coInsurance ?? 10;
+        let coInsuranceCapUnder45 = data.coInsuranceCap;
 
-        // Si hay datos de coaseguros múltiples, buscar el valor correspondiente
+        // Determinar coaseguro y tope de coaseguro para mayores de 45 (opcion_4)
+        let coInsuranceOver45 = data.coInsurance ?? 10;
+        let coInsuranceCapOver45 = data.coInsuranceCap;
+
+        // Si hay datos de coaseguros múltiples para menores de 45 (opcion_2)
         if (
           coInsuranceData &&
           coInsuranceData.opcion_2 &&
           coInsuranceData.opcion_2[nivel]
         ) {
-          coInsuranceValue = coInsuranceData.opcion_2[nivel];
-        } else if (
+          coInsuranceUnder45 = coInsuranceData.opcion_2[nivel];
+        }
+
+        // Si hay datos de coaseguros múltiples para mayores de 45 (opcion_4)
+        if (
           coInsuranceData &&
           coInsuranceData.opcion_4 &&
           coInsuranceData.opcion_4[nivel]
         ) {
-          coInsuranceValue = coInsuranceData.opcion_4[nivel];
+          coInsuranceOver45 = coInsuranceData.opcion_4[nivel];
         }
 
-        // Si hay datos de topes de coaseguro múltiples, buscar el valor correspondiente
+        // Si hay datos de topes de coaseguro múltiples para menores de 45 (opcion_2)
         if (
           coInsuranceCapData &&
           coInsuranceCapData.opcion_2 &&
           coInsuranceCapData.opcion_2[nivel]
         ) {
-          coInsuranceCapValue = coInsuranceCapData.opcion_2[nivel];
-        } else if (
+          coInsuranceCapUnder45 = coInsuranceCapData.opcion_2[nivel];
+        }
+
+        // Si hay datos de topes de coaseguro múltiples para mayores de 45 (opcion_4)
+        if (
           coInsuranceCapData &&
           coInsuranceCapData.opcion_4 &&
           coInsuranceCapData.opcion_4[nivel]
         ) {
-          coInsuranceCapValue = coInsuranceCapData.opcion_4[nivel];
+          coInsuranceCapOver45 = coInsuranceCapData.opcion_4[nivel];
         }
 
         processedDeductibles.push({
           nivel: nivelMapping[nivel] || `Nivel ${nivel}`,
-          menoresDe45: valorMenores,
-          mayoresDe45: valorMayores,
-          coInsurance: coInsuranceValue,
-          coInsuranceCap: coInsuranceCapValue,
+          deductibleUnder45: valorMenores,
+          deductibleOver45: valorMayores,
+          coInsuranceUnder45: coInsuranceUnder45,
+          coInsuranceCapUnder45: coInsuranceCapUnder45,
+          coInsuranceOver45: coInsuranceOver45,
+          coInsuranceCapOver45: coInsuranceCapOver45,
         });
       }
     }
@@ -262,8 +276,6 @@ export const generatePDFWithPuppeteer = async (
   data: QuotePDFData,
   format: "datauri" | "arraybuffer" = "datauri"
 ): Promise<string | ArrayBuffer> => {
-  console.log("data", data);
-
   const isLocal = process.env.NODE_ENV === "development" || !process.env.VERCEL;
   let browser: BrowserType | null = null;
 
@@ -450,10 +462,6 @@ export const generatePDFWithPuppeteer = async (
           cellElement.style.padding = `10px`;
         });
       });
-
-      console.log(
-        `Aplicada configuración de espaciado: multiplicador ${config.multiplier}`
-      );
     }, spacingConfig);
 
     // Pequeña pausa para asegurar que los estilos se apliquen
@@ -475,7 +483,7 @@ export const generatePDFWithPuppeteer = async (
         background-color: #ffffff;
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
-        color: #1e3c72;
+        color: #376fa0;
         padding: 15px 30px;
         display: flex;
         justify-content: center;
@@ -493,7 +501,7 @@ export const generatePDFWithPuppeteer = async (
         text-align: center;
         line-height: 1.4;
       ">
-        <span style="max-width: 600px;">
+        <span style="max-width: 550px;">
           Este documento es únicamente informativo y no constituye una póliza de seguro. Los términos y condiciones específicos están sujetos a la póliza emitida por la aseguradora.
         </span>
       </div>`,

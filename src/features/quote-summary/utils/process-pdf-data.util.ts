@@ -4,7 +4,6 @@ export const processPDFData = (
   data: InsuranceQuoteData,
   prospect?: any
 ): QuotePDFData => {
-  console.log("data", data);
   const members = [];
   let hasDetailedPricing = false;
   let totalAnual = 0;
@@ -263,7 +262,8 @@ export const processPDFData = (
 
   if (!hasDetailedPricing) {
     const totalMensual = members.reduce((sum, m) => sum + m.price, 0);
-    totalAnual = data.paymentType === "Anual" ? totalMensual : totalMensual * 12;
+    totalAnual =
+      data.paymentType === "Anual" ? totalMensual : totalMensual * 12;
 
     totalPrimerMes = totalMensual;
     totalSegundoMesADoce = totalMensual;

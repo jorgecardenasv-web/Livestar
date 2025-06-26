@@ -607,10 +607,10 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
                   {{#each processedDeductibles}}
                   <tr>
                     <td class="table-name">{{nivel}}</td>
-                    <td class="table-price">{{formatCurrency menoresDe45}}</td>
-                    <td class="table-price">{{coInsurance}}%<br><span class="tope-text">Tope: {{formatCurrency coInsuranceCap}}</span></td>
-                    <td class="table-price">{{formatCurrency mayoresDe45}}</td>
-                    <td class="table-price">{{coInsurance}}%<br><span class="tope-text">Tope: {{formatCurrency coInsuranceCap}}</span></td>
+                    <td class="table-price">{{formatCurrency deductibleUnder45}}</td>
+                    <td class="table-price">{{coInsuranceUnder45}}%<br><span class="tope-text">Tope: {{formatCurrency coInsuranceCapUnder45}}</span></td>
+                    <td class="table-price">{{formatCurrency deductibleOver45}}</td>
+                    <td class="table-price">{{coInsuranceOver45}}%<br><span class="tope-text">Tope: {{formatCurrency coInsuranceCapOver45}}</span></td>
                   </tr>
                   {{/each}}
                 </tbody>
@@ -1238,10 +1238,10 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
                   {{#each processedDeductibles}}
                   <tr>
                     <td class="table-name">{{nivel}}</td>
-                    <td class="table-price">{{formatCurrency menoresDe45}}</td>
-                    <td class="table-price">{{coInsurance}}%<br><span class="tope-text">Tope: {{formatCurrency coInsuranceCap}}</span></td>
-                    <td class="table-price">{{formatCurrency mayoresDe45}}</td>
-                    <td class="table-price">{{coInsurance}}%<br><span class="tope-text">Tope: {{formatCurrency coInsuranceCap}}</span></td>
+                    <td class="table-price">{{formatCurrency deductibleUnder45}}</td>
+                    <td class="table-price">{{coInsuranceUnder45}}%<br><span class="tope-text">Tope: {{formatCurrency coInsuranceCapUnder45}}</span></td>
+                    <td class="table-price">{{formatCurrency deductibleOver45}}</td>
+                    <td class="table-price">{{coInsuranceOver45}}%<br><span class="tope-text">Tope: {{formatCurrency coInsuranceCapOver45}}</span></td>
                   </tr>
                   {{/each}}
                 </tbody>
@@ -1810,10 +1810,12 @@ export interface GNPTemplateVariables {
   sumInsured: number;
   processedDeductibles: Array<{
     nivel: string;
-    menoresDe45: number;
-    mayoresDe45: number;
-    coInsurance: number;
-    coInsuranceCap: number;
+    deductibleUnder45: number;
+    deductibleOver45: number;
+    coInsuranceUnder45: number;
+    coInsuranceCapUnder45: number;
+    coInsuranceOver45: number;
+    coInsuranceCapOver45: number;
   }>;
 }
 
@@ -1839,10 +1841,12 @@ export interface HDITemplateVariables {
   sumInsured: number;
   processedDeductibles: Array<{
     nivel: string;
-    menoresDe45: number;
-    mayoresDe45: number;
-    coInsurance: number;
-    coInsuranceCap: number;
+    deductibleUnder45: number;
+    deductibleOver45: number;
+    coInsuranceUnder45: number;
+    coInsuranceCapUnder45: number;
+    coInsuranceOver45: number;
+    coInsuranceCapOver45: number;
   }>;
 }
 

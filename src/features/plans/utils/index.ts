@@ -488,10 +488,6 @@ export const getMinimumValueByAge = (
       if (child?.age) ages.push(child.age);
     });
   }
-  const minAge = ages.length > 0 ? Math.min(...ages) : 0;
-  console.log(
-    `Edades: [${ages.join(", ")}], Edad mínima: ${minAge}, Opción seleccionada: ${option}, Valores: [${values.join(", ")}], Mínimo: ${minValue}`
-  );
 
   return minValue;
 };
