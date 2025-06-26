@@ -8,7 +8,7 @@ interface AdditionalInfoCollapsibleProps {
 }
 
 const AdditionalInfoCollapsible: React.FC<AdditionalInfoCollapsibleProps> = ({ additionalInfoHtml }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);

@@ -187,7 +187,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
           <InfoItem
             icon={<Shield className="w-5 h-5" />}
             title="Suma asegurada"
-            value={`${formatCurrency(plan.sumInsured / 1000000)} MILLONES`}
+            value={`${formatCurrency(plan.sumInsured)}`}
           />
           {/* ------------------ DEDUCIBLE ----------------- */}
           <InfoItem

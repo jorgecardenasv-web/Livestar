@@ -1193,7 +1193,7 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
                   </div>
 
                   <div class="summary-box monthly-total">
-                    <div class="summary-label">Prima Total Mensual</div>
+                    <div class="summary-label">Prima Mensual</div>
                     <div class="summary-amount">
                       {{formatCurrency coverageFee}}
                     </div>
