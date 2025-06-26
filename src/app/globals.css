@@ -158,3 +158,62 @@ main {
     @apply bg-background text-foreground;
   }
 }
+
+
+/* Estilos del editor TipTap */
+.ProseMirror {
+  @apply min-h-[200px];
+}
+
+.ProseMirror p.is-editor-empty:first-child::before {
+  @apply text-gray-400;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.ProseMirror:focus {
+  @apply outline-none;
+}
+
+/* Estilos para el contenido */
+.ProseMirror h1 {
+  @apply text-3xl font-bold mb-4;
+}
+
+.ProseMirror h2 {
+  @apply text-2xl font-bold mb-3;
+}
+
+.ProseMirror h3 {
+  @apply text-xl font-bold mb-2;
+}
+
+.ProseMirror p {
+  @apply mb-4;
+}
+
+.ProseMirror ul {
+  @apply list-disc list-inside mb-4;
+}
+
+.ProseMirror ol {
+  @apply list-decimal list-inside mb-4;
+}
+
+.ProseMirror blockquote {
+  @apply border-l-4 border-gray-300 pl-4 italic mb-4;
+}
+
+.ProseMirror pre {
+  @apply bg-gray-100 rounded p-4 mb-4 overflow-x-auto;
+}
+
+.ProseMirror code {
+  @apply bg-gray-100 rounded px-1 py-0.5 font-mono text-sm;
+}
+
+.ProseMirror hr {
+  @apply border-t border-gray-300 my-8;
+}

@@ -23,7 +23,7 @@ import { ScrollArea } from "@/shared/components/ui/scroll-area";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import { Label } from "@/shared/components/ui/label";
 import { Callout } from "@/shared/components/ui/callout";
-import { TipTapEditor } from "@/shared/components/editors/tiptap-editor";
+import { TiptapEditor } from "@/shared/components/editors/tiptap-editor";
 
 interface Insurance {
   id: string;
@@ -158,7 +158,7 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
                   step="1"
                   min={0}
                   max={100}
-                  defaultValue={plan?.coInsurance?.value || plan?.coInsurance}
+                  defaultValue={plan?.coInsurance?.value}
                   placeholder="Ej: 20%"
                   required={!isMultipleCoInsurance}
                 />
@@ -168,7 +168,7 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
                   label="Tope de Coaseguro"
                   icon={<DollarSign className="w-4 h-4 text-gray-500" />}
                   placeholder="Ingrese tope de coaseguro"
-                  defaultValue={plan?.coInsuranceCap?.value || plan?.coInsuranceCap}
+                  defaultValue={plan?.coInsuranceCap?.value}
                 />
               </>
             )}
@@ -491,7 +491,7 @@ export const InsurancePlanForm = ({ insurances, plan, planTypes }: Props) => {
             <p className="text-sm text-muted-foreground mb-4">
               Esta información se mostrará en la tarjeta del seguro para proporcionar detalles adicionales a los usuarios.
             </p>
-            <TipTapEditor
+            <TiptapEditor
               content={additionalInfoHtml || ""}
               onChange={(html) => {
                 setAdditionalInfoHtml(html);

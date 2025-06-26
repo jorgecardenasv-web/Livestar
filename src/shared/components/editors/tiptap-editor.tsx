@@ -1,208 +1,345 @@
-"use client";
+'use client'
 
-import * as React from 'react';
-import { useEditor, EditorContent, Editor } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import { Heading } from '@tiptap/extension-heading';
-import { Bold } from '@tiptap/extension-bold';
-import { Italic } from '@tiptap/extension-italic';
-import { BulletList } from '@tiptap/extension-bullet-list';
-import { OrderedList } from '@tiptap/extension-ordered-list';
-import {
-  Bold as BoldIcon,
-  Italic as ItalicIcon,
-  List,
-  ListOrdered,
-  Heading1,
-  Heading2,
-  PilcrowSquare,
-  RemoveFormatting,
-} from 'lucide-react';
-import { cn } from '@/shared/utils/cn';
+import { useEditor, EditorContent, BubbleMenu, FloatingMenu } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import Link from '@tiptap/extension-link'
+import Placeholder from '@tiptap/extension-placeholder'
+import Underline from '@tiptap/extension-underline'
+import TextAlign from '@tiptap/extension-text-align'
+import Highlight from '@tiptap/extension-highlight'
+import { useCallback, useEffect } from 'react'
 
-interface TipTapEditorProps {
-  content: string;
-  onChange: (html: string) => void;
+interface TiptapEditorProps {
+  content?: string
+  onChange?: (content: string) => void
+  editable?: boolean
+  placeholder?: string
 }
 
-interface MenuBarProps {
-  editor: Editor | null;
-}
-
-const MenuBar = ({ editor }: MenuBarProps) => {
-  if (!editor) {
-    return null;
-  }
-
-  const menuItems = [
-    {
-      icon: <BoldIcon className="w-4 h-4" />,
-      title: 'Negrita',
-      action: () => editor.chain().focus().toggleBold().run(),
-      isActive: () => editor.isActive('bold'),
-    },
-    {
-      icon: <ItalicIcon className="w-4 h-4" />,
-      title: 'Cursiva',
-      action: () => editor.chain().focus().toggleItalic().run(),
-      isActive: () => editor.isActive('italic'),
-    },
-    {
-      icon: <Heading1 className="w-4 h-4" />,
-      title: 'Encabezado 1',
-      action: () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
-      isActive: () => editor.isActive('heading', { level: 1 }),
-    },
-    {
-      icon: <Heading2 className="w-4 h-4" />,
-      title: 'Encabezado 2',
-      action: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
-      isActive: () => editor.isActive('heading', { level: 2 }),
-    },
-    {
-      icon: <List className="w-4 h-4" />,
-      title: 'Lista de viñetas',
-      action: () => editor.chain().focus().toggleBulletList().run(),
-      isActive: () => editor.isActive('bulletList'),
-    },
-    {
-      icon: <ListOrdered className="w-4 h-4" />,
-      title: 'Lista numerada',
-      action: () => editor.chain().focus().toggleOrderedList().run(),
-      isActive: () => editor.isActive('orderedList'),
-    },
-    {
-      icon: <PilcrowSquare className="w-4 h-4" />,
-      title: 'Insertar párrafo',
-      action: () => editor.chain().focus().setHardBreak().run(),
-      isActive: () => false,
-    },
-    {
-      icon: <RemoveFormatting className="w-4 h-4" />,
-      title: 'Limpiar formato',
-      action: () => editor.chain().focus().unsetAllMarks().run(),
-      isActive: () => false,
-    },
-  ];
-
-  return (
-    <div className="flex flex-wrap gap-2 p-2 border-b border-border bg-muted/50 rounded-t-md">
-      {menuItems.map((item, index) => (
-        <button
-          key={index}
-          onClick={item.action}
-          title={item.title}
-          type="button"
-          className={cn(
-            "p-2 rounded-md hover:bg-muted transition-colors",
-            item.isActive() ? "bg-muted text-primary" : "text-muted-foreground"
-          )}
-        >
-          {item.icon}
-        </button>
-      ))}
-    </div>
-  );
-};
-
-export const TipTapEditor = ({ content, onChange }: TipTapEditorProps) => {
+export function TiptapEditor({
+  content = '',
+  onChange,
+  editable = true,
+  placeholder = 'Escribe algo increíble...'
+}: TiptapEditorProps) {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        paragraph: {
+        heading: {
+          levels: [1, 2, 3],
           HTMLAttributes: {
-            class: 'leading-relaxed mb-5',
+            class: 'text-heading',
           },
         },
-        horizontalRule: {
+        bulletList: {
           HTMLAttributes: {
-            class: 'my-6 border-t border-gray-300',
+            class: 'list-disc ml-4',
+          },
+        },
+        orderedList: {
+          HTMLAttributes: {
+            class: 'list-decimal ml-4',
           },
         },
       }),
-      Heading.configure({
-        levels: [1, 2],
+      Link.configure({
+        openOnClick: false,
         HTMLAttributes: {
-          1: {
-            class: 'text-2xl font-semibold leading-tight mt-8 mb-4',
-          },
-          2: {
-            class: 'text-xl font-medium leading-tight mt-6 mb-3',
-          },
+          class: 'text-blue-600 underline hover:text-blue-800',
         },
       }),
-      Bold,
-      Italic,
-      BulletList.configure({
-        HTMLAttributes: {
-          class: 'space-y-3 my-5 pl-5',
-        },
+      Placeholder.configure({
+        placeholder,
       }),
-      OrderedList.configure({
-        HTMLAttributes: {
-          class: 'space-y-3 my-5 pl-5',
-        },
+      Underline,
+      TextAlign.configure({
+        types: ['heading', 'paragraph'],
+      }),
+      Highlight.configure({
+        multicolor: true,
       }),
     ],
-    content: content || '',  // Nos aseguramos de que siempre haya un valor inicial válido
-    onUpdate: ({ editor }) => {
-      const html = editor.getHTML();
-      onChange(html);
-    },
-    // Configuramos immediatelyRender como false para evitar errores de hidratación en SSR
-    immediatelyRender: false,
+    content,
+    editable,
     editorProps: {
       attributes: {
-        class: 'prose focus:outline-none max-w-none',
+        class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-xl focus:outline-none min-h-[300px] px-4 py-3',
       },
     },
-    // Configuración de espaciado entre párrafos
-    editable: true,
-  });
+    immediatelyRender: false, // Importante para SSR en Next.js
+    onCreate: ({ editor }) => {
+      // Evento cuando el editor se crea
+      console.log('Editor creado')
+    },
+    onUpdate: ({ editor }) => {
+      // Evento cuando el contenido cambia
+      const html = editor.getHTML()
+      onChange?.(html)
+    },
+    onSelectionUpdate: ({ editor }) => {
+      // Evento cuando la selección cambia
+      console.log('Selección actualizada')
+    },
+    onFocus: ({ editor, event }) => {
+      // Evento cuando el editor obtiene foco
+      console.log('Editor enfocado')
+    },
+    onBlur: ({ editor, event }) => {
+      // Evento cuando el editor pierde foco
+      console.log('Editor desenfocado')
+    },
+  })
 
-  // Este efecto se asegura de que el contenido del editor se actualice
-  // cuando cambia la prop de contenido proporcionada externamente
-  React.useEffect(() => {
-    if (editor && content !== undefined && content !== editor.getHTML()) {
-      // Aseguramos que el contenido se establezca correctamente
-      setTimeout(() => {
-        editor.commands.setContent(content);
-      }, 0);
+  // Actualizar contenido si cambia desde props
+  useEffect(() => {
+    if (editor && content !== editor.getHTML()) {
+      editor.commands.setContent(content)
     }
-  }, [content, editor]);
+  }, [content, editor])
+
+  const setTextAlign = useCallback((align: 'left' | 'center' | 'right' | 'justify', e?: React.MouseEvent) => {
+    e?.preventDefault()
+    editor?.chain().focus().setTextAlign(align).run()
+  }, [editor])
+
+  if (!editor) {
+    return null
+  }
 
   return (
-    <div className="border border-input rounded-md overflow-hidden">
-      <MenuBar editor={editor} />
-      <EditorContent
-        editor={editor}
-        className="prose prose-lg max-w-none p-4 min-h-[200px] focus:outline-none 
-          [&>div]:leading-8
-          [&_p]:my-5 [&_p]:leading-8
-          [&_li]:my-3 [&_li]:leading-7
-          [&_li>p]:my-1 [&_li>p]:leading-7
-          [&_h1]:mt-8 [&_h1]:mb-5 [&_h1]:leading-tight
-          [&_h2]:mt-7 [&_h2]:mb-4 [&_h2]:leading-tight
-          [&_ul]:space-y-3 [&_ul]:my-5 [&_ul]:pl-5
-          [&_ol]:space-y-3 [&_ol]:my-5 [&_ol]:pl-5"
-      />
-      <div className="px-4 py-3 bg-muted/30 text-xs text-muted-foreground border-t border-input">
-        <p className="flex items-center flex-wrap gap-1">
-          <span>Para mejorar el interlineado:</span>
-          <span className="bg-muted/70 px-1.5 py-0.5 rounded inline-flex items-center">
-            <PilcrowSquare className="inline w-3 h-3 mr-1" /> Insertar salto de línea
-          </span>
-          <span>o</span>
-          <span className="bg-muted/70 px-1.5 py-0.5 rounded inline-flex items-center">
-            <Heading1 className="inline w-3 h-3 mr-1" /> Usar encabezados
-          </span>
-          <span>para secciones. Usa</span>
-          <span className="bg-muted/70 px-1.5 py-0.5 rounded inline-flex items-center">
-            <RemoveFormatting className="inline w-3 h-3 mr-1" /> Limpiar formato
-          </span>
-          <span>para eliminar estilos.</span>
-        </p>
+    <div className="editor-container border rounded-lg shadow-sm">
+      {/* Barra de herramientas */}
+      <div className="toolbar border-b p-2 flex flex-wrap gap-2">
+        {/* Formato de texto */}
+        <button
+          onMouseDown={(e) => {
+            e.preventDefault()
+            editor.chain().focus().toggleBold().run()
+          }}
+          disabled={!editor.can().chain().focus().toggleBold().run()}
+          className={`px-3 py-1 rounded ${editor.isActive('bold') ? 'bg-primary text-white' : 'bg-gray-100'
+            }`}
+          type='button'
+        >
+          <strong>B</strong>
+        </button>
+
+        <button
+          onMouseDown={(e) => {
+            e.preventDefault()
+            editor.chain().focus().toggleItalic().run()
+          }}
+          disabled={!editor.can().chain().focus().toggleItalic().run()}
+          className={`px-3 py-1 rounded ${editor.isActive('italic') ? 'bg-primary text-white' : 'bg-gray-100'
+            }`}
+          type='button'
+        >
+          <em>I</em>
+        </button>
+
+        <button
+          onMouseDown={(e) => {
+            e.preventDefault()
+            editor.chain().focus().toggleUnderline().run()
+          }}
+          disabled={!editor.can().chain().focus().toggleUnderline().run()}
+          className={`px-3 py-1 rounded ${editor.isActive('underline') ? 'bg-primary text-white' : 'bg-gray-100'
+            }`}
+          type='button'
+        >
+          <u>U</u>
+        </button>
+
+        <button
+          onMouseDown={(e) => {
+            e.preventDefault()
+            editor.chain().focus().toggleStrike().run()
+          }}
+          disabled={!editor.can().chain().focus().toggleStrike().run()}
+          className={`px-3 py-1 rounded ${editor.isActive('strike') ? 'bg-primary text-white' : 'bg-gray-100'
+            }`}
+          type='button'
+        >
+          <s>S</s>
+        </button>
+
+        <div className="w-px h-6 bg-gray-300 mx-1" />
+
+        {/* Encabezados */}
+        <button
+          onMouseDown={(e) => {
+            e.preventDefault()
+            editor.chain().focus().toggleHeading({ level: 1 }).run()
+          }}
+          className={`px-3 py-1 rounded ${editor.isActive('heading', { level: 1 }) ? 'bg-primary text-white' : 'bg-gray-100'
+            }`}
+          type='button'
+        >
+          H1
+        </button>
+
+        <button
+          onMouseDown={(e) => {
+            e.preventDefault()
+            editor.chain().focus().toggleHeading({ level: 2 }).run()
+          }}
+          className={`px-3 py-1 rounded ${editor.isActive('heading', { level: 2 }) ? 'bg-primary text-white' : 'bg-gray-100'
+            }`}
+          type='button'
+        >
+          H2
+        </button>
+
+        <button
+          onMouseDown={(e) => {
+            e.preventDefault()
+            editor.chain().focus().toggleHeading({ level: 3 }).run()
+          }}
+          className={`px-3 py-1 rounded ${editor.isActive('heading', { level: 3 }) ? 'bg-primary text-white' : 'bg-gray-100'
+            }`}
+          type='button'
+        >
+          H3
+        </button>
+
+        <div className="w-px h-6 bg-gray-300 mx-1" />
+
+        {/* Listas */}
+        <button
+          onMouseDown={(e) => {
+            e.preventDefault()
+            editor.chain().focus().toggleBulletList().run()
+          }}
+          className={`px-3 py-1 rounded ${editor.isActive('bulletList') ? 'bg-primary text-white' : 'bg-gray-100'
+            }`}
+          type='button'
+        >
+          • Lista
+        </button>
+
+        <button
+          onMouseDown={(e) => {
+            e.preventDefault()
+            editor.chain().focus().toggleOrderedList().run()
+          }}
+          className={`px-3 py-1 rounded ${editor.isActive('orderedList') ? 'bg-primary text-white' : 'bg-gray-100'
+            }`}
+          type='button'
+        >
+          1. Lista
+        </button>
+
+        <div className="w-px h-6 bg-gray-300 mx-1" />
+
+        {/* Alineación */}
+        <button
+          onMouseDown={(e) => setTextAlign('left', e)}
+          className={`px-3 py-1 rounded ${editor.isActive({ textAlign: 'left' }) ? 'bg-primary text-white' : 'bg-gray-100'
+            }`}
+          type='button'
+        >
+          ←
+        </button>
+
+        <button
+          onMouseDown={(e) => setTextAlign('center', e)}
+          className={`px-3 py-1 rounded ${editor.isActive({ textAlign: 'center' }) ? 'bg-primary text-white' : 'bg-gray-100'
+            }`}
+          type='button'
+        >
+          ↔
+        </button>
+
+        <button
+          onMouseDown={(e) => setTextAlign('right', e)}
+          className={`px-3 py-1 rounded ${editor.isActive({ textAlign: 'right' }) ? 'bg-primary text-white' : 'bg-gray-100'
+            }`}
+          type='button'
+        >
+          →
+        </button>
+
+        <div className="w-px h-6 bg-gray-300 mx-1" />
+
+        {/* Acciones */}
+        <button
+          onMouseDown={(e) => {
+            e.preventDefault()
+            editor.chain().focus().undo().run()
+          }}
+          type='button'
+          disabled={!editor.can().chain().focus().undo().run()}
+          className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-300 disabled:opacity-50"
+        >
+          ↶ Deshacer
+        </button>
+
+        <button
+          onMouseDown={(e) => {
+            e.preventDefault()
+            editor.chain().focus().redo().run()
+          }}
+          type='button'
+          disabled={!editor.can().chain().focus().redo().run()}
+          className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-300 disabled:opacity-50"
+        >
+          ↷ Rehacer
+        </button>
       </div>
+
+      {/* Menú flotante para selección */}
+      <BubbleMenu
+        editor={editor}
+        tippyOptions={{ duration: 100 }}
+        className="bg-black text-white rounded p-2 flex gap-2"
+      >
+        <button
+          onClick={() => editor.chain().focus().toggleBold().run()}
+          className={editor.isActive('bold') ? 'text-blue-400' : ''}
+          type='button'
+        >
+          Bold
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleItalic().run()}
+          className={editor.isActive('italic') ? 'text-blue-400' : ''}
+          type='button'
+        >
+          Italic
+        </button>
+      </BubbleMenu>
+
+      {/* Menú flotante para líneas vacías */}
+      <FloatingMenu
+        editor={editor}
+        tippyOptions={{ duration: 100 }}
+        className="bg-white border rounded shadow-lg p-2 flex gap-2"
+      >
+        <button
+          onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+          className="px-2 py-1 hover:bg-gray-100 rounded"
+          type='button'
+        >
+          H1
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+          className="px-2 py-1 hover:bg-gray-100 rounded"
+          type='button'
+        >
+          H2
+        </button>
+        <button
+          onClick={() => editor.chain().focus().toggleBulletList().run()}
+          className="px-2 py-1 hover:bg-gray-100 rounded"
+          type='button'
+        >
+          Lista
+        </button>
+      </FloatingMenu>
+
+      {/* Área del editor */}
+      <EditorContent editor={editor} />
     </div>
-  );
-};
+  )
+}
