@@ -411,16 +411,52 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
       }
 
       /* Tabla de deducibles */
-      .deductible-table th {
+      .data-table.deductible-table th {
         text-align: center;
         font-size: 14px;
         padding: 12px 8px;
+        width: auto !important;
       }
 
-      .deductible-table td {
+      .data-table.deductible-table td {
         text-align: center;
         padding: 12px 8px;
         font-weight: 500;
+        width: auto !important;
+      }
+
+      .data-table.deductible-table th:first-child,
+      .data-table.deductible-table td:first-child {
+        width: 20% !important;
+      }
+
+      .data-table.deductible-table th:not(:first-child),
+      .data-table.deductible-table td:not(:first-child) {
+        width: 20% !important;
+      }
+
+      /* Estilos para doble encabezado */
+      .data-table.deductible-table .group-header {
+        font-weight: bold;
+        width: 40% !important;
+      }
+
+      .data-table.deductible-table .sub-header {
+        font-size: 12px;
+        font-weight: 600;
+        width: 20% !important;
+      }
+
+      .data-table.deductible-table .align-middle {
+        vertical-align: middle;
+        font-weight: bold;
+        width: 20% !important;
+      }
+
+      .tope-text {
+        font-size: 10px;
+        color: var(--text-gray);
+        margin-top: 2px;
       }
 
       .level-column {
@@ -556,11 +592,15 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
               <table class="data-table deductible-table border-top">
                 <thead>
                   <tr>
-                    <th>Nivel Hospitalario</th>
-                    <th>< de 45 años</th>
-                    <th>> de 45 años</th>
-                    <th>Coaseguro</th>
-                    <th>Tope de Coaseguro</th>
+                    <th rowspan="2" class="align-middle">Nivel de atención hospitalaria</th>
+                    <th colspan="2" class="group-header">Menores de 45 años</th>
+                    <th colspan="2" class="group-header">Mayores de 45 años</th>
+                  </tr>
+                  <tr>
+                    <th class="sub-header">Deducible</th>
+                    <th class="sub-header">Coaseguro (Tope)</th>
+                    <th class="sub-header">Deducible</th>
+                    <th class="sub-header">Coaseguro (Tope)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -568,9 +608,9 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
                   <tr>
                     <td class="table-name">{{nivel}}</td>
                     <td class="table-price">{{formatCurrency menoresDe45}}</td>
+                    <td class="table-price">{{coInsurance}}%<br><span class="tope-text">Tope: {{formatCurrency coInsuranceCap}}</span></td>
                     <td class="table-price">{{formatCurrency mayoresDe45}}</td>
-                    <td class="table-price">{{coInsurance}}%</td>
-                    <td class="table-price">{{formatCurrency coInsuranceCap}}</td>
+                    <td class="table-price">{{coInsurance}}%<br><span class="tope-text">Tope: {{formatCurrency coInsuranceCap}}</span></td>
                   </tr>
                   {{/each}}
                 </tbody>
@@ -700,27 +740,6 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
       .content-section + .content-section {
         margin-top: 25px !important;
       }
-      
-      /* Reglas específicas para impresión */ 
-      @media print { 
-        body { 
-          background: var(--white); 
-          /* Los márgenes ya están definidos en @page */ 
-        } 
-
-        /* Forzar respeto de márgenes en elementos */ 
-        .main-content { 
-          /* Eliminar padding-top ya que @page lo maneja */ 
-          padding-top: 0; 
-        } 
-
-        /* Asegurar espaciado después de saltos de página */ 
-        .content-section { 
-          /* Orphans y widows para evitar líneas huérfanas */ 
-          orphans: 3; 
-          widows: 3; 
-        } 
-      }
 
       .plan-info {
         padding: 20px 30px;
@@ -761,7 +780,7 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
         gap: 10px;
         width: fit-content;
       }
-      
+
       .section-title img {
         width: 40px;
         height: 40px;
@@ -972,20 +991,18 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
         display: flex !important;
         justify-content: space-between !important;
         align-items: center !important;
-        padding: 20px !important;
+        padding: 15px !important; /* Reducir padding fijo en lugar de dinámico */
         border-bottom: 1px solid var(--border-gray) !important;
         background-color: var(--white) !important;
-        min-height: 60px !important;
+        min-height: 50px !important; /* Reducir altura mínima */
         
-        /* Evitar saltos problemáticos */
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
+        /* SIMPLIFICAR page-break rules */
+        page-break-inside: auto; /* Cambiar de avoid a auto */
+        break-inside: auto;
         
-        /* Asegurar visibilidad */
         position: relative !important;
         z-index: 15 !important;
         overflow: visible !important;
-        /* El padding se aplicará vía JavaScript */
       }
 
       .coverage-name {
@@ -1014,16 +1031,52 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
       }
 
       /* Tabla de deducibles */
-      .deductible-table th {
+      .data-table.deductible-table th {
         text-align: center;
         font-size: 14px;
         padding: 12px 8px;
+        width: auto !important;
       }
 
-      .deductible-table td {
+      .data-table.deductible-table td {
         text-align: center;
         padding: 12px 8px;
         font-weight: 500;
+        width: auto !important;
+      }
+
+      .data-table.deductible-table th:first-child,
+      .data-table.deductible-table td:first-child {
+        width: 20% !important;
+      }
+
+      .data-table.deductible-table th:not(:first-child),
+      .data-table.deductible-table td:not(:first-child) {
+        width: 20% !important;
+      }
+
+      /* Estilos para doble encabezado */
+      .data-table.deductible-table .group-header {
+        font-weight: bold;
+        width: 40% !important;
+      }
+
+      .data-table.deductible-table .sub-header {
+        font-size: 12px;
+        font-weight: 600;
+        width: 20% !important;
+      }
+
+      .data-table.deductible-table .align-middle {
+        vertical-align: middle;
+        font-weight: bold;
+        width: 20% !important;
+      }
+
+      .tope-text {
+        font-size: 10px;
+        color: var(--text-gray);
+        margin-top: 2px;
       }
 
       .level-column {
@@ -1164,17 +1217,21 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
             <!-- Deducibles y coaseguros -->
             <section class="content-section">
               <h2 class="section-title">
-                <img src="{{medicalIconPath}}" alt="Icono de Dolar" />
+                <img src="{{medicalIconPath}}" alt="Icono Dinero" />
                 DEDUCIBLES Y COASEGURO
               </h2>
               <table class="data-table deductible-table border-top">
                 <thead>
                   <tr>
-                    <th>Nivel Hospitalario</th>
-                    <th>< de 45 años</th>
-                    <th>> de 45 años</th>
-                    <th>Coaseguro</th>
-                    <th>Tope de Coaseguro</th>
+                    <th rowspan="2" class="align-middle">Nivel de atención hospitalaria</th>
+                    <th colspan="2" class="group-header">Menores de 45 años</th>
+                    <th colspan="2" class="group-header">Mayores de 45 años</th>
+                  </tr>
+                  <tr>
+                    <th class="sub-header">Deducible</th>
+                    <th class="sub-header">Coaseguro (Tope)</th>
+                    <th class="sub-header">Deducible</th>
+                    <th class="sub-header">Coaseguro (Tope)</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1182,9 +1239,9 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
                   <tr>
                     <td class="table-name">{{nivel}}</td>
                     <td class="table-price">{{formatCurrency menoresDe45}}</td>
+                    <td class="table-price">{{coInsurance}}%<br><span class="tope-text">Tope: {{formatCurrency coInsuranceCap}}</span></td>
                     <td class="table-price">{{formatCurrency mayoresDe45}}</td>
-                    <td class="table-price">{{coInsurance}}%</td>
-                    <td class="table-price">{{formatCurrency coInsuranceCap}}</td>
+                    <td class="table-price">{{coInsurance}}%<br><span class="tope-text">Tope: {{formatCurrency coInsuranceCap}}</span></td>
                   </tr>
                   {{/each}}
                 </tbody>
@@ -1574,16 +1631,28 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
       }
 
       /* Tabla de deducibles */
-      .deductible-table th {
+      .data-table.deductible-table th {
         text-align: center;
         font-size: 14px;
         padding: 12px 8px;
+        width: auto !important;
       }
 
-      .deductible-table td {
+      .data-table.deductible-table td {
         text-align: center;
         padding: 12px 8px;
         font-weight: 500;
+        width: auto !important;
+      }
+
+      .data-table.deductible-table th:first-child,
+      .data-table.deductible-table td:first-child {
+        width: 20% !important;
+      }
+
+      .data-table.deductible-table th:not(:first-child),
+      .data-table.deductible-table td:not(:first-child) {
+        width: 20% !important;
       }
 
       .level-column {
