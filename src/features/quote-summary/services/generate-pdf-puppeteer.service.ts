@@ -485,32 +485,7 @@ export const generatePDFWithPuppeteer = async (
       },
       displayHeaderFooter: true,
       headerTemplate: headerTemplate,
-      footerTemplate: `<div style="
-        background-color: #ffffff;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-        color: #376fa0;
-        padding: 15px 30px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        box-sizing: border-box;
-        font-family: 'Arial', sans-serif;
-        font-size: 12px;
-        margin: 0;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: 1000;
-        text-align: center;
-        line-height: 1.4;
-      ">
-        <span style="max-width: 550px;">
-          Este documento es únicamente informativo y no constituye una póliza de seguro. Los términos y condiciones específicos están sujetos a la póliza emitida por la aseguradora.
-        </span>
-      </div>`,
+      footerTemplate: "<div></div>",
       preferCSSPageSize: false,
       scale: 0.95,
       timeout: 30000,

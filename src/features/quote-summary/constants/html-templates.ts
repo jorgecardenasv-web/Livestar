@@ -1385,7 +1385,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
       .section-title {
         background: var(--primary-blue);
         color: var(--white);
-        padding: 8px 16px;
+        padding: 6px 16px;
         border-radius: 13px 13px 0 0;
         font-size: 16px;
         font-weight: bold;
@@ -1396,8 +1396,8 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
       }
 
       .section-title img {
-        width: 40px;
-        height: 40px;
+        width: 30px;
+        height: 30px;
       }
 
       .section-icon {
@@ -1573,6 +1573,54 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         background-color: var(--white);
       }
 
+      /* Estilos para doble encabezado en HDI */
+      .data-table.cost-table .group-header {
+        font-weight: bold;
+        text-align: center;
+        background: var(--white);
+        color: var(--text-dark);
+      }
+
+      .data-table.cost-table .sub-header {
+        font-size: 12px;
+        font-weight: 600;
+        text-align: center;
+        background: var(--white);
+        color: var(--text-dark);
+      }
+
+      .data-table.cost-table .align-middle {
+        vertical-align: middle;
+        font-weight: bold;
+        text-align: center;
+      }
+
+      /* Ajuste de anchos específicos para tabla de costos HDI */
+      .data-table.cost-table th:first-child,
+      .data-table.cost-table td:first-child {
+        width: 18%; /* Reducido aún más para dar más espacio */
+      }
+
+      .data-table.cost-table th:nth-child(2),
+      .data-table.cost-table td:nth-child(2) {
+        width: 18%;
+      }
+
+      .data-table.cost-table th:nth-child(3),
+      .data-table.cost-table td:nth-child(3) {
+        width: 32%; /* Aumentado significativamente */
+      }
+
+      .data-table.cost-table th:nth-child(4),
+      .data-table.cost-table td:nth-child(4) {
+        width: 32%; /* Aumentado significativamente */
+      }
+
+      /* Centrar todos los datos de la tabla de costos HDI */
+      .data-table.cost-table td {
+        text-align: center;
+      }
+
       .summary-box {
         text-align: center;
         padding: 6px;
@@ -1634,7 +1682,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
       .data-table.deductible-table th {
         text-align: center;
         font-size: 14px;
-        padding: 12px 8px;
+        padding: 8px 8px;
         width: auto !important;
       }
 
@@ -1719,17 +1767,16 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
                 RESUMEN DE COSTOS
               </h2>
               <div class="border-top layout-costs">
-                <table class="data-table">
+                <table class="data-table cost-table">
                   <thead>
                     <tr>
-                      <th scope="col">Asegurado</th>
-                      <th scope="col" class="data-table-th">Anual</th>
-                      <th scope="col" class="data-table-th">
-                        Pago inicial (Primer Mes)
-                      </th>
-                      <th scope="col" class="data-table-th">
-                        Pago mensual (Mes 2 al 12)
-                      </th>
+                      <th rowspan="2" class="align-middle">Asegurado</th>
+                      <th rowspan="2" class="align-middle">Anual</th>
+                      <th colspan="2" class="group-header">Pago mensual</th>
+                    </tr>
+                    <tr>
+                      <th class="sub-header">Pago inicial<br>(Primer Mes)</th>
+                      <th class="sub-header">Pago subsecuente<br>(Mes 2 al 12)</th>
                     </tr>
                   </thead>
                   <tbody>
