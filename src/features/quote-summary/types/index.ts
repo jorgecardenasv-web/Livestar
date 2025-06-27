@@ -23,7 +23,6 @@ export interface InsuranceQuoteData {
 export interface QuotePDFData {
   company: string;
   plan: string;
-  coverageFee: number;
   paymentType: string;
   sumInsured: number;
   deductible: number;
@@ -50,5 +49,6 @@ export interface QuotePDFData {
   totalAnual?: number;
   totalPrimerMes?: number;
   totalSegundoMesADoce?: number;
+  totalMensual?: number;
   individualPricesJson?: string;
 }

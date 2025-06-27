@@ -96,8 +96,6 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 
   const logoSrc = company.logo ? await getImage(company.logo) : null;
 
-  console.log("prices", prices)
-
   return (
     <div
       className={`bg-white rounded shadow-lg overflow-hidden w-80 ${isRecommended ? "ring-4 ring-[#00a5e3] " : ""

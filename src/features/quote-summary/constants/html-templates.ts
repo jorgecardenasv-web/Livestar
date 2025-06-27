@@ -564,7 +564,7 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
                   <div class="summary-box monthly-total">
                     <div class="summary-label">Prima Total Anual</div>
                     <div class="summary-amount">
-                      {{formatCurrency coverageFee}}
+                      {{formatCurrency totalAnual}}
                     </div>
                   </div>
                 </div>
@@ -1177,7 +1177,7 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
                         {{#if name}}{{name}}{{else}}{{type}}{{/if}}
                       </td>
                       <td class="table-price">
-                        {{formatCurrency (multiply price 12)}}
+                        {{formatCurrency anual}}
                       </td>
                       <td class="table-price">{{formatCurrency price}}</td>
                     </tr>
@@ -1188,14 +1188,14 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
                   <div class="summary-box annual-total">
                     <div class="summary-label">Prima Total Anual</div>
                     <div class="summary-amount">
-                      {{formatCurrency (multiply coverageFee 12)}}
+                      {{formatCurrency totalAnual}}
                     </div>
                   </div>
 
                   <div class="summary-box monthly-total">
                     <div class="summary-label">Prima Mensual</div>
                     <div class="summary-amount">
-                      {{formatCurrency coverageFee}}
+                      {{formatCurrency totalMensual}}
                     </div>
                   </div>
                 </div>
@@ -1806,7 +1806,8 @@ export interface GNPTemplateVariables {
     name?: string;
     price: number;
   }>;
-  coverageFee: number;
+  totalAnual: number;
+  totalMensual: number;
   sumInsured: number;
   processedDeductibles: Array<{
     nivel: string;
