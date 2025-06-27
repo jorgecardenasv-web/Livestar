@@ -15,7 +15,8 @@ import {
   MONEY_ICON_BASE64,
   CHECK_ICON_BASE64,
   MEDICAL_ICON_BASE64,
-  PDF_SGM_BASE64,
+  PDF_SGM_GNP_BASE64,
+  PDF_SGM_HDI_BASE64,
 } from "../constants/assets-base64";
 import {
   GNP_ANNUAL_TEMPLATE_HTML,
@@ -185,11 +186,16 @@ const calculateSpacingConfig = (
 
 // Función para unir el PDF SGM con el PDF generado por Puppeteer
 const mergePDFs = async (
-  puppeteerPdfBuffer: Buffer | Uint8Array
+  puppeteerPdfBuffer: Buffer | Uint8Array,
+  hasDetailedPricing = false
 ): Promise<Buffer> => {
   try {
     // Crear un nuevo documento PDF
     const mergedPdf = await PDFDocument.create();
+
+    const PDF_SGM_BASE64 = hasDetailedPricing
+      ? PDF_SGM_HDI_BASE64
+      : PDF_SGM_GNP_BASE64;
 
     // Cargar el PDF SGM desde base64
     const sgmPdfBytes = Buffer.from(PDF_SGM_BASE64, "base64");
@@ -513,7 +519,10 @@ export const generatePDFWithPuppeteer = async (
     await browser.close();
 
     // Unir el PDF SGM con el PDF generado por Puppeteer
-    const mergedPdfBuffer = await mergePDFs(Buffer.from(pdfBuffer));
+    const mergedPdfBuffer = await mergePDFs(
+      Buffer.from(pdfBuffer),
+      data.hasDetailedPricing
+    );
 
     // Devolver resultado
     if (format === "datauri") {
