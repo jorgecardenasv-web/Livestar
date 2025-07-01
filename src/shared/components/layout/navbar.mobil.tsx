@@ -6,23 +6,18 @@ import Image from "next/image";
 import Link from "next/link";
 import Logo from "@/assets/shared/livestar_logo_horizontal_blanco.svg"
 import { useState } from "react";
-import { NewQuoteButton } from "./new-quote.button";
 
-export function NavbarMobile({
-  isQuoteRoute
-}: {
-  isQuoteRoute: boolean
-}) {
+export function NavbarMobile() {
   const [showDropdown, setShowDropdown] = useState(false)
   return (
     <div className="lg:hidden relative z-50">
       <Sheet>
         <SheetTrigger asChild>
           <button className="p-2 rounded-md hover:bg-[#00BFFF] transition-colors">
-            <Menu className="h-6 w-6" />
+            <Menu className="h-8 w-8" />
           </button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-[300px] sm:w-[400px] bg-[#223E99] text-white p-0">
+        <SheetContent side="right" className="w-[300px] sm:w-[400px] bg-[#223E99] text-white p-0">
           <nav className="flex flex-col h-full">
             <div className="p-4 border-b border-white/10">
               <Image
@@ -83,10 +78,6 @@ export function NavbarMobile({
                 <Link href="https://livestar.mx/en-confianza/" className="block px-3 py-2 text-white hover:text-gray-200 transition-colors font-medium">
                   En confianza
                 </Link>
-                {
-                  isQuoteRoute &&
-                  <NewQuoteButton />
-                }
               </div>
             </div>
           </nav>

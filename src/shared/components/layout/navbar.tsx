@@ -22,7 +22,7 @@ export const Navbar = () => {
             alt="Logo Principal"
             width={200}
             height={58}
-            className="w-[160px] sm:w-[180px] lg:w-[180px] 2xl:w-[238px]"
+            className="w-[140px] sm:w-[180px] lg:w-[180px] 2xl:w-[238px]"
             priority
           />
         </Link>
@@ -105,7 +105,14 @@ export const Navbar = () => {
         </div>
 
         {/* Mobile menu button and content */}
-        <NavbarMobile isQuoteRoute />
+        <div className="flex items-center gap-5">
+          {isQuoteRoute && (
+            <div className="lg:hidden">
+              <NewQuoteButton />
+            </div>
+          )}
+          <NavbarMobile />
+        </div>
       </div>
     </nav>
   );
