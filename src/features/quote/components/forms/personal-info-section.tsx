@@ -39,7 +39,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         </h3>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 dark:text-gray-400 mb-1">
+      <div className="grid grid-cols-1 gap-6 dark:text-gray-400 mb-1">
         <TextInput
           label="Mi nombre es"
           name="name"
@@ -89,53 +89,55 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           formData.protectWho === "mis_hijos_y_yo" ||
           formData.protectWho === "solo_yo" ||
           formData.protectWho === "familia") && (
-            <NumberInput
-              label="Yo tengo"
-              name="age"
-              placeholder="Ej: 18"
-              value={formData.age}
-              onChange={(e) => handleInputChange("age", Number(e.target.value))}
-              className="w-full"
-              min={18}
-              max={100}
-              error={errors.age || ""}
-            />
-          )}
-
-        {(formData.protectWho === "mi_pareja_y_yo" ||
-          formData.protectWho === "familia") && (
-            <>
-              <SelectInput
-                options={genderOptions}
-                error={errors.partnerGender}
-                label="Género al nacer de mi pareja"
-                name="partnerGender"
-                value={formData.partnerGender}
-                onValueChange={(value) =>
-                  handleInputChange("partnerGender", value)
-                }
-              />
+            <div className="space-y-6">
               <NumberInput
-                label="Mi pareja tiene"
-                id="partnerAge"
-                name="partnerAge"
+                label="Yo tengo"
+                name="age"
                 placeholder="Ej: 18"
-                value={formData.partnerAge}
-                onChange={(e) =>
-                  handleInputChange("partnerAge", Number(e.target.value))
-                }
+                value={formData.age}
+                onChange={(e) => handleInputChange("age", Number(e.target.value))}
                 className="w-full"
                 min={18}
                 max={100}
-                error={errors.partnerAge}
+                error={errors.age || ""}
               />
-            </>
+              
+              {(formData.protectWho === "mi_pareja_y_yo" ||
+                formData.protectWho === "familia") && (
+                  <>
+                    <SelectInput
+                      options={genderOptions}
+                      error={errors.partnerGender}
+                      label="Género al nacer de mi pareja"
+                      name="partnerGender"
+                      value={formData.partnerGender}
+                      onValueChange={(value) =>
+                        handleInputChange("partnerGender", value)
+                      }
+                    />
+                    <NumberInput
+                      label="Mi pareja tiene"
+                      id="partnerAge"
+                      name="partnerAge"
+                      placeholder="Ej: 18"
+                      value={formData.partnerAge}
+                      onChange={(e) =>
+                        handleInputChange("partnerAge", Number(e.target.value))
+                      }
+                      className="w-full"
+                      min={18}
+                      max={100}
+                      error={errors.partnerAge}
+                    />
+                  </>
+                )}
+            </div>
           )}
 
         {(formData.protectWho === "familia" ||
           formData.protectWho === "mis_hijos_y_yo" ||
           formData.protectWho === "solo_mis_hijos") && (
-            <>
+            <div className="space-y-6">
               <NumberInput
                 label="Número de hijos"
                 id="childrenCount"
@@ -150,18 +152,18 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 error={errors.childrenCount}
               />
               {formData.childrenCount && formData.childrenCount > 0 && (
-                <div className="col-span-2">
+                <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
                     {formData.childrenCount === 1
                       ? "Datos de mi hijo"
                       : `Datos de mis ${formData.childrenCount} hijos`}
                   </label>
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     {Array.from({ length: formData.childrenCount }).map(
                       (_, index) => (
                         <div
                           key={index}
-                          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+                          className="space-y-4"
                         >
                           <NumberInput
                             label="Edad"
@@ -196,11 +198,11 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                   </div>
                 </div>
               )}
-            </>
+            </div>
           )}
 
         {formData.protectWho === "otros" && (
-          <>
+          <div className="space-y-6">
             <NumberInput
               label="¿Cuántas personas quieres asegurar?"
               id="protectedCount"
@@ -215,14 +217,14 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
               min={1}
             />
 
-            <div className="col-span-2">
+            <div>
               {formData.protectedCount && formData.protectedCount > 0 && (
-                <div className="space-y-4">
+                <div className="space-y-6">
                   {Array.from({ length: formData.protectedCount }).map(
                     (_, index) => (
                       <div
                         key={index}
-                        className="grid grid-cols-1 md:grid-cols-3 gap-4"
+                        className="space-y-4"
                       >
                         <TextInput
                           id={`protectedRelationship${index}`}
@@ -282,60 +284,58 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 </div>
               )}
             </div>
-          </>
+          </div>
         )}
 
         {formData.protectWho === "mis_padres" && (
-          <>
-            <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-              <TextInput
-                type="text"
-                label="Nombre de papá"
-                name="dadName"
-                placeholder="Ej: Juan Pérez"
-                value={formData.dadName}
-                onChange={(e) => handleInputChange("dadName", e.target.value)}
-                error={errors.dadName}
-                className="w-full"
-              />
+          <div className="space-y-6">
+            <TextInput
+              type="text"
+              label="Nombre de papá"
+              name="dadName"
+              placeholder="Ej: Juan Pérez"
+              value={formData.dadName}
+              onChange={(e) => handleInputChange("dadName", e.target.value)}
+              error={errors.dadName}
+              className="w-full"
+            />
 
-              <TextInput
-                type="text"
-                label="Nombre de mamá"
-                name="momName"
-                placeholder="Ej: María López"
-                value={formData.momName}
-                onChange={(e) => handleInputChange("momName", e.target.value)}
-                error={errors.momName}
-                className="w-full"
-              />
+            <TextInput
+              type="text"
+              label="Nombre de mamá"
+              name="momName"
+              placeholder="Ej: María López"
+              value={formData.momName}
+              onChange={(e) => handleInputChange("momName", e.target.value)}
+              error={errors.momName}
+              className="w-full"
+            />
 
-              <NumberInput
-                label="Edad de papá"
-                name="dadAge"
-                placeholder="Edad de papá"
-                value={formData.dadAge}
-                onChange={(e) =>
-                  handleInputChange("dadAge", Number(e.target.value))
-                }
-                error={errors.dadAge}
-                className="w-full"
-                min={18}
-              />
-              <NumberInput
-                label="Edad de mamá"
-                name="momAge"
-                placeholder="Edad de mamá"
-                value={formData.momAge}
-                onChange={(e) =>
-                  handleInputChange("momAge", Number(e.target.value))
-                }
-                error={errors.momAge}
-                className="w-full"
-                min={18}
-              />
-            </div>
-          </>
+            <NumberInput
+              label="Edad de papá"
+              name="dadAge"
+              placeholder="Edad de papá"
+              value={formData.dadAge}
+              onChange={(e) =>
+                handleInputChange("dadAge", Number(e.target.value))
+              }
+              error={errors.dadAge}
+              className="w-full"
+              min={18}
+            />
+            <NumberInput
+              label="Edad de mamá"
+              name="momAge"
+              placeholder="Edad de mamá"
+              value={formData.momAge}
+              onChange={(e) =>
+                handleInputChange("momAge", Number(e.target.value))
+              }
+              error={errors.momAge}
+              className="w-full"
+              min={18}
+            />
+          </div>
         )}
       </div>
     </div>
