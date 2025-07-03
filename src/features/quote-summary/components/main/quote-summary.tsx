@@ -7,6 +7,44 @@ import { InfoCard } from "../cards/info-card";
 import { deleteSelectedPlan } from "@/features/plans/actions/set-cookies";
 import { FC, useState } from "react";
 import { DeductibleAndCoInsuranceInfoModal } from "../modals/CombinedInfoModal";
+
+// Función para convertir data URI a Blob
+const dataURItoBlob = (dataURI: string): Blob => {
+  try {
+    // Verificar que sea un data URI válido
+    if (!dataURI.startsWith('data:')) {
+      console.error('Invalid data URI format');
+      return new Blob([], { type: 'application/pdf' });
+    }
+
+    // Extraer la parte base64 y el tipo MIME
+    const parts = dataURI.split(',');
+    if (parts.length !== 2) {
+      console.error('Invalid data URI format: missing comma separator');
+      return new Blob([], { type: 'application/pdf' });
+    }
+
+    const mimeMatch = parts[0].match(/:(.*?);/);
+    if (!mimeMatch || mimeMatch.length < 2) {
+      console.error('Invalid data URI format: cannot extract MIME type');
+      return new Blob([], { type: 'application/pdf' });
+    }
+
+    const mimeString = mimeMatch[1];
+    const byteString = atob(parts[1]);
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+
+    return new Blob([ab], { type: mimeString });
+  } catch (error) {
+    console.error('Error converting data URI to Blob:', error);
+    return new Blob([], { type: 'application/pdf' });
+  }
+};
 import { formatCurrency } from "@/shared/utils";
 import { useQuoteSumaryActions } from "../../hooks/use-quote-sumary-actions";
 import { Modal } from "@/shared/components/ui/modal";
@@ -132,9 +170,20 @@ export const QuoteSummary: FC<
   } = useQuoteSumaryActions();
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
+  // Detectar si es un dispositivo iOS con una detección más robusta
+  const isIOS = typeof navigator !== 'undefined' ?
+    (/iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) :
+    false;
+
+  // Estado para controlar mensajes de error
+  const [pdfError, setPdfError] = useState<string | null>(null);
+
   //! -------------------------------------------------------------------
   const handleGeneratePDF = async () => {
     setIsGeneratingPDF(true);
+    setPdfError(null);
+
     try {
       const prospectData = await getProspect();
       const pdfData = processPDFData({
@@ -144,21 +193,70 @@ export const QuoteSummary: FC<
       const result = await generatePDFAction(pdfData);
 
       if (result.success && result.data) {
-        const link = document.createElement("a");
-        link.href = result.data;
-        link.download = `cotizacion-${props.company}-${props.plan}.pdf`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        if (isIOS) {
+          try {
+            // Mostrar un cuadro de confirmación para la descarga
+            if (confirm('¿Deseas descargar la cotización en PDF?')) {
+              // Convertir data URI a Blob para mejor compatibilidad con iOS
+              const pdfBlob = dataURItoBlob(result.data);
+              const blobUrl = URL.createObjectURL(pdfBlob);
+
+              // Crear un enlace de descarga y forzar el clic
+              const downloadLink = document.createElement('a');
+              downloadLink.href = blobUrl;
+              downloadLink.download = `cotizacion-${props.company}-${props.plan}.pdf`;
+              downloadLink.style.display = 'none';
+              // Ya no abrimos en nueva ventana para evitar la navegación
+              document.body.appendChild(downloadLink);
+
+              // Intentar forzar la descarga
+              downloadLink.click();
+
+              // Limpiar después de un tiempo
+              setTimeout(() => {
+                if (document.body.contains(downloadLink)) {
+                  document.body.removeChild(downloadLink);
+                }
+                // Liberar el objeto URL
+                URL.revokeObjectURL(blobUrl);
+              }, 1000);
+            }
+          } catch (iosError) {
+            console.error("Error específico de iOS:", iosError);
+            // Mostrar mensaje de error
+            setPdfError("Ocurrió un error al procesar la descarga. Por favor, intente nuevamente.");
+          }
+        } else {
+          // Para otros dispositivos, descargar directamente
+          try {
+            const blob = dataURItoBlob(result.data);
+            const blobUrl = URL.createObjectURL(blob);
+            const downloadLink = document.createElement("a");
+            downloadLink.href = blobUrl;
+            downloadLink.download = `cotizacion-${props.company}-${props.plan}.pdf`;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            URL.revokeObjectURL(blobUrl);
+          } catch (error) {
+            console.error("Error al descargar el PDF:", error);
+            setPdfError("Ocurrió un error al procesar la descarga. Por favor, intente nuevamente.");
+          }
+        }
       } else {
         console.error("Error generando PDF:", result.error);
+        setPdfError("No se pudo generar la cotización. Por favor, intente nuevamente.");
       }
     } catch (error) {
       console.error("Error en la descarga:", error);
+      setPdfError("Ocurrió un error al procesar la cotización. Por favor, intente nuevamente.");
     } finally {
       setIsGeneratingPDF(false);
     }
   };
+
+  // Estas funciones han sido eliminadas ya que no se utiliza más el modal del PDF
+
   //! -------------------------------------------------------------------
 
   return (
@@ -286,8 +384,17 @@ export const QuoteSummary: FC<
                     </>
                   ) : (
                     <>
-                      <Download className="w-4 h-4" />
-                      Descargar Cotización
+                      {isIOS ? (
+                        <>
+                          <FileText className="w-4 h-4" />
+                          Ver Cotización
+                        </>
+                      ) : (
+                        <>
+                          <Download className="w-4 h-4" />
+                          Descargar Cotización
+                        </>
+                      )}
                     </>
                   )}
                 </button>
@@ -354,6 +461,35 @@ export const QuoteSummary: FC<
             </Modal>
           )}
         </>
+      )}
+
+      {/* El modal para mostrar el PDF en iOS ha sido eliminado */}
+
+      {/* Mensaje de error global */}
+      {pdfError && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-lg font-semibold text-red-600 mb-2">Error</h3>
+            <p className="mb-4">{pdfError}</p>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => setPdfError(null)}
+                className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
+              >
+                Cerrar
+              </button>
+              <button
+                onClick={() => {
+                  setPdfError(null);
+                  handleGeneratePDF();
+                }}
+                className="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors"
+              >
+                Intentar nuevamente
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
