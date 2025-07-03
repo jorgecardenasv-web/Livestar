@@ -195,32 +195,35 @@ export const QuoteSummary: FC<
       if (result.success && result.data) {
         if (isIOS) {
           try {
-            // Mostrar un cuadro de confirmación para la descarga
-            if (confirm('¿Deseas descargar la cotización en PDF?')) {
-              // Convertir data URI a Blob para mejor compatibilidad con iOS
-              const pdfBlob = dataURItoBlob(result.data);
-              const blobUrl = URL.createObjectURL(pdfBlob);
+            // Convertir data URI a Blob para mejor compatibilidad con iOS
+            const pdfBlob = dataURItoBlob(result.data);
+            const blobUrl = URL.createObjectURL(pdfBlob);
 
-              // Crear un enlace de descarga y forzar el clic
-              const downloadLink = document.createElement('a');
-              downloadLink.href = blobUrl;
-              downloadLink.download = `cotizacion-${props.company}-${props.plan}.pdf`;
-              downloadLink.style.display = 'none';
-              // Ya no abrimos en nueva ventana para evitar la navegación
-              document.body.appendChild(downloadLink);
+            // Crear un enlace de descarga y forzar el clic
+            const downloadLink = document.createElement('a');
+            downloadLink.href = blobUrl;
+            downloadLink.setAttribute('download', `cotizacion-${props.company}-${props.plan}.pdf`);
+            downloadLink.style.display = 'none';
+            // Asegurarnos que se descargue y no se abra
+            document.body.appendChild(downloadLink);
 
-              // Intentar forzar la descarga
-              downloadLink.click();
+            // Disparar el evento click para asegurar compatibilidad con todos los navegadores
+            downloadLink.dispatchEvent(
+              new MouseEvent('click', { 
+                bubbles: true, 
+                cancelable: true, 
+                view: window 
+              })
+            );
 
-              // Limpiar después de un tiempo
-              setTimeout(() => {
-                if (document.body.contains(downloadLink)) {
-                  document.body.removeChild(downloadLink);
-                }
-                // Liberar el objeto URL
-                URL.revokeObjectURL(blobUrl);
-              }, 1000);
-            }
+            // Limpiar después de un tiempo para asegurar que Firefox complete la descarga
+            setTimeout(() => {
+              if (document.body.contains(downloadLink)) {
+                document.body.removeChild(downloadLink);
+              }
+              // Liberar el objeto URL
+              URL.revokeObjectURL(blobUrl);
+            }, 100);
           } catch (iosError) {
             console.error("Error específico de iOS:", iosError);
             // Mostrar mensaje de error
@@ -233,11 +236,27 @@ export const QuoteSummary: FC<
             const blobUrl = URL.createObjectURL(blob);
             const downloadLink = document.createElement("a");
             downloadLink.href = blobUrl;
-            downloadLink.download = `cotizacion-${props.company}-${props.plan}.pdf`;
+            downloadLink.setAttribute('download', `cotizacion-${props.company}-${props.plan}.pdf`);
+            downloadLink.style.display = 'none';
             document.body.appendChild(downloadLink);
-            downloadLink.click();
-            document.body.removeChild(downloadLink);
-            URL.revokeObjectURL(blobUrl);
+            
+            // Disparar el evento click para asegurar compatibilidad con todos los navegadores
+            downloadLink.dispatchEvent(
+              new MouseEvent('click', { 
+                bubbles: true, 
+                cancelable: true, 
+                view: window 
+              })
+            );
+            
+            // Limpiar después de un tiempo para asegurar que Firefox complete la descarga
+            setTimeout(() => {
+              if (document.body.contains(downloadLink)) {
+                document.body.removeChild(downloadLink);
+              }
+              // Liberar el objeto URL
+              URL.revokeObjectURL(blobUrl);
+            }, 100);
           } catch (error) {
             console.error("Error al descargar el PDF:", error);
             setPdfError("Ocurrió un error al procesar la descarga. Por favor, intente nuevamente.");
