@@ -193,113 +193,34 @@ export const QuoteSummary: FC<
       const result = await generatePDFAction(pdfData);
 
       if (result.success && result.data) {
+        const pdfBlob = dataURItoBlob(result.data);
+        const blobUrl = URL.createObjectURL(pdfBlob);
+
         if (isIOS) {
-          try {
-            // Detectar si es Chrome en iOS
-            const isChromeIOS = /CriOS\/[\d]+/.test(navigator.userAgent);
-            
-            if (isChromeIOS) {
-              // Solución específica para Chrome en iOS usando FileReader
-              const pdfBlob = dataURItoBlob(result.data);
-              const reader = new FileReader();
-              
-              reader.onload = function() {
-                // Usar el resultado como Data URL
-                const dataUrl = reader.result;
-                
-                // Crear un enlace y forzar la descarga
-                const downloadLink = document.createElement('a');
-                downloadLink.href = dataUrl as string;
-                downloadLink.setAttribute('download', `cotizacion-${props.company}-${props.plan}.pdf`);
-                downloadLink.style.display = 'none';
-                document.body.appendChild(downloadLink);
-                
-                // Disparar el evento click
-                downloadLink.dispatchEvent(
-                  new MouseEvent('click', { 
-                    bubbles: true, 
-                    cancelable: true, 
-                    view: window 
-                  })
-                );
-                
-                // Limpiar
-                setTimeout(() => {
-                  if (document.body.contains(downloadLink)) {
-                    document.body.removeChild(downloadLink);
-                  }
-                }, 100);
-              };
-              
-              // Leer el blob como Data URL
-              reader.readAsDataURL(pdfBlob);
-            } else {
-              // Para Safari en iOS y otros navegadores en iOS
-              const pdfBlob = dataURItoBlob(result.data);
-              const blobUrl = URL.createObjectURL(pdfBlob);
-
-              // Crear un enlace de descarga y forzar el clic
-              const downloadLink = document.createElement('a');
-              downloadLink.href = blobUrl;
-              downloadLink.setAttribute('download', `cotizacion-${props.company}-${props.plan}.pdf`);
-              downloadLink.style.display = 'none';
-              document.body.appendChild(downloadLink);
-
-              // Disparar el evento click para asegurar compatibilidad con todos los navegadores
-              downloadLink.dispatchEvent(
-                new MouseEvent('click', { 
-                  bubbles: true, 
-                  cancelable: true, 
-                  view: window 
-                })
-              );
-
-              // Limpiar después de un tiempo para asegurar que Firefox complete la descarga
-              setTimeout(() => {
-                if (document.body.contains(downloadLink)) {
-                  document.body.removeChild(downloadLink);
-                }
-                // Liberar el objeto URL
-                URL.revokeObjectURL(blobUrl);
-              }, 100);
-            }
-          } catch (iosError) {
-            console.error("Error específico de iOS:", iosError);
-            // Mostrar mensaje de error
-            setPdfError("Ocurrió un error al procesar la descarga. Por favor, intente nuevamente.");
+          // Para iOS, intentar abrir en una nueva pestaña
+          const newTab = window.open(blobUrl, '_blank');
+          
+          // Si el navegador bloquea la nueva pestaña, mostrar un mensaje
+          if (!newTab || newTab.closed || typeof newTab.closed === 'undefined') {
+            setPdfError("No se pudo abrir la cotización en una nueva pestaña. Por favor, deshabilite el bloqueador de pop-ups e intente de nuevo.");
           }
+          
+          // No es necesario revocar la URL inmediatamente si se abre en una nueva pestaña
+          // Se puede revocar después de un tiempo o cuando la pestaña se cierre, pero es más complejo
         } else {
           // Para otros dispositivos, descargar directamente
-          try {
-            const blob = dataURItoBlob(result.data);
-            const blobUrl = URL.createObjectURL(blob);
-            const downloadLink = document.createElement("a");
-            downloadLink.href = blobUrl;
-            downloadLink.setAttribute('download', `cotizacion-${props.company}-${props.plan}.pdf`);
-            downloadLink.style.display = 'none';
-            document.body.appendChild(downloadLink);
-            
-            // Disparar el evento click para asegurar compatibilidad con todos los navegadores
-            downloadLink.dispatchEvent(
-              new MouseEvent('click', { 
-                bubbles: true, 
-                cancelable: true, 
-                view: window 
-              })
-            );
-            
-            // Limpiar después de un tiempo para asegurar que Firefox complete la descarga
-            setTimeout(() => {
-              if (document.body.contains(downloadLink)) {
-                document.body.removeChild(downloadLink);
-              }
-              // Liberar el objeto URL
-              URL.revokeObjectURL(blobUrl);
-            }, 100);
-          } catch (error) {
-            console.error("Error al descargar el PDF:", error);
-            setPdfError("Ocurrió un error al procesar la descarga. Por favor, intente nuevamente.");
-          }
+          const downloadLink = document.createElement("a");
+          downloadLink.href = blobUrl;
+          downloadLink.setAttribute('download', `cotizacion-${props.company}-${props.plan}.pdf`);
+          downloadLink.style.display = 'none';
+          document.body.appendChild(downloadLink);
+          
+          downloadLink.click();
+          
+          setTimeout(() => {
+            document.body.removeChild(downloadLink);
+            URL.revokeObjectURL(blobUrl);
+          }, 100);
         }
       } else {
         console.error("Error generando PDF:", result.error);
