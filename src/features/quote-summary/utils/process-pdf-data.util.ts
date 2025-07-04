@@ -483,7 +483,8 @@ export const processPDFData = (
         if (prices.main && !prices.main.anual) {
           members.push({
             type: "Titular",
-            price: prices.main,
+            price: ensureValidNumber(prices.main),
+            anual: ensureValidNumber(prices.main * 12),
             age: prices.mainAge || undefined,
           });
         }
@@ -491,7 +492,8 @@ export const processPDFData = (
         if (prices.partner && !prices.partner.anual) {
           members.push({
             type: "Pareja",
-            price: prices.partner,
+            price: ensureValidNumber(prices.partner),
+            anual: ensureValidNumber(prices.partner * 12),
             age: prices.partnerAge || undefined,
           });
         }
@@ -505,7 +507,8 @@ export const processPDFData = (
                 typeof price === "number" ? undefined : price.age;
               members.push({
                 type: `Hijo/a ${index + 1}`,
-                price: childPrice,
+                price: ensureValidNumber(childPrice),
+                anual: ensureValidNumber(childPrice * 12),
                 age: childAge,
               });
             }
@@ -517,7 +520,8 @@ export const processPDFData = (
             (parent: { name: string; price: number; age?: number }) => {
               members.push({
                 type: parent.name === "Padre" ? "Padre" : "Madre",
-                price: parent.price,
+                price: ensureValidNumber(parent.price),
+                anual: ensureValidNumber(parent.price * 12),
                 age: parent.age,
               });
             }
@@ -529,7 +533,8 @@ export const processPDFData = (
             (other: { relationship: string; price: number; age?: number }) => {
               members.push({
                 type: other.relationship || "Otro",
-                price: other.price,
+                price: ensureValidNumber(other.price),
+                anual: ensureValidNumber(other.price * 12),
                 age: other.age,
               });
             }
