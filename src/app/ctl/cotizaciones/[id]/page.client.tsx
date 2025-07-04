@@ -54,28 +54,43 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
           typeof membersData.children[0] === 'object' && membersData.children[0].primerMes !== undefined));
 
     const processMember = (member: any, type: string, id: string, name?: string) => {
+      // Asegurar que los valores numéricos sean válidos
+      const ensureValidNumber = (value: any): number => {
+        const num = Number(value);
+        return isNaN(num) ? 0 : num;
+      };
+
       if (hasDifferentiatedPrices && typeof member === 'object' && member.primerMes !== undefined) {
         return {
           id,
           type,
           name,
-          price: member.price || member.anual || 0,
-          primerMes: member.primerMes,
-          segundoMesADoce: member.segundoMesADoce
+          price: ensureValidNumber(member.price || member.anual || 0),
+          primerMes: ensureValidNumber(member.primerMes),
+          segundoMesADoce: ensureValidNumber(member.segundoMesADoce)
         };
       } else if (typeof member === 'object' && member.price !== undefined) {
         return {
           id,
           type,
           name,
-          price: member.price
+          price: ensureValidNumber(member.price)
+        };
+      } else if (typeof member === 'object' && member.anual !== undefined) {
+        // Caso específico para GNP donde puede tener anual pero no price
+        return {
+          id,
+          type,
+          name,
+          price: ensureValidNumber(member.mensual || member.anual / 12 || 0),
+          anual: ensureValidNumber(member.anual)
         };
       } else {
         return {
           id,
           type,
           name,
-          price: member
+          price: ensureValidNumber(member)
         };
       }
     };

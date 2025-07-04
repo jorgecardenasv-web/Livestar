@@ -13,6 +13,7 @@ interface Member {
   price: number;         // Precio estándar o precio anual
   primerMes?: number;    // Precio del primer mes (sólo para formato HDI)
   segundoMesADoce?: number; // Precio de los meses 2-12 (sólo para formato HDI)
+  anual?: number;        // Precio anual (para GNP)
 }
 
 /**
