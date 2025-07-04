@@ -38,7 +38,7 @@ export const sendQuoteEmailService = async ({
       attachments: [
         {
           filename: `cotizacion-${company}-${plan}.pdf`,
-          content: Buffer.from(pdfBuffer),
+          content: Buffer.from(pdfBuffer.split(';base64,').pop(), 'base64'),
           contentType: "application/pdf",
         },
       ],
@@ -63,7 +63,7 @@ export const sendQuoteEmailService = async ({
         attachments: [
           {
             filename: `cotizacion-${company}-${plan}.pdf`,
-            content: Buffer.from(pdfBuffer),
+            content: Buffer.from(pdfBuffer.split(';base64,').pop(), 'base64'),
             contentType: "application/pdf",
           },
         ],
@@ -102,7 +102,7 @@ export const sendQuoteEmailProspectService = async ({
       attachments: [
         {
           filename: `cotizacion-${company}-${plan}.pdf`,
-          content: Buffer.from(pdfBuffer),
+          content: Buffer.from(pdfBuffer.split(';base64,').pop(), 'base64'),
           contentType: "application/pdf",
         },
       ],

@@ -178,6 +178,7 @@ export const QuoteSummary: FC<
 
   // Estado para controlar mensajes de error
   const [pdfError, setPdfError] = useState<string | null>(null);
+  const [pdfSuccess, setPdfSuccess] = useState<string | null>(null);
 
   //! -------------------------------------------------------------------
   const handleGeneratePDF = async () => {
@@ -193,34 +194,22 @@ export const QuoteSummary: FC<
       const result = await generatePDFAction(pdfData);
 
       if (result.success && result.data) {
-        const pdfBlob = dataURItoBlob(result.data);
-        const blobUrl = URL.createObjectURL(pdfBlob);
-
         if (isIOS) {
-          // Para iOS, intentar abrir en una nueva pestaña
-          const newTab = window.open(blobUrl, '_blank');
-          
-          // Si el navegador bloquea la nueva pestaña, mostrar un mensaje
-          if (!newTab || newTab.closed || typeof newTab.closed === 'undefined') {
-            setPdfError("No se pudo abrir la cotización en una nueva pestaña. Por favor, deshabilite el bloqueador de pop-ups e intente de nuevo.");
-          }
-          
-          // No es necesario revocar la URL inmediatamente si se abre en una nueva pestaña
-          // Se puede revocar después de un tiempo o cuando la pestaña se cierre, pero es más complejo
+          setPdfSuccess("Se ha enviado la cotización a tu correo electrónico.");
         } else {
-          // Para otros dispositivos, descargar directamente
+          const pdfBlob = dataURItoBlob(result.data);
+          const blobUrl = URL.createObjectURL(pdfBlob);
           const downloadLink = document.createElement("a");
           downloadLink.href = blobUrl;
           downloadLink.setAttribute('download', `cotizacion-${props.company}-${props.plan}.pdf`);
           downloadLink.style.display = 'none';
           document.body.appendChild(downloadLink);
-          
           downloadLink.click();
-          
           setTimeout(() => {
             document.body.removeChild(downloadLink);
             URL.revokeObjectURL(blobUrl);
           }, 100);
+          setPdfSuccess("Se ha descargado la cotización y enviado a tu correo electrónico.");
         }
       } else {
         console.error("Error generando PDF:", result.error);
@@ -442,7 +431,6 @@ export const QuoteSummary: FC<
         </>
       )}
 
-      {/* El modal para mostrar el PDF en iOS ha sido eliminado */}
 
       {/* Mensaje de error global */}
       {pdfError && (
@@ -465,6 +453,23 @@ export const QuoteSummary: FC<
                 className="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors"
               >
                 Intentar nuevamente
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {pdfSuccess && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-lg font-semibold text-green-600 mb-2">Éxito</h3>
+            <p className="mb-4">{pdfSuccess}</p>
+            <div className="flex justify-end">
+              <button
+                onClick={() => setPdfSuccess(null)}
+                className="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors"
+              >
+                Aceptar
               </button>
             </div>
           </div>
