@@ -43,9 +43,11 @@ export const getAdvisorsService = async ({
         where: {
           ...where,
           ...whereText,
+          role: "ASESOR",
         },
       }),
     ]);
+    
 
     const totalPages = Math.ceil(totalAdvisors / pageSize);
 
