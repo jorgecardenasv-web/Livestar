@@ -3,41 +3,38 @@ import { handlePrismaError } from "@/shared/errors/prisma";
 
 export const getAdvisorWithLeastQuotesService = async () => {
   try {
-    const newAdvisor = await prisma.user.findFirst({
+    const advisorsWithQuoteCounts = await prisma.user.findMany({
       where: {
-        role: "ASESOR",
-        status: "ACTIVO",
-        isNewAdvisor: true,
-        lastProspectAssigned: null,
-      },
-      orderBy: {
-        createdAt: "asc",
+        role: 'ASESOR',
+        status: 'ACTIVO',
       },
       select: {
         id: true,
         email: true,
         name: true,
+        _count: {
+          select: {
+            Quote: true,
+          },
+        },
       },
     });
 
-    if (newAdvisor) {
-      return newAdvisor;
+    if (advisorsWithQuoteCounts.length === 0) {
+      return null;
     }
 
-    const nextAdvisor = await prisma.user.findFirst({
-      where: {
-        role: "ASESOR",
-        status: "ACTIVO",
-      },
-      orderBy: [{ lastProspectAssigned: "asc" }, { createdAt: "asc" }],
-      select: {
-        id: true,
-        email: true,
-        name: true,
-      },
-    });
+    const sortedAdvisors = advisorsWithQuoteCounts.sort(
+      (a, b) => a._count.Quote - b._count.Quote
+    );
 
-    return nextAdvisor ?? null;
+    const leastBusyAdvisor = sortedAdvisors[0];
+
+    return {
+      id: leastBusyAdvisor.id,
+      email: leastBusyAdvisor.email,
+      name: leastBusyAdvisor.name,
+    };
   } catch (error) {
     throw handlePrismaError(error);
   }
