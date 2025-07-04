@@ -58,6 +58,7 @@ export const ListQuotes = async ({ params }: {
             <TableRow>
               <TableHead>Nombre</TableHead>
               <TableHead>Correo electrónico</TableHead>
+              <TableHead>Whatsapp</TableHead>
               <TableHead>Fecha de creación</TableHead>
               <TableHead>Asesor asignado</TableHead>
               <TableHead>Estado</TableHead>
@@ -71,6 +72,7 @@ export const ListQuotes = async ({ params }: {
                 <TableRow key={quote.id}>
                   <TableCell>{quote.prospect?.name}</TableCell>
                   <TableCell>{quote.prospect?.email}</TableCell>
+                  <TableCell>{quote.prospect?.whatsapp}</TableCell>
                   <TableCell>{formatDate(quote.createdAt)}</TableCell>
                   <TableCell>{quote.user?.name}</TableCell>
                   <TableCell>
