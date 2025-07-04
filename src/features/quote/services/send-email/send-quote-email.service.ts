@@ -2,6 +2,7 @@ import { sendEmail } from "@/lib/nodemailer/config/nodemailer";
 import {
   advisorTemplate,
   prospectoTemplate,
+  prospectoTemplateBefore,
 } from "@/lib/nodemailer/templates/email-templates";
 
 interface SendQuoteEmailParams {
@@ -68,6 +69,44 @@ export const sendQuoteEmailService = async ({
         ],
       });
     }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error enviando email:", error);
+    return { success: false, error: "Error enviando el email" };
+  }
+};
+
+export const sendQuoteEmailProspectService = async ({
+  prospectName,
+  prospectEmail,
+  pdfBuffer,
+  company,
+  plan,
+}: {
+  prospectName: string;
+  prospectEmail: string;
+  pdfBuffer: any;
+  company: string;
+  plan: string;
+}) => {
+  try {
+    await sendEmail({
+      subject: "Cotización de Seguro de Gastos Médicos",
+      html: prospectoTemplateBefore({
+        logoUrl:
+          "https://livestar.mx/wp-content/uploads/2021/08/Livestar-logo-color-horizontal.png",
+        prospectName,
+      }),
+      to: prospectEmail,
+      attachments: [
+        {
+          filename: `cotizacion-${company}-${plan}.pdf`,
+          content: Buffer.from(pdfBuffer),
+          contentType: "application/pdf",
+        },
+      ],
+    });
 
     return { success: true };
   } catch (error) {

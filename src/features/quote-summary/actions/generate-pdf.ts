@@ -3,20 +3,28 @@
 import { QuotePDFData } from "../types";
 import { generatePDFService } from "../services/generate-pdf.service";
 import { getProspect } from "@/features/plans/loaders/get-prospect";
+import { sendQuoteEmailProspectService } from "@/features/quote/services/send-email/send-quote-email.service";
 
 export async function generatePDFAction(
   data: QuotePDFData
 ): Promise<{ success: boolean; data?: string; error?: string }> {
   try {
-    const pdfData = generatePDFService(data, "datauri");
-
+    const pdfData = await generatePDFService(data, "datauri");
+    const { prospect } = await getProspect();
     if (!pdfData) {
       throw new Error("No se pudo generar el PDF");
     }
 
+    await sendQuoteEmailProspectService({
+          prospectName: prospect.name,
+          prospectEmail: prospect.email,
+          pdfBuffer: pdfData,
+          company: data.company,
+          plan: data.plan,
+        });
     return {
       success: true,
-      data: (await pdfData) as string,
+      data: pdfData as string,
     };
   } catch (error) {
     console.error("Error detallado:", error);

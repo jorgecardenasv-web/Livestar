@@ -3,8 +3,6 @@ import { Attachment } from "nodemailer/lib/mailer";
 
 function validateEnvVariables() {
   const requiredVars = {
-    EMAIL_HOST: process.env.EMAIL_HOST,
-    EMAIL_PORT: process.env.EMAIL_PORT,
     EMAIL_USER: process.env.EMAIL_USER,
     EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
   };
