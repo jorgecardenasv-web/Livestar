@@ -1,6 +1,6 @@
 import { TextInput } from "@/shared/components/ui/text-input";
 import { SelectInput } from "@/shared/components/ui/select-input";
-import { DatePicker } from "@/shared/components/ui/data-picker";
+import { MonthYearPicker } from "@/shared/components/ui/month-year-picker";
 import { RadioOption } from "../../types";
 import RadioGroup from "../inputs/radio-group-medical";
 import { FC } from "react";
@@ -64,10 +64,10 @@ export const HealthConditionForm: FC<HealthConditionFormProps> = ({
             errors[`question-${indexform}-condition-${index}-tipoEvento`] || ""
           }
         />
-        <DatePicker
+        <MonthYearPicker
           value={formData.fechaInicio}
           label="Fecha de inicio"
-          placeholder="Fecha de inicio"
+          placeholder="Selecciona mes y año de inicio"
           onValueChange={(value) => onChange("fechaInicio", value)}
           error={
             errors[`question-${indexform}-condition-${index}-fechaInicio`] || ""
