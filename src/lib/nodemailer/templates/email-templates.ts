@@ -72,24 +72,6 @@ export const prospectoTemplate = ({
                   </td>
                 </tr>
 
-                <!-- Contact box 
-                  <tr>
-                    <td style="padding: 25px; background-color: #f8f9fa; border-radius: 8px; margin: 20px 0;">
-                      <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
-                        <tr>
-                          <td style="text-align: center;">
-                            <p style="margin: 0 0 15px 0; color: #1a1a1a; font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6;">
-                              Si tiene alguna pregunta o desea adelantar el contacto, no dude en comunicarse con nosotros al:
-                            </p>
-                            <p style="margin: 0; color: #0066cc; font-family: Arial, sans-serif; font-size: 20px; font-weight: bold;">
-                              ${""}
-                            </p>
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                -->
                 <tr>
                   <td style="padding-top: 25px;">
                     <p style="margin: 0 0 20px 0; color: #1a1a1a; font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6;">
@@ -127,9 +109,11 @@ export const prospectoTemplate = ({
 export const prospectoTemplateBefore = ({
   prospectName,
   logoUrl,
+  redirectUrl,
 }: {
   prospectName: string;
   logoUrl: string;
+  redirectUrl: string;
 }) => `
 <!DOCTYPE html>
 <html lang="es">
@@ -148,7 +132,7 @@ export const prospectoTemplateBefore = ({
           <!-- Logo section -->
           <tr>
             <td align="center" style="padding: 20px 20px 30px 20px;">
-              <img src="${logoUrl}" alt="Logo Aseguradora" style="max-width: 180px; height: auto;">
+              <img src="${logoUrl}" alt="Logo Livestar" style="max-width: 200px; width: 100%; height: auto; display: block;">
             </td>
           </tr>
 
@@ -188,24 +172,21 @@ export const prospectoTemplateBefore = ({
                   </td>
                 </tr>
 
-                <!-- Contact box 
-                  <tr>
-                    <td style="padding: 25px; background-color: #f8f9fa; border-radius: 8px; margin: 20px 0;">
-                      <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
-                        <tr>
-                          <td style="text-align: center;">
-                            <p style="margin: 0 0 15px 0; color: #1a1a1a; font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6;">
-                              Si tiene alguna pregunta o desea adelantar el contacto, no dude en comunicarse con nosotros al:
-                            </p>
-                            <p style="margin: 0; color: #0066cc; font-family: Arial, sans-serif; font-size: 20px; font-weight: bold;">
-                              ${""}
-                            </p>
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                -->
+                <!-- Call to Action Button -->
+                <tr>
+                  <td style="padding: 30px 0; text-align: center;">
+                    <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin: 0 auto;">
+                      <tr>
+                        <td style="background-color: #0066cc; border-radius: 6px; padding: 0;">
+                          <a href="${redirectUrl}" style="display: inline-block; padding: 16px 32px; font-family: Arial, sans-serif; font-size: 16px; font-weight: bold; color: #ffffff; text-decoration: none; border-radius: 6px;">
+                             Continuar mi cotización
+                           </a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
                 <tr>
                   <td style="padding-top: 25px;">
                     <p style="margin: 0 0 20px 0; color: #1a1a1a; font-family: Arial, sans-serif; font-size: 16px; line-height: 1.6;">

@@ -83,12 +83,14 @@ export const sendQuoteEmailProspectService = async ({
   pdfBuffer,
   company,
   plan,
+  redirectUrl,
 }: {
   prospectName: string;
   prospectEmail: string;
   pdfBuffer: any;
   company: string;
   plan: string;
+  redirectUrl: string;
 }) => {
   try {
     await sendEmail({
@@ -97,6 +99,7 @@ export const sendQuoteEmailProspectService = async ({
         logoUrl:
           "https://livestar.mx/wp-content/uploads/2021/08/Livestar-logo-color-horizontal.png",
         prospectName,
+        redirectUrl,
       }),
       to: prospectEmail,
       attachments: [

@@ -21,6 +21,7 @@ export async function generatePDFAction(
           pdfBuffer: pdfData,
           company: data.company,
           plan: data.plan,
+          redirectUrl: `${process.env.BASE_URL}/cotizar/resumen`
         });
     return {
       success: true,
