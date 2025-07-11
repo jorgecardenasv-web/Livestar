@@ -365,7 +365,7 @@ export const generatePDFWithPuppeteer = async (
       });
     } else {
       browser = await puppeteerCore.launch({
-        args: [...chromiumArgs, ...chromium.args],
+        args: chromium.args,
         executablePath: await chromium.executablePath(),
         headless: chromium.headless,
         protocolTimeout: 30000,
@@ -377,13 +377,19 @@ export const generatePDFWithPuppeteer = async (
 
     // Configurar interceptación de requests
     await page.setRequestInterception(true);
-    page.on("request", (request: any) => {
+    page.on("request", (request) => {
+      // Tu lógica de intercepción es excelente, la mantenemos.
       const resourceType = request.resourceType();
+      const allowedResources = new Set([
+        "document",
+        "stylesheet",
+        "font",
+        "script",
+      ]);
+
       if (
-        ["document", "script", "stylesheet", "font"].includes(resourceType) ||
-        request.url().startsWith("data:") ||
-        request.url().startsWith("https://fonts.googleapis.com") ||
-        request.url().startsWith("https://fonts.gstatic.com")
+        allowedResources.has(resourceType) ||
+        request.url().startsWith("data:")
       ) {
         request.continue();
       } else {
@@ -406,72 +412,8 @@ export const generatePDFWithPuppeteer = async (
       timeout: 20000,
     });
 
-    // Aplicar estilos optimizados con la nueva configuración
-    await (page as any).evaluate((config: any) => {
-      // NO aplicar paddingTop al body ya que @page lo maneja
-      document.body.style.width = "215.9mm";
-      document.body.style.margin = "0 auto";
-      // Eliminar esta línea: document.body.style.paddingTop = `${config.headerHeight}px`;
-
-      // Para la primera página, aplicar margen al primer elemento
-      // const firstSection = document.querySelector(".plan-info") as HTMLElement;
-      // if (firstSection) {
-      //   firstSection.style.marginTop = "10px";
-      // }
-
-      // Aplicar espaciado a las secciones
-      const sections = document.querySelectorAll(".content-section");
-      sections.forEach((section, index) => {
-        const element = section as HTMLElement;
-
-        // Espaciado normal entre secciones
-        element.style.marginBottom = `${config.sectionGap}px`;
-        element.style.padding = `${config.sectionPadding}px`;
-
-        // Asegurar que las secciones no se corten
-        element.style.pageBreakInside = "avoid";
-        element.style.breakInside = "avoid";
-
-        // Para secciones que podrían quedar en la parte superior de una nueva página
-        if (index > 0) {
-          // Agregar un margen superior condicional que solo aplique después de saltos
-          element.style.pageBreakBefore = "auto";
-          // CSS ya maneja el espaciado con @page
-        }
-      });
-
-      // Ajustar contenido principal
-      const mainContent = document.querySelector(
-        ".main-content"
-      ) as HTMLElement;
-      if (mainContent) {
-        mainContent.style.gap = `${config.elementSpacing}px`;
-        mainContent.style.padding = `${config.sectionPadding}px 0`;
-      }
-
-      // Ajustar información del plan
-      const planInfo = document.querySelector(".plan-info") as HTMLElement;
-      if (planInfo) {
-        planInfo.style.marginTop = `${config.elementSpacing}px`;
-        planInfo.style.marginBottom = `${config.elementSpacing}px`;
-      }
-
-      // Ajustar tablas para mejor legibilidad
-      const tables = document.querySelectorAll(".data-table");
-      tables.forEach((table) => {
-        const tableElement = table as HTMLElement;
-        tableElement.style.fontSize = "14px";
-
-        const cells = table.querySelectorAll("td, th");
-        cells.forEach((cell) => {
-          const cellElement = cell as HTMLElement;
-          cellElement.style.padding = `10px`;
-        });
-      });
-    }, spacingConfig);
-
     // Pequeña pausa para asegurar que los estilos se apliquen
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
     // Generar PDF con configuración optimizada
     const pdfBuffer = await page.pdf({
@@ -524,5 +466,9 @@ export const generatePDFWithPuppeteer = async (
     }
 
     throw error;
+  } finally {
+    if (browser !== null) {
+      await browser.close();
+    }
   }
 };
