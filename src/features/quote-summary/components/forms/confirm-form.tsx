@@ -17,12 +17,7 @@ export const ContractForm = () => {
 
   return (
     <div className="mt-5">
-      <Button className="w-full py-6 text-lg" disabled={!isConfirmed || pending}>
-        <Link href="/finalizar-cotizacion" className="w-full">
-          {pending ? "Continuando..." : "Continuar cotización"}
-        </Link>
-      </Button>
-      <Alert variant="important" className="mt-4">
+      <Alert variant="important" className="mb-4">
         <AlertCircle className="h-4 w-4" color="#ca8a04" />
         <AlertTitle>¡Importante!</AlertTitle>
         <AlertDescription>
@@ -41,6 +36,11 @@ export const ContractForm = () => {
           </div>
         </AlertDescription>
       </Alert>
+      <Button className="w-full py-6 text-lg" disabled={!isConfirmed || pending}>
+        <Link href="/finalizar-cotizacion" className="w-full">
+          {pending ? "Continuando..." : "Continuar cotización"}
+        </Link>
+      </Button>
       <Alert variant="default" className="mt-4">
         <AlertCircle className="h-4 w-4" color="black" />
         <AlertTitle>Aviso</AlertTitle>
