@@ -9,7 +9,7 @@ interface SendQuoteEmailParams {
   prospectName: string;
   prospectEmail: string;
   whatsapp: string;
-  pdfBuffer: any;
+  pdfBuffer: Buffer | string;
   company: string;
   plan: string;
   advisorName?: string;
@@ -38,7 +38,7 @@ export const sendQuoteEmailService = async ({
       attachments: [
         {
           filename: `cotizacion-${company}-${plan}.pdf`,
-          content: Buffer.from(pdfBuffer.split(';base64,').pop(), 'base64'),
+          content: Buffer.isBuffer(pdfBuffer) ? pdfBuffer : Buffer.from(pdfBuffer.split(';base64,').pop() || pdfBuffer, 'base64'),
           contentType: "application/pdf",
         },
       ],
@@ -63,7 +63,7 @@ export const sendQuoteEmailService = async ({
         attachments: [
           {
             filename: `cotizacion-${company}-${plan}.pdf`,
-            content: Buffer.from(pdfBuffer.split(';base64,').pop(), 'base64'),
+            content: Buffer.isBuffer(pdfBuffer) ? pdfBuffer : Buffer.from(pdfBuffer.split(';base64,').pop() || pdfBuffer, 'base64'),
             contentType: "application/pdf",
           },
         ],
@@ -87,7 +87,7 @@ export const sendQuoteEmailProspectService = async ({
 }: {
   prospectName: string;
   prospectEmail: string;
-  pdfBuffer: any;
+  pdfBuffer: Buffer | string;
   company: string;
   plan: string;
   redirectUrl: string;
@@ -105,7 +105,7 @@ export const sendQuoteEmailProspectService = async ({
       attachments: [
         {
           filename: `cotizacion-${company}-${plan}.pdf`,
-          content: Buffer.from(pdfBuffer.split(';base64,').pop(), 'base64'),
+          content: Buffer.isBuffer(pdfBuffer) ? pdfBuffer : Buffer.from(pdfBuffer.split(';base64,').pop() || pdfBuffer, 'base64'),
           contentType: "application/pdf",
         },
       ],
