@@ -18,7 +18,7 @@ export async function generatePDFAction(
     await sendQuoteEmailProspectService({
           prospectName: prospect.name,
           prospectEmail: prospect.email,
-          pdfBuffer: pdfData,
+          pdfBuffer: typeof pdfData === 'string' ? pdfData : Buffer.from(pdfData),
           company: data.company,
           plan: data.plan,
           redirectUrl: "https://emma-gmm.livestar.mx/cotizar/resumen"
