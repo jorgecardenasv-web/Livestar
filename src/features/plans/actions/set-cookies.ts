@@ -43,7 +43,7 @@ export async function handleInterestClick(formData: FormData) {
   const medicalData = [{ set: [] }] as Prisma.JsonArray;
 
   if (parsedProspect) {
-    await createQuoteService(
+    const createdQuote = await createQuoteService(
       {
         prospectData: parsedProspect,
         medicalData,
@@ -76,8 +76,7 @@ export async function handleInterestClick(formData: FormData) {
     // cookieStore.delete("selectedPlan");
     // cookieStore.delete("activePlanType");
     // cookieStore.delete("activePaymentType");
-
-    cookies().set("selectedPlan", JSON.stringify(insuranceData));
+    cookieStore.set("createdQuote", JSON.stringify(createdQuote));
     redirect("/cotizar/resumen");
   }
 }
