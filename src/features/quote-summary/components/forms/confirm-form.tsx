@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Alert,
   AlertDescription,
@@ -10,9 +9,13 @@ import { AlertCircle } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
+import { Separator } from "@radix-ui/react-select";
+import { MedicalInformationForm } from "@/features/quote/components/forms/medical-information-form";
+import { QUESTIONS } from "@/features/quote/data";
+import { useQuoteSumaryActions } from "../../hooks/use-quote-sumary-actions";
 
-export const ContractForm = () => {
-  const [isConfirmed, setIsConfirmed] = useState(false);
+export const ContractForm = (prospect: any) => {
+  const { handleSubmit,forms, setForms, formData } = useQuoteSumaryActions(prospect)
   const { pending } = useFormStatus();
 
   return (
@@ -22,13 +25,13 @@ export const ContractForm = () => {
         <AlertTitle>¡Importante!</AlertTitle>
         <AlertDescription>
           <div className="flex items-center space-x-2 my-4">
-            <input
+            {/* <input
               type="checkbox"
               id="confirmation"
               checked={isConfirmed}
               onChange={(e) => setIsConfirmed(e.target.checked)}
               className="h-4 w-4 text-[#223E99] focus:ring-[#223E99] border-gray-300 rounded"
-            />
+            /> */}
             <label htmlFor="confirmation">
               Entiendo que cualquier padecimiento preexistente a la contratación
               del seguro estará excluida en mis coberturas
@@ -36,7 +39,8 @@ export const ContractForm = () => {
           </div>
         </AlertDescription>
       </Alert>
-      <Button className="w-full py-6 text-lg" disabled={!isConfirmed || pending}>
+
+      <Button className="w-full py-6 text-lg" disabled={pending}>
         <Link href="/finalizar-cotizacion" className="w-full">
           {pending ? "Continuando..." : "Continuar cotización"}
         </Link>
@@ -58,6 +62,20 @@ export const ContractForm = () => {
           </div>
         </AlertDescription>
       </Alert>
+
+      <Separator />
+
+      <form onSubmit={handleSubmit}>
+
+        <MedicalInformationForm
+          forms={forms}
+          setForms={setForms}
+          questions={QUESTIONS}
+          formFamily={formData}
+          errors={currentMedicalErrors}
+        />
+
+      </form>
     </div>
   );
 };

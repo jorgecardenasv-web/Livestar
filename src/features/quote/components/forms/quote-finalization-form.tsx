@@ -31,7 +31,7 @@ export const QuoteFinalizationForm = ({ prospect }: QuoteFinalizationClientPageP
   return (
     <Card className="max-w-6xl mx-auto p-5">
       <CardContent className="pt-6">
-        <form onSubmit={handleSubmit}>
+        
           <div className="space-y-10">
             <PersonalInfoSection
               formData={formData}
@@ -49,15 +49,7 @@ export const QuoteFinalizationForm = ({ prospect }: QuoteFinalizationClientPageP
               handleInputChange={handleInputChange}
             />
 
-            <Separator />
-
-            <MedicalInformationForm
-              forms={forms}
-              setForms={setForms}
-              questions={QUESTIONS}
-              formFamily={formData}
-              errors={currentMedicalErrors}
-            />
+            
           </div>
 
           <div className="flex justify-end">
@@ -70,7 +62,7 @@ export const QuoteFinalizationForm = ({ prospect }: QuoteFinalizationClientPageP
               {isSubmitting ? (<><Loader2 className="w-6 h-6 mr-2 animate-spin" />Enviando...</>) : "Enviar solicitud"}
             </Button>
           </div>
-        </form>
+        
       </CardContent>
     </Card>
   );

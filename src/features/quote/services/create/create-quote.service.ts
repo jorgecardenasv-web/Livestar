@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 
 interface CreateQuoteParams {
   prospectData: any;
-  medicalData: any;
+  medicalData?: any;
   plan: {
     id: string;
     company: string;
@@ -110,7 +110,7 @@ export const createQuoteService = async (
     planData: planData,
     totalPrice: parseFloat(plan.coverage_fee.toString()),
     protectWho,
-    medicalHistories: medicalData,
+    medicalHistories: medicalData ?? "[{ set: [] }]",
     userId: advisorId,
     coverageFee: parseFloat(plan.coverage_fee.toString()),
     paymentType: plan.paymentType,
@@ -127,7 +127,12 @@ export const createQuoteService = async (
     additionalInfo,
   };
 
-  return await prisma.quote.create({
-    data: quoteData,
-  });
+  try {
+    return await prisma.quote.create({
+      data: quoteData,
+    });
+  } catch (error) {
+    // @ts-ignore
+    console.error(`Prisma error: ${error.stack}`);
+  }
 };
