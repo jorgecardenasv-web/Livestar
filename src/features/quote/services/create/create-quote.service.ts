@@ -110,7 +110,7 @@ export const createQuoteService = async (
     planData: planData,
     totalPrice: parseFloat(plan.coverage_fee.toString()),
     protectWho,
-    medicalHistories: medicalData ?? "[{ set: [] }]",
+    medicalHistories: medicalData ?? "[{ set: [] }]", //
     userId: advisorId,
     coverageFee: parseFloat(plan.coverage_fee.toString()),
     paymentType: plan.paymentType,

@@ -7,16 +7,45 @@ import {
 } from "@/shared/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
-import Link from "next/link";
-import { useFormStatus } from "react-dom";
 import { Separator } from "@radix-ui/react-select";
 import { MedicalInformationForm } from "@/features/quote/components/forms/medical-information-form";
 import { QUESTIONS } from "@/features/quote/data";
-import { useQuoteSumaryActions } from "../../hooks/use-quote-sumary-actions";
+import { useGetQuoteForm } from "@/features/quote/hooks/use-get-quote-form";
+import { useState } from "react";
+import { useQuoteStore } from "@/features/quote/store/quote-store";
 
-export const ContractForm = (prospect: any) => {
-  const { handleSubmit,forms, setForms, formData } = useQuoteSumaryActions(prospect)
-  const { pending } = useFormStatus();
+const INITIAL_HEALTH_CONDITION = {
+  hospitalizado: "No",
+  complicacion: "No",
+  estadoSalud: "Sano",
+  medicamento: "No",
+  nombrePadecimiento: "",
+  tipoEvento: "",
+  tipoTratamiento: "",
+  detalleComplicacion: "",
+  detalleMedicamento: "",
+};
+
+export const ContractForm = ({prospect}: any) => {
+  // const { pending } = useFormStatus();
+
+  const createInitialMedicalForms = (questions: any[]) =>
+  questions.map((question) => ({
+    [`answer-${question.id}`]: "No",
+    healthConditions: [{ ...INITIAL_HEALTH_CONDITION }],
+  }));
+
+  const [medicalForm, setMedicalForm] = useState<any[]>(() =>
+      QUESTIONS
+        ? createInitialMedicalForms(QUESTIONS) : []
+    );
+
+  const [medicalErrors, setMedicalErrors] = useState<Record<string, string>>(
+  {}
+  );
+
+  const { prospect: prospectStore } = useQuoteStore()
+  console.log(prospectStore)
 
   return (
     <div className="mt-5">
@@ -25,26 +54,18 @@ export const ContractForm = (prospect: any) => {
         <AlertTitle>¡Importante!</AlertTitle>
         <AlertDescription>
           <div className="flex items-center space-x-2 my-4">
-            {/* <input
-              type="checkbox"
-              id="confirmation"
-              checked={isConfirmed}
-              onChange={(e) => setIsConfirmed(e.target.checked)}
-              className="h-4 w-4 text-[#223E99] focus:ring-[#223E99] border-gray-300 rounded"
-            /> */}
             <label htmlFor="confirmation">
-              Entiendo que cualquier padecimiento preexistente a la contratación
-              del seguro estará excluida en mis coberturas
+              Cualquier padecimiento preexistente a la contratación del seguro estará excluida de las coberturas.
             </label>
           </div>
         </AlertDescription>
       </Alert>
 
-      <Button className="w-full py-6 text-lg" disabled={pending}>
+      {/* <Button className="w-full py-6 text-lg" disabled={pending}>
         <Link href="/finalizar-cotizacion" className="w-full">
           {pending ? "Continuando..." : "Continuar cotización"}
         </Link>
-      </Button>
+      </Button> */}
       <Alert variant="default" className="mt-4">
         <AlertCircle className="h-4 w-4" color="black" />
         <AlertTitle>Aviso</AlertTitle>
@@ -65,15 +86,32 @@ export const ContractForm = (prospect: any) => {
 
       <Separator />
 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={(e) => {
+        e.preventDefault()
+        console.log("form", medicalForm)
+      }}>
+
+        <input type="hidden" name="medicalData" value={JSON.stringify(medicalForm)} />
 
         <MedicalInformationForm
-          forms={forms}
-          setForms={setForms}
+          forms={medicalForm}
+          setForms={setMedicalForm}
           questions={QUESTIONS}
-          formFamily={formData}
-          errors={currentMedicalErrors}
+          formFamily={prospectStore}
+          errors={medicalErrors}
         />
+
+        <div className="flex justify-end">
+          <Button
+            type="submit"
+            size="lg"
+            className="font-semibold text-lg"
+            disabled={false}
+          >
+            {/* {isSubmitting ? (<><Loader2 className="w-6 h-6 mr-2 animate-spin" />Enviando...</>) : "Enviar solicitud"} */}
+            Enviar
+          </Button>
+        </div>
 
       </form>
     </div>

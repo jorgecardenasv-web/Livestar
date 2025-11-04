@@ -20,6 +20,8 @@ export const Plans = async () => {
     (a, b) => a.orderIndex - b.orderIndex
   );
 
+  console.log({planTypes});
+  
   if (planTypes.length === 0) {
     return (
       <div className="text-center py-8">

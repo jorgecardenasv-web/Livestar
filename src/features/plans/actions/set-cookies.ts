@@ -34,12 +34,10 @@ interface Plan {
 
 export async function handleInterestClick(formData: FormData) {
   const insuranceData = Object.fromEntries(formData) as unknown as Plan;
-  console.log(insuranceData);
 
   const cookieStore = cookies();
   const prospect = cookieStore.get("prospect")?.value;
   const parsedProspect = JSON.parse(prospect!);
-  console.log("prospect infomration", parsedProspect);
 
   const advisor = await getAdvisorWithLeastQuotesService();
   const medicalData = [{ set: [] }] as Prisma.JsonArray;

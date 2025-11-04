@@ -30,33 +30,28 @@ export async function middleware(request: NextRequest) {
 
   if (pathWithoutQuery.startsWith("/cotizar")) {
     const prospect = request.cookies.get("prospect")?.value;
-    const selectedPlan = request.cookies.get("selectedPlan")?.value;
 
     const hasProspect = prospect ? JSON.parse(prospect) : null;
-    const hasSelectedPlan = selectedPlan ? JSON.parse(selectedPlan) : null;
 
     if (pathWithoutQuery === quoteRoutes.root) {
       if (!hasProspect) {
         return NextResponse.redirect(new URL(quoteRoutes.flow, request.url));
       }
-      if (hasProspect && !hasSelectedPlan) {
-        return NextResponse.redirect(new URL(quoteRoutes.planes, request.url));
-      }
-      if (hasProspect && hasSelectedPlan) {
-        return NextResponse.redirect(new URL(quoteRoutes.resumen, request.url));
-      }
+      // if (hasProspect && !hasSelectedPlan) {
+      //   return NextResponse.redirect(new URL(quoteRoutes.planes, request.url));
+      // }
+      // if (hasProspect && hasSelectedPlan) {
+      //   return NextResponse.redirect(new URL(quoteRoutes.resumen, request.url));
+      // }
     }
 
     if (pathWithoutQuery === quoteRoutes.planes && !hasProspect) {
       return NextResponse.redirect(new URL(quoteRoutes.flow, request.url));
     }
 
-    if (
-      pathWithoutQuery === quoteRoutes.resumen &&
-      (!hasProspect || !hasSelectedPlan)
-    ) {
-      return NextResponse.redirect(new URL(quoteRoutes.flow, request.url));
-    }
+    // if (pathWithoutQuery === quoteRoutes.resumen && !hasProspect) {
+    //   return NextResponse.redirect(new URL(quoteRoutes.flow, request.url));
+    // }
 
     if (pathWithoutQuery === quoteRoutes.flow && hasProspect) {
       return NextResponse.redirect(new URL(quoteRoutes.planes, request.url));

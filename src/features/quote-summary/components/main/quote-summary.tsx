@@ -159,8 +159,9 @@ export const QuoteSummary: FC<
     coInsuranceJson,
     coInsuranceCapJson,
     protectedWho,
-    prospect,
+    prospect, //
   } = props;
+
   const isMultiple = isMultipleString === "true" ? true : false;
   const isMultipleCoIns = isMultipleCoInsurance === "true" ? true : false;
   const {
@@ -400,6 +401,7 @@ export const QuoteSummary: FC<
               </div>
             </div>
 
+            {/** */}
             {/* Formulario de Contrato */}
             <div id="pdfIngnore" className="mt-6">
               <ContractForm prospect={prospect}/>

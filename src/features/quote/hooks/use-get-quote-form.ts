@@ -5,6 +5,7 @@ import { createProspect } from "@/features/prospects/actions/create-prospect";
 import { createQuoteAction } from "@/features/quote/actions/create-quote";
 import { useModalStore } from "@/shared/store/modal-store";
 import { normalizeFormData } from "../utils/normalize-form-data";
+import { useQuoteStore } from "../store/quote-store";
 
 const INITIAL_HEALTH_CONDITION = {
   hospitalizado: "No",
@@ -100,6 +101,7 @@ const dataCleaners: Record<string, (data: any, cleaned: any) => void> = {
 
 export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
   const { openModal, closeModal } = useModalStore();
+  const { setProspect } = useQuoteStore();
 
   const [formData, setFormData] = useState<FormData>(() => {
     const normalized = normalizeFormData(initialState);
@@ -317,16 +319,30 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
     });
   };
 
-  const unifiedHandleSubmit = async (e: React.FormEvent) => {
+  const unifiedHandleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
+    console.log("unifiedHandleSubmit");
     try {
       const schema = buildSchema(formData.protectWho!);
+      console.log({ schema });
+
       const validatedData = schema.parse(formData);
+      console.log({ validatedData });
+
       const cleanedData = cleanFormData(validatedData);
+
+      console.log({
+        schema,
+        validatedData,
+        cleanedData,
+        questions,
+      });
 
       if (questions && forms.length > 0) {
         const medErrors = validateMedicalConditions();
+        console.log({ medErrors });
+
         if (Object.keys(medErrors).length > 0) {
           setMedicalErrors(medErrors);
           return;
@@ -338,7 +354,29 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
         });
       }
 
+      // {
+      //   "name": "test",
+      //   "gender": "hombre",
+      //   "postalCode": "12345",
+      //   "protectWho": "familia",
+      //   "whatsapp": "1231231231",
+      //   "email": "josuegt95@gmail.com",
+      //   "age": 30,
+      //   "partnerGender": "mujer",
+      //   "partnerAge": 22,
+      //   "childrenCount": 1,
+      //   "children": [
+      //     {
+      //       "age": 10,
+      //       "gender": "hombre"
+      //     }
+      //   ]
+      // }
+
+      // TODO: lo que sea da igual
+
       if (!initialState) {
+        setProspect(cleanedData);
         await createProspect(cleanedData);
       }
       closeModal();

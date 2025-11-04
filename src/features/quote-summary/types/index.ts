@@ -18,7 +18,7 @@ export interface InsuranceQuoteData {
   imgCompanyLogo: string;
   postalCode?: string;
   contractorName?: string;
-  prospect: any;
+  prospect: any; //
 }
 
 export interface QuotePDFData {
