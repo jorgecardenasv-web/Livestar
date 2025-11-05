@@ -1,12 +1,12 @@
 export interface InsuranceQuoteData {
-  company: string;
-  plan: string;
+  companyName: string;
+  planTypeName: string;
   paymentType: string;
   sumInsured: number;
   deductible: number;
   coInsurance: number;
   coInsuranceCap: number;
-  coverage_fee: number;
+  coverageFee: number;
   id: string;
   protectedWho: string;
   isMultipleString?: string;
@@ -18,7 +18,7 @@ export interface InsuranceQuoteData {
   imgCompanyLogo: string;
   postalCode?: string;
   contractorName?: string;
-  prospect: any; //
+  prospect: any;
 }
 
 export interface QuotePDFData {

@@ -11,7 +11,7 @@ interface Plan {
   id: string;
   company: string;
   plan: string;
-  coverage_fee: number | string;
+  coverageFee: number | string;
   paymentType: string;
   sumInsured: number | string;
   deductible: number | string;
@@ -77,7 +77,7 @@ export async function handleInterestClick(formData: FormData) {
     // cookieStore.delete("activePlanType");
     // cookieStore.delete("activePaymentType");
     cookieStore.set("createdQuote", JSON.stringify(createdQuote));
-    redirect("/cotizar/resumen");
+    redirect("/resumen");
   }
 }
 

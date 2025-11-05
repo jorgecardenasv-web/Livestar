@@ -19,8 +19,6 @@ export const Plans = async () => {
   const selectorPlanTypes = planTypes.sort(
     (a, b) => a.orderIndex - b.orderIndex
   );
-
-  console.log({planTypes});
   
   if (planTypes.length === 0) {
     return (

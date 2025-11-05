@@ -322,26 +322,13 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
   const unifiedHandleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
-    console.log("unifiedHandleSubmit");
     try {
       const schema = buildSchema(formData.protectWho!);
-      console.log({ schema });
-
       const validatedData = schema.parse(formData);
-      console.log({ validatedData });
-
       const cleanedData = cleanFormData(validatedData);
-
-      console.log({
-        schema,
-        validatedData,
-        cleanedData,
-        questions,
-      });
 
       if (questions && forms.length > 0) {
         const medErrors = validateMedicalConditions();
-        console.log({ medErrors });
 
         if (Object.keys(medErrors).length > 0) {
           setMedicalErrors(medErrors);
@@ -353,27 +340,6 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
           prospectData: cleanedData,
         });
       }
-
-      // {
-      //   "name": "test",
-      //   "gender": "hombre",
-      //   "postalCode": "12345",
-      //   "protectWho": "familia",
-      //   "whatsapp": "1231231231",
-      //   "email": "josuegt95@gmail.com",
-      //   "age": 30,
-      //   "partnerGender": "mujer",
-      //   "partnerAge": 22,
-      //   "childrenCount": 1,
-      //   "children": [
-      //     {
-      //       "age": 10,
-      //       "gender": "hombre"
-      //     }
-      //   ]
-      // }
-
-      // TODO: lo que sea da igual
 
       if (!initialState) {
         setProspect(cleanedData);

@@ -1,8 +1,6 @@
 import { QuoteSummary } from "@/features/quote-summary/components/main/quote-summary";
-import { getInsuranceState } from "@/features/plans/loaders/get-insurance-status";
 import { getInsurancePlanById } from "@/features/plans/loaders/get-insurance-plan-by-id";
 import { ScrollToTop } from "@/shared/components/scroll-to-top";
-import { getProspect } from "@/features/plans/loaders/get-prospect";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { Button } from "@/shared/components/ui/button";
@@ -34,13 +32,21 @@ export default async function ResumenPage() {
     );
   }
 
+  const prospectValue = cookieStore.get("prospect")?.value
+  const prospectParsed = quoteValue ? JSON.parse(prospectValue!) : null;
+
   const plan = await getInsurancePlanById(quoteParsed.planData.id);
   const planData = {
+    deductible: quoteParsed.deductible,
     ...quoteParsed.planData,
     imgCompanyLogo: plan.company.logo,
   };
 
-  const prospect = await getProspect();
+  const prospect = {
+    quoteId: quoteParsed.id,
+    prospectId: quoteParsed.prospectId,
+    ...prospectParsed,
+  }
 
   return (
     <>

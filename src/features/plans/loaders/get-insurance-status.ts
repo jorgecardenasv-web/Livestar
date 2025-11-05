@@ -13,7 +13,7 @@ export async function getInsuranceState() {
       sumInsured: Number(plan.sumInsured) ?? 0,
       deductible: Number(plan.deductible) ?? 0,
       coInsuranceCap: Number(plan.coInsuranceCap) ?? 0,
-      coverage_fee: Number(plan.coverage_fee) ?? 0,
+      coverageFee: Number(plan.coverageFee) ?? 0,
     };
   };
 

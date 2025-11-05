@@ -21,6 +21,9 @@ export const updateQuote = async (
       ? JSON.parse(String(medicalDataStr))
       : [];
 
+    const prospectStr = formData.get("prospect");
+    const prospect = prospectStr ? JSON.parse(String(prospectStr)) : [];
+
     const {
       name,
       age,
@@ -29,8 +32,9 @@ export const updateQuote = async (
       postalCode,
       whatsapp,
       protectWho,
+      prospectId,
       ...rest
-    } = parsed;
+    } = prospect;
 
     const additionalInfo = Object.fromEntries(
       Object.entries(rest).filter(([key]) =>
@@ -51,6 +55,7 @@ export const updateQuote = async (
 
     await updateQuoteService({
       prospect: {
+        id: prospectId,
         name: String(name),
         age: Number(age),
         email: String(email),
