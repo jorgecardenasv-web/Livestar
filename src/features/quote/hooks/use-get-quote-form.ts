@@ -120,6 +120,7 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
         : createInitialMedicalForms(questions)
       : []
   );
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateMedicalConditions = useCallback(() => {
