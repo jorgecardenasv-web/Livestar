@@ -1,18 +1,14 @@
 "use client";
 
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/shared/components/ui/alert";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/shared/components/ui/button";
 import { Separator } from "@radix-ui/react-select";
 import { MedicalInformationForm } from "@/features/quote/components/forms/medical-information-form";
 import { QUESTIONS } from "@/features/quote/data";
 import { useEffect, useState } from "react";
 import { useQuoteStore } from "@/features/quote/store/quote-store";
-import { updateQuote } from "@/features/quote/actions/update-quote";
+import { removeCookies, updateQuote } from "@/features/quote/actions/update-quote";
 import { useFormState } from "react-dom";
 import { useNotificationStore } from "@/features/notification/store/notification-store";
 
@@ -29,6 +25,8 @@ const INITIAL_HEALTH_CONDITION = {
 };
 
 export const ContractForm = ({ prospect }: { prospect: any }) => {
+  const router = useRouter();
+
   const updateUserWithId = prospect.quoteId ? updateQuote.bind(null, prospect.quoteId) : null
   const [state, formAction] = useFormState(
     updateUserWithId || (() => ({ message: "Error: No se pudo encontrar la cotización", success: false, inputErrors: {} })),
@@ -43,6 +41,8 @@ export const ContractForm = ({ prospect }: { prospect: any }) => {
 
   useEffect(() => {
     if (state.success) {
+      removeCookies();
+      router.replace(`/cotizar/flow`);
       showNotification(state.message, "success")
     }
     
