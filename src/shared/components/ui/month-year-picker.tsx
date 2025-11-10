@@ -87,7 +87,7 @@ export function MonthYearPicker({
   const handleMonthChange = (month: string) => {
     const monthValue = parseInt(month);
     setSelectedMonth(monthValue);
-    
+
     if (selectedYear !== undefined) {
       const newDate = new Date(selectedYear, monthValue, 1);
       onValueChange(newDate);
@@ -97,7 +97,7 @@ export function MonthYearPicker({
   const handleYearChange = (year: string) => {
     const yearValue = parseInt(year);
     setSelectedYear(yearValue);
-    
+
     if (selectedMonth !== undefined) {
       const newDate = new Date(yearValue, selectedMonth, 1);
       onValueChange(newDate);
@@ -152,7 +152,7 @@ export function MonthYearPicker({
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="flex-1 space-y-2">
               <Label className="text-sm font-medium">Año</Label>
               <Select

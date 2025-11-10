@@ -45,17 +45,17 @@ export const ContractForm = ({ prospect }: { prospect: any }) => {
       router.replace(`/cotizar/flow`);
       showNotification(state.message, "success")
     }
-    
+
     setIsSubmitting(false);
   }, [state, showNotification])
 
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
   const createInitialMedicalForms = (questions: any[]) =>
-  questions.map((question) => ({
-    [`answer-${question.id}`]: "No",
-    healthConditions: [{ ...INITIAL_HEALTH_CONDITION }],
-  }));
+    questions.map((question) => ({
+      [`answer-${question.id}`]: "No",
+      healthConditions: [{ ...INITIAL_HEALTH_CONDITION }],
+    }));
 
   const [medicalForm, setMedicalForm] = useState<any[]>(() =>
     QUESTIONS
@@ -65,6 +65,8 @@ export const ContractForm = ({ prospect }: { prospect: any }) => {
   const [medicalErrors, setMedicalErrors] = useState<Record<string, string>>(
     {}
   );
+
+  console.log("Medical Form:", medicalForm);
 
   const { prospect: prospectStore } = useQuoteStore()
 
@@ -99,8 +101,8 @@ export const ContractForm = ({ prospect }: { prospect: any }) => {
 
         <div className="mt-3">
           <p className="text-sm text-gray-700 leading-relaxed">
-            Esta cotización es informativa y debe ser confirmada con un asesor. Los valores presentados son aproximados y están sujetos a ajustes según los planes y tarifas vigentes. 
-            Se recomienda consultar directamente para obtener cifras precisas y actualizadas. 
+            Esta cotización es informativa y debe ser confirmada con un asesor. Los valores presentados son aproximados y están sujetos a ajustes según los planes y tarifas vigentes.
+            Se recomienda consultar directamente para obtener cifras precisas y actualizadas.
             Es importante destacar que los montos pueden variar según la cobertura elegida y las condiciones específicas del asegurado.
           </p>
         </div>
