@@ -106,6 +106,38 @@ livestar_insurance/
 
 Ejecuta los siguientes comandos en orden en la raíz del proyecto:
 
-2. **`prisma:push`**
-3. **`prisma:generate`**
-4. **`dev`**
+### **Docker**
+
+```bash
+docker compose up -d
+```
+
+Conexión al contenedor para crear la base de datos en dado caso que no se cree sola
+
+```bash
+docker exec -it <nombre_del_contenedor> sh
+
+psql -h localhost -p 5432 -U postgres -d postgres
+
+CREATE DATABASE livestar_insurance;
+```
+
+### **Prisma**
+```bash
+pnpm prisma db push
+```
+
+```bash
+pnpm prisma generate
+```
+
+```bash
+pnpm install
+pnpm run dev
+```
+
+### **O directamente**
+
+```bash
+pnpm run build
+```

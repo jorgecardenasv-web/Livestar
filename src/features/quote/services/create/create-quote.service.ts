@@ -2,12 +2,12 @@ import prisma from "@/lib/prisma";
 
 interface CreateQuoteParams {
   prospectData: any;
-  medicalData: any;
+  medicalData?: any;
   plan: {
     id: string;
     company: string;
     plan: string;
-    coverage_fee: number | string;
+    coverageFee: number | string;
     paymentType: string;
     sumInsured: number | string;
     deductible: number | string;
@@ -82,7 +82,7 @@ export const createQuoteService = async (
       (plan.deductiblesJson ? JSON.parse(plan.deductiblesJson) : null),
     isRecommended: plan.isRecommended || false,
     paymentType: plan.paymentType,
-    coverageFee: parseFloat(plan.coverage_fee.toString()),
+    coverageFee: parseFloat(plan.coverageFee.toString()),
   };
 
   // Preparar datos de coaseguro múltiple
@@ -108,11 +108,11 @@ export const createQuoteService = async (
   const quoteData = {
     prospectId: prospect.id,
     planData: planData,
-    totalPrice: parseFloat(plan.coverage_fee.toString()),
+    totalPrice: parseFloat(plan.coverageFee.toString()),
     protectWho,
-    medicalHistories: medicalData,
+    medicalHistories: medicalData ?? "[{ set: [] }]", //
     userId: advisorId,
-    coverageFee: parseFloat(plan.coverage_fee.toString()),
+    coverageFee: parseFloat(plan.coverageFee.toString()),
     paymentType: plan.paymentType,
     sumInsured: parseFloat(plan.sumInsured.toString()),
     deductible: parseFloat(plan.deductible.toString()),
@@ -127,7 +127,13 @@ export const createQuoteService = async (
     additionalInfo,
   };
 
-  return await prisma.quote.create({
-    data: quoteData,
-  });
+  try {
+    const quoteCreated = await prisma.quote.create({
+      data: quoteData,
+    });
+    return quoteCreated;
+  } catch (error) {
+    // @ts-ignore
+    console.error(`Prisma error: ${error.stack}`);
+  }
 };

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import { NotificationContainer } from "@/features/notification/components/notification.container";
 
 const openSans = Open_Sans({ subsets: ["latin"] });
 
@@ -18,7 +19,10 @@ export default async function RootLayout({
   return (
     <html lang="es">
       <body className={`${openSans.className} flex h-screen flex-col`}>
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <NotificationContainer />
+        </Providers>
       </body>
     </html>
   );
