@@ -65,7 +65,7 @@ export const HealthConditionForm: FC<HealthConditionFormProps> = ({
           }
         />
         <MonthYearPicker
-          value={new Date(formData.fechaInicio || "")}
+          value={formData.fechaInicio}
           label="Fecha de inicio"
           placeholder="Selecciona mes y año de inicio"
           onValueChange={(value) => onChange("fechaInicio", value)}

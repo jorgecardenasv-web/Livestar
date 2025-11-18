@@ -143,16 +143,15 @@ export const QuoteSummary: FC<
   InsuranceQuoteData
 > = (props) => {
   const {
-    id,
     coInsurance,
     coInsuranceCap,
-    coverageFee,
+    coverage_fee,
     individualPricesJson,
     deductible,
     sumInsured,
-    companyName,
+    company,
     imgCompanyLogo,
-    planTypeName,
+    plan,
     paymentType,
     isMultipleString,
     deductiblesJson,
@@ -160,9 +159,7 @@ export const QuoteSummary: FC<
     coInsuranceJson,
     coInsuranceCapJson,
     protectedWho,
-    prospect
   } = props;
-
   const isMultiple = isMultipleString === "true" ? true : false;
   const isMultipleCoIns = isMultipleCoInsurance === "true" ? true : false;
   const {
@@ -204,7 +201,7 @@ export const QuoteSummary: FC<
           const blobUrl = URL.createObjectURL(pdfBlob);
           const downloadLink = document.createElement("a");
           downloadLink.href = blobUrl;
-          downloadLink.setAttribute('download', `cotizacion-${props.companyName}-${props.planTypeName}.pdf`);
+          downloadLink.setAttribute('download', `cotizacion-${props.company}-${props.plan}.pdf`);
           downloadLink.style.display = 'none';
           document.body.appendChild(downloadLink);
           downloadLink.click();
@@ -252,7 +249,7 @@ export const QuoteSummary: FC<
                 width={80}
                 height={60}
                 className="h-12 w-auto object-contain"
-                alt={`Logo de ${companyName}`}
+                alt={`Logo de ${company}`}
                 priority
               />
             </div>
@@ -285,10 +282,10 @@ export const QuoteSummary: FC<
                 ) : (
                   <div>
                     <p className="text-sm text-sky-600 font-semibold uppercase">
-                      Total {paymentType}
+                      Total {paymentType === "Anual" ? "Anual" : ""}
                     </p>
                     <p className="text-4xl font-bold text-[#223E99]">
-                      {formatCurrency(coverageFee)}
+                      {formatCurrency(coverage_fee)}
                     </p>
                   </div>
                 )}
@@ -298,7 +295,7 @@ export const QuoteSummary: FC<
                   Plan
                 </p>
                 <p className="text-xl font-bold text-[#223E99]">
-                  {planTypeName}
+                  {plan}
                 </p>
               </div>
             </div>
@@ -404,7 +401,7 @@ export const QuoteSummary: FC<
 
             {/* Formulario de Contrato */}
             <div id="pdfIngnore" className="mt-6">
-              <ContractForm prospect={prospect} />
+              <ContractForm />
             </div>
           </div>
         </div>

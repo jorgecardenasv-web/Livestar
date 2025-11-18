@@ -58,7 +58,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 
   const isHDIPrice = isHDIPriceTable(prices);
 
-  const { coverageFee, individualPrices } = calculateInsurancePrice(
+  const { coverage_fee, individualPrices } = calculateInsurancePrice(
     { ...prospect, protectWho, additionalInfo },
     prices,
     paymentType
@@ -123,7 +123,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             {isHDIPrice && paymentType === "Mensual" ? (
               <>
                 <p className="text-xl font-bold text-[#223E99]">
-                  {formatCurrency(coverageFee)}{" "}
+                  {formatCurrency(coverage_fee)}{" "}
                   <span className="text-base font-normal text-gray-600">
                     /primer mes
                   </span>
@@ -138,7 +138,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             ) : (
               //works for both cases, HDI and non-HDI
               <p className="text-3xl font-bold text-[#223E99]">
-                {formatCurrency(coverageFee)}{" "}
+                {formatCurrency(coverage_fee)}{" "}
                 <span className="text-base font-normal text-gray-600">
                   {paymentType === "Mensual" ? "/mes" : "/año"}
                 </span>{" "}
@@ -253,7 +253,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             name="coInsuranceCapJson"
             value={JSON.stringify(plan.coInsuranceCap)}
           />
-          <input type="hidden" name="coverageFee" value={coverageFee} />
+          <input type="hidden" name="coverage_fee" value={coverage_fee} />
           <input
             type="hidden"
             name="individualPricesJson"

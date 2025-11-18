@@ -6,7 +6,7 @@ import { ContactInfoSection } from "@/features/quote/components/forms/contact-in
 import { PersonalInfoSection } from "@/features/quote/components/forms/personal-info-section"
 import { useGetQuoteForm } from "@/features/quote/hooks/use-get-quote-form"
 import type { AdditionalInfo, DeductiblesData, Quote, CoInsuranceData, CoInsuranceCapData } from "@/features/quote/types"
-import { Card, CardContent, CardHeader } from "@/shared/components/ui/card"
+import { Card, CardContent } from "@/shared/components/ui/card"
 import { SubmitButton } from "@/shared/components/ui/submit-button"
 import { useEffect } from "react"
 import { useFormState } from "react-dom"
@@ -201,26 +201,6 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
             <div className="rounded-xl bg-muted/50 p-5">
               <Card>
                 <CardContent>
-                  <CardHeader>
-                    {JSON.stringify(quote.medicalHistories) === '[{"set":[]}]' && (
-                      <div className="border border-yellow-500 rounded-md p-4 mb-4 bg-transparent">
-                        <div className="flex items-center space-x-2">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="#ca8a04">
-                            <circle cx="12" cy="12" r="10" stroke-width="2"></circle>
-                            <line x1="12" y1="8" x2="12" y2="12" stroke-width="2"></line>
-                            <line x1="12" y1="16" x2="12" y2="16" stroke-width="2"></line>
-                          </svg>
-                          <h4 className="font-semibold text-lg text-yellow-700">¡Importante!</h4>
-                        </div>
-
-                        <div className="flex items-center space-x-2 my-4">
-                          <label htmlFor="confirmation" className="text-gray-800 leading-relaxed">
-                            Aviso: El lead aún no ha respondido el cuestionario médico.
-                          </label>
-                        </div>
-                      </div>
-                    )}
-                  </CardHeader>
                   <MedicalInformationForm
                     forms={forms}
                     setForms={setForms}

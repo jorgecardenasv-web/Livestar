@@ -24,13 +24,10 @@ export interface StandardPriceDetails {
   mensual: number;
 }
 
-export type IndividualPriceDetails =
-  | number
-  | HDIPriceDetails
-  | StandardPriceDetails;
+export type IndividualPriceDetails = number | HDIPriceDetails | StandardPriceDetails;
 
 export interface InsurancePriceResult {
-  coverageFee: number;
+  coverage_fee: number;
   individualPrices: {
     main: IndividualPriceDetails;
     partner: IndividualPriceDetails | null;

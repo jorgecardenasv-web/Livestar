@@ -20,7 +20,7 @@ interface CustomizableOptions {
 }
 
 export interface InsurancePriceResult {
-  coverageFee: number;
+  coverage_fee: number;
   individualPrices: {
     main: number;
     partner?: number;

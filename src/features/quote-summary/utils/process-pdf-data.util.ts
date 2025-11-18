@@ -304,7 +304,7 @@ export const processPDFData = (
   }
 
   // Convertir el coverage_fee a número y calcular los precios base
-  const defaultMonthlyPrice = ensureValidNumber(data.coverageFee);
+  const defaultMonthlyPrice = ensureValidNumber(data.coverage_fee);
   const defaultYearlyPrice = defaultMonthlyPrice * 12;
 
   // Si tenemos precios detallados (HDI)

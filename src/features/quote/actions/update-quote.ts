@@ -1,16 +1,15 @@
 "use server";
 
+import { prefix } from "@/features/layout/nav-config/constants";
+import { revalidatePath } from "next/cache";
 import { updateQuoteService } from "../services/update/update-quote.service";
 import { parsedFormDataAge } from "@/shared/utils";
 import { FormState } from "@/shared/types";
 import { PrismaError } from "@/shared/errors/prisma";
-import { cookies } from "next/headers";
-import { revalidatePath } from "next/cache";
-import { prefix } from "@/features/layout/nav-config/constants";
 
 export const updateQuote = async (
   quoteId: string,
-  _: any,
+  prevState: any,
   formData: FormData
 ): Promise<FormState> => {
   try {
@@ -22,9 +21,6 @@ export const updateQuote = async (
       ? JSON.parse(String(medicalDataStr))
       : [];
 
-    const prospectStr = formData.get("prospect");
-    const prospect = prospectStr ? JSON.parse(String(prospectStr)) : [];
-
     const {
       name,
       age,
@@ -33,9 +29,8 @@ export const updateQuote = async (
       postalCode,
       whatsapp,
       protectWho,
-      prospectId,
       ...rest
-    } = prospect;
+    } = parsed;
 
     const additionalInfo = Object.fromEntries(
       Object.entries(rest).filter(([key]) =>
@@ -56,7 +51,6 @@ export const updateQuote = async (
 
     await updateQuoteService({
       prospect: {
-        id: prospectId,
         name: String(name),
         age: Number(age),
         email: String(email),
@@ -72,6 +66,8 @@ export const updateQuote = async (
       },
     });
 
+    revalidatePath(`${prefix}/cotizaciones`);
+
     return {
       success: true,
       message: "Cotización actualizada correctamente",
@@ -85,14 +81,4 @@ export const updateQuote = async (
           : "Error al actualizar la cotización.",
     };
   }
-};
-
-export const removeCookies = async () => {
-  console.log(`/cotizar/planes`);
-
-  const cookieStore = cookies();
-  cookieStore.delete("createdQuote");
-  cookieStore.delete("prospect");
-
-  // revalidatePath(`/cotizar/planes`);
 };

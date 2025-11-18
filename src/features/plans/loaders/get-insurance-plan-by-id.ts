@@ -12,7 +12,7 @@ const getCachedPlan = unstable_cache(
     return await getInsurancePlanByIdService(id);
   },
   ["plan-details"], // clave del cache
-  { tags: ["plan"], revalidate: 1 } // revalidar cada minuto
+  { tags: ["plan"], revalidate: 60 } // revalidar cada minuto
 );
 
 export const getInsurancePlanById = async (id: string) => {
