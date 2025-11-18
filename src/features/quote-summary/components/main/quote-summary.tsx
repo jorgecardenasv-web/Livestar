@@ -5,7 +5,7 @@ import { Shield, DollarSign, Percent, Heart, ArrowLeft, FileText, Download, User
 import { ContractForm } from "../forms/confirm-form";
 import { InfoCard } from "../cards/info-card";
 import { deleteSelectedPlan } from "@/features/plans/actions/set-cookies";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { DeductibleAndCoInsuranceInfoModal } from "../modals/CombinedInfoModal";
 
 // Función para convertir data URI a Blob
@@ -53,6 +53,10 @@ import { generatePDFAction } from "../../actions/generate-pdf";
 import { processPDFData } from "../../utils/process-pdf-data.util"
 import { InsuranceQuoteData } from "../../types";
 import { getProspect } from "@/features/plans/loaders/get-prospect";
+import { MedicalInformationForm } from "@/features/quote/components/forms/medical-information-form";
+import { QUESTIONS } from "@/features/quote/data";
+import { updateQuoteFromSummary } from "@/features/quote-summary/actions/update-quote-from-summary";
+import { useSearchParams } from "next/navigation";
 
 interface MemberPrices {
   primerMes?: number;
@@ -142,6 +146,8 @@ const getMinimumValues = (jsonString: string | undefined): number => {
 export const QuoteSummary: FC<
   InsuranceQuoteData
 > = (props) => {
+  const searchParams = useSearchParams();
+  const quoteIdParam = searchParams?.get("quoteId") ?? "";
   const {
     coInsurance,
     coInsuranceCap,
@@ -179,6 +185,32 @@ export const QuoteSummary: FC<
   // Estado para controlar mensajes de error
   const [pdfError, setPdfError] = useState<string | null>(null);
   const [pdfSuccess, setPdfSuccess] = useState<string | null>(null);
+  const [forms, setForms] = useState<any[]>(() => QUESTIONS.map((q, idx) => ({ [`answer-${idx}`]: "No", healthConditions: [] })));
+  const [medicalErrors, setMedicalErrors] = useState<Record<string, string>>({});
+  const [formFamily, setFormFamily] = useState<any>({ protectWho: protectedWho });
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { protectWho, additionalInfo } = await getProspect();
+        const children = additionalInfo?.children ?? [];
+        const partnerGender = additionalInfo?.partnerGender ?? "";
+        const partnerAge = additionalInfo?.partnerAge ?? "";
+        const childrenCount = additionalInfo?.childrenCount ?? children?.length ?? 0;
+        const protectedPersons = additionalInfo?.protectedPersons ?? [];
+        const protectedCount = additionalInfo?.protectedCount ?? protectedPersons?.length ?? 0;
+        setFormFamily({
+          protectWho: protectWho ?? protectedWho,
+          children,
+          childrenCount,
+          partnerGender,
+          partnerAge,
+          protectedPersons,
+          protectedCount,
+        });
+      } catch {}
+    })();
+  }, [protectedWho]);
 
   //! -------------------------------------------------------------------
   const handleGeneratePDF = async () => {
@@ -402,6 +434,61 @@ export const QuoteSummary: FC<
             {/* Formulario de Contrato */}
             <div id="pdfIngnore" className="mt-6">
               <ContractForm />
+            </div>
+
+            {/* Formulario médico opcional al final */}
+            <div className="mt-8 border-t border-gray-100 pt-6">
+              <div className="mb-4">
+                <h3 className="text-xl font-semibold text-gray-900">Información médica (opcional)</h3>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Completa este formulario para ajustar tu cotización con mayor precisión. No es obligatorio.
+                </p>
+              </div>
+
+              <MedicalInformationForm
+                forms={forms}
+                setForms={setForms}
+                questions={QUESTIONS as any}
+                formFamily={formFamily}
+                errors={medicalErrors}
+              />
+
+              <form
+                action={async (fd: FormData) => {
+                  const medicalData = forms.map((form, idx) => {
+                    const answerKey = `answer-${idx}`;
+                    return {
+                      answer: form[answerKey],
+                      [answerKey]: form[answerKey],
+                      questionId: QUESTIONS[idx]?.id ?? idx,
+                      healthConditions: form.healthConditions || [],
+                      activePadecimiento: form.activePadecimiento,
+                    };
+                  });
+                  fd.set("medicalData", JSON.stringify(medicalData));
+                  if (quoteIdParam) {
+                    fd.set("quoteId", quoteIdParam);
+                  }
+                  const res = await updateQuoteFromSummary(undefined, fd);
+                  if (!res?.success) {
+                    setMedicalErrors((prev) => ({ ...prev, global: res?.message || "No se pudo actualizar la cotización." }));
+                  } else {
+                    setMedicalErrors({});
+                  }
+                }}
+              >
+                {/* Pasar quoteId por formulario a la Server Action */}
+                <input type="hidden" name="quoteId" value={quoteIdParam} />
+                <button
+                  type="submit"
+                  className="mt-4 w-full sm:w-auto bg-sky-600 text-white hover:bg-sky-700 font-medium px-6 py-2.5 rounded-lg transition-colors"
+                >
+                  Actualizar cotización con información médica
+                </button>
+                {medicalErrors.global && (
+                  <p className="mt-2 text-sm text-red-600">{medicalErrors.global}</p>
+                )}
+              </form>
             </div>
           </div>
         </div>

@@ -332,10 +332,20 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
           return;
         }
         const medicalData = formatMedicalData();
-        await createQuoteAction({
-          medicalData,
-          prospectData: cleanedData,
-        });
+        // Evitar creación duplicada si ya se creó en "Me interesa"
+        const hasCreatedEarly =
+          typeof document !== "undefined" &&
+          document.cookie.split("; ").some((c) => c.startsWith("quoteCreated="));
+
+        if (!hasCreatedEarly) {
+          await createQuoteAction(
+            {
+              medicalData,
+              prospectData: cleanedData,
+            },
+            { deleteCookies: false, redirectTo: "/cotizar/resumen", setCreatedCookie: true }
+          );
+        }
       }
 
       if (!initialState) {

@@ -49,7 +49,7 @@ export const updateQuote = async (
       )
     );
 
-    await updateQuoteService({
+    const quoteUpdate: any = {
       prospect: {
         name: String(name),
         age: Number(age),
@@ -62,9 +62,14 @@ export const updateQuote = async (
         id: quoteId,
         protectWho: String(protectWho),
         medicalHistories: medicalData,
-        additionalInfo: JSON.parse(JSON.stringify(additionalInfo)),
       },
-    });
+    };
+
+    if (Object.keys(additionalInfo).length > 0) {
+      quoteUpdate.quote.additionalInfo = JSON.parse(JSON.stringify(additionalInfo));
+    }
+
+    await updateQuoteService(quoteUpdate);
 
     revalidatePath(`${prefix}/cotizaciones`);
 

@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { createQuoteAction } from "@/features/quote/actions/create-quote";
 
 export async function handleInterestClick(formData: FormData) {
   const insuranceData = {
@@ -26,7 +27,12 @@ export async function handleInterestClick(formData: FormData) {
   };
 
   cookies().set("selectedPlan", JSON.stringify(insuranceData));
-  redirect("/cotizar/resumen");
+  // Crear cotización inmediatamente al seleccionar "Me interesa"
+  await createQuoteAction(
+    // No pasamos prospectData explícitamente: se tomará de la cookie 'prospect'
+    { medicalData: [] },
+    { deleteCookies: false, redirectTo: "/cotizar/resumen", setCreatedCookie: true }
+  );
 }
 
 export async function setActivePlanType(formData: FormData) {

@@ -1,46 +1,25 @@
 "use client";
-
-import { useState } from "react";
 import {
   Alert,
   AlertDescription,
   AlertTitle,
 } from "@/shared/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { Button } from "@/shared/components/ui/button";
-import Link from "next/link";
-import { useFormStatus } from "react-dom";
 
 export const ContractForm = () => {
-  const [isConfirmed, setIsConfirmed] = useState(false);
-  const { pending } = useFormStatus();
-
   return (
     <div className="mt-5">
       <Alert variant="important" className="mb-4">
         <AlertCircle className="h-4 w-4" color="#ca8a04" />
         <AlertTitle>¡Importante!</AlertTitle>
         <AlertDescription>
-          <div className="flex items-center space-x-2 my-4">
-            <input
-              type="checkbox"
-              id="confirmation"
-              checked={isConfirmed}
-              onChange={(e) => setIsConfirmed(e.target.checked)}
-              className="h-4 w-4 text-[#223E99] focus:ring-[#223E99] border-gray-300 rounded"
-            />
-            <label htmlFor="confirmation">
-              Entiendo que cualquier padecimiento preexistente a la contratación
-              del seguro estará excluida en mis coberturas
-            </label>
-          </div>
+          <p className="my-4">
+            Entiendo que cualquier padecimiento preexistente a la contratación del
+            seguro estará excluido en mis coberturas.
+          </p>
         </AlertDescription>
       </Alert>
-      <Button className="w-full py-6 text-lg" disabled={!isConfirmed || pending}>
-        <Link href="/finalizar-cotizacion" className="w-full">
-          {pending ? "Continuando..." : "Continuar cotización"}
-        </Link>
-      </Button>
+      {/* Aviso informativo; no requiere interacción ni habilita acciones */}
       <Alert variant="default" className="mt-4">
         <AlertCircle className="h-4 w-4" color="black" />
         <AlertTitle>Aviso</AlertTitle>
