@@ -18,6 +18,8 @@ import { MembersTable } from "@/features/quote/components/tables/members-table"
 import { formatCurrency, formatPercentage } from "@/shared/utils"
 import { DeductiblesAccordion } from "@/features/quote/components/accodions/deductibles-accordion"
 import { CoInsuranceAccordion } from "@/features/quote/components/accodions/co-insurance-accordion"
+import { Alert, AlertDescription, AlertTitle } from "@/shared/components/ui/alert"
+import { AlertCircle } from "lucide-react"
 
 export function QuotePageClient({ quote }: { quote: Quote }) {
   const { formData, errors, handleChildChange, handleInputChange, handleProtectedPersonChange, forms, setForms } =
@@ -149,6 +151,7 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
   };
 
   const members = processMembers(quote?.membersData);
+  const showMedicalDisclaimer = !quote?.medicalHistories || (Array.isArray(quote.medicalHistories) && quote.medicalHistories.length === 0);
 
   return (
     <>
@@ -163,6 +166,19 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
           ]}
         />
       </div>
+
+      {/* Aviso para el asesor sobre cuestionario médico */}
+      {showMedicalDisclaimer && (
+        <div className="mt-4">
+          <Alert variant="important" className="mb-4 bg-yellow-50">
+            <AlertCircle className="h-4 w-4" color="#ca8a04" />
+            <AlertTitle>Aviso</AlertTitle>
+            <AlertDescription>
+              El Lead aun no ha respondido el cuestionario médico.
+            </AlertDescription>
+          </Alert>
+        </div>
+      )}
 
       <form action={formAction}>
         <input type="hidden" name="medicalData" value={JSON.stringify(forms)} />
