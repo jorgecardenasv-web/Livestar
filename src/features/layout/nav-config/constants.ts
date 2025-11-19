@@ -8,6 +8,7 @@ export const publicPaths = [
   "/cotizar/planes",
   "/cotizar/resumen",
   "/cotizar/flow",
+  "/cotizar/enviando",
   "/finalizar-cotizacion",
   "/aviso-de-Privacidad",
 ];
