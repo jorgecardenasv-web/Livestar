@@ -20,12 +20,14 @@ import { DeductiblesAccordion } from "@/features/quote/components/accodions/dedu
 import { CoInsuranceAccordion } from "@/features/quote/components/accodions/co-insurance-accordion"
 import { Alert, AlertDescription, AlertTitle } from "@/shared/components/ui/alert"
 import { AlertCircle } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export function QuotePageClient({ quote }: { quote: Quote }) {
   const { formData, errors, handleChildChange, handleInputChange, handleProtectedPersonChange, forms, setForms } =
     useGetQuoteForm(quote, QUESTIONS)
 
   const { showNotification } = useNotificationStore()
+  const router = useRouter()
 
   const updateUserWithId = quote?.id ? updateQuote.bind(null, quote.id) : null
 
@@ -41,8 +43,10 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
   useEffect(() => {
     if (state.success) {
       showNotification(state.message, "success")
+      // Refrescar los datos de la página para mostrar los precios actualizados
+      router.refresh()
     }
-  }, [state, showNotification])
+  }, [state, showNotification, router])
 
   const processMembers = (membersData: any) => {
     if (!membersData) return [];
