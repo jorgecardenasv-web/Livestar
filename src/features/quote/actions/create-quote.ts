@@ -13,7 +13,7 @@ import { prefix } from "@/features/layout/nav-config/constants";
 
 export const createQuoteAction = async (
   payload: any,
-  options?: { deleteCookies?: boolean; redirectTo?: string; setCreatedCookie?: boolean }
+  options?: { deleteCookies?: boolean; redirectTo?: string; setCreatedCookie?: boolean; disableRedirect?: boolean }
 ) => {
   let createdQuoteId: string | undefined;
   try {
@@ -86,6 +86,11 @@ export const createQuoteAction = async (
     };
   }
   revalidatePath(`${prefix}/cotizaciones`);
+  // Permitir flujo sin redirección (para navegación de cliente y estado en memoria)
+  if (options?.disableRedirect) {
+    return { success: true, quoteId: createdQuoteId };
+  }
+
   const redirectTo = options?.redirectTo ?? "/cotizar";
   if (options?.setCreatedCookie && createdQuoteId) {
     redirect(`${redirectTo}?quoteId=${createdQuoteId}`);

@@ -53,10 +53,13 @@ import { generatePDFAction } from "../../actions/generate-pdf";
 import { processPDFData } from "../../utils/process-pdf-data.util"
 import { InsuranceQuoteData } from "../../types";
 import { getProspect } from "@/features/plans/loaders/get-prospect";
+import { getProspectByQuoteId } from "../../actions/get-prospect-by-quote";
+import { useQuoteRuntimeStore } from "@/shared/store/quote-runtime-store";
 import { MedicalInformationForm } from "@/features/quote/components/forms/medical-information-form";
 import { QUESTIONS } from "@/features/quote/data";
 import { updateQuoteFromSummary } from "@/features/quote-summary/actions/update-quote-from-summary";
 import { useSearchParams } from "next/navigation";
+import { Button } from "@/shared/components/ui/button";
 
 interface MemberPrices {
   primerMes?: number;
@@ -218,12 +221,21 @@ export const QuoteSummary: FC<
     setPdfError(null);
 
     try {
-      const prospectData = await getProspect();
+      // Intentar obtener prospecto desde cookie; si no hay, usar quoteId en memoria
+      let prospectData = await getProspect();
+      const quoteIdStore = useQuoteRuntimeStore.getState().quoteId;
+      const hasEmail = Boolean(prospectData?.prospect?.email);
+      if (!hasEmail && quoteIdStore) {
+        prospectData = await getProspectByQuoteId(quoteIdStore);
+      }
       const pdfData = processPDFData({
         ...props,
         protectedWho: protectedWho
       }, prospectData);
-      const result = await generatePDFAction(pdfData);
+      const result = await generatePDFAction(pdfData, {
+        name: prospectData?.prospect?.name,
+        email: prospectData?.prospect?.email,
+      });
 
       if (result.success && result.data) {
         if (isIOS) {
@@ -267,11 +279,6 @@ export const QuoteSummary: FC<
           <div className="lg:p-6 border-b border-gray-100">
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
               <div className="flex items-center gap-4">
-                <form id="pdfIngnore" action={deleteSelectedPlan}>
-                  <button className="text-gray-700 hover:text-gray-900 transition-colors">
-                    <ArrowLeft strokeWidth={2.5} size={24} />
-                  </button>
-                </form>
                 <h2 className="text-2xl font-bold text-gray-900">
                   Resumen de cotización
                 </h2>
@@ -438,13 +445,6 @@ export const QuoteSummary: FC<
 
             {/* Formulario médico opcional al final */}
             <div className="mt-8 border-t border-gray-100 pt-6">
-              <div className="mb-4">
-                <h3 className="text-xl font-semibold text-gray-900">Información médica (opcional)</h3>
-                <p className="text-sm text-muted-foreground mt-2">
-                  Completa este formulario para ajustar tu cotización con mayor precisión. No es obligatorio.
-                </p>
-              </div>
-
               <MedicalInformationForm
                 forms={forms}
                 setForms={setForms}
@@ -479,12 +479,15 @@ export const QuoteSummary: FC<
               >
                 {/* Pasar quoteId por formulario a la Server Action */}
                 <input type="hidden" name="quoteId" value={quoteIdParam} />
-                <button
-                  type="submit"
-                  className="mt-4 w-full sm:w-auto bg-sky-600 text-white hover:bg-sky-700 font-medium px-6 py-2.5 rounded-lg transition-colors"
-                >
-                  Actualizar cotización con información médica
-                </button>
+                <div className="flex justify-end">
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="mt-4"
+                  >
+                    Actualizar cotización con información médica
+                  </Button>
+                </div>
                 {medicalErrors.global && (
                   <p className="mt-2 text-sm text-red-600">{medicalErrors.global}</p>
                 )}

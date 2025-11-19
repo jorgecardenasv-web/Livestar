@@ -27,12 +27,7 @@ export async function handleInterestClick(formData: FormData) {
   };
 
   cookies().set("selectedPlan", JSON.stringify(insuranceData));
-  // Crear cotización inmediatamente al seleccionar "Me interesa"
-  await createQuoteAction(
-    // No pasamos prospectData explícitamente: se tomará de la cookie 'prospect'
-    { medicalData: [] },
-    { deleteCookies: false, redirectTo: "/cotizar/resumen", setCreatedCookie: true }
-  );
+  redirect("/cotizar/enviando");
 }
 
 export async function setActivePlanType(formData: FormData) {

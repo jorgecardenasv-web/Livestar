@@ -51,13 +51,6 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL(quoteRoutes.flow, request.url));
     }
 
-    if (
-      pathWithoutQuery === quoteRoutes.resumen &&
-      (!hasProspect || !hasSelectedPlan)
-    ) {
-      return NextResponse.redirect(new URL(quoteRoutes.flow, request.url));
-    }
-
     if (pathWithoutQuery === quoteRoutes.flow && hasProspect) {
       return NextResponse.redirect(new URL(quoteRoutes.planes, request.url));
     }

@@ -11,7 +11,7 @@ import {
   PersonStanding,
 } from "lucide-react";
 import { handleInterestClick } from "../../actions/set-cookies";
-import { SubmitButton } from "@/shared/components/ui/submit-button";
+import StoreAwareSubmit from "../store-aware-submit";
 import { getProspect } from "../../loaders/get-prospect";
 import { getImage } from "../../../../shared/services/get-image.service";
 import { formatCurrency } from "@/shared/utils";
@@ -271,11 +271,37 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             value={JSON.stringify(deductibles)}
           />
           <input type="hidden" name="protectedWho" value={protectWho} />
-          <SubmitButton
-            type="submit"
+          <StoreAwareSubmit
             label="Me interesa"
             labelPending="Seleccionando..."
             className="w-full bg-[#223E99] text-white py-3 rounded font-bold text-lg hover:bg-primary transition duration-300"
+            planData={{
+              company: company.name,
+              imgCompanyLogo: company.logo,
+              plan: plan.planType.name,
+              paymentType,
+              sumInsured: plan.sumInsured,
+              deductible: minor,
+              coInsurance: typeof plan.coInsurance === 'object' && (plan.coInsurance as any).value !== undefined
+                ? (plan.coInsurance as any).value
+                : typeof plan.coInsurance === 'number'
+                  ? plan.coInsurance
+                  : 0,
+              coInsuranceCap: typeof plan.coInsuranceCap === 'object' && (plan.coInsuranceCap as any)?.value !== undefined
+                ? (plan.coInsuranceCap as any).value
+                : typeof plan.coInsuranceCap === 'number'
+                  ? plan.coInsuranceCap
+                  : 0,
+              coverage_fee,
+              individualPricesJson: JSON.stringify(individualPrices),
+              id: plan.id,
+              isMultipleString: isMultiple.toString(),
+              deductiblesJson: JSON.stringify(deductibles),
+              isMultipleCoInsurance: (typeof plan.coInsurance === 'object' && ((plan.coInsurance as any).opcion_2 || (plan.coInsurance as any).opcion_4)) ? 'true' : 'false',
+              coInsuranceJson: JSON.stringify(plan.coInsurance),
+              coInsuranceCapJson: JSON.stringify(plan.coInsuranceCap),
+              protectedWho: protectWho,
+            }}
           />
         </form>
 

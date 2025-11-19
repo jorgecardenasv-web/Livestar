@@ -343,7 +343,7 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
               medicalData,
               prospectData: cleanedData,
             },
-            { deleteCookies: false, redirectTo: "/cotizar/resumen", setCreatedCookie: true }
+            { deleteCookies: false, redirectTo: "/cotizar/enviando", setCreatedCookie: true }
           );
         }
       }
