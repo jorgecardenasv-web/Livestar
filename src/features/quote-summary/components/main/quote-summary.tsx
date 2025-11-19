@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { Shield, DollarSign, Percent, Heart, ArrowLeft, FileText, Download, Users } from "lucide-react";
+import { Shield, DollarSign, Percent, Heart, ArrowLeft, FileText, Download, Users, Loader2 } from "lucide-react";
 import { ContractForm } from "../forms/confirm-form";
 import { InfoCard } from "../cards/info-card";
 import { deleteSelectedPlan } from "@/features/plans/actions/set-cookies";
 import { FC, useEffect, useState } from "react";
+import { useFormStatus } from "react-dom";
 import { DeductibleAndCoInsuranceInfoModal } from "../modals/CombinedInfoModal";
 
 // Función para convertir data URI a Blob
@@ -58,7 +59,6 @@ import { useQuoteRuntimeStore } from "@/shared/store/quote-runtime-store";
 import { MedicalInformationForm } from "@/features/quote/components/forms/medical-information-form";
 import { QUESTIONS } from "@/features/quote/data";
 import { updateQuoteFromSummary } from "@/features/quote-summary/actions/update-quote-from-summary";
-import { useSearchParams } from "next/navigation";
 import { Button } from "@/shared/components/ui/button";
 
 interface MemberPrices {
@@ -146,11 +146,33 @@ const getMinimumValues = (jsonString: string | undefined): number => {
   }
 };
 
+// Componente para el botón de submit que muestra estado de carga
+const SubmitMedicalButton = () => {
+  const { pending } = useFormStatus();
+  
+  return (
+    <Button
+      type="submit"
+      size="lg"
+      className="mt-4"
+      disabled={pending}
+    >
+      {pending ? (
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          Actualizando...
+        </>
+      ) : (
+        "Actualizar cotización con información médica"
+      )}
+    </Button>
+  );
+};
+
 export const QuoteSummary: FC<
   InsuranceQuoteData
 > = (props) => {
-  const searchParams = useSearchParams();
-  const quoteIdParam = searchParams?.get("quoteId") ?? "";
+  const quoteIdParam = useQuoteRuntimeStore((s) => s.quoteId) ?? "";
   const {
     coInsurance,
     coInsuranceCap,
@@ -190,6 +212,7 @@ export const QuoteSummary: FC<
   const [pdfSuccess, setPdfSuccess] = useState<string | null>(null);
   const [forms, setForms] = useState<any[]>(() => QUESTIONS.map((q, idx) => ({ [`answer-${idx}`]: "No", healthConditions: [] })));
   const [medicalErrors, setMedicalErrors] = useState<Record<string, string>>({});
+  const [medicalSuccess, setMedicalSuccess] = useState<string | null>(null);
   const [formFamily, setFormFamily] = useState<any>({ protectWho: protectedWho });
 
   useEffect(() => {
@@ -455,6 +478,8 @@ export const QuoteSummary: FC<
 
               <form
                 action={async (fd: FormData) => {
+                  setMedicalSuccess(null);
+                  setMedicalErrors({});
                   const medicalData = forms.map((form, idx) => {
                     const answerKey = `answer-${idx}`;
                     return {
@@ -472,25 +497,24 @@ export const QuoteSummary: FC<
                   const res = await updateQuoteFromSummary(undefined, fd);
                   if (!res?.success) {
                     setMedicalErrors((prev) => ({ ...prev, global: res?.message || "No se pudo actualizar la cotización." }));
+                    setMedicalSuccess(null);
                   } else {
                     setMedicalErrors({});
+                    setMedicalSuccess("Cotización actualizada correctamente con la información médica.");
                   }
                 }}
               >
                 {/* Pasar quoteId por formulario a la Server Action */}
                 <input type="hidden" name="quoteId" value={quoteIdParam} />
-                <div className="flex justify-end">
-                  <Button
-                    type="submit"
-                    size="lg"
-                    className="mt-4"
-                  >
-                    Actualizar cotización con información médica
-                  </Button>
+                <div className="flex flex-col items-end">
+                  <SubmitMedicalButton />
+                  {medicalSuccess && (
+                    <p className="mt-2 text-sm text-green-600">{medicalSuccess}</p>
+                  )}
+                  {medicalErrors.global && (
+                    <p className="mt-2 text-sm text-red-600">{medicalErrors.global}</p>
+                  )}
                 </div>
-                {medicalErrors.global && (
-                  <p className="mt-2 text-sm text-red-600">{medicalErrors.global}</p>
-                )}
               </form>
             </div>
           </div>

@@ -12,19 +12,26 @@ export async function getProspectByQuoteId(quoteId: string) {
     };
   }
 
-  // Mapear a la estructura usada por getProspect()
-  const { name, email, whatsapp, postalCode, age, protectWho, additionalInfo } = {
+  // Los datos del prospect vienen de la relación prospect
+  const prospect = {
     name: quote.prospect.name,
     email: quote.prospect.email,
     whatsapp: quote.prospect.whatsapp || "",
     postalCode: quote.prospect.postalCode || "",
-    age: (quote.prospect as any).age || undefined,
-    protectWho: (quote.prospect as any).protectWho || undefined,
-    additionalInfo: (quote.prospect as any).additionalInfo || undefined,
+    age: quote.prospect.age || undefined,
+    gender: quote.prospect.gender || undefined,
   };
 
+  // protectWho y additionalInfo están en el quote, no en el prospect
+  const protectWho = quote.protectWho || undefined;
+  const additionalInfo = quote.additionalInfo 
+    ? (typeof quote.additionalInfo === 'string' 
+        ? JSON.parse(quote.additionalInfo) 
+        : quote.additionalInfo)
+    : undefined;
+
   return {
-    prospect: { name, email, whatsapp, postalCode, age },
+    prospect,
     protectWho,
     additionalInfo,
   };
