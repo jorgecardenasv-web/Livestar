@@ -18,6 +18,19 @@ export const getQuoteByIdService = async (
 
     if (!quote) return null;
 
+    // Parsear additionalInfo si existe
+    let parsedAdditionalInfo = null;
+    if (quote.additionalInfo) {
+      try {
+        parsedAdditionalInfo =
+          typeof quote.additionalInfo === "string"
+            ? JSON.parse(quote.additionalInfo)
+            : quote.additionalInfo;
+      } catch (e) {
+        console.error("Error parsing additionalInfo:", e);
+      }
+    }
+
     // Parsear planData si existe
     let parsedPlanData: PlanData | null = null;
     if (quote.planData) {
@@ -80,6 +93,7 @@ export const getQuoteByIdService = async (
     const typedQuote: Quote = {
       ...quote,
       planData: parsedPlanData as PlanData,
+      additionalInfo: parsedAdditionalInfo,
     };
 
     return typedQuote;

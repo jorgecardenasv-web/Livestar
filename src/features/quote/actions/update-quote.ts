@@ -21,16 +21,16 @@ const transformFormDataToProspectData = (parsed: any) => {
 
   // Helper para convertir a número de forma segura
   const toNumber = (value: any): number => {
-    if (value === undefined || value === null || value === '') return 0;
+    if (value === undefined || value === null || value === "") return 0;
     const num = Number(value);
     return isNaN(num) ? 0 : num;
   };
 
   // Extraer childrenCount
-  if (parsed.childrenCount !== undefined && parsed.childrenCount !== '') {
+  if (parsed.childrenCount !== undefined && parsed.childrenCount !== "") {
     const childrenCount = toNumber(parsed.childrenCount);
     transformed.additionalInfo.childrenCount = childrenCount;
-    
+
     // Construir array de children desde childAge0, childGender0, etc.
     const children = [];
     for (let i = 0; i < childrenCount; i++) {
@@ -38,7 +38,7 @@ const transformFormDataToProspectData = (parsed: any) => {
       const genderKey = `childGender${i}`;
       const age = toNumber(parsed[ageKey]);
       const gender = parsed[genderKey] || "";
-      
+
       // Solo agregar si tiene datos válidos
       if (age > 0 || gender) {
         children.push({
@@ -53,18 +53,18 @@ const transformFormDataToProspectData = (parsed: any) => {
   }
 
   // Extraer partnerAge y partnerGender
-  if (parsed.partnerAge !== undefined && parsed.partnerAge !== '') {
+  if (parsed.partnerAge !== undefined && parsed.partnerAge !== "") {
     transformed.additionalInfo.partnerAge = toNumber(parsed.partnerAge);
   }
-  if (parsed.partnerGender !== undefined && parsed.partnerGender !== '') {
+  if (parsed.partnerGender !== undefined && parsed.partnerGender !== "") {
     transformed.additionalInfo.partnerGender = parsed.partnerGender;
   }
 
   // Extraer protectedCount y protectedPersons
-  if (parsed.protectedCount !== undefined && parsed.protectedCount !== '') {
+  if (parsed.protectedCount !== undefined && parsed.protectedCount !== "") {
     const protectedCount = toNumber(parsed.protectedCount);
     transformed.additionalInfo.protectedCount = protectedCount;
-    
+
     const protectedPersons = [];
     for (let i = 0; i < protectedCount; i++) {
       const relationshipKey = `protectedRelationship${i}`;
@@ -73,7 +73,7 @@ const transformFormDataToProspectData = (parsed: any) => {
       const age = toNumber(parsed[ageKey]);
       const gender = parsed[genderKey] || "";
       const relationship = parsed[relationshipKey] || "";
-      
+
       // Solo agregar si tiene datos válidos
       if (age > 0 || gender || relationship) {
         protectedPersons.push({
@@ -91,9 +91,11 @@ const transformFormDataToProspectData = (parsed: any) => {
   // Extraer información de padres
   if (parsed.momName || parsed.dadName || parsed.momAge || parsed.dadAge) {
     if (parsed.momName) transformed.additionalInfo.momName = parsed.momName;
-    if (parsed.momAge) transformed.additionalInfo.momAge = toNumber(parsed.momAge);
+    if (parsed.momAge)
+      transformed.additionalInfo.momAge = toNumber(parsed.momAge);
     if (parsed.dadName) transformed.additionalInfo.dadName = parsed.dadName;
-    if (parsed.dadAge) transformed.additionalInfo.dadAge = toNumber(parsed.dadAge);
+    if (parsed.dadAge)
+      transformed.additionalInfo.dadAge = toNumber(parsed.dadAge);
   }
 
   return transformed;
@@ -163,7 +165,8 @@ export const updateQuote = async (
     if (!insurancePlan || !insurancePlan.prices) {
       return {
         success: false,
-        message: "No se pudo obtener la información del plan para recalcular precios.",
+        message:
+          "No se pudo obtener la información del plan para recalcular precios.",
       };
     }
 
@@ -192,7 +195,7 @@ export const updateQuote = async (
       protectWho: individualPrices.protectWho,
     };
 
-    // Usar el additionalInfo transformado en lugar del raw
+    // Usar el additionalInfo transformado directamente (sin anidación extra)
     const finalAdditionalInfo = prospectData.additionalInfo || {};
 
     const quoteUpdate: any = {
@@ -212,10 +215,11 @@ export const updateQuote = async (
         coverageFee: coverage_fee,
         totalPrice: coverage_fee,
         membersData: membersData,
-        // Guardar additionalInfo con la estructura correcta (arrays de children, etc.)
-        additionalInfo: Object.keys(finalAdditionalInfo).length > 0 
-          ? JSON.parse(JSON.stringify(finalAdditionalInfo)) 
-          : undefined,
+        // Guardar additionalInfo directamente sin envolver en otro objeto
+        additionalInfo:
+          Object.keys(finalAdditionalInfo).length > 0
+            ? finalAdditionalInfo
+            : undefined,
       },
     };
 

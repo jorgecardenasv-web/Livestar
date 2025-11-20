@@ -24,11 +24,18 @@ export async function getProspectByQuoteId(quoteId: string) {
 
   // protectWho y additionalInfo están en el quote, no en el prospect
   const protectWho = quote.protectWho || undefined;
-  const additionalInfo = quote.additionalInfo 
-    ? (typeof quote.additionalInfo === 'string' 
-        ? JSON.parse(quote.additionalInfo) 
-        : quote.additionalInfo)
+
+  // Parsear additionalInfo y manejar estructura anidada si existe
+  let additionalInfo = quote.additionalInfo
+    ? typeof quote.additionalInfo === "string"
+      ? JSON.parse(quote.additionalInfo)
+      : quote.additionalInfo
     : undefined;
+
+  // Si additionalInfo tiene una propiedad additionalInfo anidada, desenvolverla
+  if (additionalInfo && additionalInfo.additionalInfo) {
+    additionalInfo = additionalInfo.additionalInfo;
+  }
 
   return {
     prospect,
