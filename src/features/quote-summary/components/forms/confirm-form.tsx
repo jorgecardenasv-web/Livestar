@@ -14,8 +14,7 @@ export const ContractForm = () => {
         <AlertTitle>¡Importante!</AlertTitle>
         <AlertDescription>
           <p className="my-4">
-            Entiendo que cualquier padecimiento preexistente a la contratación del
-            seguro estará excluido en mis coberturas.
+            Cualquier padecimiento preexistente a la contratación del seguro estará excluida de las coberturas.
           </p>
         </AlertDescription>
       </Alert>
