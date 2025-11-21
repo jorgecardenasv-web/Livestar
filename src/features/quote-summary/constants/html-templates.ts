@@ -479,7 +479,7 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
       }
 
       .logo-emma {
-        height: 100px;
+        height: 250px;
         width: auto;
       }
     </style>
@@ -1099,7 +1099,7 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
       }
 
       .logo-emma {
-        height: 100px;
+        height: 250px;
         width: auto;
       }
     </style>
@@ -1362,7 +1362,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
       }
 
       .logo-emma {
-        height: 100px;
+        height: 250px;
         width: auto;
       }
 
