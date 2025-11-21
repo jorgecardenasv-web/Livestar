@@ -11,6 +11,7 @@ export const ModalStorytellingActions: FC = () => {
 
   return (
     <>
+
       {isOpen && modalType === "formQuote" && (
         <Modal
           title=""

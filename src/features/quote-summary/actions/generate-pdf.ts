@@ -2,27 +2,28 @@
 
 import { QuotePDFData } from "../types";
 import { generatePDFService } from "../services/generate-pdf.service";
-import { getProspect } from "@/features/plans/loaders/get-prospect";
 import { sendQuoteEmailProspectService } from "@/features/quote/services/send-email/send-quote-email.service";
 
 export async function generatePDFAction(
-  data: QuotePDFData
+  data: QuotePDFData,
+  prospect?: { name?: string; email?: string }
 ): Promise<{ success: boolean; data?: string; error?: string }> {
   try {
     const pdfData = await generatePDFService(data, "datauri");
-    const { prospect } = await getProspect();
     if (!pdfData) {
       throw new Error("No se pudo generar el PDF");
     }
 
-    await sendQuoteEmailProspectService({
-          prospectName: prospect.name,
-          prospectEmail: prospect.email,
-          pdfBuffer: typeof pdfData === 'string' ? pdfData : Buffer.from(pdfData),
-          company: data.company,
-          plan: data.plan,
-          redirectUrl: "https://emma-gmm.livestar.mx/cotizar/resumen"
-        });
+    if (prospect?.email) {
+      await sendQuoteEmailProspectService({
+        prospectName: prospect?.name || "",
+        prospectEmail: prospect.email,
+        pdfBuffer: typeof pdfData === 'string' ? pdfData : Buffer.from(pdfData),
+        company: data.company,
+        plan: data.plan,
+        redirectUrl: "https://emma-gmm.livestar.mx/cotizar/resumen",
+      });
+    }
     return {
       success: true,
       data: pdfData as string,

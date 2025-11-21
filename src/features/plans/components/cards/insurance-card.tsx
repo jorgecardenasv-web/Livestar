@@ -11,7 +11,7 @@ import {
   PersonStanding,
 } from "lucide-react";
 import { handleInterestClick } from "../../actions/set-cookies";
-import { SubmitButton } from "@/shared/components/ui/submit-button";
+import StoreAwareSubmit from "../store-aware-submit";
 import { getProspect } from "../../loaders/get-prospect";
 import { getImage } from "../../../../shared/services/get-image.service";
 import { formatCurrency } from "@/shared/utils";
@@ -58,7 +58,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 
   const isHDIPrice = isHDIPriceTable(prices);
 
-  const { coverageFee, individualPrices } = calculateInsurancePrice(
+  const { coverage_fee, individualPrices } = calculateInsurancePrice(
     { ...prospect, protectWho, additionalInfo },
     prices,
     paymentType
@@ -123,7 +123,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             {isHDIPrice && paymentType === "Mensual" ? (
               <>
                 <p className="text-xl font-bold text-[#223E99]">
-                  {formatCurrency(coverageFee)}{" "}
+                  {formatCurrency(coverage_fee)}{" "}
                   <span className="text-base font-normal text-gray-600">
                     /primer mes
                   </span>
@@ -138,7 +138,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             ) : (
               //works for both cases, HDI and non-HDI
               <p className="text-3xl font-bold text-[#223E99]">
-                {formatCurrency(coverageFee)}{" "}
+                {formatCurrency(coverage_fee)}{" "}
                 <span className="text-base font-normal text-gray-600">
                   {paymentType === "Mensual" ? "/mes" : "/año"}
                 </span>{" "}
@@ -253,7 +253,7 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             name="coInsuranceCapJson"
             value={JSON.stringify(plan.coInsuranceCap)}
           />
-          <input type="hidden" name="coverageFee" value={coverageFee} />
+          <input type="hidden" name="coverage_fee" value={coverage_fee} />
           <input
             type="hidden"
             name="individualPricesJson"
@@ -271,11 +271,37 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             value={JSON.stringify(deductibles)}
           />
           <input type="hidden" name="protectedWho" value={protectWho} />
-          <SubmitButton
-            type="submit"
+          <StoreAwareSubmit
             label="Me interesa"
             labelPending="Seleccionando..."
             className="w-full bg-[#223E99] text-white py-3 rounded font-bold text-lg hover:bg-primary transition duration-300"
+            planData={{
+              company: company.name,
+              imgCompanyLogo: company.logo,
+              plan: plan.planType.name,
+              paymentType,
+              sumInsured: plan.sumInsured,
+              deductible: minor,
+              coInsurance: typeof plan.coInsurance === 'object' && (plan.coInsurance as any).value !== undefined
+                ? (plan.coInsurance as any).value
+                : typeof plan.coInsurance === 'number'
+                  ? plan.coInsurance
+                  : 0,
+              coInsuranceCap: typeof plan.coInsuranceCap === 'object' && (plan.coInsuranceCap as any)?.value !== undefined
+                ? (plan.coInsuranceCap as any).value
+                : typeof plan.coInsuranceCap === 'number'
+                  ? plan.coInsuranceCap
+                  : 0,
+              coverage_fee,
+              individualPricesJson: JSON.stringify(individualPrices),
+              id: plan.id,
+              isMultipleString: isMultiple.toString(),
+              deductiblesJson: JSON.stringify(deductibles),
+              isMultipleCoInsurance: (typeof plan.coInsurance === 'object' && ((plan.coInsurance as any).opcion_2 || (plan.coInsurance as any).opcion_4)) ? 'true' : 'false',
+              coInsuranceJson: JSON.stringify(plan.coInsurance),
+              coInsuranceCapJson: JSON.stringify(plan.coInsuranceCap),
+              protectedWho: protectWho,
+            }}
           />
         </form>
 

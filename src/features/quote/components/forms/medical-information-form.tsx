@@ -79,9 +79,15 @@ export const MedicalInformationForm: React.FC<MedicalInformationProps> = ({
   return (
     <div className="space-y-6 py-6">
       <div className="flex items-center space-x-4">
+        <div>
+
         <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
           Información médica
         </h3>
+        <p className="text-sm text-muted-foreground mt-2">
+          Completa este formulario para ajustar tu cotización con mayor precisión. No es obligatorio.
+        </p>
+        </div>
       </div>
 
       {questions.map((question, index) => {

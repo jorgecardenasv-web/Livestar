@@ -390,7 +390,7 @@ export function calculateInsurancePrice(
   }
 
   return {
-    coverageFee: roundPrice(totalPrice),
+    coverage_fee: roundPrice(totalPrice),
     individualPrices: {
       main: individualPrices.main,
       partner: individualPrices.partner,

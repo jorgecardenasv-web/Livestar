@@ -6,8 +6,9 @@ export const publicPaths = [
   "/",
   "/cotizar",
   "/cotizar/planes",
-  "/resumen",
+  "/cotizar/resumen",
   "/cotizar/flow",
+  "/cotizar/enviando",
   "/finalizar-cotizacion",
   "/aviso-de-Privacidad",
 ];
@@ -27,6 +28,6 @@ export const restrictedPaths = {
 export const quoteRoutes = {
   flow: "/cotizar/flow",
   planes: "/cotizar/planes",
-  resumen: "/resumen",
+  resumen: "/cotizar/resumen",
   root: "/cotizar",
 } as const;

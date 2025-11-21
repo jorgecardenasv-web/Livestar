@@ -26,9 +26,12 @@ export const normalizeFormData = (initialData?: any): FormData => {
     protectWho: initialData.protectWho || "",
   };
 
-  // Additional info
+  // Additional info - manejar estructura anidada duplicada si existe
   if (initialData.additionalInfo) {
-    const { additionalInfo } = initialData;
+    // Si additionalInfo tiene una propiedad additionalInfo anidada, usar esa
+    const additionalInfo = initialData.additionalInfo.additionalInfo
+      ? initialData.additionalInfo.additionalInfo
+      : initialData.additionalInfo;
 
     // Procesar protectedCount y protectedPersons
     if (additionalInfo.protectedCount) {

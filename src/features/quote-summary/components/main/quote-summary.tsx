@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { Shield, DollarSign, Percent, Heart, ArrowLeft, FileText, Download, Users } from "lucide-react";
+import { Shield, DollarSign, Percent, Heart, ArrowLeft, FileText, Download, Users, Loader2 } from "lucide-react";
 import { ContractForm } from "../forms/confirm-form";
 import { InfoCard } from "../cards/info-card";
 import { deleteSelectedPlan } from "@/features/plans/actions/set-cookies";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
+import { useFormStatus } from "react-dom";
 import { DeductibleAndCoInsuranceInfoModal } from "../modals/CombinedInfoModal";
 
 // Función para convertir data URI a Blob
@@ -53,6 +54,12 @@ import { generatePDFAction } from "../../actions/generate-pdf";
 import { processPDFData } from "../../utils/process-pdf-data.util"
 import { InsuranceQuoteData } from "../../types";
 import { getProspect } from "@/features/plans/loaders/get-prospect";
+import { getProspectByQuoteId } from "../../actions/get-prospect-by-quote";
+import { useQuoteRuntimeStore } from "@/shared/store/quote-runtime-store";
+import { MedicalInformationForm } from "@/features/quote/components/forms/medical-information-form";
+import { QUESTIONS } from "@/features/quote/data";
+import { updateQuoteFromSummary } from "@/features/quote-summary/actions/update-quote-from-summary";
+import { Button } from "@/shared/components/ui/button";
 
 interface MemberPrices {
   primerMes?: number;
@@ -139,20 +146,43 @@ const getMinimumValues = (jsonString: string | undefined): number => {
   }
 };
 
+// Componente para el botón de submit que muestra estado de carga
+const SubmitMedicalButton = () => {
+  const { pending } = useFormStatus();
+  
+  return (
+    <Button
+      type="submit"
+      size="lg"
+      className="mt-4"
+      disabled={pending}
+    >
+      {pending ? (
+        <>
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          Actualizando...
+        </>
+      ) : (
+        "Actualizar cotización con información médica"
+      )}
+    </Button>
+  );
+};
+
 export const QuoteSummary: FC<
   InsuranceQuoteData
 > = (props) => {
+  const quoteIdParam = useQuoteRuntimeStore((s) => s.quoteId) ?? "";
   const {
-    id,
     coInsurance,
     coInsuranceCap,
-    coverageFee,
+    coverage_fee,
     individualPricesJson,
     deductible,
     sumInsured,
-    companyName,
+    company,
     imgCompanyLogo,
-    planTypeName,
+    plan,
     paymentType,
     isMultipleString,
     deductiblesJson,
@@ -160,9 +190,7 @@ export const QuoteSummary: FC<
     coInsuranceJson,
     coInsuranceCapJson,
     protectedWho,
-    prospect
   } = props;
-
   const isMultiple = isMultipleString === "true" ? true : false;
   const isMultipleCoIns = isMultipleCoInsurance === "true" ? true : false;
   const {
@@ -182,6 +210,33 @@ export const QuoteSummary: FC<
   // Estado para controlar mensajes de error
   const [pdfError, setPdfError] = useState<string | null>(null);
   const [pdfSuccess, setPdfSuccess] = useState<string | null>(null);
+  const [forms, setForms] = useState<any[]>(() => QUESTIONS.map((q, idx) => ({ [`answer-${idx}`]: "No", healthConditions: [] })));
+  const [medicalErrors, setMedicalErrors] = useState<Record<string, string>>({});
+  const [medicalSuccess, setMedicalSuccess] = useState<string | null>(null);
+  const [formFamily, setFormFamily] = useState<any>({ protectWho: protectedWho });
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { protectWho, additionalInfo } = await getProspect();
+        const children = additionalInfo?.children ?? [];
+        const partnerGender = additionalInfo?.partnerGender ?? "";
+        const partnerAge = additionalInfo?.partnerAge ?? "";
+        const childrenCount = additionalInfo?.childrenCount ?? children?.length ?? 0;
+        const protectedPersons = additionalInfo?.protectedPersons ?? [];
+        const protectedCount = additionalInfo?.protectedCount ?? protectedPersons?.length ?? 0;
+        setFormFamily({
+          protectWho: protectWho ?? protectedWho,
+          children,
+          childrenCount,
+          partnerGender,
+          partnerAge,
+          protectedPersons,
+          protectedCount,
+        });
+      } catch {}
+    })();
+  }, [protectedWho]);
 
   //! -------------------------------------------------------------------
   const handleGeneratePDF = async () => {
@@ -189,12 +244,21 @@ export const QuoteSummary: FC<
     setPdfError(null);
 
     try {
-      const prospectData = await getProspect();
+      // Intentar obtener prospecto desde cookie; si no hay, usar quoteId en memoria
+      let prospectData = await getProspect();
+      const quoteIdStore = useQuoteRuntimeStore.getState().quoteId;
+      const hasEmail = Boolean(prospectData?.prospect?.email);
+      if (!hasEmail && quoteIdStore) {
+        prospectData = await getProspectByQuoteId(quoteIdStore);
+      }
       const pdfData = processPDFData({
         ...props,
         protectedWho: protectedWho
       }, prospectData);
-      const result = await generatePDFAction(pdfData);
+      const result = await generatePDFAction(pdfData, {
+        name: prospectData?.prospect?.name,
+        email: prospectData?.prospect?.email,
+      });
 
       if (result.success && result.data) {
         if (isIOS) {
@@ -204,7 +268,7 @@ export const QuoteSummary: FC<
           const blobUrl = URL.createObjectURL(pdfBlob);
           const downloadLink = document.createElement("a");
           downloadLink.href = blobUrl;
-          downloadLink.setAttribute('download', `cotizacion-${props.companyName}-${props.planTypeName}.pdf`);
+          downloadLink.setAttribute('download', `cotizacion-${props.company}-${props.plan}.pdf`);
           downloadLink.style.display = 'none';
           document.body.appendChild(downloadLink);
           downloadLink.click();
@@ -238,11 +302,6 @@ export const QuoteSummary: FC<
           <div className="lg:p-6 border-b border-gray-100">
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
               <div className="flex items-center gap-4">
-                <form id="pdfIngnore" action={deleteSelectedPlan}>
-                  <button className="text-gray-700 hover:text-gray-900 transition-colors">
-                    <ArrowLeft strokeWidth={2.5} size={24} />
-                  </button>
-                </form>
                 <h2 className="text-2xl font-bold text-gray-900">
                   Resumen de cotización
                 </h2>
@@ -252,7 +311,7 @@ export const QuoteSummary: FC<
                 width={80}
                 height={60}
                 className="h-12 w-auto object-contain"
-                alt={`Logo de ${companyName}`}
+                alt={`Logo de ${company}`}
                 priority
               />
             </div>
@@ -285,10 +344,10 @@ export const QuoteSummary: FC<
                 ) : (
                   <div>
                     <p className="text-sm text-sky-600 font-semibold uppercase">
-                      Total {paymentType}
+                      Total {paymentType === "Anual" ? "Anual" : ""}
                     </p>
                     <p className="text-4xl font-bold text-[#223E99]">
-                      {formatCurrency(coverageFee)}
+                      {formatCurrency(coverage_fee)}
                     </p>
                   </div>
                 )}
@@ -298,7 +357,7 @@ export const QuoteSummary: FC<
                   Plan
                 </p>
                 <p className="text-xl font-bold text-[#223E99]">
-                  {planTypeName}
+                  {plan}
                 </p>
               </div>
             </div>
@@ -404,7 +463,59 @@ export const QuoteSummary: FC<
 
             {/* Formulario de Contrato */}
             <div id="pdfIngnore" className="mt-6">
-              <ContractForm prospect={prospect} />
+              <ContractForm />
+            </div>
+
+            {/* Formulario médico opcional al final */}
+            <div className="mt-8 border-t border-gray-100 pt-6">
+              <MedicalInformationForm
+                forms={forms}
+                setForms={setForms}
+                questions={QUESTIONS as any}
+                formFamily={formFamily}
+                errors={medicalErrors}
+              />
+
+              <form
+                action={async (fd: FormData) => {
+                  setMedicalSuccess(null);
+                  setMedicalErrors({});
+                  const medicalData = forms.map((form, idx) => {
+                    const answerKey = `answer-${idx}`;
+                    return {
+                      answer: form[answerKey],
+                      [answerKey]: form[answerKey],
+                      questionId: QUESTIONS[idx]?.id ?? idx,
+                      healthConditions: form.healthConditions || [],
+                      activePadecimiento: form.activePadecimiento,
+                    };
+                  });
+                  fd.set("medicalData", JSON.stringify(medicalData));
+                  if (quoteIdParam) {
+                    fd.set("quoteId", quoteIdParam);
+                  }
+                  const res = await updateQuoteFromSummary(undefined, fd);
+                  if (!res?.success) {
+                    setMedicalErrors((prev) => ({ ...prev, global: res?.message || "No se pudo actualizar la cotización." }));
+                    setMedicalSuccess(null);
+                  } else {
+                    setMedicalErrors({});
+                    setMedicalSuccess("Cotización actualizada correctamente con la información médica.");
+                  }
+                }}
+              >
+                {/* Pasar quoteId por formulario a la Server Action */}
+                <input type="hidden" name="quoteId" value={quoteIdParam} />
+                <div className="flex flex-col items-end">
+                  <SubmitMedicalButton />
+                  {medicalSuccess && (
+                    <p className="mt-2 text-sm text-green-600">{medicalSuccess}</p>
+                  )}
+                  {medicalErrors.global && (
+                    <p className="mt-2 text-sm text-red-600">{medicalErrors.global}</p>
+                  )}
+                </div>
+              </form>
             </div>
           </div>
         </div>

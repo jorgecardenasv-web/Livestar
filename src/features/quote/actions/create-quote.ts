@@ -11,7 +11,11 @@ import { processPDFData } from "@/features/quote-summary/utils/process-pdf-data.
 import { revalidatePath } from "next/cache";
 import { prefix } from "@/features/layout/nav-config/constants";
 
-export const createQuoteAction = async (payload: any) => {
+export const createQuoteAction = async (
+  payload: any,
+  options?: { deleteCookies?: boolean; redirectTo?: string; setCreatedCookie?: boolean; disableRedirect?: boolean }
+) => {
+  let createdQuoteId: string | undefined;
   try {
     const { prospectData, medicalData } = payload;
     const cookieStore = cookies();
@@ -20,15 +24,23 @@ export const createQuoteAction = async (payload: any) => {
 
     const advisor = await getAdvisorWithLeastQuotesService();
 
-    if (prospectData) {
-      await createQuoteService(
+    // Si no se proporciona prospectData explícitamente, intentar obtenerlo desde la cookie 'prospect'
+    const resolvedProspectData = prospectData ?? (() => {
+      const prospectJson = cookieStore.get("prospect")?.value;
+      const prospect = prospectJson ? JSON.parse(prospectJson) : null;
+      return prospect ? { ...prospect, additionalInfo: prospect.additionalInfo } : null;
+    })();
+
+    if (resolvedProspectData) {
+      const created = await createQuoteService(
         {
-          prospectData,
-          medicalData,
+          prospectData: resolvedProspectData,
+          medicalData: medicalData ?? [],
           plan: parsedPlan,
         },
         advisor?.id!
       );
+      createdQuoteId = created?.id;
 
       try {
         const pdfData = processPDFData(parsedPlan);
@@ -36,9 +48,9 @@ export const createQuoteAction = async (payload: any) => {
         const buffer = Buffer.from(new Uint8Array(pdfBuffer as ArrayBuffer));
 
         await sendQuoteEmailService({
-          prospectName: prospectData.name,
-          prospectEmail: prospectData.email,
-          whatsapp: prospectData.whatsapp,
+          prospectName: resolvedProspectData.name,
+          prospectEmail: resolvedProspectData.email,
+          whatsapp: resolvedProspectData.whatsapp,
           pdfBuffer: buffer,
           company: parsedPlan.company,
           plan: parsedPlan.plan,
@@ -49,10 +61,19 @@ export const createQuoteAction = async (payload: any) => {
         console.error("Error generando o enviando PDF:", pdfError);
       }
 
-      cookieStore.delete("prospect");
-      cookieStore.delete("selectedPlan");
-      cookieStore.delete("activePlanType");
-      cookieStore.delete("activePaymentType");
+      const shouldDeleteCookies = options?.deleteCookies ?? true;
+      if (shouldDeleteCookies) {
+        cookieStore.delete("prospect");
+        cookieStore.delete("selectedPlan");
+        cookieStore.delete("activePlanType");
+        cookieStore.delete("activePaymentType");
+      } else if (options?.setCreatedCookie) {
+        // Bandera para evitar creación duplicada posterior en el flujo de finalización
+        cookieStore.set("quoteCreated", "true");
+        if (created?.id) {
+          cookieStore.set("createdQuoteId", created.id);
+        }
+      }
     }
   } catch (error) {
     console.error("Error en createQuoteAction:", error);
@@ -65,5 +86,15 @@ export const createQuoteAction = async (payload: any) => {
     };
   }
   revalidatePath(`${prefix}/cotizaciones`);
-  redirect("/cotizar");
+  // Permitir flujo sin redirección (para navegación de cliente y estado en memoria)
+  if (options?.disableRedirect) {
+    return { success: true, quoteId: createdQuoteId };
+  }
+
+  const redirectTo = options?.redirectTo ?? "/cotizar";
+  if (options?.setCreatedCookie && createdQuoteId) {
+    redirect(`${redirectTo}?quoteId=${createdQuoteId}`);
+  } else {
+    redirect(redirectTo);
+  }
 };

@@ -140,17 +140,25 @@ function getFormattedValue(key: string, value: any, protectWho: string, hasDiffe
     if (typeof value === 'object' && value !== null) {
       if (value.primerMes !== undefined && value.segundoMesADoce !== undefined) {
         return {
-          price: value.price || value.anual || 0,
+          price: value.price || value.anual || value.mensual || 0,
           primerMes: value.primerMes,
           segundoMesADoce: value.segundoMesADoce,
           name: value.name,
           relationship: value.relationship
         };
       }
-      // Si es un objeto con estructura estándar
+      // Si es un objeto con estructura estándar (price)
       if (value.price !== undefined) {
         return {
           price: value.price,
+          name: value.name,
+          relationship: value.relationship
+        };
+      }
+      // Si es un objeto con estructura GNP (mensual/anual)
+      if (value.mensual !== undefined || value.anual !== undefined) {
+        return {
+          price: value.mensual || (value.anual ? value.anual / 12 : 0),
           name: value.name,
           relationship: value.relationship
         };

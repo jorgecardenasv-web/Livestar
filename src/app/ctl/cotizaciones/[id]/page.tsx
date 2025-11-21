@@ -39,8 +39,6 @@ export default async function QuotesPage({
     );
   }
 
-  console.log({quote: quote.medicalHistories});
-
   return (
     <>
       <QuotePageClient quote={quote} />

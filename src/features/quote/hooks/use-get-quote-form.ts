@@ -5,7 +5,6 @@ import { createProspect } from "@/features/prospects/actions/create-prospect";
 import { createQuoteAction } from "@/features/quote/actions/create-quote";
 import { useModalStore } from "@/shared/store/modal-store";
 import { normalizeFormData } from "../utils/normalize-form-data";
-import { useQuoteStore } from "../store/quote-store";
 
 const INITIAL_HEALTH_CONDITION = {
   hospitalizado: "No",
@@ -101,7 +100,6 @@ const dataCleaners: Record<string, (data: any, cleaned: any) => void> = {
 
 export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
   const { openModal, closeModal } = useModalStore();
-  const { setProspect } = useQuoteStore();
 
   const [formData, setFormData] = useState<FormData>(() => {
     const normalized = normalizeFormData(initialState);
@@ -120,7 +118,6 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
         : createInitialMedicalForms(questions)
       : []
   );
-
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const validateMedicalConditions = useCallback(() => {
@@ -320,7 +317,7 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
     });
   };
 
-  const unifiedHandleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const unifiedHandleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
@@ -330,20 +327,28 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
 
       if (questions && forms.length > 0) {
         const medErrors = validateMedicalConditions();
-
         if (Object.keys(medErrors).length > 0) {
           setMedicalErrors(medErrors);
           return;
         }
         const medicalData = formatMedicalData();
-        await createQuoteAction({
-          medicalData,
-          prospectData: cleanedData,
-        });
+        // Evitar creación duplicada si ya se creó en "Me interesa"
+        const hasCreatedEarly =
+          typeof document !== "undefined" &&
+          document.cookie.split("; ").some((c) => c.startsWith("quoteCreated="));
+
+        if (!hasCreatedEarly) {
+          await createQuoteAction(
+            {
+              medicalData,
+              prospectData: cleanedData,
+            },
+            { deleteCookies: false, redirectTo: "/cotizar/enviando", setCreatedCookie: true }
+          );
+        }
       }
 
       if (!initialState) {
-        setProspect(cleanedData);
         await createProspect(cleanedData);
       }
       closeModal();
