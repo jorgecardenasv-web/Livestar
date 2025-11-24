@@ -43,8 +43,21 @@ export default function MoreInformationQuote() {
   // Verificar si los datos tienen estructura de precios diferenciados
   const hasDifferentiatedPrices = () => {
     // Verificar si alguno de los miembros tiene primerMes y segundoMesADoce definidos
-    const checkMember = (member: any) =>
-      member && typeof member === 'object' && member.primerMes !== undefined && member.segundoMesADoce !== undefined;
+    const checkMember = (member: any) => {
+      if (!member || typeof member !== 'object') return false;
+
+      // Check direct structure: { primerMes, segundoMesADoce }
+      if (member.primerMes !== undefined && member.segundoMesADoce !== undefined) {
+        return true;
+      }
+
+      // Check nested structure: { price: { primerMes, segundoMesADoce } }
+      if (member.price && typeof member.price === 'object') {
+        return member.price.primerMes !== undefined && member.price.segundoMesADoce !== undefined;
+      }
+
+      return false;
+    };
 
     if (checkMember(modalProps.main) || checkMember(modalProps.partner)) {
       return true;
@@ -74,70 +87,47 @@ export default function MoreInformationQuote() {
 
   const hasDiffPrices = hasDifferentiatedPrices();
 
-  return (
-    <div className="w-full space-y-10">
-      <h2 className="text-4xl font-bold text-center text-gradiant">
-        {getTotalMembers() > 1 ? 'Detalles de los Asegurados' : 'Detalle del Asegurado'}
-      </h2>
-      <Table className="w-full text-center border rounded">
-        <TableHeader>
-          <TableRow>
-            <TableHead className="text-lg text-center w-1/3 text-sky-600">
-              Integrante
-            </TableHead>
-            {hasDiffPrices ? (
-              <>
-                <TableHead className="text-lg text-center w-1/3 text-sky-600">
-                  Pago Inicial (Mes 1)
-                </TableHead>
-                <TableHead className="text-lg text-center w-1/3 text-sky-600">
-                  Pago Mensual (Meses 2-12)
-                </TableHead>
-              </>
-            ) : (
-              <TableHead className="text-lg text-center w-1/3 text-sky-600">
-                Prima Individual
-              </TableHead>
-            )}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {Object.entries(modalProps)
-            .filter(([key]) => ['main', 'partner', 'children', 'parents', 'others'].includes(key))
-            .map(([key, value]) => {
-              return (
-                <React.Fragment key={key}>
-                  {getFormattedValue(key, value, modalProps.protectWho, hasDiffPrices)}
-                </React.Fragment>
-              );
-            })}
-        </TableBody>
-      </Table>
-      {hasDiffPrices && (
-        <div className="bg-muted/30 rounded-md p-4 text-sm">
-          <p className="text-muted-foreground font-medium">
-            * Esta cotización muestra precios diferenciados. El pago del primer mes es diferente a los pagos de los meses 2-12.
-          </p>
-        </div>
-      )}
-      <Button
-        onClick={closeModal}
-        className="w-full text-lg"
-        size="lg"
-      >
-        Cerrar
-      </Button>
-    </div>
-  );
-}
-
-function getFormattedValue(key: string, value: any, protectWho: string, hasDifferentiatedPrices: boolean) {
   // Función para procesar un miembro del seguro y extraer datos relevantes
   const processInsuranceMember = (value: any): Member => {
     if (!value) return {};
 
     // Si es un objeto con estructura HDI (precios diferenciados)
     if (typeof value === 'object' && value !== null) {
+      // Check if this is a parent or other member with nested price property
+      if (value.price && typeof value.price === 'object') {
+        const priceDetails = value.price;
+
+        // If the nested price has HDI structure
+        if (priceDetails.primerMes !== undefined && priceDetails.segundoMesADoce !== undefined) {
+          return {
+            price: priceDetails.anual || priceDetails.mensual || 0,
+            primerMes: priceDetails.primerMes,
+            segundoMesADoce: priceDetails.segundoMesADoce,
+            name: value.name,
+            relationship: value.relationship
+          };
+        }
+
+        // If the nested price has standard GNP structure (mensual/anual)
+        if (priceDetails.mensual !== undefined || priceDetails.anual !== undefined) {
+          return {
+            price: priceDetails.mensual || (priceDetails.anual ? priceDetails.anual / 12 : 0),
+            name: value.name,
+            relationship: value.relationship
+          };
+        }
+
+        // If the nested price is just a number
+        if (typeof priceDetails === 'number') {
+          return {
+            price: priceDetails,
+            name: value.name,
+            relationship: value.relationship
+          };
+        }
+      }
+
+      // Direct HDI structure (no nested price property)
       if (value.primerMes !== undefined && value.segundoMesADoce !== undefined) {
         return {
           price: value.price || value.anual || value.mensual || 0,
@@ -147,15 +137,17 @@ function getFormattedValue(key: string, value: any, protectWho: string, hasDiffe
           relationship: value.relationship
         };
       }
-      // Si es un objeto con estructura estándar (price)
-      if (value.price !== undefined) {
+
+      // Direct standard structure with price as a number
+      if (value.price !== undefined && typeof value.price === 'number') {
         return {
           price: value.price,
           name: value.name,
           relationship: value.relationship
         };
       }
-      // Si es un objeto con estructura GNP (mensual/anual)
+
+      // Direct GNP structure (mensual/anual)
       if (value.mensual !== undefined || value.anual !== undefined) {
         return {
           price: value.mensual || (value.anual ? value.anual / 12 : 0),
@@ -176,99 +168,167 @@ function getFormattedValue(key: string, value: any, protectWho: string, hasDiffe
 
   // Renderizar una celda según el tipo de precios
   const renderPriceCell = (member: Member) => {
-    if (hasDifferentiatedPrices) {
+    if (hasDiffPrices) {
       return (
         <>
-          <TableCell className="text-xl font-bold text-[#223E99]">
+          <TableCell className="text-lg font-semibold text-[#223E99] text-center">
             {formatCurrency(member.primerMes !== undefined ? member.primerMes : member.price || 0)}
           </TableCell>
-          <TableCell className="text-xl font-bold text-[#223E99]">
+          <TableCell className="text-lg font-semibold text-[#223E99] text-center">
             {formatCurrency(member.segundoMesADoce !== undefined ? member.segundoMesADoce : 0)}
+          </TableCell>
+          <TableCell className="text-lg font-semibold text-[#223E99] text-center">
+            {formatCurrency(member.price || 0)}
           </TableCell>
         </>
       );
     } else {
       return (
-        <TableCell className="text-xl font-bold text-[#223E99]">
+        <TableCell className="text-xl font-bold text-[#223E99] text-center">
           {formatCurrency(member.price || 0)}
         </TableCell>
       );
     }
   };
 
-  if (key === "main" && ["solo_yo", "mi_pareja_y_yo", "familia", "mis_hijos_y_yo"].includes(protectWho)) {
-    const member = processInsuranceMember(value);
-    return (
-      <TableRow key="main">
-        <TableCell className="flex justify-center">
-          <div className="bg-sky-100 px-3 py-1.5 rounded-lg text-sky-600">
-            Titular
+  const getFormattedValue = (key: string, value: any, protectWho: string) => {
+    // Titular solo debe aparecer cuando está incluido en la cobertura
+    // NO debe aparecer para "mis_padres" u "otros"
+    if (key === "main" && ["solo_yo", "mi_pareja_y_yo", "familia", "mis_hijos_y_yo"].includes(protectWho)) {
+      const member = processInsuranceMember(value);
+      return (
+        <TableRow key="main">
+          <TableCell className="text-center">
+            <div className="inline-block bg-sky-100 px-4 py-2 rounded-lg text-sky-700 font-medium">
+              Titular
+            </div>
+          </TableCell>
+          {renderPriceCell(member)}
+        </TableRow>
+      );
+    }
+
+    // Pareja solo debe aparecer cuando está incluida
+    if (key === "partner" && ["mi_pareja_y_yo", "familia"].includes(protectWho)) {
+      const member = processInsuranceMember(value);
+      return (
+        <TableRow key="partner">
+          <TableCell className="text-center">
+            <div className="inline-block bg-sky-100 px-4 py-2 rounded-lg text-sky-700 font-medium">
+              Pareja
+            </div>
+          </TableCell>
+          {renderPriceCell(member)}
+        </TableRow>
+      );
+    }
+
+    if (key === "children" && Array.isArray(value)) {
+      return value.map((child, index) => {
+        const member = processInsuranceMember(child);
+        return (
+          <TableRow key={`child-${index}`}>
+            <TableCell className="text-center">
+              <div className="inline-block bg-sky-100 px-4 py-2 rounded-lg text-sky-700 font-medium">
+                {value.length > 1 ? `Hijo/a ${index + 1}` : 'Hijo/a'}
+              </div>
+            </TableCell>
+            {renderPriceCell(member)}
+          </TableRow>
+        );
+      });
+    }
+
+    if (key === "parents" && Array.isArray(value)) {
+      return value.map((parent, index) => {
+        const member = processInsuranceMember(parent);
+        return (
+          <TableRow key={`parent-${index}`}>
+            <TableCell className="text-center">
+              <div className="inline-block bg-sky-100 px-4 py-2 rounded-lg text-sky-700 font-medium">
+                {member.name ? member.name : `Padre/Madre ${index + 1}`}
+              </div>
+            </TableCell>
+            {renderPriceCell(member)}
+          </TableRow>
+        );
+      });
+    }
+
+    if (key === "others" && Array.isArray(value)) {
+      return value.map((other, index) => {
+        const member = processInsuranceMember(other);
+        return (
+          <TableRow key={`other-${index}`}>
+            <TableCell className="text-center">
+              <div className="inline-block bg-sky-100 px-4 py-2 rounded-lg text-sky-700 font-medium">
+                {member.relationship ? member.relationship : `Otro ${index + 1}`}
+              </div>
+            </TableCell>
+            {renderPriceCell(member)}
+          </TableRow>
+        );
+      });
+    }
+
+    return null;
+  };
+
+  return (
+    <div className="w-full space-y-6">
+      <div className="overflow-x-auto">
+        <Table className="w-full border rounded-lg">
+          <TableHeader>
+            <TableRow className="bg-sky-50">
+              <TableHead className="text-base font-bold text-center text-sky-700 w-[25%]">
+                Integrante
+              </TableHead>
+              {hasDiffPrices ? (
+                <>
+                  <TableHead className="text-base font-bold text-center text-sky-700 w-[25%]">
+                    Pago Inicial<br />(Mes 1)
+                  </TableHead>
+                  <TableHead className="text-base font-bold text-center text-sky-700 w-[25%]">
+                    Pago Mensual<br />(Meses 2-12)
+                  </TableHead>
+                  <TableHead className="text-base font-bold text-center text-sky-700 w-[25%]">
+                    Prima Anual
+                  </TableHead>
+                </>
+              ) : (
+                <TableHead className="text-base font-bold text-center text-sky-700">
+                  Prima Individual
+                </TableHead>
+              )}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {Object.entries(modalProps)
+              .filter(([key]) => ['main', 'partner', 'children', 'parents', 'others'].includes(key))
+              .map(([key, value]) => {
+                return (
+                  <React.Fragment key={key}>
+                    {getFormattedValue(key, value, modalProps.protectWho)}
+                  </React.Fragment>
+                );
+              })}
+          </TableBody>
+        </Table>
+        {hasDiffPrices && (
+          <div className="bg-muted/30 rounded-md p-4 text-sm mt-4">
+            <p className="text-muted-foreground font-medium">
+              * Esta cotización muestra precios diferenciados. El pago del primer mes es diferente a los pagos de los meses 2-12.
+            </p>
           </div>
-        </TableCell>
-        {renderPriceCell(member)}
-      </TableRow>
-    );
-  }
-
-  if (key === "partner" && ["mi_pareja_y_yo", "familia"].includes(protectWho)) {
-    const member = processInsuranceMember(value);
-    return (
-      <TableRow key="partner">
-        <TableCell className="flex justify-center">
-          <div className="bg-sky-100 px-3 py-1.5 rounded-lg text-sky-600">
-            Pareja
-          </div>
-        </TableCell>
-        {renderPriceCell(member)}
-      </TableRow>
-    );
-  }
-
-  if (key === "children" && Array.isArray(value)) {
-    return value.map((child, index) => {
-      const member = processInsuranceMember(child);
-      return (
-        <TableRow key={`child-${index}`}>
-          <TableCell className="flex justify-center">
-            <div className="bg-sky-100 px-3 py-1.5 rounded-lg text-sky-600">
-              {value.length > 1 ? `Hijo/a ${index + 1}` : 'Hijo/a'}
-            </div>
-          </TableCell>
-          {renderPriceCell(member)}
-        </TableRow>
-      );
-    });
-  }
-
-  if (key === "parents" && Array.isArray(value)) {
-    return value.map((parent, index) => {
-      const member = processInsuranceMember(parent);
-      return (
-        <TableRow key={`parent-${index}`}>
-          <TableCell className="flex justify-center">
-            <div className="bg-sky-100 px-3 py-1.5 rounded-lg text-sky-600">
-              {member.name ? member.name : `Padre/Madre ${index + 1}`}
-            </div>
-          </TableCell>
-          {renderPriceCell(member)}
-        </TableRow>
-      );
-    });
-  }
-
-  if (key === "others" && Array.isArray(value)) {
-    return value.map((other, index) => {
-      const member = processInsuranceMember(other);
-      return (
-        <TableRow key={`other-${index}`}>
-          <TableCell className="flex justify-center">
-            <div className="bg-sky-100 px-3 py-1.5 rounded-lg text-sky-600">
-              {member.relationship ? member.relationship : `Otro ${index + 1}`}
-            </div>
-          </TableCell>
-          {renderPriceCell(member)}
-        </TableRow>
-      );
-    });
-  }
+        )}
+        <Button
+          onClick={closeModal}
+          className="w-full text-lg mt-4"
+          size="lg"
+        >
+          Cerrar
+        </Button>
+      </div>
+    </div>
+  );
 }

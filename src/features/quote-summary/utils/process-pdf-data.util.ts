@@ -28,8 +28,10 @@ const calculateTotalAnnualPrice = (individualPricesJson: string): number => {
     // Add parents prices
     if (Array.isArray(prices.parents)) {
       prices.parents.forEach((parent: any) => {
-        if (parent?.anual) {
-          total += parent.anual;
+        // Handle nested price structure: { name: "Padre", price: { anual: X } }
+        const anual = parent?.price?.anual || parent?.anual;
+        if (anual) {
+          total += anual;
         }
       });
     }
@@ -37,8 +39,10 @@ const calculateTotalAnnualPrice = (individualPricesJson: string): number => {
     // Add others prices
     if (Array.isArray(prices.others)) {
       prices.others.forEach((other: any) => {
-        if (other?.anual) {
-          total += other.anual;
+        // Handle nested price structure: { relationship: "...", price: { anual: X } }
+        const anual = other?.price?.anual || other?.anual;
+        if (anual) {
+          total += anual;
         }
       });
     }
@@ -84,8 +88,10 @@ const calculateTotalPrimerMes = (
     // Check parents prices
     if (Array.isArray(prices.parents)) {
       prices.parents.forEach((parent: any) => {
-        if (parent?.primerMes !== undefined) {
-          total += parent.primerMes;
+        // Handle nested price structure: { name: "Padre", price: { primerMes: X } }
+        const primerMes = parent?.price?.primerMes ?? parent?.primerMes;
+        if (primerMes !== undefined) {
+          total += primerMes;
           hasAnyPrimerMes = true;
         }
       });
@@ -94,8 +100,10 @@ const calculateTotalPrimerMes = (
     // Check others prices
     if (Array.isArray(prices.others)) {
       prices.others.forEach((other: any) => {
-        if (other?.primerMes !== undefined) {
-          total += other.primerMes;
+        // Handle nested price structure: { relationship: "...", price: { primerMes: X } }
+        const primerMes = other?.price?.primerMes ?? other?.primerMes;
+        if (primerMes !== undefined) {
+          total += primerMes;
           hasAnyPrimerMes = true;
         }
       });
@@ -142,8 +150,10 @@ const calculateTotalSegundoMesADoce = (
     // Check parents prices
     if (Array.isArray(prices.parents)) {
       prices.parents.forEach((parent: any) => {
-        if (parent?.segundoMesADoce !== undefined) {
-          total += parent.segundoMesADoce;
+        // Handle nested price structure: { name: "Padre", price: { segundoMesADoce: X } }
+        const segundoMesADoce = parent?.price?.segundoMesADoce ?? parent?.segundoMesADoce;
+        if (segundoMesADoce !== undefined) {
+          total += segundoMesADoce;
           hasAnySegundoMesADoce = true;
         }
       });
@@ -152,8 +162,10 @@ const calculateTotalSegundoMesADoce = (
     // Check others prices
     if (Array.isArray(prices.others)) {
       prices.others.forEach((other: any) => {
-        if (other?.segundoMesADoce !== undefined) {
-          total += other.segundoMesADoce;
+        // Handle nested price structure: { relationship: "...", price: { segundoMesADoce: X } }
+        const segundoMesADoce = other?.price?.segundoMesADoce ?? other?.segundoMesADoce;
+        if (segundoMesADoce !== undefined) {
+          total += segundoMesADoce;
           hasAnySegundoMesADoce = true;
         }
       });
@@ -198,8 +210,10 @@ const calculateTotalMensual = (individualPricesJson: string): number | null => {
     // Check parents prices
     if (Array.isArray(prices.parents)) {
       prices.parents.forEach((parent: any) => {
-        if (parent?.mensual !== undefined) {
-          total += parent.mensual;
+        // Handle nested price structure: { name: "Padre", price: { mensual: X } }
+        const mensual = parent?.price?.mensual ?? parent?.mensual;
+        if (mensual !== undefined) {
+          total += mensual;
           hasAnyMensual = true;
         }
       });
@@ -208,8 +222,10 @@ const calculateTotalMensual = (individualPricesJson: string): number | null => {
     // Check others prices
     if (Array.isArray(prices.others)) {
       prices.others.forEach((other: any) => {
-        if (other?.mensual !== undefined) {
-          total += other.mensual;
+        // Handle nested price structure: { relationship: "...", price: { mensual: X } }
+        const mensual = other?.price?.mensual ?? other?.mensual;
+        if (mensual !== undefined) {
+          total += mensual;
           hasAnyMensual = true;
         }
       });
@@ -241,15 +257,55 @@ export const hasDetailedPricingStructure = (
       return false;
     }
 
-    // Check if main member has detailed pricing structure
-    const mainPrices = prices.main;
-    return (
-      typeof mainPrices === "object" &&
-      mainPrices !== null &&
-      "anual" in mainPrices &&
-      "primerMes" in mainPrices &&
-      "segundoMesADoce" in mainPrices
-    );
+    // Helper function to check if a member has HDI structure
+    const hasHDIStructure = (member: any): boolean => {
+      if (!member || typeof member !== "object") return false;
+      
+      // Direct structure: { anual, primerMes, segundoMesADoce }
+      if ("anual" in member && "primerMes" in member && "segundoMesADoce" in member) {
+        return true;
+      }
+      
+      // Nested structure: { price: { anual, primerMes, segundoMesADoce } }
+      if (member.price && typeof member.price === "object") {
+        return "anual" in member.price && "primerMes" in member.price && "segundoMesADoce" in member.price;
+      }
+      
+      return false;
+    };
+
+    // Check main member
+    if (prices.main && hasHDIStructure(prices.main)) {
+      return true;
+    }
+
+    // Check partner member
+    if (prices.partner && hasHDIStructure(prices.partner)) {
+      return true;
+    }
+
+    // Check children array
+    if (Array.isArray(prices.children) && prices.children.length > 0) {
+      if (prices.children.some((child: any) => hasHDIStructure(child))) {
+        return true;
+      }
+    }
+
+    // Check parents array
+    if (Array.isArray(prices.parents) && prices.parents.length > 0) {
+      if (prices.parents.some((parent: any) => hasHDIStructure(parent))) {
+        return true;
+      }
+    }
+
+    // Check others array
+    if (Array.isArray(prices.others) && prices.others.length > 0) {
+      if (prices.others.some((other: any) => hasHDIStructure(other))) {
+        return true;
+      }
+    }
+
+    return false;
   } catch (error) {
     console.error("Error parsing individualPricesJson:", error);
     return false;
@@ -310,16 +366,22 @@ export const processPDFData = (
   // Si tenemos precios detallados (HDI)
   if (hasDetailedPricing) {
     try {
-      const mainMember = {
-        type: "Titular",
-        price: individualPrices.main.anual,
-        anual: individualPrices.main.anual,
-        primerMes: individualPrices.main.primerMes,
-        segundoMesADoce: individualPrices.main.segundoMesADoce,
-        age: prospect?.prospect?.age,
-      };
-      // totals will be calculated from utility functions
-      members.push(mainMember);
+      // Solo agregar el titular si está incluido en la cobertura
+      const shouldIncludeMain = ["solo_yo", "mi_pareja_y_yo", "familia", "mis_hijos_y_yo"].includes(
+        prospect?.protectWho || data.protectedWho || ""
+      );
+      
+      if (shouldIncludeMain && individualPrices.main) {
+        const mainMember = {
+          type: "Titular",
+          price: individualPrices.main.anual,
+          anual: individualPrices.main.anual,
+          primerMes: individualPrices.main.primerMes,
+          segundoMesADoce: individualPrices.main.segundoMesADoce,
+          age: prospect?.prospect?.age,
+        };
+        members.push(mainMember);
+      }
 
       if (individualPrices.partner) {
         const partnerMember = {
@@ -346,6 +408,66 @@ export const processPDFData = (
           };
           // totals will be calculated from utility functions
           members.push(childMember);
+        });
+      }
+
+      // Process parents for HDI
+      if (individualPrices.parents?.length) {
+        individualPrices.parents.forEach((parent: any, index: number) => {
+          // Handle nested price structure: { name: "Padre", price: { anual: X, primerMes: Y, segundoMesADoce: Z } }
+          let anual, primerMes, segundoMesADoce;
+          
+          if (parent.price && typeof parent.price === 'object') {
+            // Nested structure
+            anual = parent.price.anual || 0;
+            primerMes = parent.price.primerMes || 0;
+            segundoMesADoce = parent.price.segundoMesADoce || 0;
+          } else {
+            // Direct structure
+            anual = parent.anual || 0;
+            primerMes = parent.primerMes || 0;
+            segundoMesADoce = parent.segundoMesADoce || 0;
+          }
+          
+          const parentMember = {
+            type: parent.name || `Padre/Madre ${index + 1}`,
+            price: anual,
+            anual: anual,
+            primerMes: primerMes,
+            segundoMesADoce: segundoMesADoce,
+            age: index === 0 ? prospect?.additionalInfo?.dadAge : prospect?.additionalInfo?.momAge,
+          };
+          members.push(parentMember);
+        });
+      }
+
+      // Process others for HDI
+      if (individualPrices.others?.length) {
+        individualPrices.others.forEach((other: any, index: number) => {
+          // Handle nested price structure: { relationship: "...", price: { anual: X, primerMes: Y, segundoMesADoce: Z } }
+          let anual, primerMes, segundoMesADoce;
+          
+          if (other.price && typeof other.price === 'object') {
+            // Nested structure
+            anual = other.price.anual || 0;
+            primerMes = other.price.primerMes || 0;
+            segundoMesADoce = other.price.segundoMesADoce || 0;
+          } else {
+            // Direct structure
+            anual = other.anual || 0;
+            primerMes = other.primerMes || 0;
+            segundoMesADoce = other.segundoMesADoce || 0;
+          }
+          
+          const otherMember = {
+            type: other.relationship || `Otro ${index + 1}`,
+            price: anual,
+            anual: anual,
+            primerMes: primerMes,
+            segundoMesADoce: segundoMesADoce,
+            age: prospect?.additionalInfo?.protectedPersons?.[index]?.age,
+          };
+          members.push(otherMember);
         });
       }
     } catch (error) {
@@ -392,19 +514,23 @@ export const processPDFData = (
             );
             break;
           case "parents":
+            // Handle nested price structure: { name: "Padre", price: { mensual: X, anual: Y } }
+            const parentPrice = individualPrices.parents?.[index || 0];
             individualMensual = ensureValidNumber(
-              individualPrices.parents?.[index || 0]?.mensual
+              parentPrice?.price?.mensual || parentPrice?.mensual
             );
             individualAnual = ensureValidNumber(
-              individualPrices.parents?.[index || 0]?.anual
+              parentPrice?.price?.anual || parentPrice?.anual
             );
             break;
           case "others":
+            // Handle nested price structure: { relationship: "...", price: { mensual: X, anual: Y } }
+            const otherPrice = individualPrices.others?.[index || 0];
             individualMensual = ensureValidNumber(
-              individualPrices.others?.[index || 0]?.mensual
+              otherPrice?.price?.mensual || otherPrice?.mensual
             );
             individualAnual = ensureValidNumber(
-              individualPrices.others?.[index || 0]?.anual
+              otherPrice?.price?.anual || otherPrice?.anual
             );
             break;
         }
@@ -480,7 +606,12 @@ export const processPDFData = (
         const prices = JSON.parse(data.individualPricesJson);
 
         // Procesar precios solo si no son del formato HDI (con anual, primerMes, etc.)
-        if (prices.main && !prices.main.anual) {
+        // Solo agregar el titular si está incluido en la cobertura
+        const shouldIncludeMain = ["solo_yo", "mi_pareja_y_yo", "familia", "mis_hijos_y_yo"].includes(
+          prospect?.protectWho || data.protectedWho || ""
+        );
+        
+        if (prices.main && !prices.main.anual && shouldIncludeMain) {
           members.push({
             type: "Titular",
             price: ensureValidNumber(prices.main),
@@ -517,11 +648,27 @@ export const processPDFData = (
 
         if (prices.parents) {
           prices.parents.forEach(
-            (parent: { name: string; price: number; age?: number }) => {
+            (parent: any) => {
+              // Handle nested price structure: { name: "Padre", price: { mensual: X, anual: Y } }
+              // or simple structure: { name: "Padre", price: number }
+              const priceData = parent.price;
+              let monthlyPrice = 0;
+              let annualPrice = 0;
+              
+              if (typeof priceData === 'object' && priceData !== null) {
+                // Nested structure with mensual/anual
+                monthlyPrice = ensureValidNumber(priceData.mensual || priceData.anual / 12);
+                annualPrice = ensureValidNumber(priceData.anual || priceData.mensual * 12);
+              } else {
+                // Simple number
+                monthlyPrice = ensureValidNumber(priceData);
+                annualPrice = ensureValidNumber(priceData * 12);
+              }
+              
               members.push({
                 type: parent.name === "Padre" ? "Padre" : "Madre",
-                price: ensureValidNumber(parent.price),
-                anual: ensureValidNumber(parent.price * 12),
+                price: monthlyPrice,
+                anual: annualPrice,
                 age: parent.age,
               });
             }
@@ -530,11 +677,27 @@ export const processPDFData = (
 
         if (prices.others) {
           prices.others.forEach(
-            (other: { relationship: string; price: number; age?: number }) => {
+            (other: any) => {
+              // Handle nested price structure: { relationship: "...", price: { mensual: X, anual: Y } }
+              // or simple structure: { relationship: "...", price: number }
+              const priceData = other.price;
+              let monthlyPrice = 0;
+              let annualPrice = 0;
+              
+              if (typeof priceData === 'object' && priceData !== null) {
+                // Nested structure with mensual/anual
+                monthlyPrice = ensureValidNumber(priceData.mensual || priceData.anual / 12);
+                annualPrice = ensureValidNumber(priceData.anual || priceData.mensual * 12);
+              } else {
+                // Simple number
+                monthlyPrice = ensureValidNumber(priceData);
+                annualPrice = ensureValidNumber(priceData * 12);
+              }
+              
               members.push({
                 type: other.relationship || "Otro",
-                price: ensureValidNumber(other.price),
-                anual: ensureValidNumber(other.price * 12),
+                price: monthlyPrice,
+                anual: annualPrice,
                 age: other.age,
               });
             }

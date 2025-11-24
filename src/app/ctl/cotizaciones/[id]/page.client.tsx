@@ -66,6 +66,47 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
         return isNaN(num) ? 0 : num;
       };
 
+      // Check if this is a parent or other member with nested price property
+      // Structure: { name: "Padre", price: { anual: X, primerMes: Y, segundoMesADoce: Z } }
+      // or: { relationship: "...", price: { anual: X, mensual: Y } }
+      if (typeof member === 'object' && member.price && typeof member.price === 'object') {
+        const priceDetails = member.price;
+
+        // If the nested price has HDI structure (primerMes/segundoMesADoce)
+        if (priceDetails.primerMes !== undefined && priceDetails.segundoMesADoce !== undefined) {
+          return {
+            id,
+            type,
+            name: member.name || name,
+            price: ensureValidNumber(priceDetails.price || priceDetails.anual || 0),
+            primerMes: ensureValidNumber(priceDetails.primerMes),
+            segundoMesADoce: ensureValidNumber(priceDetails.segundoMesADoce)
+          };
+        }
+
+        // If the nested price has standard GNP structure (mensual/anual)
+        if (priceDetails.mensual !== undefined || priceDetails.anual !== undefined) {
+          return {
+            id,
+            type,
+            name: member.name || name,
+            price: ensureValidNumber(priceDetails.mensual || priceDetails.anual / 12 || 0),
+            anual: ensureValidNumber(priceDetails.anual)
+          };
+        }
+
+        // If the nested price is just a number
+        if (typeof priceDetails === 'number') {
+          return {
+            id,
+            type,
+            name: member.name || name,
+            price: ensureValidNumber(priceDetails)
+          };
+        }
+      }
+
+      // Direct HDI structure (no nested price property)
       if (hasDifferentiatedPrices && typeof member === 'object' && member.primerMes !== undefined) {
         return {
           id,
@@ -75,7 +116,7 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
           primerMes: ensureValidNumber(member.primerMes),
           segundoMesADoce: ensureValidNumber(member.segundoMesADoce)
         };
-      } else if (typeof member === 'object' && member.price !== undefined) {
+      } else if (typeof member === 'object' && member.price !== undefined && typeof member.price === 'number') {
         return {
           id,
           type,
@@ -118,6 +159,12 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
     if (membersData.parents) {
       membersData.parents.forEach((parent: any, index: number) => {
         members.push(processMember(parent, 'Padre/Madre', `parent-${index}`, parent.name));
+      });
+    }
+
+    if (membersData.others) {
+      membersData.others.forEach((other: any, index: number) => {
+        members.push(processMember(other, 'Otro', `other-${index}`, other.relationship));
       });
     }
 
