@@ -93,19 +93,25 @@ const getIndividualPrices = (jsonString: string | undefined): { firstMonth: numb
       });
     }
 
-    // Suma parents (array)
+    // Suma parents (array) - Handle nested price structure
     if (Array.isArray(data.parents)) {
-      data.parents.forEach((parent: MemberPrices) => {
-        totalFirstMonth += parent.primerMes || 0;
-        totalRemainingMonths += parent.segundoMesADoce || 0;
+      data.parents.forEach((parent: any) => {
+        // Handle nested price structure: { name: "Padre", price: { primerMes: X, segundoMesADoce: Y } }
+        const primerMes = parent?.price?.primerMes ?? parent?.primerMes ?? 0;
+        const segundoMesADoce = parent?.price?.segundoMesADoce ?? parent?.segundoMesADoce ?? 0;
+        totalFirstMonth += primerMes;
+        totalRemainingMonths += segundoMesADoce;
       });
     }
 
-    // Suma others (array)
+    // Suma others (array) - Handle nested price structure
     if (Array.isArray(data.others)) {
-      data.others.forEach((other: MemberPrices) => {
-        totalFirstMonth += other.primerMes || 0;
-        totalRemainingMonths += other.segundoMesADoce || 0;
+      data.others.forEach((other: any) => {
+        // Handle nested price structure: { relationship: "...", price: { primerMes: X, segundoMesADoce: Y } }
+        const primerMes = other?.price?.primerMes ?? other?.primerMes ?? 0;
+        const segundoMesADoce = other?.price?.segundoMesADoce ?? other?.segundoMesADoce ?? 0;
+        totalFirstMonth += primerMes;
+        totalRemainingMonths += segundoMesADoce;
       });
     }
 
@@ -149,7 +155,7 @@ const getMinimumValues = (jsonString: string | undefined): number => {
 // Componente para el botón de submit que muestra estado de carga
 const SubmitMedicalButton = () => {
   const { pending } = useFormStatus();
-  
+
   return (
     <Button
       type="submit"
@@ -196,6 +202,7 @@ export const QuoteSummary: FC<
   const {
     isOpen,
     modalType,
+    modalProps,
     openModalMoreInformation,
     openModal,
   } = useQuoteSumaryActions();
@@ -234,7 +241,7 @@ export const QuoteSummary: FC<
           protectedPersons,
           protectedCount,
         });
-      } catch {}
+      } catch { }
     })();
   }, [protectedWho]);
 
@@ -524,15 +531,27 @@ export const QuoteSummary: FC<
       {/* Modales */}
       {isOpen && (
         <>
-          {modalType === "moreInformationQuote" && (
-            <Modal
-              title="Detalles de Prima"
-              size="3xl"
-              fullScreenOnMobile={true}
-            >
-              <MoreInformationQuote />
-            </Modal>
-          )}
+          {modalType === "moreInformationQuote" && (() => {
+            // Calcular el número total de miembros para el título dinámico
+            let totalMembers = 0;
+            if (modalProps.main) totalMembers++;
+            if (modalProps.partner) totalMembers++;
+            if (modalProps.children) totalMembers += modalProps.children.length;
+            if (modalProps.parents) totalMembers += modalProps.parents.length;
+            if (modalProps.others) totalMembers += modalProps.others.length;
+
+            const modalTitle = totalMembers > 1 ? 'Detalles de los Asegurados' : 'Detalle del Asegurado';
+
+            return (
+              <Modal
+                title={modalTitle}
+                size="3xl"
+                fullScreenOnMobile={true}
+              >
+                <MoreInformationQuote />
+              </Modal>
+            );
+          })()}
           {modalType === "combinedInfo" && (
             <Modal
               title="Deducibles y Coaseguro"
