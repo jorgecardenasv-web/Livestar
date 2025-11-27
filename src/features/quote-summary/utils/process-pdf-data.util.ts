@@ -737,8 +737,8 @@ export const processPDFData = (
     coInsuranceCapData: data.coInsuranceCapJson
       ? JSON.parse(data.coInsuranceCapJson)
       : undefined,
-    contractorName: prospect?.prospect?.name || "",
-    postalCode: prospect?.prospect?.postalCode || "",
+    contractorName: prospect?.name || prospect?.prospect?.name || "",
+    postalCode: prospect?.postalCode || prospect?.prospect?.postalCode || "",
     hasDetailedPricing,
     individualPricesJson: data.individualPricesJson,
     totalAnual,
