@@ -378,7 +378,7 @@ export const processPDFData = (
           anual: individualPrices.main.anual,
           primerMes: individualPrices.main.primerMes,
           segundoMesADoce: individualPrices.main.segundoMesADoce,
-          age: prospect?.prospect?.age,
+          age: prospect?.prospect?.age || prospect?.age,
         };
         members.push(mainMember);
       }
@@ -564,8 +564,9 @@ export const processPDFData = (
         addMember(`Hijo/a ${index + 1}`, child.age, "children", index);
       });
     } else {
-      if (prospect.prospect?.age) {
-        addMember("Titular", prospect.prospect.age, "main");
+      const mainAge = prospect?.prospect?.age || prospect?.age;
+      if (mainAge) {
+        addMember("Titular", mainAge, "main");
       }
 
       if (
@@ -616,7 +617,7 @@ export const processPDFData = (
             type: "Titular",
             price: ensureValidNumber(prices.main),
             anual: ensureValidNumber(prices.main * 12),
-            age: prices.mainAge || undefined,
+            age: prospect?.prospect?.age || prospect?.age || undefined,
           });
         }
 
@@ -736,8 +737,8 @@ export const processPDFData = (
     coInsuranceCapData: data.coInsuranceCapJson
       ? JSON.parse(data.coInsuranceCapJson)
       : undefined,
-    contractorName: prospect?.prospect?.name || "",
-    postalCode: prospect?.prospect?.postalCode || "",
+    contractorName: prospect?.name || prospect?.prospect?.name || "",
+    postalCode: prospect?.postalCode || prospect?.prospect?.postalCode || "",
     hasDetailedPricing,
     individualPricesJson: data.individualPricesJson,
     totalAnual,

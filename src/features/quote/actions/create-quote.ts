@@ -42,24 +42,26 @@ export const createQuoteAction = async (
       );
       createdQuoteId = created?.id;
 
-      try {
-        const pdfData = processPDFData(parsedPlan);
-        const pdfBuffer = await generatePDFService(pdfData, "arraybuffer");
-        const buffer = Buffer.from(new Uint8Array(pdfBuffer as ArrayBuffer));
+      const emailPromise = (async () => {
+        try {
+          const pdfData = processPDFData(parsedPlan, resolvedProspectData);
+          const pdfBuffer = await generatePDFService(pdfData, "arraybuffer");
+          const buffer = Buffer.from(new Uint8Array(pdfBuffer as ArrayBuffer));
 
-        await sendQuoteEmailService({
-          prospectName: resolvedProspectData.name,
-          prospectEmail: resolvedProspectData.email,
-          whatsapp: resolvedProspectData.whatsapp,
-          pdfBuffer: buffer,
-          company: parsedPlan.company,
-          plan: parsedPlan.plan,
-          advisorName: advisor?.name,
-          advisorEmail: advisor?.email ?? "emma@livestar.mx",
-        });
-      } catch (pdfError) {
-        console.error("Error generando o enviando PDF:", pdfError);
-      }
+          await sendQuoteEmailService({
+            prospectName: resolvedProspectData.name,
+            prospectEmail: resolvedProspectData.email,
+            whatsapp: resolvedProspectData.whatsapp,
+            pdfBuffer: buffer,
+            company: parsedPlan.company,
+            plan: parsedPlan.plan,
+            advisorName: advisor?.name,
+            advisorEmail: advisor?.email ?? "emma@livestar.mx",
+          });
+        } catch (pdfError) {
+          console.error("Error generando o enviando PDF:", pdfError);
+        }
+      })();
 
       const shouldDeleteCookies = options?.deleteCookies ?? true;
       if (shouldDeleteCookies) {
@@ -68,12 +70,13 @@ export const createQuoteAction = async (
         cookieStore.delete("activePlanType");
         cookieStore.delete("activePaymentType");
       } else if (options?.setCreatedCookie) {
-        // Bandera para evitar creación duplicada posterior en el flujo de finalización
         cookieStore.set("quoteCreated", "true");
         if (created?.id) {
           cookieStore.set("createdQuoteId", created.id);
         }
       }
+
+      await Promise.allSettled([emailPromise]);
     }
   } catch (error) {
     console.error("Error en createQuoteAction:", error);
@@ -86,7 +89,6 @@ export const createQuoteAction = async (
     };
   }
   revalidatePath(`${prefix}/cotizaciones`);
-  // Permitir flujo sin redirección (para navegación de cliente y estado en memoria)
   if (options?.disableRedirect) {
     return { success: true, quoteId: createdQuoteId };
   }
