@@ -2,6 +2,7 @@
   "name": "livestar_insurance",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.24.0",
   "scripts": {
     "dev": "prisma generate && next dev",
     "build": "prisma generate && next build",
@@ -104,7 +105,7 @@
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed/index.ts"
   },
   "engines": {
-    "node": ">=18"
+    "node": "20"
   },
   "config": {
     "puppeteer_skip_chromium_download": true

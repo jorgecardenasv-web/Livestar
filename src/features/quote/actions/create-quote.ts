@@ -56,7 +56,7 @@ export const createQuoteAction = async (
             company: parsedPlan.company,
             plan: parsedPlan.plan,
             advisorName: advisor?.name,
-            advisorEmail: "uli.vargas02@outlook.com", // advisor?.email ?? "emma@livestar.mx",
+            advisorEmail: advisor?.email ?? "emma@livestar.mx",
           });
         } catch (pdfError) {
           console.error("Error generando o enviando PDF:", pdfError);
