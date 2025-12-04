@@ -507,7 +507,6 @@ export const QuoteSummary: FC<
                     setMedicalSuccess(null);
                   } else {
                     setMedicalErrors({});
-                    setMedicalSuccess("Cotización actualizada correctamente con la información médica.");
                   }
                 }}
               >

@@ -2,6 +2,7 @@
 
 import { updateQuote } from "@/features/quote/actions/update-quote";
 import { getProspectByQuoteId } from "./get-prospect-by-quote";
+import { redirect } from "next/navigation";
 
 export const updateQuoteFromSummary = async (
   prevState: any,
@@ -48,5 +49,7 @@ export const updateQuoteFromSummary = async (
     });
   }
 
-  return await updateQuote(quoteId, prevState, formData);
+  await updateQuote(quoteId, prevState, formData);
+
+  return redirect(`/cotizar`);
 };
