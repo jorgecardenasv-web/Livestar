@@ -1,9 +1,8 @@
 import chromium from "@sparticuz/chromium";
 import puppeteerCore, {
-  Browser as CoreBrowser,
-  Page as CorePage,
+  Browser,
+  Page,
 } from "puppeteer-core";
-import puppeteer, { Browser, Page } from "puppeteer";
 import Handlebars from "handlebars";
 import { PDFDocument } from "pdf-lib";
 import { QuotePDFData } from "../types";
@@ -24,8 +23,8 @@ import {
   HDI_TEMPLATE_HTML,
 } from "../constants/html-templates";
 
-type BrowserType = Browser | CoreBrowser;
-type PageType = Page | CorePage;
+type BrowserType = Browser;
+type PageType = Page;
 
 // Registrar los helpers de Handlebars
 Handlebars.registerHelper("formatCurrency", function (amount: number) {
@@ -358,7 +357,7 @@ export const generatePDFWithPuppeteer = async (
 
     // Configurar Puppeteer según el entorno
     if (isLocal) {
-      browser = await puppeteer.launch({
+      browser = await puppeteerCore.launch({
         headless: true,
         args: chromiumArgs,
         protocolTimeout: 30000,
