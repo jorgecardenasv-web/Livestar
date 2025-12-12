@@ -18,6 +18,7 @@ export const getAllProspectsByDateService = async ({
       },
       include: {
         user: true,
+        prospect: true,
       },
     });
   } catch (error) {

@@ -26,7 +26,14 @@ export const useReport = () => {
           dateRange.to.toISOString()
         );
 
-        const blob = new Blob([Buffer.from(base64Excel, "base64")], {
+        // Convertir base64 a bytes usando atob (compatible con el navegador)
+        const binaryString = atob(base64Excel);
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        const blob = new Blob([bytes], {
           type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
 
@@ -34,7 +41,7 @@ export const useReport = () => {
 
         const a = document.createElement("a");
         a.href = url;
-        a.download = "Reporte_Prospectos.xlsx";
+        a.download = "Reporte_Cotizaciones.xlsx";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);

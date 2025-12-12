@@ -42,7 +42,8 @@ export const createQuoteAction = async (
       );
       createdQuoteId = created?.id;
 
-      const emailPromise = (async () => {
+      // Enviar correo en segundo plano sin bloquear la respuesta
+      (async () => {
         try {
           const pdfData = processPDFData(parsedPlan, resolvedProspectData);
           const pdfBuffer = await generatePDFService(pdfData, "arraybuffer");
@@ -61,7 +62,7 @@ export const createQuoteAction = async (
         } catch (pdfError) {
           console.error("Error generando o enviando PDF:", pdfError);
         }
-      })();
+      })().catch(err => console.error("Error en proceso de email en segundo plano:", err));
 
       const shouldDeleteCookies = options?.deleteCookies ?? true;
       if (shouldDeleteCookies) {
@@ -75,8 +76,6 @@ export const createQuoteAction = async (
           cookieStore.set("createdQuoteId", created.id);
         }
       }
-
-      await Promise.allSettled([emailPromise]);
     }
   } catch (error) {
     console.error("Error en createQuoteAction:", error);

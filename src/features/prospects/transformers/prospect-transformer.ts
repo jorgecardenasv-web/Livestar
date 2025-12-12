@@ -21,5 +21,6 @@ export const prospectTransformer = (quote: QuotePayload) => {
     userId: quote.userId,
     lastContactDate: quote.lastContactDate,
     user: quote.user,
+    status: quote.status,
   };
 };
