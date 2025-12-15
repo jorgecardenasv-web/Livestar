@@ -357,7 +357,9 @@ export const generatePDFWithPuppeteer = async (
 
     // Configurar Puppeteer según el entorno
     if (isLocal) {
-      browser = await puppeteerCore.launch({
+      // En local, usar puppeteer (que incluye Chromium)
+      const puppeteer = (await import("puppeteer")).default;
+      browser = await puppeteer.launch({
         headless: true,
         args: chromiumArgs,
         protocolTimeout: 30000,

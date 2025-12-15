@@ -42,27 +42,24 @@ export const createQuoteAction = async (
       );
       createdQuoteId = created?.id;
 
-      // Enviar correo en segundo plano sin bloquear la respuesta
-      (async () => {
-        try {
-          const pdfData = processPDFData(parsedPlan, resolvedProspectData);
-          const pdfBuffer = await generatePDFService(pdfData, "arraybuffer");
-          const buffer = Buffer.from(new Uint8Array(pdfBuffer as ArrayBuffer));
+      try {
+        const pdfData = processPDFData(parsedPlan, resolvedProspectData);
+        const pdfBuffer = await generatePDFService(pdfData, "arraybuffer");
+        const buffer = Buffer.from(new Uint8Array(pdfBuffer as ArrayBuffer));
 
-          await sendQuoteEmailService({
-            prospectName: resolvedProspectData.name,
-            prospectEmail: resolvedProspectData.email,
-            whatsapp: resolvedProspectData.whatsapp,
-            pdfBuffer: buffer,
-            company: parsedPlan.company,
-            plan: parsedPlan.plan,
-            advisorName: advisor?.name,
-            advisorEmail: advisor?.email ?? "emma@livestar.mx",
-          });
-        } catch (pdfError) {
-          console.error("Error generando o enviando PDF:", pdfError);
-        }
-      })().catch(err => console.error("Error en proceso de email en segundo plano:", err));
+        await sendQuoteEmailService({
+          prospectName: resolvedProspectData.name,
+          prospectEmail: resolvedProspectData.email,
+          whatsapp: resolvedProspectData.whatsapp,
+          pdfBuffer: buffer,
+          company: parsedPlan.company,
+          plan: parsedPlan.plan,
+          advisorName: advisor?.name,
+          advisorEmail: advisor?.email ?? "emma@livestar.mx",
+        });
+      } catch (pdfError) {
+        console.error("Error generando o enviando PDF:", pdfError);
+      }
 
       const shouldDeleteCookies = options?.deleteCookies ?? true;
       if (shouldDeleteCookies) {
