@@ -282,7 +282,7 @@ export const generatePDFWithPuppeteer = async (
   format: "datauri" | "arraybuffer" = "datauri"
 ): Promise<string | ArrayBuffer> => {
   const isLocal = process.env.NODE_ENV === "development" || !process.env.VERCEL;
-  let browser: BrowserType | null = null;
+  let browser: any = null;
 
   try {
     const processedDeductibles = processDeductibles(data);
