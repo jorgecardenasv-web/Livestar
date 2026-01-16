@@ -2,7 +2,7 @@
 
 import { simplifyZodErrors } from "@/shared/utils";
 import { addAdvisorSchema } from "../schemas/add-advisor";
-import { User } from "@generated/prisma/client";
+import type { User } from "@generated/prisma/client";
 import { revalidatePath } from "next/cache";
 import { FormState } from "@/shared/types";
 import { createAdvisorService } from "../services/add-advisor.service";

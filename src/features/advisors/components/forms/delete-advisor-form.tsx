@@ -1,5 +1,3 @@
-import { UserStatus } from "@generated/prisma/client";
-
 import { useAdvisorActions } from "../../hooks/use-advisor-actions";
 import { deleteAdvisor } from "../../actions/delete-advisor";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
@@ -53,7 +51,7 @@ export const DeleteAdvisorForm = () => {
         <div className="flex flex-row items-center gap-2 mb-1">
           <p>Status:</p>
           <p>
-            {advisor.status === UserStatus.ACTIVO ? (
+            {advisor.status === "ACTIVO" ? (
               <Badge variant="success">Activo</Badge>
             ) : (
               <Badge variant="destructive">Inactivo</Badge>

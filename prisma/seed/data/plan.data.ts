@@ -1,4 +1,4 @@
-import { Prisma } from "../../src/generated/prisma/client";
+import { Prisma } from "@generated/prisma/client";
 import { generarPreciosHDI, generarPreciosSeguros } from "./utils.data";
 
 export const plans: Prisma.PlanCreateManyInput[] = [

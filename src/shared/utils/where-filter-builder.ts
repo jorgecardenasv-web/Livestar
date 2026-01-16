@@ -1,4 +1,4 @@
-import { JsonValue } from "@prisma/client/runtime/library";
+import { Prisma } from "@generated/prisma/client";
 
 type FilterValue =
   | string
@@ -7,7 +7,7 @@ type FilterValue =
   | Date
   | null
   | undefined
-  | JsonValue;
+  | Prisma.JsonValue;
 
 type FilterOptions<T> = {
   [k in keyof T]?: T[k] extends FilterValue ? T[k] : never;

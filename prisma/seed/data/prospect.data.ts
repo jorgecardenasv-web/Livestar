@@ -1,4 +1,4 @@
-import { Prisma } from "../../src/generated/prisma/client";
+import { Prisma } from "@generated/prisma/client";
 
 export const prospects: Prisma.ProspectCreateManyInput[] = [
   {

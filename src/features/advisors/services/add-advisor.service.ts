@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-import { User } from "@generated/prisma/client";
+import type { User } from "@generated/prisma/client";
 import { handlePrismaError } from "@/shared/errors/prisma";
 
 export const createAdvisorService = async (

@@ -1,4 +1,4 @@
-import { PlanTypeStatus, Prisma } from "../../src/generated/prisma/client";
+import { PlanTypeStatus, Prisma } from "@generated/prisma/client";
 
 export const planTypes: Prisma.PlanTypeCreateManyInput[] = [
   {
