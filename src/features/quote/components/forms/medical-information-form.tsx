@@ -211,7 +211,15 @@ export const MedicalInformationForm: React.FC<MedicalInformationProps> = ({
                                     });
                                     return opts;
                                   }
-                                  if (formFamily.protectWho === "mis_hijos_y_yo" || formFamily.protectWho === "solo_mis_hijos") {
+                                  if (formFamily.protectWho === "mis_hijos_y_yo") {
+                                    const opts = [{ label: "Yo", value: "Yo" }];
+                                    (formFamily.children || []).forEach((child: any, index: number) => {
+                                      const label = child.gender === "mujer" ? `Hija ${index + 1}` : `Hijo ${index + 1}`;
+                                      opts.push({ label, value: label });
+                                    });
+                                    return opts;
+                                  }
+                                  if (formFamily.protectWho === "solo_mis_hijos") {
                                     return (formFamily.children || []).map((child: any, index: number) => {
                                       const label = child.gender === "mujer" ? `Hija ${index + 1}` : `Hijo ${index + 1}`;
                                       return { label, value: label };

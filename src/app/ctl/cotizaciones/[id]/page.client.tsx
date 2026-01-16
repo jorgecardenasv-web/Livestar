@@ -143,7 +143,16 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
     };
 
     if (membersData.main) {
-      members.push(processMember(membersData.main, 'Titular', 'main'));
+      // Verificar si es un objeto vacío o si el precio es 0, lo que podría indicar que no aplica
+      const isMainValid = typeof membersData.main === 'object'
+        ? (membersData.main.price > 0 || membersData.main.primerMes > 0 || membersData.main.anual > 0)
+        : membersData.main > 0;
+
+      // Siempre mostrar al titular a menos que explícitamente no deba estar (lo cual es raro en seguros)
+      // O si el protectWho es "solo_mis_hijos" (aunque generalmente el titular es el contratante)
+      if (membersData.protectWho !== "solo_mis_hijos" || isMainValid) {
+        members.push(processMember(membersData.main, 'Titular', 'main'));
+      }
     }
 
     if (membersData.partner) {

@@ -60,6 +60,7 @@ import { MedicalInformationForm } from "@/features/quote/components/forms/medica
 import { QUESTIONS } from "@/features/quote/data";
 import { updateQuoteFromSummary } from "@/features/quote-summary/actions/update-quote-from-summary";
 import { Button } from "@/shared/components/ui/button";
+import { normalizeFormData } from "@/features/quote/utils/normalize-form-data";
 
 interface MemberPrices {
   primerMes?: number;
@@ -229,25 +230,54 @@ export const QuoteSummary: FC<
   useEffect(() => {
     (async () => {
       try {
-        const { protectWho, additionalInfo } = await getProspect();
-        const children = additionalInfo?.children ?? [];
-        const partnerGender = additionalInfo?.partnerGender ?? "";
-        const partnerAge = additionalInfo?.partnerAge ?? "";
-        const childrenCount = additionalInfo?.childrenCount ?? children?.length ?? 0;
-        const protectedPersons = additionalInfo?.protectedPersons ?? [];
-        const protectedCount = additionalInfo?.protectedCount ?? protectedPersons?.length ?? 0;
-        setFormFamily({
-          protectWho: protectWho ?? protectedWho,
-          children,
-          childrenCount,
-          partnerGender,
-          partnerAge,
-          protectedPersons,
-          protectedCount,
+        let prospectData = await getProspect();
+        
+        // Si tenemos un quoteId, priorizamos los datos de la BD para asegurar consistencia
+        if (quoteIdParam) {
+          const dbData = await getProspectByQuoteId(quoteIdParam);
+          if (dbData) {
+            prospectData = {
+              ...prospectData,
+              ...dbData,
+              // Asegurar que additionalInfo se combine correctamente si dbData lo trae
+              additionalInfo: dbData.additionalInfo || prospectData.additionalInfo
+            };
+          }
+        }
+
+        // Usar normalizeFormData para estandarizar la estructura de datos
+        // tal como se hace en el hook useGetQuoteForm en CTL
+        const normalizedData = normalizeFormData({
+          ...prospectData,
+          protectWho: prospectData.protectWho ?? protectedWho
         });
-      } catch { }
+        
+        setFormFamily(normalizedData);
+
+        // Si hay historial médico, restaurar el estado del formulario
+        const medicalHistories = (prospectData as any).medicalHistories || [];
+        if (medicalHistories && Array.isArray(medicalHistories) && medicalHistories.length > 0) {
+          const newForms = QUESTIONS.map((q, idx) => {
+            const history = medicalHistories.find((h: any) => h.questionId === (q.id ?? idx));
+            if (history) {
+              return {
+                [`answer-${idx}`]: history.answer,
+                healthConditions: history.healthConditions || [],
+                activePadecimiento: history.activePadecimiento,
+              };
+            }
+            return {
+              healthConditions: [],
+              activePadecimiento: null,
+            };
+          });
+          setForms(newForms);
+        }
+      } catch (error) {
+        console.error("Error loading prospect data:", error);
+      }
     })();
-  }, [protectedWho]);
+  }, [protectedWho, quoteIdParam]);
 
   //! -------------------------------------------------------------------
   const handleGeneratePDF = async () => {
@@ -300,10 +330,6 @@ export const QuoteSummary: FC<
       setIsGeneratingPDF(false);
     }
   };
-
-  // Estas funciones han sido eliminadas ya que no se utiliza más el modal del PDF
-
-  //! -------------------------------------------------------------------
 
   return (
     <div className="min-h-screen">

@@ -29,7 +29,14 @@ export const createQuoteAction = async (
     const resolvedProspectData = prospectData ?? (() => {
       const prospectJson = cookieStore.get("prospect")?.value;
       const prospect = prospectJson ? JSON.parse(prospectJson) : null;
-      return prospect ? { ...prospect, additionalInfo: prospect.additionalInfo } : null;
+      
+      let additionalInfo = prospect?.additionalInfo;
+      // Si additionalInfo tiene una propiedad additionalInfo anidada, desenvolverla
+      if (additionalInfo && additionalInfo.additionalInfo) {
+        additionalInfo = additionalInfo.additionalInfo;
+      }
+
+      return prospect ? { ...prospect, additionalInfo } : null;
     })();
 
     if (resolvedProspectData) {

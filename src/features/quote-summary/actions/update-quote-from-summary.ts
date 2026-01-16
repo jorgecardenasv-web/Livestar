@@ -40,9 +40,41 @@ export const updateQuoteFromSummary = async (
 
   // Incluir campos de additionalInfo para evitar que se limpien
   if (additionalInfo && typeof additionalInfo === "object") {
+    const info = additionalInfo as any;
+
+    // Manejar array de hijos específicamente
+    if (Array.isArray(info.children)) {
+      info.children.forEach((child: any, index: number) => {
+        if (child.age) formData.set(`childAge${index}`, String(child.age));
+        if (child.gender)
+          formData.set(`childGender${index}`, String(child.gender));
+      });
+      formData.set("childrenCount", String(info.children.length));
+    }
+
+    // Manejar array de personas protegidas específicamente
+    if (Array.isArray(info.protectedPersons)) {
+      info.protectedPersons.forEach((person: any, index: number) => {
+        if (person.age)
+          formData.set(`protectedAge${index}`, String(person.age));
+        if (person.gender)
+          formData.set(`protectedGender${index}`, String(person.gender));
+        if (person.relationship)
+          formData.set(
+            `protectedRelationship${index}`,
+            String(person.relationship)
+          );
+      });
+      formData.set("protectedCount", String(info.protectedPersons.length));
+    }
+
     Object.entries(additionalInfo).forEach(([key, value]) => {
+      // Omitir arrays que ya procesamos para evitar duplicación o malformación
+      if (key === "children" || key === "protectedPersons") return;
+
       try {
-        const val = typeof value === "object" ? JSON.stringify(value) : String(value ?? "");
+        const val =
+          typeof value === "object" ? JSON.stringify(value) : String(value ?? "");
         formData.set(key, val);
       } catch {
         // Si no se puede serializar, se omite silenciosamente
