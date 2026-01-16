@@ -9,7 +9,7 @@ import type { AdditionalInfo, DeductiblesData, Quote, CoInsuranceData, CoInsuran
 import { Card, CardContent } from "@/shared/components/ui/card"
 import { SubmitButton } from "@/shared/components/ui/submit-button"
 import { useEffect } from "react"
-import { useFormState } from "react-dom"
+import { useActionState } from "react"
 import { MedicalInformationForm } from "@/features/quote/components/forms/medical-information-form"
 import { QUESTIONS } from "@/features/quote/data"
 import { Breadcrumbs } from "@/shared/components/layout/breadcrumbs"
@@ -31,7 +31,7 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
 
   const updateUserWithId = quote?.id ? updateQuote.bind(null, quote.id) : null
 
-  const [state, formAction] = useFormState(
+  const [state, formAction] = useActionState(
     updateUserWithId || (() => ({ message: "Error: No se pudo encontrar la cotización", success: false, inputErrors: {} })),
     {
       message: "",

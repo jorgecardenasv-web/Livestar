@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { compare } from "bcrypt";
+import { compare } from "bcryptjs";
 import { authenticadedUser } from "../transformers/authenticaded-user";
 import { handlePrismaError } from "@/shared/errors/prisma";
 

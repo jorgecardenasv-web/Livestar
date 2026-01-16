@@ -1,7 +1,7 @@
 "use client";
 
 import { SubmitButton } from "@/shared/components/ui/submit-button";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { updatePassword } from "../../actions/update-password";
 import { useEffect, useRef } from "react";
 import { useNotificationStore } from "@/features/notification/store/notification-store";
@@ -13,7 +13,7 @@ export const PasswordForm = () => {
     (state) => state.showNotification
   );
 
-  const [state, formAction] = useFormState(updatePassword, {
+  const [state, formAction] = useActionState(updatePassword, {
     success: false,
     message: "",
     inputErrors: {},

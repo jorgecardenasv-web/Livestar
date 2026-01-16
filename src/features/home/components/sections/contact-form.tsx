@@ -13,7 +13,7 @@ import { FormError } from "@/shared/types";
 const inputConfig: Record<string, { 
   placeholder: string;
   type: "text" | "email" | "tel";
-  icon: JSX.Element;
+  icon: any;
   inputMode: "email" | "search" | "text" | "numeric" | "tel" | "url" | "none" | "decimal";
   pattern: string;
 }> = {

@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 
 export async function getInsuranceState() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const selectedPlanJson = cookieStore.get("selectedPlan")?.value;
 
   const parseAndFormatPlan = (json: string) => {

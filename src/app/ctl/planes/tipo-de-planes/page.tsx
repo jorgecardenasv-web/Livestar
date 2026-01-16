@@ -5,7 +5,7 @@ import { HeaderPlanType } from "@/features/plans/components/headers/header-plan"
 import { ModalPlanTypeActions } from "@/features/plans/components/modals/modal-plan-type-actions";
 import { Suspense } from "react";
 import { TableSkeleton } from "@/shared/components/skeletons/table-skeleton";
-import { PlanType } from "@prisma/client";
+import { PlanType } from "@generated/prisma/client";
 
 export interface Params extends PlanType {
   page: string;

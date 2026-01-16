@@ -3,7 +3,7 @@ import { ModalInsuranceActions } from "@/features/insurance/components/modal/mod
 import { ListInsurance } from "@/features/insurance/components/table/list-insurance";
 import { TableSkeleton } from "@/shared/components/skeletons/table-skeleton";
 import { Card, CardContent } from "@/shared/components/ui/card";
-import { Insurance } from "@prisma/client";
+import { Insurance } from "@generated/prisma/client";
 import { Suspense } from "react";
 
 export interface Params extends Insurance {

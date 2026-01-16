@@ -1,4 +1,4 @@
-import { PlanStatus, PlanType } from "@prisma/client";
+import { PlanStatus, PlanType } from "@generated/prisma/client";
 import { formatDate } from "@/shared/utils";
 import {
   Table,

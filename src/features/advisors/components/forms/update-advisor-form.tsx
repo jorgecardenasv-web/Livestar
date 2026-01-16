@@ -1,5 +1,5 @@
 import { SubmitButton } from "@/shared/components/ui/submit-button";
-import { UserStatus } from "@prisma/client";
+import { UserStatus } from "@generated/prisma/client";
 import { useAdvisorActions } from "../../hooks/use-advisor-actions";
 import { updateAdvisor } from "../../actions/update-advisor";
 import { Badge } from "@/shared/components/ui/badge";

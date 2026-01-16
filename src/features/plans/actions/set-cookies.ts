@@ -26,29 +26,34 @@ export async function handleInterestClick(formData: FormData) {
     protectedWho: formData.get("protectedWho"),
   };
 
-  cookies().set("selectedPlan", JSON.stringify(insuranceData));
+  const cookieStore = await cookies();
+  cookieStore.set("selectedPlan", JSON.stringify(insuranceData));
   redirect("/cotizar/enviando");
 }
 
 export async function setActivePlanType(formData: FormData) {
   const planTypeId = formData.get("planTypeId");
-  cookies().set("planTypeId", planTypeId as string);
+  const cookieStore = await cookies();
+  cookieStore.set("planTypeId", planTypeId as string);
   revalidatePath("/");
 }
 
 export async function setActivePaymentType(formData: FormData) {
   const paymentType = formData.get("paymentType") as string;
-  cookies().set("activePaymentType", paymentType);
+  const cookieStore = await cookies();
+  cookieStore.set("activePaymentType", paymentType);
   revalidatePath("/");
 }
 
-export const deleteSelectedPlan = () => {
-  cookies().delete("selectedPlan");
+export const deleteSelectedPlan = async () => {
+  const cookieStore = await cookies();
+  cookieStore.delete("selectedPlan");
   redirect("/cotizar/planes");
 };
 
-export const deleteProspectQuote = () => {
-  cookies().delete("prospect");
-  cookies().delete("selectedPlan");
+export const deleteProspectQuote = async () => {
+  const cookieStore = await cookies();
+  cookieStore.delete("prospect");
+  cookieStore.delete("selectedPlan");
   redirect("/cotizar");
 };

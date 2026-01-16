@@ -6,7 +6,7 @@ import {
   filterOptionsToWhere,
   textSearchFilterBuilder,
 } from "@/shared/utils/where-filter-builder";
-import { User } from "@prisma/client";
+import { User } from "@generated/prisma/client";
 import { FilterOptions } from "../loaders/get-advisors";
 import { handlePrismaError } from "@/shared/errors/prisma";
 

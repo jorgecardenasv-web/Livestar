@@ -1,6 +1,6 @@
 import { HeaderQuotes } from "@/features/quote/components/headers/header-quotes";
 import { getAdvisors } from "@/features/prospects/loaders/get-advisors";
-import { Prospect } from "@prisma/client";
+import { Prospect } from "@generated/prisma/client";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { ModalQuoteActions } from "@/features/quote/components/modals/modal-quote-actions";
 import { Suspense } from "react";

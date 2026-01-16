@@ -1,4 +1,4 @@
-import { UserStatus } from "@prisma/client";
+import { UserStatus } from "@generated/prisma/client";
 
 import { useAdvisorActions } from "../../hooks/use-advisor-actions";
 import { deleteAdvisor } from "../../actions/delete-advisor";
@@ -6,7 +6,7 @@ import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { Callout } from "@/shared/components/ui/callout";
 import { Button } from "@/shared/components/ui/button";
 import { Badge } from "@/shared/components/ui/badge";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { useEffect } from "react";
 import { useNotificationStore } from "@/features/notification/store/notification-store";
 
@@ -21,7 +21,7 @@ export const DeleteAdvisorForm = () => {
 
   const deleteAdvisorWithId = deleteAdvisor.bind(null, advisor?.id);
 
-  const [state, formAction] = useFormState(deleteAdvisorWithId, {
+  const [state, formAction] = useActionState(deleteAdvisorWithId, {
     success: false,
     message: "",
   });

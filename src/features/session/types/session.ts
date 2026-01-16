@@ -1,4 +1,4 @@
-import { User, Session as PrismaSession } from "@prisma/client"
+import { User, Session as PrismaSession } from "@generated/prisma/client"
 
 
 

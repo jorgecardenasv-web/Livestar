@@ -18,7 +18,7 @@ export const createQuoteAction = async (
   let createdQuoteId: string | undefined;
   try {
     const { prospectData, medicalData } = payload;
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const selectedPlan = cookieStore.get("selectedPlan")?.value;
     const parsedPlan = JSON.parse(selectedPlan!);
 

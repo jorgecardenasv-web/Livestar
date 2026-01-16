@@ -7,7 +7,7 @@ import {
 import { FilterOptions } from "../loaders/get-insurance";
 import { insuranceTransformer } from "../transformers/insurance-tranformer";
 import { Insurance } from "../types/insurance";
-import { Insurance as InsurancePrisma } from "@prisma/client";
+import { Insurance as InsurancePrisma } from "@generated/prisma/client";
 import { getImage } from "@/shared/services/get-image.service";
 import { handlePrismaError } from "@/shared/errors/prisma";
 

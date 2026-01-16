@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { handlePrismaError } from "@/shared/errors/prisma";
-import { Insurance } from "@prisma/client";
+import { Insurance } from "@generated/prisma/client";
 
 export const deleteInsuranceService = async (
   id: string

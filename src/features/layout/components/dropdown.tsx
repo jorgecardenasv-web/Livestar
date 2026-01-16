@@ -17,7 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/shared/components/ui/dropdown-menu";
 import { Button } from "@/shared/components/ui/button";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 
 interface DropdownProps {
   label?: string;
@@ -25,7 +25,7 @@ interface DropdownProps {
 
 export const Dropdown: FC<DropdownProps> = ({ label }) => {
 
-  const [state, formAction] = useFormState(logout, {
+  const [state, formAction] = useActionState(logout, {
     success: false,
     message: "",
   });

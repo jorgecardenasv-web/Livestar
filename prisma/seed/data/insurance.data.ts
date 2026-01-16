@@ -1,4 +1,5 @@
-import { InsuranceStatus, Prisma } from "@prisma/client";
+import { Prisma } from "@generated/prisma/client";
+
 
 export const insurances: Prisma.InsuranceCreateManyInput[] = [
   {

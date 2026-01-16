@@ -2,7 +2,7 @@
 
 import { updatePasswordSchema } from "../schemas/update-password";
 import { simplifyZodErrors } from "@/shared/utils";
-import { compare, hash } from "bcrypt";
+import { compare, hash } from "bcryptjs";
 import { AuthService } from "@/shared/services/find-user.service";
 import { getSession } from "@/lib/iron-session/get-session";
 import { updatePasswordService } from "../services/update-password.service";

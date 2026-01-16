@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 
 export async function getProspect() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const prospectJson = cookieStore.get("prospect")?.value;
   const prospect = prospectJson ? JSON.parse(prospectJson) : {};
 

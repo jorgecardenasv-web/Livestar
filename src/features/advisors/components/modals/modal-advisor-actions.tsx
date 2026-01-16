@@ -6,7 +6,7 @@ import { CreateAdvisorForm } from "../forms/create-advisor-form";
 import { DeleteAdvisorForm } from "../forms/delete-advisor-form";
 import { UpdateAdvisorForm } from "../forms/update-advisor-form";
 
-export const ModalAdvisorActions = (): JSX.Element => {
+export const ModalAdvisorActions = () => {
   const { isOpen, modalType } = useAdvisorActions();
 
   return (

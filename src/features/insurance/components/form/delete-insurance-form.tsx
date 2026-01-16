@@ -4,7 +4,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Badge } from "@/shared/components/ui/badge";
 import { useInsuranceActions } from "../../hooks/use-insurance-actions";
 import { deleteInsurance } from "../../actions/delete-insurance";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { useEffect } from "react";
 import { useNotificationStore } from "@/features/notification/store/notification-store";
 
@@ -14,7 +14,7 @@ export const DeleteInsuranceForm = () => {
 
   const deleteInsuranceWithId = deleteInsurance.bind(null, insurance.id);
 
-  const [state, formAction] = useFormState(deleteInsuranceWithId, {
+  const [state, formAction] = useActionState(deleteInsuranceWithId, {
     success: false,
     message: ""
   })

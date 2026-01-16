@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/shared/components/ui/card";
 import { SelectInput } from "@/shared/components/ui/select-input";
 import { useInsurancePlanForm } from "../../../hooks/use-insurance-plan-form";
 import { useEffect, useMemo, useState } from "react";
-import { PlanType } from "@prisma/client";
+import { PlanType } from "@generated/prisma/client";
 import {
   TableCell,
   TableRow,

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getSession } from "@/lib/iron-session/get-session";
-import { Role } from "@prisma/client";
+import { Role } from "@generated/prisma/enums";
 import {
   prefix,
   publicPaths,
@@ -18,7 +18,7 @@ const routeRoles = getRoutesByRoles();
 
 const staticResources = ["/_next/", "/api/", "/static/", "/images/"];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   if (staticResources.some((resource) => path.startsWith(resource))) {

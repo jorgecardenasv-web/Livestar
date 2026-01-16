@@ -21,6 +21,6 @@ En este proyecto, seguimos los principios de **Screaming Architecture**, un enfo
     - **`features`/**: Aquí se organizan las funcionalidades principales del sistema. Cada funcionalidad se representa como un módulo o una característica (feature), que puede contener sus propios componentes, hooks, servicios y lógica.
   - **`lib/`**: Incluye utilidades, funciones auxiliares, y otras librerías que son reutilizables a lo largo del proyecto. 
   - **`shared/`**: Contiene recursos compartidos entre diferentes partes del proyecto, como componentes comunes, constantes, hooks reutilizables, y más.
-  - **`middleware.ts`**: Archivo que contiene la configuración y lógica de los middlewares, útiles para el manejo de solicitudes y respuestas en el servidor.
+  - **`proxy.ts`**: Archivo que contiene la configuración y lógica del proxy, útil para el manejo de solicitudes y respuestas en el servidor.
 
 - **`.env`: Archivo de configuración de variables de entorno.

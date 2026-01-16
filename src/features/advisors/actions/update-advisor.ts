@@ -1,7 +1,7 @@
 "use server";
 import { simplifyZodErrors } from "@/shared/utils";
 import prisma from "@/lib/prisma";
-import { User } from "@prisma/client";
+import { User } from "@generated/prisma/client";
 import { revalidatePath } from "next/cache";
 import { editAdvisorSchema } from "../schemas/edit-advisor";
 import { updateAdvisorService } from "../services/update-advisor.service";

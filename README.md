@@ -86,7 +86,7 @@ livestar_insurance/
 │   ├── lib/            # Utilidades y funciones auxiliares
 │   └── shared/         # Recursos compartidos (componentes, hooks, etc.)
 ├── prisma/             # Esquema y migraciones de base de datos
-└── middleware.ts       # Configuración de middlewares
+└── proxy.ts            # Configuración del proxy de red
 ```
 
 > [!NOTE]
