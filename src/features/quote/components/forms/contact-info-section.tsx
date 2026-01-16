@@ -23,7 +23,7 @@ export const ContactInfoSection: React.FC<ContactInfoSectionProps> = ({
         </h3>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <TextInput
           type="text"
           label="Mi whatsapp es"

@@ -1,7 +1,6 @@
 "use client";
 
 import { QuoteSummary } from "@/features/quote-summary/components/main/quote-summary";
-import { ModalStorytellingActions } from "@/features/storytelling/components/modals/modal-storytelling-actions";
 import { ScrollToTop } from "@/shared/components/scroll-to-top";
 import { useQuoteRuntimeStore } from "@/shared/store/quote-runtime-store";
 import { useEffect } from "react";
@@ -27,7 +26,6 @@ export default function ResumenPage() {
       <ScrollToTop />
       {/* Garantizar el tipo requerido por QuoteSummary */}
       <QuoteSummary {...(selectedPlanData as InsuranceQuoteData)} />
-      <ModalStorytellingActions />
     </main>
   );
 }

@@ -3,6 +3,7 @@ import { TextInput } from "@/shared/components/ui/text-input";
 import { genderOptions, whoOptions } from "../../data";
 import { FormData } from "../../schemas/form-schema";
 import { NumberInput } from "@/shared/components/ui/number-input";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface PersonalInfoSectionProps {
   formData: FormData;
@@ -27,6 +28,17 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   handleChildChange,
   handleProtectedPersonChange,
 }) => {
+  const showAge = ["mi_pareja_y_yo", "mis_hijos_y_yo", "solo_yo", "familia"].includes(formData.protectWho);
+  const showPartner = ["mi_pareja_y_yo", "familia"].includes(formData.protectWho);
+  const showChildren = ["familia", "mis_hijos_y_yo", "solo_mis_hijos"].includes(formData.protectWho);
+  const showOthers = formData.protectWho === "otros";
+  const showParents = formData.protectWho === "mis_padres";
+
+  const containerVariants = {
+    hidden: { opacity: 0, height: 0 },
+    visible: { opacity: 1, height: "auto" },
+    exit: { opacity: 0, height: 0 }
+  };
 
   return (
     <div className="space-y-6 py-6">
@@ -39,7 +51,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         </h3>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 dark:text-gray-400 mb-1">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 dark:text-gray-400 mb-1">
         <TextInput
           label="Mi nombre es"
           name="name"
@@ -85,25 +97,31 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
           options={whoOptions}
         />
 
-        {(formData.protectWho === "mi_pareja_y_yo" ||
-          formData.protectWho === "mis_hijos_y_yo" ||
-          formData.protectWho === "solo_yo" ||
-          formData.protectWho === "familia") && (
-            <div className="space-y-6">
-              <NumberInput
-                label="Yo tengo"
-                name="age"
-                placeholder="Ej: 18"
-                value={formData.age}
-                onChange={(e) => handleInputChange("age", Number(e.target.value))}
-                className="w-full"
-                min={18}
-                max={100}
-                error={errors.age || ""}
-              />
-              
-              {(formData.protectWho === "mi_pareja_y_yo" ||
-                formData.protectWho === "familia") && (
+        <div className="col-span-1 sm:col-span-2">
+          <AnimatePresence mode="wait">
+            {showAge && (
+              <motion.div
+                key="age-section"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{ duration: 0.3 }}
+                className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+              >
+                <NumberInput
+                  label="Yo tengo"
+                  name="age"
+                  placeholder="Ej: 18"
+                  value={formData.age}
+                  onChange={(e) => handleInputChange("age", Number(e.target.value))}
+                  className="w-full"
+                  min={18}
+                  max={100}
+                  error={errors.age || ""}
+                />
+                
+                {showPartner && (
                   <>
                     <SelectInput
                       options={genderOptions}
@@ -111,9 +129,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                       label="Género al nacer de mi pareja"
                       name="partnerGender"
                       value={formData.partnerGender}
-                      onValueChange={(value) =>
-                        handleInputChange("partnerGender", value)
-                      }
+                      onValueChange={(value) => handleInputChange("partnerGender", value)}
                     />
                     <NumberInput
                       label="Mi pareja tiene"
@@ -121,9 +137,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                       name="partnerAge"
                       placeholder="Ej: 18"
                       value={formData.partnerAge}
-                      onChange={(e) =>
-                        handleInputChange("partnerAge", Number(e.target.value))
-                      }
+                      onChange={(e) => handleInputChange("partnerAge", Number(e.target.value))}
                       className="w-full"
                       min={18}
                       max={100}
@@ -131,212 +145,213 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                     />
                   </>
                 )}
-            </div>
-          )}
+              </motion.div>
+            )}
 
-        {(formData.protectWho === "familia" ||
-          formData.protectWho === "mis_hijos_y_yo" ||
-          formData.protectWho === "solo_mis_hijos") && (
-            <div className="space-y-6">
-              <NumberInput
-                label="Número de hijos"
-                id="childrenCount"
-                name="childrenCount"
-                placeholder="Nº de hijos"
-                value={formData.childrenCount}
-                onChange={(e) =>
-                  handleInputChange("childrenCount", Number(e.target.value))
-                }
-                className="w-full"
-                min={1}
-                error={errors.childrenCount}
-              />
-              {formData.childrenCount && formData.childrenCount > 0 && (
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-1">
-                    {formData.childrenCount === 1
-                      ? "Datos de mi hijo"
-                      : `Datos de mis ${formData.childrenCount} hijos`}
-                  </label>
-                  <div className="space-y-6">
-                    {Array.from({ length: formData.childrenCount }).map(
-                      (_, index) => (
-                        <div
+            {showChildren && (
+              <motion.div
+                key="children-section"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{ duration: 0.3 }}
+                className="space-y-6 mt-6"
+              >
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <NumberInput
+                    label="Número de hijos"
+                    id="childrenCount"
+                    name="childrenCount"
+                    placeholder="Nº de hijos"
+                    value={formData.childrenCount}
+                    onChange={(e) => handleInputChange("childrenCount", Number(e.target.value))}
+                    className="w-full"
+                    min={1}
+                    error={errors.childrenCount}
+                    />
+                </div>
+                
+                <AnimatePresence>
+                  {formData.childrenCount && formData.childrenCount > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                    >
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-4">
+                        {formData.childrenCount === 1
+                          ? "Datos de mi hijo"
+                          : `Datos de mis ${formData.childrenCount} hijos`}
+                      </label>
+                      <div className="space-y-4">
+                        {Array.from({ length: formData.childrenCount }).map((_, index) => (
+                          <motion.div
+                            key={index}
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: index * 0.1 }}
+                            className="grid grid-cols-1 sm:grid-cols-2 gap-6 p-4 border rounded-lg bg-gray-50 dark:bg-gray-800/50"
+                          >
+                            <NumberInput
+                              label={`Edad hijo ${index + 1}`}
+                              id={`childAge${index}`}
+                              name={`childAge${index}`}
+                              placeholder="Edad"
+                              value={formData.children?.[index]?.age ?? 0}
+                              onChange={(e) => handleChildChange(index, "age", Number(e.target.value))}
+                              error={errors[`children.${index}.age`]}
+                              className="w-full"
+                              min={0}
+                            />
+                            <SelectInput
+                              label={`Género hijo ${index + 1}`}
+                              name={`childGender${index}`}
+                              value={formData.children?.[index]?.gender ?? ""}
+                              onValueChange={(value) => handleChildChange(index, "gender", value)}
+                              options={genderOptions}
+                              error={errors[`children.${index}.gender`]}
+                            />
+                          </motion.div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            )}
+
+            {showOthers && (
+              <motion.div
+                key="others-section"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{ duration: 0.3 }}
+                className="space-y-6 mt-6"
+              >
+                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <NumberInput
+                    label="¿Cuántas personas quieres asegurar?"
+                    id="protectedCount"
+                    name="protectedCount"
+                    placeholder="Nº de personas"
+                    value={formData.protectedCount}
+                    onChange={(e) => handleInputChange("protectedCount", Number(e.target.value))}
+                    error={errors.protectedCount}
+                    className="w-full"
+                    min={1}
+                    />
+                </div>
+
+                <AnimatePresence>
+                  {formData.protectedCount && formData.protectedCount > 0 && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="space-y-4"
+                    >
+                      {Array.from({ length: formData.protectedCount }).map((_, index) => (
+                        <motion.div
                           key={index}
-                          className="space-y-4"
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                          className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 border rounded-lg bg-gray-50 dark:bg-gray-800/50"
                         >
+                          <TextInput
+                            id={`protectedRelationship${index}`}
+                            name={`protectedRelationship${index}`}
+                            placeholder="Ej: Hermano"
+                            value={formData.protectedPersons?.[index]?.relationship || ""}
+                            onChange={(e) => handleProtectedPersonChange(index, "relationship", e.target.value)}
+                            error={errors[`protectedPersons.${index}.relationship`]}
+                            className="w-full"
+                            label="Parentesco"
+                          />
                           <NumberInput
                             label="Edad"
-                            id={`childAge${index}`}
-                            name={`childAge${index}`}
+                            id={`protectedAge${index}`}
+                            name={`protectedAge${index}`}
                             placeholder="Edad"
-                            value={formData.children?.[index]?.age ?? 0}
-                            onChange={(e) =>
-                              handleChildChange(
-                                index,
-                                "age",
-                                Number(e.target.value)
-                              )
-                            }
-                            error={errors[`children.${index}.age`]}
+                            value={formData.protectedPersons?.[index]?.age || 0}
+                            onChange={(e) => handleProtectedPersonChange(index, "age", Number(e.target.value))}
+                            error={errors[`protectedPersons.${index}.age`]}
                             className="w-full"
                             min={0}
                           />
                           <SelectInput
-                            label="Género al nacer"
-                            name={`childGender${index}`}
-                            value={formData.children?.[index]?.gender ?? ""}
-                            onValueChange={(value) =>
-                              handleChildChange(index, "gender", value)
-                            }
+                            label="Género"
+                            name={`protectedGender${index}`}
+                            value={formData.protectedPersons?.[index]?.gender || ""}
+                            onValueChange={(value) => handleProtectedPersonChange(index, "gender", value)}
+                            error={errors[`protectedPersons.${index}.gender`]}
                             options={genderOptions}
-                            error={errors[`children.${index}.gender`]}
                           />
-                        </div>
-                      )
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-        {formData.protectWho === "otros" && (
-          <div className="space-y-6">
-            <NumberInput
-              label="¿Cuántas personas quieres asegurar?"
-              id="protectedCount"
-              name="protectedCount"
-              placeholder="Nº de personas"
-              value={formData.protectedCount}
-              onChange={(e) =>
-                handleInputChange("protectedCount", Number(e.target.value))
-              }
-              error={errors.protectedCount}
-              className="w-full"
-              min={1}
-            />
-
-            <div>
-              {formData.protectedCount && formData.protectedCount > 0 && (
-                <div className="space-y-6">
-                  {Array.from({ length: formData.protectedCount }).map(
-                    (_, index) => (
-                      <div
-                        key={index}
-                        className="space-y-4"
-                      >
-                        <TextInput
-                          id={`protectedRelationship${index}`}
-                          name={`protectedRelationship${index}`}
-                          placeholder="Ej: Hermano"
-                          value={
-                            formData.protectedPersons?.[index]?.relationship ||
-                            ""
-                          }
-                          onChange={(e) =>
-                            handleProtectedPersonChange(
-                              index,
-                              "relationship",
-                              e.target.value
-                            )
-                          }
-                          error={
-                            errors[`protectedPersons.${index}.relationship`]
-                          }
-                          className="w-full"
-                          label="Parentesco"
-                        />
-
-                        <NumberInput
-                          label="Edad"
-                          id={`protectedAge${index}`}
-                          name={`protectedAge${index}`}
-                          placeholder="Edad"
-                          value={formData.protectedPersons?.[index]?.age || 0}
-                          onChange={(e) =>
-                            handleProtectedPersonChange(
-                              index,
-                              "age",
-                              Number(e.target.value)
-                            )
-                          }
-                          error={errors[`protectedPersons.${index}.age`]}
-                          className="w-full"
-                          min={0}
-                        />
-
-                        <SelectInput
-                          label="Género"
-                          name={`protectedGender${index}`}
-                          value={
-                            formData.protectedPersons?.[index]?.gender || ""
-                          }
-                          onValueChange={(value) =>
-                            handleProtectedPersonChange(index, "gender", value)
-                          }
-                          error={errors[`protectedPersons.${index}.gender`]}
-                          options={genderOptions}
-                        />
-                      </div>
-                    )
+                        </motion.div>
+                      ))}
+                    </motion.div>
                   )}
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+                </AnimatePresence>
+              </motion.div>
+            )}
 
-        {formData.protectWho === "mis_padres" && (
-          <div className="space-y-6">
-            <TextInput
-              type="text"
-              label="Nombre de papá"
-              name="dadName"
-              placeholder="Ej: Juan Pérez"
-              value={formData.dadName}
-              onChange={(e) => handleInputChange("dadName", e.target.value)}
-              error={errors.dadName}
-              className="w-full"
-            />
-
-            <TextInput
-              type="text"
-              label="Nombre de mamá"
-              name="momName"
-              placeholder="Ej: María López"
-              value={formData.momName}
-              onChange={(e) => handleInputChange("momName", e.target.value)}
-              error={errors.momName}
-              className="w-full"
-            />
-
-            <NumberInput
-              label="Edad de papá"
-              name="dadAge"
-              placeholder="Edad de papá"
-              value={formData.dadAge}
-              onChange={(e) =>
-                handleInputChange("dadAge", Number(e.target.value))
-              }
-              error={errors.dadAge}
-              className="w-full"
-              min={18}
-            />
-            <NumberInput
-              label="Edad de mamá"
-              name="momAge"
-              placeholder="Edad de mamá"
-              value={formData.momAge}
-              onChange={(e) =>
-                handleInputChange("momAge", Number(e.target.value))
-              }
-              error={errors.momAge}
-              className="w-full"
-              min={18}
-            />
-          </div>
-        )}
+            {showParents && (
+              <motion.div
+                key="parents-section"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                transition={{ duration: 0.3 }}
+                className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6"
+              >
+                <TextInput
+                  type="text"
+                  label="Nombre de papá"
+                  name="dadName"
+                  placeholder="Ej: Juan Pérez"
+                  value={formData.dadName}
+                  onChange={(e) => handleInputChange("dadName", e.target.value)}
+                  error={errors.dadName}
+                  className="w-full"
+                />
+                <NumberInput
+                  label="Edad de papá"
+                  name="dadAge"
+                  placeholder="Edad de papá"
+                  value={formData.dadAge}
+                  onChange={(e) => handleInputChange("dadAge", Number(e.target.value))}
+                  error={errors.dadAge}
+                  className="w-full"
+                  min={18}
+                />
+                <TextInput
+                  type="text"
+                  label="Nombre de mamá"
+                  name="momName"
+                  placeholder="Ej: María López"
+                  value={formData.momName}
+                  onChange={(e) => handleInputChange("momName", e.target.value)}
+                  error={errors.momName}
+                  className="w-full"
+                />
+                <NumberInput
+                  label="Edad de mamá"
+                  name="momAge"
+                  placeholder="Edad de mamá"
+                  value={formData.momAge}
+                  onChange={(e) => handleInputChange("momAge", Number(e.target.value))}
+                  error={errors.momAge}
+                  className="w-full"
+                  min={18}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );

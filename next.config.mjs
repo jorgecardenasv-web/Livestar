@@ -3,6 +3,7 @@
 const nextConfig = {
   output: "standalone",
   images: {
+    qualities: [75, 90],
     remotePatterns: [
       {
         protocol: "http",
