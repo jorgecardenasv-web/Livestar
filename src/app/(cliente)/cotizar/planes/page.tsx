@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { Plans } from "@/features/plans/components/main/insurance-plans";
 import { ModalStorytellingActions } from "@/features/storytelling/components/modals/modal-storytelling-actions";
 import { ScrollToTop } from "@/shared/components/scroll-to-top";
