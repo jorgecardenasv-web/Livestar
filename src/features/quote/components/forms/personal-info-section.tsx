@@ -4,10 +4,13 @@ import { genderOptions, whoOptions } from "../../data";
 import { FormData } from "../../schemas/form-schema";
 import { NumberInput } from "@/shared/components/ui/number-input";
 import { motion, AnimatePresence } from "framer-motion";
+import { Badge } from "@/shared/components/ui/badge";
+import { CheckCircle2, XCircle } from "lucide-react";
 
 interface PersonalInfoSectionProps {
   formData: FormData;
   errors: Record<string, string>;
+  isVerified?: boolean;
   handleInputChange: (field: keyof FormData, value: string | number) => void;
   handleChildChange: (
     index: number,
@@ -24,6 +27,7 @@ interface PersonalInfoSectionProps {
 export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   formData,
   errors,
+  isVerified,
   handleInputChange,
   handleChildChange,
   handleProtectedPersonChange,
@@ -49,6 +53,21 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
         <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
           Datos Personales
         </h3>
+        {isVerified !== undefined && (
+          <div className="ml-auto sm:ml-4">
+            {isVerified ? (
+              <Badge variant="success" className="gap-1">
+                <CheckCircle2 className="h-3 w-3" />
+                Verificado
+              </Badge>
+            ) : (
+              <Badge variant="secondary" className="gap-1 text-muted-foreground">
+                <XCircle className="h-3 w-3" />
+                No Verificado
+              </Badge>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 dark:text-gray-400 mb-1">

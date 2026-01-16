@@ -123,6 +123,7 @@ export const updateQuote = async (
       postalCode,
       whatsapp,
       protectWho,
+      isVerified,
       ...rest
     } = parsed;
 
@@ -206,6 +207,7 @@ export const updateQuote = async (
         gender: String(gender),
         postalCode: String(postalCode),
         whatsapp: String(whatsapp),
+        ...(isVerified !== undefined ? { isVerified: isVerified === "true" } : {}),
       },
       quote: {
         id: quoteId,

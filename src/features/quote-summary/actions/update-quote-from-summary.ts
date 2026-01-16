@@ -36,6 +36,7 @@ export const updateQuoteFromSummary = async (
   formData.set("postalCode", String((prospect as any).postalCode ?? ""));
   formData.set("whatsapp", String((prospect as any).whatsapp ?? ""));
   formData.set("protectWho", String(protectWho ?? ""));
+  formData.set("isVerified", "true");
 
   // Incluir campos de additionalInfo para evitar que se limpien
   if (additionalInfo && typeof additionalInfo === "object") {

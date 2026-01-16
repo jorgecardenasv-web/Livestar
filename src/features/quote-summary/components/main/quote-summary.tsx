@@ -152,7 +152,6 @@ const getMinimumValues = (jsonString: string | undefined): number => {
   }
 };
 
-// Componente para el botón de submit que muestra estado de carga
 const SubmitMedicalButton = () => {
   const { pending } = useFormStatus();
 
@@ -169,7 +168,7 @@ const SubmitMedicalButton = () => {
           Actualizando...
         </>
       ) : (
-        "Actualizar cotización con información médica"
+        "Quiero contratar"
       )}
     </Button>
   );
@@ -217,7 +216,12 @@ export const QuoteSummary: FC<
   // Estado para controlar mensajes de error
   const [pdfError, setPdfError] = useState<string | null>(null);
   const [pdfSuccess, setPdfSuccess] = useState<string | null>(null);
-  const [forms, setForms] = useState<any[]>(() => QUESTIONS.map((q, idx) => ({ [`answer-${idx}`]: "No", healthConditions: [] })));
+  const [forms, setForms] = useState<any[]>(() =>
+    QUESTIONS.map(() => ({
+      healthConditions: [],
+      activePadecimiento: null,
+    }))
+  );
   const [medicalErrors, setMedicalErrors] = useState<Record<string, string>>({});
   const [medicalSuccess, setMedicalSuccess] = useState<string | null>(null);
   const [formFamily, setFormFamily] = useState<any>({ protectWho: protectedWho });
@@ -481,6 +485,7 @@ export const QuoteSummary: FC<
                 questions={QUESTIONS as any}
                 formFamily={formFamily}
                 errors={medicalErrors}
+                useCheckboxes
               />
 
               <form
@@ -497,7 +502,14 @@ export const QuoteSummary: FC<
                       activePadecimiento: form.activePadecimiento,
                     };
                   });
-                  fd.set("medicalData", JSON.stringify(medicalData));
+                  const allEmpty = medicalData.every(
+                    (item) =>
+                      !item.answer &&
+                      (!item.healthConditions ||
+                        item.healthConditions.length === 0)
+                  );
+                  const payload = allEmpty ? [] : medicalData;
+                  fd.set("medicalData", JSON.stringify(payload));
                   if (quoteIdParam) {
                     fd.set("quoteId", quoteIdParam);
                   }

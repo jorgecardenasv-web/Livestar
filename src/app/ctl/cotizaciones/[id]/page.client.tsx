@@ -243,6 +243,7 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
                   <PersonalInfoSection
                     formData={formData}
                     errors={errors}
+                    isVerified={quote.prospect?.isVerified}
                     handleInputChange={handleInputChange}
                     handleChildChange={handleChildChange}
                     handleProtectedPersonChange={handleProtectedPersonChange}
@@ -274,6 +275,7 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
                     questions={QUESTIONS}
                     formFamily={formData}
                     errors={errors}
+                    useCheckboxes
                   />
                 </CardContent>
               </Card>

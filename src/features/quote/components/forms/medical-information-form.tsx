@@ -16,6 +16,8 @@ import {
 } from "@/shared/components/ui/accordion";
 import { Button } from "@/shared/components/ui/button";
 import { SelectInput } from "@/shared/components/ui/select-input";
+import { Checkbox } from "@/shared/components/ui/checkbox";
+import { Label } from "@/shared/components/ui/label";
 
 const addPadecimiento = (questionIndex: number, forms: any[], setForms: React.Dispatch<any>) => {
   const updatedForms = [...forms];
@@ -67,6 +69,7 @@ interface MedicalInformationProps {
   questions: Question[];
   formFamily: FormData;
   errors: { [key: string]: string };
+  useCheckboxes?: boolean;
 }
 
 export const MedicalInformationForm: React.FC<MedicalInformationProps> = ({
@@ -75,6 +78,7 @@ export const MedicalInformationForm: React.FC<MedicalInformationProps> = ({
   questions,
   formFamily,
   errors,
+  useCheckboxes = false,
 }) => {
   return (
     <div className="space-y-6 py-6">
@@ -97,31 +101,67 @@ export const MedicalInformationForm: React.FC<MedicalInformationProps> = ({
             (!formFamily.protectedCount ||
               !formFamily.protectedPersons ||
               formFamily.protectedPersons.every((p: any) => !p.relationship)));
+        const answerKey = `answer-${index}`;
+        const currentAnswer = forms[index]?.[answerKey];
+
+        const handleAnswerChange = (value: "Sí" | "No" | undefined) => {
+          const updated = [...forms];
+          updated[index] = { ...updated[index], [answerKey]: value };
+          if (value === "Sí") {
+            if (
+              updated[index].healthConditions &&
+              updated[index].healthConditions.length > 0
+            ) {
+              updated[index].activePadecimiento = 0;
+            }
+          } else {
+            updated[index].activePadecimiento = null;
+            updated[index].healthConditions = [];
+          }
+          setForms(updated);
+        };
 
         return (
           <div key={question.id || index}>
             <p className="mb-2">
               {index + 1}.- {question.text}
             </p>
-            <RadioGroup
-              name={`answer-${index}`}
-              options={["Sí", "No"]}
-              value={forms[index]?.[`answer-${index}`] ?? "No"}
-              disabled={disableMedical}
-              onChange={(name, value) => {
-                const updated = [...forms];
-                updated[index] = { ...updated[index], [name]: value };
-                if (value === "Sí") {
-                  if (updated[index].healthConditions && updated[index].healthConditions.length > 0) {
-                    updated[index].activePadecimiento = 0;
-                  }
-                } else {
-                  updated[index].activePadecimiento = null;
-                  updated[index].healthConditions = [];
-                }
-                setForms(updated);
-              }}
-            />
+            {useCheckboxes ? (
+              <div className="flex space-x-4">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`answer-${index}-si`}
+                    checked={currentAnswer === "Sí"}
+                    disabled={disableMedical}
+                    onCheckedChange={(checked) =>
+                      handleAnswerChange(checked === true ? "Sí" : undefined)
+                    }
+                  />
+                  <Label htmlFor={`answer-${index}-si`}>Sí</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`answer-${index}-no`}
+                    checked={currentAnswer === "No"}
+                    disabled={disableMedical}
+                    onCheckedChange={(checked) =>
+                      handleAnswerChange(checked === true ? "No" : undefined)
+                    }
+                  />
+                  <Label htmlFor={`answer-${index}-no`}>No</Label>
+                </div>
+              </div>
+            ) : (
+              <RadioGroup
+                name={answerKey}
+                options={["Sí", "No"]}
+                value={currentAnswer ?? "No"}
+                disabled={disableMedical}
+                onChange={(_, value) => {
+                  handleAnswerChange(value as "Sí" | "No");
+                }}
+              />
+            )}
             {forms[index]?.[`answer-${index}`] === "Sí" &&
               errors[`question-${index}-noPadecimiento`] && (
                 <p className="mt-2 text-sm text-red-600">

@@ -11,11 +11,12 @@ export interface Params extends Insurance {
   query?: string;
 }
 
-export default function Aseguradoras({
+export default async function Aseguradoras({
   searchParams,
 }: {
-  searchParams: Params;
+  searchParams: Promise<Params>;
 }) {
+  const resolvedSearchParams = await searchParams;
   return (
     <>
       <div className="flex-1 rounded-xl bg-muted/50 p-5 space-y-6">
@@ -25,7 +26,7 @@ export default function Aseguradoras({
         <Card>
           <CardContent className="space-y-6 p-6">
             <Suspense fallback={<TableSkeleton />}>
-              <ListInsurance params={searchParams} />
+              <ListInsurance params={resolvedSearchParams} />
             </Suspense>
           </CardContent>
         </Card>
