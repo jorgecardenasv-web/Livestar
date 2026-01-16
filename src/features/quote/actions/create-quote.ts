@@ -10,6 +10,7 @@ import { sendQuoteEmailService } from "../services/send-email/send-quote-email.s
 import { processPDFData } from "@/features/quote-summary/utils/process-pdf-data.util";
 import { revalidatePath } from "next/cache";
 import { prefix } from "@/features/layout/nav-config/constants";
+import { after } from "next/server";
 
 export const createQuoteAction = async (
   payload: any,
@@ -42,24 +43,26 @@ export const createQuoteAction = async (
       );
       createdQuoteId = created?.id;
 
-      try {
-        const pdfData = processPDFData(parsedPlan, resolvedProspectData);
-        const pdfBuffer = await generatePDFService(pdfData, "arraybuffer");
-        const buffer = Buffer.from(new Uint8Array(pdfBuffer as ArrayBuffer));
-
-        await sendQuoteEmailService({
-          prospectName: resolvedProspectData.name,
-          prospectEmail: resolvedProspectData.email,
-          whatsapp: resolvedProspectData.whatsapp,
-          pdfBuffer: buffer,
-          company: parsedPlan.company,
-          plan: parsedPlan.plan,
-          advisorName: advisor?.name,
-          advisorEmail: advisor?.email ?? "emma@livestar.mx",
-        });
-      } catch (pdfError) {
-        console.error("Error generando o enviando PDF:", pdfError);
-      }
+      after(async () => {
+        try {
+          const pdfData = processPDFData(parsedPlan, resolvedProspectData);
+          const pdfBuffer = await generatePDFService(pdfData, "arraybuffer");
+          const buffer = Buffer.from(new Uint8Array(pdfBuffer as ArrayBuffer));
+          
+          await sendQuoteEmailService({
+            prospectName: resolvedProspectData.name,
+            prospectEmail: resolvedProspectData.email,
+            whatsapp: resolvedProspectData.whatsapp,
+            pdfBuffer: buffer,
+            company: parsedPlan.company,
+            plan: parsedPlan.plan,
+            advisorName: advisor?.name,
+            advisorEmail: "ulivargas.02@gmail.com" // advisor?.email ?? "emma@livestar.mx",
+          });
+        } catch (pdfError) {
+          console.error("Error generando o enviando PDF:", pdfError);
+        }
+      });
 
       const shouldDeleteCookies = options?.deleteCookies ?? true;
       if (shouldDeleteCookies) {

@@ -186,9 +186,10 @@ export const useGetQuoteForm = (initialState?: any, questions?: any[]) => {
       });
     } catch (error) {
       if (error instanceof z.ZodError) {
+        const firstError = error.errors?.[0];
         setErrors((prev) => ({
           ...prev,
-          [field]: error.errors[0].message,
+          [field]: firstError?.message || "Dato inválido",
         }));
       }
     }

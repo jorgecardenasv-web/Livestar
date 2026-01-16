@@ -11,19 +11,22 @@ export const getDefaultState = (): FormData => ({
 });
 
 export const normalizeFormData = (initialData?: any): FormData => {
+  const base = getDefaultState();
+
   if (!initialData) {
-    return {} as FormData;
+    return base;
   }
 
   // Base data
   const normalized: FormData = {
-    age: initialData.prospect?.age || 0,
-    name: initialData.prospect?.name || "",
-    gender: initialData.prospect?.gender || "",
-    postalCode: initialData.prospect?.postalCode || "",
-    whatsapp: initialData.prospect?.whatsapp || "",
-    email: initialData.prospect?.email || "",
-    protectWho: initialData.protectWho || "",
+    ...base,
+    age: initialData.prospect?.age ?? base.age,
+    name: initialData.prospect?.name ?? base.name,
+    gender: initialData.prospect?.gender ?? base.gender,
+    postalCode: initialData.prospect?.postalCode ?? base.postalCode,
+    whatsapp: initialData.prospect?.whatsapp ?? base.whatsapp,
+    email: initialData.prospect?.email ?? base.email,
+    protectWho: initialData.protectWho ?? base.protectWho,
   };
 
   // Additional info - manejar estructura anidada duplicada si existe
