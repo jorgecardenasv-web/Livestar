@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FormData } from "../schemas/form-schema";
 import type { MedicalQuestionForm } from "../types";
@@ -23,7 +23,6 @@ export const useQuoteEditFormRHF = (
     mode: "onSubmit",
     reValidateMode: "onSubmit",
   });
-
   const [flatErrors, setFlatErrors] = useState<FlatErrors>({});
   const [forms, setForms] = useState<MedicalQuestionForm[]>(() =>
     questions
@@ -32,6 +31,17 @@ export const useQuoteEditFormRHF = (
         : (createInitialMedicalForms(questions) as MedicalQuestionForm[])
       : []
   );
+
+  useEffect(() => {
+    if (!questions) return;
+
+    const nextForms =
+      initialState && (initialState as any).medicalHistories
+        ? ((initialState as any).medicalHistories as MedicalQuestionForm[])
+        : (createInitialMedicalForms(questions) as MedicalQuestionForm[]);
+
+    setForms(nextForms);
+  }, [initialState, questions]);
 
   const formData = watch();
 
