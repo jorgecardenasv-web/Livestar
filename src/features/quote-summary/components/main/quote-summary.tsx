@@ -4,7 +4,6 @@ import Image from "next/image";
 import { Shield, DollarSign, Percent, Heart, ArrowLeft, FileText, Download, Users, Loader2 } from "lucide-react";
 import { ContractForm } from "../forms/confirm-form";
 import { InfoCard } from "../cards/info-card";
-import { deleteSelectedPlan } from "@/features/plans/actions/set-cookies";
 import { FC, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { DeductibleAndCoInsuranceInfoModal } from "../modals/CombinedInfoModal";
@@ -228,6 +227,17 @@ export const QuoteSummary: FC<
   const [formFamily, setFormFamily] = useState<any>({ protectWho: protectedWho });
 
   useEffect(() => {
+    const clearCookies = async () => {
+      try {
+        await fetch("/api/clear-quote-cookies", { method: "POST" });
+      } catch (error) {
+        console.error("Error clearing quote cookies", error);
+      }
+    };
+    clearCookies();
+  }, []);
+
+  useEffect(() => {
     (async () => {
       try {
         let prospectData = await getProspect();
@@ -246,7 +256,6 @@ export const QuoteSummary: FC<
         }
 
         // Usar normalizeFormData para estandarizar la estructura de datos
-        // tal como se hace en el hook useGetQuoteForm en CTL
         const normalizedData = normalizeFormData({
           ...prospectData,
           protectWho: prospectData.protectWho ?? protectedWho

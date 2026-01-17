@@ -3,6 +3,7 @@
 import { updateQuote } from "@/features/quote/actions/update-quote";
 import { getProspectByQuoteId } from "./get-prospect-by-quote";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 export const updateQuoteFromSummary = async (
   prevState: any,
@@ -17,18 +18,21 @@ export const updateQuoteFromSummary = async (
     };
   }
 
-  // Obtener los datos actuales de la cotización desde la BD
-  const { prospect, protectWho, additionalInfo } = await getProspectByQuoteId(quoteId);
+  const { prospect, protectWho, additionalInfo } =
+    await getProspectByQuoteId(quoteId);
 
-  // Verificar que tengamos los datos del prospect
-  if (!prospect || typeof prospect !== 'object' || !('name' in prospect) || !prospect.name) {
+  if (
+    !prospect ||
+    typeof prospect !== "object" ||
+    !("name" in prospect) ||
+    !prospect.name
+  ) {
     return {
       success: false,
       message: "No se pudieron obtener los datos de la cotización.",
     };
   }
 
-  // Completar datos del prospecto desde la BD para preservarlos
   formData.set("name", String((prospect as any).name ?? ""));
   formData.set("age", String((prospect as any).age ?? ""));
   formData.set("email", String((prospect as any).email ?? ""));
@@ -38,11 +42,9 @@ export const updateQuoteFromSummary = async (
   formData.set("protectWho", String(protectWho ?? ""));
   formData.set("isVerified", "true");
 
-  // Incluir campos de additionalInfo para evitar que se limpien
   if (additionalInfo && typeof additionalInfo === "object") {
     const info = additionalInfo as any;
 
-    // Manejar array de hijos específicamente
     if (Array.isArray(info.children)) {
       info.children.forEach((child: any, index: number) => {
         if (child.age) formData.set(`childAge${index}`, String(child.age));
@@ -52,7 +54,6 @@ export const updateQuoteFromSummary = async (
       formData.set("childrenCount", String(info.children.length));
     }
 
-    // Manejar array de personas protegidas específicamente
     if (Array.isArray(info.protectedPersons)) {
       info.protectedPersons.forEach((person: any, index: number) => {
         if (person.age)
@@ -69,7 +70,6 @@ export const updateQuoteFromSummary = async (
     }
 
     Object.entries(additionalInfo).forEach(([key, value]) => {
-      // Omitir arrays que ya procesamos para evitar duplicación o malformación
       if (key === "children" || key === "protectedPersons") return;
 
       try {
@@ -77,12 +77,23 @@ export const updateQuoteFromSummary = async (
           typeof value === "object" ? JSON.stringify(value) : String(value ?? "");
         formData.set(key, val);
       } catch {
-        // Si no se puede serializar, se omite silenciosamente
       }
     });
   }
 
-  await updateQuote(quoteId, prevState, formData);
+  const result = await updateQuote(quoteId, prevState, formData);
 
-  return redirect(`/cotizar`);
+  if (!result?.success) {
+    return result;
+  }
+
+  const cookieStore = await cookies();
+  cookieStore.delete("prospect");
+  cookieStore.delete("selectedPlan");
+  cookieStore.delete("activePlanType");
+  cookieStore.delete("activePaymentType");
+  cookieStore.delete("quoteCreated");
+  cookieStore.delete("createdQuoteId");
+
+  return redirect("/cotizar");
 };

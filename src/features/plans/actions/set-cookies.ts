@@ -57,3 +57,14 @@ export const deleteProspectQuote = async () => {
   cookieStore.delete("selectedPlan");
   redirect("/cotizar");
 };
+
+export const clearQuoteCookies = async () => {
+  const cookieStore = await cookies();
+  cookieStore.delete("prospect");
+  cookieStore.delete("selectedPlan");
+  cookieStore.delete("activePlanType");
+  cookieStore.delete("activePaymentType");
+  cookieStore.delete("planTypeId");
+  cookieStore.delete("quoteCreated");
+  cookieStore.delete("createdQuoteId");
+};

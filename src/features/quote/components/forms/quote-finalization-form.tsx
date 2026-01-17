@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetQuoteForm } from "../../hooks/use-get-quote-form";
+import { useQuoteFinalizationFormRHF } from "../../hooks/use-quote-form-rhf";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { Separator } from "@/shared/components/ui/separator";
 import { ContactInfoSection } from "./contact-info-section";
@@ -26,7 +26,7 @@ export const QuoteFinalizationForm = ({ prospect }: QuoteFinalizationClientPageP
     setForms,
     currentMedicalErrors,
     isSubmitting,
-  } = useGetQuoteForm(prospect, QUESTIONS);
+  } = useQuoteFinalizationFormRHF(prospect, QUESTIONS);
 
   return (
     <Card className="max-w-6xl mx-auto p-5">

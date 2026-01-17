@@ -1,6 +1,6 @@
 "use client";
 
-import { useGetQuoteForm } from "../../hooks/use-get-quote-form";
+import { useQuoteFormRHF } from "../../hooks/use-quote-form-rhf";
 import { PersonalInfoSection } from "./personal-info-section";
 import { ContactInfoSection } from "./contact-info-section";
 import { Button } from "@/shared/components/ui/button";
@@ -20,7 +20,7 @@ export const GetQuoteForm: React.FC<{
     handleProtectedPersonChange,
     handleSubmit,
     isSubmitting
-  } = useGetQuoteForm(prospect);
+  } = useQuoteFormRHF(prospect);
 
   return (
     <Card className="bg-white shadow-sm border border-slate-200">
