@@ -14,18 +14,13 @@ export const ContactInfoSection: React.FC<ContactInfoSectionProps> = ({
 }) => {
   return (
     <div className="space-y-6 py-6">
-      <div className="flex items-center gap-3 mb-2">
-        <span className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold">
-          2
-        </span>
-        <div>
-          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
-            Datos de contacto
-          </h3>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-            Te contactaremos solo para compartirte tu cotización y resolver dudas.
-          </p>
-        </div>
+      <div className="mb-2">
+        <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
+          Datos de contacto
+        </h3>
+        <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+          Te contactaremos solo para compartirte tu cotización y resolver dudas.
+        </p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">

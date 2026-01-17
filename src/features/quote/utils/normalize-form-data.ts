@@ -4,7 +4,7 @@ export const getDefaultState = (): FormData => ({
   name: "",
   gender: "",
   postalCode: "",
-  protectWho: "solo_yo",
+  protectWho: "",
   whatsapp: "",
   email: "",
   age: 0,

@@ -8,7 +8,6 @@ import { createQuoteAction } from "@/features/quote/actions/create-quote";
 export async function handleInterestClick(formData: FormData) {
   const insuranceData = {
     company: formData.get("company"),
-    companyLogo: formData.get("companyLogo"),
     plan: formData.get("plan"),
     paymentType: formData.get("paymentType"),
     sumInsured: formData.get("sumInsured"),

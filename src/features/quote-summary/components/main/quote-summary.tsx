@@ -200,6 +200,8 @@ export const QuoteSummary: FC<
     coInsuranceCapJson,
     protectedWho,
   } = props;
+  const hasCompanyLogo =
+    typeof imgCompanyLogo === "string" && imgCompanyLogo.trim().length > 0;
   const isMultiple = isMultipleString === "true" ? true : false;
   const isMultipleCoIns = isMultipleCoInsurance === "true" ? true : false;
   const {
@@ -359,14 +361,16 @@ export const QuoteSummary: FC<
                   Resumen de cotización
                 </h2>
               </div>
-              <Image
-                src={imgCompanyLogo}
-                width={80}
-                height={60}
-                className="h-12 w-auto object-contain"
-                alt={`Logo de ${company}`}
-                priority
-              />
+              {hasCompanyLogo && (
+                <Image
+                  src={imgCompanyLogo}
+                  width={80}
+                  height={60}
+                  className="h-12 w-auto object-contain"
+                  alt={`Logo de ${company}`}
+                  priority
+                />
+              )}
             </div>
           </div>
 

@@ -37,6 +37,11 @@ export const NumberInput: FC<Props> = ({
 
   useEffect(() => {
     const initialValue = value !== undefined ? value : defaultValue;
+    if (initialValue === 0 || initialValue === "0") {
+      setDisplayValue("");
+      setHiddenValue("");
+      return;
+    }
     if (initialValue !== undefined) {
       const formatted = formatNumber(initialValue);
       setDisplayValue(formatted);
