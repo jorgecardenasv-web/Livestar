@@ -228,6 +228,7 @@ export const updateQuote = async (
     await updateQuoteService(quoteUpdate);
 
     revalidatePath(`${prefix}/cotizaciones`);
+    revalidatePath(`${prefix}/cotizaciones/${quoteId}`);
 
     return {
       success: true,

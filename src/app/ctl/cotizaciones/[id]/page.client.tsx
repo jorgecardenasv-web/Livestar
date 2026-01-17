@@ -4,7 +4,7 @@ import { useNotificationStore } from "@/features/notification/store/notification
 import { updateQuote } from "@/features/quote/actions/update-quote"
 import { ContactInfoSection } from "@/features/quote/components/forms/contact-info-section"
 import { PersonalInfoSection } from "@/features/quote/components/forms/personal-info-section"
-import { useQuoteFinalizationFormRHF } from "@/features/quote/hooks/use-quote-form-rhf"
+import { useQuoteEditFormRHF } from "@/features/quote/hooks/use-quote-edit-form-rhf"
 import type { AdditionalInfo, DeductiblesData, Quote, CoInsuranceData, CoInsuranceCapData } from "@/features/quote/types"
 import { Card, CardContent } from "@/shared/components/ui/card"
 import { SubmitButton } from "@/shared/components/ui/submit-button"
@@ -24,7 +24,7 @@ import { useRouter } from "next/navigation"
 
 export function QuotePageClient({ quote }: { quote: Quote }) {
   const { formData, errors, handleChildChange, handleInputChange, handleProtectedPersonChange, forms, setForms } =
-    useQuoteFinalizationFormRHF(quote, QUESTIONS)
+    useQuoteEditFormRHF(quote, QUESTIONS)
 
   const { showNotification } = useNotificationStore()
   const router = useRouter()
