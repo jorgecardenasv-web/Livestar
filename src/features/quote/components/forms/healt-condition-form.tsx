@@ -1,27 +1,14 @@
 import { TextInput } from "@/shared/components/ui/text-input";
 import { SelectInput } from "@/shared/components/ui/select-input";
 import { MonthYearPicker } from "@/shared/components/ui/month-year-picker";
-import { RadioOption } from "../../types";
+import { HealthCondition, RadioOption } from "../../types";
 import RadioGroup from "../inputs/radio-group-medical";
 import { FC } from "react";
 
-interface FormData {
-  nombrePadecimiento?: string;
-  tipoEvento?: string;
-  fechaInicio?: Date | undefined;
-  tipoTratamiento?: string;
-  hospitalizado?: RadioOption;
-  complicacion?: RadioOption;
-  detalleComplicacion?: string;
-  estadoSalud?: RadioOption;
-  medicamento?: RadioOption;
-  detalleMedicamento?: string;
-}
-
 interface HealthConditionFormProps {
-  formData: FormData;
+  formData: HealthCondition;
   onChange: (
-    field: keyof FormData,
+    field: keyof HealthCondition,
     value: string | RadioOption | Date | null | undefined
   ) => void;
   index: number;

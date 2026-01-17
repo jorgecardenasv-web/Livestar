@@ -60,6 +60,10 @@ import { QUESTIONS } from "@/features/quote/data";
 import { updateQuoteFromSummary } from "@/features/quote-summary/actions/update-quote-from-summary";
 import { Button } from "@/shared/components/ui/button";
 import { normalizeFormData } from "@/features/quote/utils/normalize-form-data";
+import type {
+  MedicalHistoryPayload,
+  MedicalQuestionForm,
+} from "@/features/quote/types";
 
 interface MemberPrices {
   primerMes?: number;
@@ -216,11 +220,14 @@ export const QuoteSummary: FC<
   // Estado para controlar mensajes de error
   const [pdfError, setPdfError] = useState<string | null>(null);
   const [pdfSuccess, setPdfSuccess] = useState<string | null>(null);
-  const [forms, setForms] = useState<any[]>(() =>
-    QUESTIONS.map(() => ({
-      healthConditions: [],
-      activePadecimiento: null,
-    }))
+  const [forms, setForms] = useState<MedicalQuestionForm[]>(() =>
+    QUESTIONS.map(
+      () =>
+        ({
+          healthConditions: [],
+          activePadecimiento: null,
+        } as MedicalQuestionForm)
+    )
   );
   const [medicalErrors, setMedicalErrors] = useState<Record<string, string>>({});
   const [medicalSuccess, setMedicalSuccess] = useState<string | null>(null);
@@ -527,14 +534,17 @@ export const QuoteSummary: FC<
                 action={async (fd: FormData) => {
                   setMedicalSuccess(null);
                   setMedicalErrors({});
-                  const medicalData = forms.map((form, idx) => {
+                  const medicalData: MedicalHistoryPayload[] = forms.map((form, idx) => {
                     const answerKey = `answer-${idx}`;
                     return {
-                      answer: form[answerKey],
-                      [answerKey]: form[answerKey],
+                      answer: (form[answerKey] as string | undefined) ?? undefined,
+                      [answerKey]: form[answerKey] as string | undefined,
                       questionId: QUESTIONS[idx]?.id ?? idx,
                       healthConditions: form.healthConditions || [],
-                      activePadecimiento: form.activePadecimiento,
+                      activePadecimiento:
+                        form.activePadecimiento !== undefined
+                          ? form.activePadecimiento
+                          : null,
                     };
                   });
                   const allEmpty = medicalData.every(

@@ -4,6 +4,7 @@ import { HealthConditionForm } from "./healt-condition-form";
 import RadioGroup from "../inputs/radio-group-medical";
 import {
   HealthCondition,
+  MedicalQuestionForm,
   Question,
 } from "../../types";
 import { Plus, X } from "lucide-react";
@@ -19,7 +20,11 @@ import { SelectInput } from "@/shared/components/ui/select-input";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import { Label } from "@/shared/components/ui/label";
 
-const addPadecimiento = (questionIndex: number, forms: any[], setForms: React.Dispatch<any>) => {
+const addPadecimiento = (
+  questionIndex: number,
+  forms: MedicalQuestionForm[],
+  setForms: React.Dispatch<React.SetStateAction<MedicalQuestionForm[]>>
+) => {
   const updatedForms = [...forms];
   const newIndex = updatedForms[questionIndex].healthConditions
     ? updatedForms[questionIndex].healthConditions.length
@@ -48,10 +53,10 @@ const addPadecimiento = (questionIndex: number, forms: any[], setForms: React.Di
 const handleDeletePadecimiento = (
   qIndex: number,
   pIndex: number,
-  forms: any[],
-  setForms: React.Dispatch<any>
+  forms: MedicalQuestionForm[],
+  setForms: React.Dispatch<React.SetStateAction<MedicalQuestionForm[]>>
 ) => {
-  setForms((prev: any[]) => {
+  setForms((prev: MedicalQuestionForm[]) => {
     const updated = [...prev];
     const condiciones = [...updated[qIndex].healthConditions];
     condiciones.splice(pIndex, 1);
@@ -64,8 +69,8 @@ const handleDeletePadecimiento = (
 };
 
 interface MedicalInformationProps {
-  forms: any[];
-  setForms: React.Dispatch<React.SetStateAction<any[]>>;
+  forms: MedicalQuestionForm[];
+  setForms: React.Dispatch<React.SetStateAction<MedicalQuestionForm[]>>;
   questions: Question[];
   formFamily: FormData;
   errors: { [key: string]: string };

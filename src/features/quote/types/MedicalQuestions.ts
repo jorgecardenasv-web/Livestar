@@ -1,10 +1,5 @@
 import { RadioOption } from "./RadioOption";
 
-export interface FormDataMedical {
-  [key: string]: string | HealthCondition[] | undefined; // Permite claves dinámicas como "answer-0", "answer-1", etc.
-  healthConditions?: HealthCondition[];
-}
-
 export interface HealthCondition {
   nombrePadecimiento?: string;
   tipoEvento?: string;
@@ -16,4 +11,28 @@ export interface HealthCondition {
   estadoSalud?: RadioOption;
   medicamento?: RadioOption;
   detalleMedicamento?: string;
+}
+
+export interface FormDataMedical {
+  [key: string]:
+    | string
+    | HealthCondition[]
+    | number
+    | null
+    | undefined;
+  healthConditions?: HealthCondition[];
+}
+
+export interface MedicalQuestionForm extends FormDataMedical {
+  activePadecimiento?: number | null;
+}
+
+export type MedicalForms = MedicalQuestionForm[];
+
+export interface MedicalHistoryPayload {
+  answer?: string;
+  questionId: number | string;
+  healthConditions: HealthCondition[];
+  activePadecimiento: number | null;
+  [key: string]: string | number | HealthCondition[] | null | undefined;
 }

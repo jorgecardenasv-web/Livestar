@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FormData } from "../schemas/form-schema";
+import type { MedicalQuestionForm } from "../types";
 import { normalizeFormData } from "../utils/normalize-form-data";
 import {
   createInitialMedicalForms,
@@ -24,11 +25,11 @@ export const useQuoteEditFormRHF = (
   });
 
   const [flatErrors, setFlatErrors] = useState<FlatErrors>({});
-  const [forms, setForms] = useState<any[]>(() =>
+  const [forms, setForms] = useState<MedicalQuestionForm[]>(() =>
     questions
       ? initialState && (initialState as any).medicalHistories
-        ? (initialState as any).medicalHistories
-        : createInitialMedicalForms(questions)
+        ? ((initialState as any).medicalHistories as MedicalQuestionForm[])
+        : (createInitialMedicalForms(questions) as MedicalQuestionForm[])
       : []
   );
 

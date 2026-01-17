@@ -9,6 +9,7 @@ import { PrismaError } from "@/shared/errors/prisma";
 import { getInsurancePlanByIdService } from "@/features/plans/services/read/get-insurance-plan-by-id.service";
 import { calculateInsurancePrice } from "@/features/plans/utils";
 import { getQuoteByIdService } from "../services/read/get-quote-by-id.service";
+import type { MedicalHistoryPayload } from "../types";
 
 // Función para transformar los datos del formulario en la estructura esperada
 const transformFormDataToProspectData = (parsed: any) => {
@@ -111,8 +112,8 @@ export const updateQuote = async (
     const parsed = parsedFormDataAge(rawFormData);
 
     const medicalDataStr = formData.get("medicalData");
-    const medicalData = medicalDataStr
-      ? JSON.parse(String(medicalDataStr))
+    const medicalData: MedicalHistoryPayload[] = medicalDataStr
+      ? (JSON.parse(String(medicalDataStr)) as MedicalHistoryPayload[])
       : [];
 
     const {

@@ -1,18 +1,20 @@
+import { HealthCondition, MedicalQuestionForm } from "../types";
+
 export const updateForms = (
-  forms: any[],
+  forms: MedicalQuestionForm[],
   questionIndex: number,
-  updater: (current: any) => any
-): any[] => {
+  updater: (current: MedicalQuestionForm) => MedicalQuestionForm
+): MedicalQuestionForm[] => {
   const updated = [...forms];
   updated[questionIndex] = updater(updated[questionIndex]);
   return updated;
 };
 
 export const addMedicalCondition = (
-  forms: any[],
+  forms: MedicalQuestionForm[],
   questionIndex: number
-): any[] => {
-  const newCondition = {
+): MedicalQuestionForm[] => {
+  const newCondition: HealthCondition & { persona?: string } = {
     nombrePadecimiento: "",
     tipoEvento: "",
     fechaInicio: undefined,
@@ -25,7 +27,7 @@ export const addMedicalCondition = (
     detalleMedicamento: "",
     persona: "",
   };
-  return updateForms(forms, questionIndex, (current: any) => {
+  return updateForms(forms, questionIndex, (current) => {
     const conditions = current.healthConditions
       ? [...current.healthConditions]
       : [];
@@ -39,11 +41,11 @@ export const addMedicalCondition = (
 };
 
 export const removeMedicalCondition = (
-  forms: any[],
+  forms: MedicalQuestionForm[],
   questionIndex: number,
   conditionIndex: number
-): any[] => {
-  return updateForms(forms, questionIndex, (current: any) => {
+): MedicalQuestionForm[] => {
+  return updateForms(forms, questionIndex, (current) => {
     const conditions = [...(current.healthConditions || [])];
     conditions.splice(conditionIndex, 1);
     return {
