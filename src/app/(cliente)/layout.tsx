@@ -8,8 +8,12 @@ export default function LandingLayout({
 }) {
   return (
     <LightModeLayout>
-      {children}
-      <Footer />
+      <div className="min-h-screen flex flex-col">
+        <div className="flex-1 w-full">
+          {children}
+        </div>
+        <Footer />
+      </div>
     </LightModeLayout>
   );
 }

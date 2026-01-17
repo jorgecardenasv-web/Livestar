@@ -8,6 +8,6 @@ export async function startQuoteCreation(_: FormData) {
   // No redirigir desde el servidor; borrar cookies y devolver el id
   return await createQuoteAction(
     { medicalData: [] },
-    { deleteCookies: true, disableRedirect: true }
+    { deleteCookies: false, disableRedirect: true, setCreatedCookie: true }
   );
 }

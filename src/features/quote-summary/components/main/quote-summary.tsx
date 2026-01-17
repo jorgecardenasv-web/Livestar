@@ -176,9 +176,9 @@ const SubmitMedicalButton = () => {
 };
 
 export const QuoteSummary: FC<
-  InsuranceQuoteData
+  InsuranceQuoteData & { quoteId?: string }
 > = (props) => {
-  const quoteIdParam = useQuoteRuntimeStore((s) => s.quoteId) ?? "";
+  const quoteIdParam = props.quoteId || useQuoteRuntimeStore((s) => s.quoteId) || "";
   const {
     coInsurance,
     coInsuranceCap,

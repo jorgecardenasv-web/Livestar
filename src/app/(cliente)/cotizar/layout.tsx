@@ -6,7 +6,7 @@ export default function CotizarLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex flex-col w-full">
       <HeaderSecondary />
       {children}
     </div>
