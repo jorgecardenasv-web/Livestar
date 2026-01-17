@@ -1,111 +1,138 @@
 # Livestar Insurance
 
-Sistema de cotización de seguros desarrollado con tecnologías modernas.
+Sistema de cotización de seguros moderno y escalable, diseñado para optimizar la gestión de pólizas, asesores y prospectos.
 
-## 🚀 Características principales
+## 🚀 Descripción General
 
-- Gestión de cotizaciones de seguros
-- Panel de administración
-- Simulador de costos
-- Comparador de coberturas
-- Gestión de asesores
-- Seguimiento de prospectos
-- Interfaz moderna y responsiva
-- Generación de propuestas en PDF
-- Gestión de usuarios y roles
+Livestar Insurance es una plataforma integral que permite:
+- **Cotización en tiempo real**: Cálculo de primas y comparación de coberturas.
+- **Gestión de Planes**: Administración dinámica de aseguradoras, tipos de planes y tablas de precios.
+- **Panel de Asesores**: Herramientas para que los asesores gestionen sus prospectos.
+- **Generación de Propuestas**: Creación automatizada de PDFs profesionales para clientes.
+- **Administración**: Control total sobre usuarios, roles y configuraciones del sistema.
 
-## 🛠️ Tecnologías utilizadas
+## 🛠️ Stack Tecnológico
 
-- **[Next.js](https://nextjs.org/)**
-- **[Prisma](https://www.prisma.io/)**
-- **[Docker](https://www.docker.com/)**
-- **[TailwindCSS](https://tailwindcss.com/)**
-- **[Shadcn/ui](https://ui.shadcn.com/)**
-- **[Iron-Session](https://github.com/vvo/iron-session)**
-- **[Bcrypt](https://www.npmjs.com/package/bcrypt)**
-- **[Zod](https://zod.dev/)**
-- **[Lucide Icons](https://lucide.dev/guide/packages/lucide-react)**
-- **[React](https://react.dev)**
-- **[Typescript](https://www.typescriptlang.org)**
+El proyecto utiliza tecnologías de vanguardia para garantizar rendimiento, seguridad y mantenibilidad:
 
-## ⚙️ Requisitos previos
+### Core & Frontend
+- **[Next.js 16](https://nextjs.org/)**: Framework de React para producción (App Router).
+- **[React 19](https://react.dev)**: Biblioteca para interfaces de usuario.
+- **[TypeScript](https://www.typescriptlang.org)**: Tipado estático robusto.
+- **[Tailwind CSS 4](https://tailwindcss.com/)**: Motor de estilos utility-first.
+- **[Shadcn/ui](https://ui.shadcn.com/)**: Componentes de UI reutilizables y accesibles.
+- **[Framer Motion](https://www.framer.com/motion/)**: Animaciones fluidas.
+- **[Lucide Icons](https://lucide.dev)**: Iconografía consistente.
 
-Para ejecutar este proyecto, necesitarás tener instalados los siguientes programas:
+### Estado & Datos
+- **[Prisma](https://www.prisma.io/)**: ORM de última generación para Node.js y TypeScript.
+- **[PostgreSQL](https://www.postgresql.org/)**: Base de datos relacional robusta.
+- **[Zustand](https://github.com/pmndrs/zustand)**: Gestión de estado global ligero y escalable.
+- **[Iron-Session](https://github.com/vvo/iron-session)**: Gestión de sesiones encriptadas y seguras.
 
-- **[Node.js](https://nodejs.org/en/) Versión mínima 18 o superior**
-- **[PNPM](https://pnpm.io/es/) Versión 9 o superior**
-- **[Docker](https://www.docker.com/) Versión 4 o superior**
+### Formularios & Validación
+- **[React Hook Form](https://react-hook-form.com/)**: Manejo eficiente de formularios.
+- **[Zod](https://zod.dev/)**: Validación de esquemas y tipos TypeScript.
 
-## 🔧 Configuración inicial
+### Herramientas Especializadas
+- **Documentos**: `puppeteer`, `jspdf`, `pdf-lib` (Generación y manipulación de PDFs).
+- **Hojas de Cálculo**: `exceljs`, `xlsx` (Procesamiento de Excel).
+- **Email**: `nodemailer` (Envío de correos transaccionales).
+- **Editor de Texto**: `tiptap` (Editor WYSIWYG headless).
 
-1. Clona el repositorio
+### Infraestructura
+- **[Docker](https://www.docker.com/)**: Contenerización de la aplicación y base de datos.
+- **[PNPM](https://pnpm.io/)**: Gestor de paquetes rápido y eficiente.
 
-```bash
-git clone https://github.com/tu-usuario/livestar_insurance.git
-cd livestar_insurance
-```
+## 🏗️ Arquitectura y Estructura
 
-2. Instala las dependencias
+Este proyecto sigue los principios de **Screaming Architecture**. La estructura del código "grita" su propósito y dominio de negocio, no solo las herramientas técnicas.
 
-```bash
-pnpm install
-```
+### Principios Clave
+1.  **Modularidad por Features**: El código se organiza por características funcionales (`features/`) en lugar de por tipo de archivo (no agrupamos todos los controladores o componentes juntos, sino por dominio).
+2.  **Separación de Responsabilidades**: UI, lógica de negocio y acceso a datos están claramente delimitados.
+3.  **Co-locación**: Todo lo relacionado con una funcionalidad (componentes, hooks, servicios, acciones) vive junto.
 
-3. Copia el archivo de variables de entorno
-
-```bash
-cp .env.example .env
-```
-
-4. Configura las variables de entorno en el archivo `.env`:
-
-```env
-DATABASE_URL="postgresql://usuario:contraseña@localhost:5432/livestar_insurance"
-SESSION_SECRET="tu-secreto-seguro"
-EMAIL_USER="tu-email@dominio.com"
-EMAIL_PASSWORD="tu-contraseña"
-EMAIL_HOST="tu-host-smtp"
-EMAIL_PORT="puerto-smtp"
-```
-
-> [!IMPORTANT]
-> Si es la primera vez que ejecutas el proyecto, debes ir a la sección de ejecutar por primera vez.
-
-## 📦 Estructura del proyecto
+### Estructura de Carpetas
 
 ```
 livestar_insurance/
-├── public/             # Archivos estáticos (imágenes, fuentes, etc.)
-├── src/                # Código fuente principal
-│   ├── app/            # Componentes y páginas de la interfaz
-│   ├── features/       # Funcionalidades principales del sistema
-│   │   ├── auth/       # Autenticación y autorización
-│   │   ├── quotes/     # Gestión de cotizaciones
-│   │   ├── advisors/   # Gestión de asesores
-│   │   └── insurances/ # Generación de aseguradoras
-│   ├── lib/            # Utilidades y funciones auxiliares
-│   └── shared/         # Recursos compartidos (componentes, hooks, etc.)
-├── prisma/             # Esquema y migraciones de base de datos
-└── proxy.ts            # Configuración del proxy de red
+├── public/                 # Assets estáticos públicos
+├── prisma/                 # Esquema de BD y scripts de seed
+├── src/
+│   ├── app/                # Rutas y páginas (Next.js App Router)
+│   │     ├── (auth)/       # Rutas de autenticación
+│   │     ├── (cliente)/    # Rutas públicas/cliente final
+│   │     ├── ctl/          # Panel de control / Dashboard interno
+│   │     └── api/          # Endpoints de API
+│   │
+│   ├── features/           # Módulos principales del dominio
+│   │     ├── advisors/     # Lógica de asesores (CRUD, métricas)
+│   │     ├── auth/         # Lógica de autenticación (Login, Verify)
+│   │     ├── home/         # Landing page y componentes de inicio
+│   │     ├── insurance/    # Gestión de compañías aseguradoras
+│   │     ├── plans/        # Lógica de planes, precios y cotización
+│   │     ├── notification/ # Sistema de notificaciones
+│   │     └── layout/       # Componentes estructurales (Sidebar, Header)
+│   │
+│   ├── lib/                # Utilidades generales y configuración de librerías
+│   ├── shared/             # Componentes y hooks reutilizables entre features
+│   └── assets/             # Imágenes y recursos importados desde código
+└── ...config files
 ```
 
-> [!NOTE]
-> Esta estructura sigue los principios de **Screaming Architecture**, donde la organización del código refleja claramente el propósito del sistema. Para más detalles sobre la arquitectura, consulta [STRUCTURE.md](STRUCTURE.md).
+## ⚙️ Requisitos Previos
 
-## 🚀 Comandos disponibles
+Asegúrate de tener instalado lo siguiente antes de comenzar:
 
-> [!NOTE]
-> Para ejecutar los comandos, asegúrate de tener instalado el paquete pnpm, y poner `pnpm run comando-a-ejecutar`
+- **[Node.js](https://nodejs.org/)**: Versión **24.0.0** o superior.
+- **[PNPM](https://pnpm.io/)**: Versión 9 o superior (Recomendado).
+- **[Docker](https://www.docker.com/)**: Para levantar la base de datos localmente.
 
-- **`dev`** Inicia el servidor de desarrollo de Next.js. Este comando configura la variable de entorno NODE_ENV en development, lo que permite funcionar en modo desarrollo.
-- **`build`** Compila la aplicación para producción. Establece NODE_ENV en production.
-- **`start`** Inicia el servidor Next.js en modo producción. Utiliza los archivos generados por el comando build y sirve la aplicación de manera optimizada para producción.
-- **`lint`** Ejecuta el linter de Next.js para analizar el código en busca de errores y advertencias de estilo, asegurando la consistencia y calidad del código.
+## 🚀 Configuración Inicial
 
-## 🏃‍♂️ Primera ejecución
+1.  **Clonar el repositorio**
+    ```bash
+    git clone https://github.com/tu-usuario/livestar_insurance.git
+    cd livestar_insurance
+    ```
 
-Ejecuta los siguientes comandos en orden en la raíz del proyecto:
+2.  **Instalar dependencias**
+    ```bash
+    pnpm install
+    ```
 
-2. **`prisma:push`**
-3. **`prisma:generate`**
-4. **`dev`**
+3.  **Configurar variables de entorno**
+    Copia el archivo de ejemplo y ajústalo con tus credenciales:
+    ```bash
+    cp .env.example .env
+    ```
+    > Asegúrate de configurar correctamente `DATABASE_URL` y las credenciales de correo.
+
+4.  **Iniciar infraestructura (Base de Datos)**
+    Si usas Docker Compose:
+    ```bash
+    docker compose up -d
+    ```
+
+5.  **Inicializar Base de Datos**
+    Ejecuta las migraciones y carga los datos de prueba (seeds):
+    ```bash
+    pnpm prisma:push
+    pnpm prisma:generate
+    pnpm db:seed
+    ```
+
+6.  **Iniciar servidor de desarrollo**
+    ```bash
+    pnpm dev
+    ```
+    Visita `http://localhost:3000`.
+
+## 📜 Comandos Disponibles
+
+- `pnpm dev`: Inicia entorno de desarrollo.
+- `pnpm build`: Compila para producción.
+- `pnpm start`: Inicia servidor de producción.
+- `pnpm lint`: Verifica calidad de código.
+- `pnpm db:seed`: Puebla la base de datos con información inicial.
