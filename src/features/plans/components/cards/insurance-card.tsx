@@ -98,8 +98,9 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 
   return (
     <div
-      className={`bg-white rounded shadow-lg overflow-hidden w-80 ${isRecommended ? "ring-4 ring-[#00a5e3] " : ""
-        }`}
+      className={`bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden w-80 ${
+        isRecommended ? "ring-2 ring-offset-2 ring-[#00a5e3]" : ""
+      }`}
     >
       {isRecommended && (
         <div className="bg-[#00a5e3] text-white text-center py-2 text-sm font-bold">
@@ -158,17 +159,17 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             <Accordion
               type="single"
               collapsible
-              className="w-full bg-slate-50 border-none rounded-lg"
+              className="w-full bg-slate-50 border border-slate-100 rounded-xl"
             >
               <AccordionItem value="item-1" className="border-b-0">
-                <AccordionTrigger className="px-4 py-3 text-sm text-sky-600 font-semibold uppercase hover:no-underline border-none bg-white rounded-lg shadow-sm flex items-center justify-between">
+                <AccordionTrigger className="px-4 py-3 text-sm text-sky-600 font-semibold uppercase hover:no-underline border-none bg-white rounded-xl flex items-center justify-between">
                   <p className="font-sans">
                     {paymentType === "Mensual"
                       ? "Desglose Mensual"
                       : "Desglose Anual"}
                   </p>
                 </AccordionTrigger>
-                <AccordionContent className="p-4 rounded space-y-2 shadow-sm">
+                <AccordionContent className="p-4 rounded-xl space-y-2 border-t border-slate-100 bg-slate-50">
                   {Object.entries(individualPrices).map(([key, value]) => {
                     const formattedValue = getFormattedValue(
                       key,

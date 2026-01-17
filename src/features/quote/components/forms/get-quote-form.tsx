@@ -23,9 +23,17 @@ export const GetQuoteForm: React.FC<{
   } = useGetQuoteForm(prospect);
 
   return (
-    <Card className="bg-white">
-      <CardContent className="pt-6">
-        <form onSubmit={handleSubmit} className="space-y-8">
+    <Card className="bg-white shadow-sm border border-slate-200">
+      <CardContent className="pt-6 sm:pt-8 pb-6 sm:pb-8">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
+            Empecemos con tus datos
+          </h1>
+          <p className="mt-2 text-sm sm:text-base text-muted-foreground">
+            Cuéntanos sobre ti y a quién quieres proteger para calcular tu cotización.
+          </p>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-10">
           <PersonalInfoSection
             formData={formData}
             errors={errors}
@@ -51,7 +59,11 @@ export const GetQuoteForm: React.FC<{
             )}
           </AnimatePresence>
 
-          <Button type="submit" disabled={isSubmitting} className="w-full bg-primary text-white p-6 rounded font-bold text-lg mt-6 hover:bg-[#223E99]">
+          <Button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-primary text-white h-12 sm:h-14 rounded font-semibold text-base sm:text-lg mt-4 sm:mt-6 hover:bg-[#223E99]"
+          >
             {isSubmitting ? (
               <>
                 <Loader2 className="w-6 h-6 mr-2 animate-spin" />

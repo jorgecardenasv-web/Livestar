@@ -46,13 +46,20 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
 
   return (
     <div className="space-y-6 py-6">
-      <div className="flex items-center space-x-4 mb-6">
-        <span className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-bold text-xl">
+      <div className="flex items-center justify-between gap-4 mb-4">
+        <div className="flex items-center gap-3">
+          <span className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-semibold">
           1
-        </span>
-        <h3 className="text-2xl font-bold text-gray-800 dark:text-white">
-          Datos Personales
-        </h3>
+          </span>
+          <div>
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
+              Datos personales
+            </h3>
+            <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+              Esta información nos ayuda a ajustar tu cotización a tu familia.
+            </p>
+          </div>
+        </div>
         {isVerified !== undefined && (
           <div className="ml-auto sm:ml-4">
             {isVerified ? (
