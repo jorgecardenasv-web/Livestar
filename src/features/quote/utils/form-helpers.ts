@@ -197,6 +197,12 @@ export const createQuoteFormHandlers = (deps: {
       shouldValidate: false,
       shouldDirty: true,
     });
+    const errorKey = `children.${index}.${field}`;
+    setFlatErrors((prev) => {
+      const next = { ...prev };
+      delete next[errorKey];
+      return next;
+    });
   };
 
   const handleProtectedPersonChange = (
@@ -223,6 +229,12 @@ export const createQuoteFormHandlers = (deps: {
     setValue("protectedPersons" as any, protectedPersons as any, {
       shouldValidate: false,
       shouldDirty: true,
+    });
+    const errorKey = `protectedPersons.${index}.${field}`;
+    setFlatErrors((prev) => {
+      const next = { ...prev };
+      delete next[errorKey];
+      return next;
     });
   };
 

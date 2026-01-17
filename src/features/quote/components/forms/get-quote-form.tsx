@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuoteFormRHF } from "../../hooks/use-quote-form-rhf";
 import { ProtectionStep, PersonalInfoSection } from "./personal-info-section";
 import { ContactInfoSection } from "./contact-info-section";
@@ -23,6 +23,47 @@ const steps = [
   },
 ];
 
+type StepKey = (typeof steps)[number]["key"];
+
+const stepFieldPrefixes: Record<StepKey, string[]> = {
+  protection: ["protectWho"],
+  personal: [
+    "name",
+    "gender",
+    "postalCode",
+    "age",
+    "partnerGender",
+    "partnerAge",
+    "childrenCount",
+    "children",
+    "protectedCount",
+    "protectedPersons",
+    "dadName",
+    "dadAge",
+    "momName",
+    "momAge",
+  ],
+  contact: ["whatsapp", "email"],
+};
+
+const getStepIndexFromErrorKey = (key: string) => {
+  const stepKey = (Object.keys(stepFieldPrefixes) as StepKey[]).find(
+    (sKey) => {
+      const prefixes = stepFieldPrefixes[sKey] || [];
+      return prefixes.some(
+        (prefix) => key === prefix || key.startsWith(`${prefix}.`)
+      );
+    }
+  );
+
+  if (!stepKey) {
+    return 1;
+  }
+
+  const index = steps.findIndex((step) => step.key === stepKey);
+  return index === -1 ? 1 : index;
+};
+
 export const GetQuoteForm: React.FC<{
   prospect: any;
 }> = ({ prospect }) => {
@@ -38,6 +79,7 @@ export const GetQuoteForm: React.FC<{
   } = useQuoteFormRHF(prospect);
 
   const [currentStep, setCurrentStep] = useState(0);
+  const [submitAttempt, setSubmitAttempt] = useState(0);
 
   const getStepDescription = (stepKey: string) => {
     if (stepKey === "protection") {
@@ -83,6 +125,28 @@ export const GetQuoteForm: React.FC<{
 
   const isLastStep = currentStep === steps.length - 1;
 
+  const handleFormSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault();
+    setSubmitAttempt((prev) => prev + 1);
+    handleSubmit(event);
+  };
+
+  useEffect(() => {
+    if (!submitAttempt) {
+      return;
+    }
+
+    const errorKeys = Object.keys(errors);
+    if (!errorKeys.length) {
+      return;
+    }
+
+    const targetStep = getStepIndexFromErrorKey(errorKeys[0]);
+    if (targetStep !== currentStep) {
+      setCurrentStep(targetStep);
+    }
+  }, [errors, submitAttempt, currentStep]);
+
   return (
     <div className="bg-slate-50/80 border border-slate-200 rounded-2xl px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <div className="mb-4 sm:mb-6">
@@ -103,6 +167,12 @@ export const GetQuoteForm: React.FC<{
             const isActive = index === currentStep;
             const isCompleted = index < currentStep;
             const isDisabled = step.key === "contact" && !showContactInfo;
+            const prefixes = stepFieldPrefixes[step.key as StepKey] || [];
+            const hasError = Object.keys(errors).some((key) =>
+              prefixes.some(
+                (prefix) => key === prefix || key.startsWith(`${prefix}.`)
+              )
+            );
 
             return (
               <div
@@ -113,7 +183,9 @@ export const GetQuoteForm: React.FC<{
               >
                 <div
                   className={`flex h-7 w-7 sm:h-8 sm:w-8 flex-none items-center justify-center rounded-full text-[11px] sm:text-xs font-semibold ${
-                    isActive
+                    hasError
+                      ? "bg-red-50 text-red-600 border border-red-200"
+                      : isActive
                       ? "bg-primary text-white"
                       : isCompleted
                       ? "bg-primary/10 text-primary"
@@ -125,13 +197,23 @@ export const GetQuoteForm: React.FC<{
                 <div className="flex flex-col">
                   <span
                     className={`font-medium ${
-                      isActive ? "text-slate-900" : "text-slate-700"
+                      hasError
+                        ? "text-red-700"
+                        : isActive
+                        ? "text-slate-900"
+                        : "text-slate-700"
                     }`}
                   >
                     {step.label}
                   </span>
-                  <span className="text-[11px] sm:text-xs text-muted-foreground">
-                    {getStepDescription(step.key)}
+                  <span
+                    className={`text-[11px] sm:text-xs ${
+                      hasError ? "text-red-600" : "text-muted-foreground"
+                    }`}
+                  >
+                    {hasError
+                      ? "Revisa los campos de este paso."
+                      : getStepDescription(step.key)}
                   </span>
                 </div>
               </div>
@@ -140,7 +222,7 @@ export const GetQuoteForm: React.FC<{
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-10">
+      <form onSubmit={handleFormSubmit} className="space-y-10">
         {currentStep === 0 && (
           <ProtectionStep
             formData={formData}
