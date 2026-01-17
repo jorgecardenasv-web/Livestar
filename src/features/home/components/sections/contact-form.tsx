@@ -43,8 +43,8 @@ export const ContactForm = () => {
   }
 
   return (
-    <section className="relative w-full text-black my-16 flex justify-center">
-      <div className="w-2/4 text-center">
+    <section className="relative w-full text-black my-16 flex justify-center px-4 sm:px-6">
+      <div className="w-full max-w-xl md:w-3/4 lg:w-2/4 text-center">
         <h2 className="text-4xl font-bold text-wrap text-gradiant mb-8">
           CONTÁCTANOS
         </h2>
@@ -52,7 +52,7 @@ export const ContactForm = () => {
           <CardContent className="space-y-6 p-6">
             <form action={onSubmit}>
               <TextInput required={true} placeholder="Nombre(s)" name="name" />
-              <div className="w-2/4 mt-4">
+              <div className="w-full md:w-2/4 mt-4 mx-auto">
                 <RadioGroup
                   label="Tipo de contacto"
                   name="contactType"

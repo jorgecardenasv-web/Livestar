@@ -62,7 +62,7 @@ export const GetQuoteForm: React.FC<{
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-primary text-white h-12 sm:h-14 rounded font-semibold text-base sm:text-lg mt-4 sm:mt-6 hover:bg-[#223E99]"
+            className="w-full bg-primary text-white h-12 sm:h-14 rounded-lg font-semibold text-base sm:text-lg mt-4 sm:mt-6 hover:bg-[#223E99]"
           >
             {isSubmitting ? (
               <>
