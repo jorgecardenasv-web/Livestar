@@ -16,7 +16,10 @@ export const PlansContent = async ({
   if (plans.length === 0) {
     return (
       <div className="text-center py-8">
-        <p>No hay planes disponibles para esta selección.</p>
+        <p>
+          No hay planes disponibles para esta selección. Prueba cambiar el tipo de
+          plan o la forma de pago.
+        </p>
       </div>
     );
   }

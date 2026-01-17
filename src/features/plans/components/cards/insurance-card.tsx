@@ -189,23 +189,31 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
           <InfoItem
             icon={<Shield className="w-5 h-5" />}
             title="Suma asegurada"
-            value={`${formatCurrency(plan.sumInsured)}`}
+            value={formatCurrency(plan.sumInsured)}
           />
-          {/* ------------------ DEDUCIBLE ----------------- */}
           <InfoItem
             icon={<DollarSign className="w-5 h-5" />}
-            title="Deducible"
-            value={`${isMultiple ? "DESDE" : ""} ${formatCurrency(minor)}`}
+            title={isMultiple ? "Deducible desde" : "Deducible"}
+            value={formatCurrency(minor)}
           />
-          {/* ---------------------------------------------- */}
           <InfoItem
             icon={<Percent className="w-5 h-5" />}
-            title="Coaseguro"
+            title={
+              typeof plan.coInsurance === "object" &&
+              (plan.coInsurance.opcion_2 || plan.coInsurance.opcion_4)
+                ? "Coaseguro desde"
+                : "Coaseguro"
+            }
             value={getCoInsuranceValue(plan.coInsurance, prospect, additionalInfo)}
           />
           <InfoItem
             icon={<Heart className="w-5 h-5" />}
-            title="Tope coaseguro"
+            title={
+              typeof plan.coInsuranceCap === "object" &&
+              (plan.coInsuranceCap.opcion_2 || plan.coInsuranceCap.opcion_4)
+                ? "Tope coaseguro desde"
+                : "Tope coaseguro"
+            }
             value={getCoInsuranceCapValue(plan.coInsuranceCap, prospect, additionalInfo)}
           />
         </div>
@@ -328,7 +336,7 @@ const InfoItem = ({
   title: string;
   value: string;
 }) => (
-  <div className="bg-white rounded-xl p-4 shadow-sm flex items-center space-x-3">
+  <div className="bg-white rounded-xl p-4 flex items-center space-x-3">
     <div className="bg-sky-100 p-2 rounded-lg text-sky-600">{icon}</div>
     <div>
       <p className="text-xs text-sky-600 font-semibold uppercase">{title}</p>
@@ -349,7 +357,7 @@ function getCoInsuranceValue(coInsurance: any, prospect: any, additionalInfo: an
   // Si tiene opciones múltiples, usar la nueva utilidad
   if (coInsurance.opcion_2 || coInsurance.opcion_4) {
     const minValue = getMinimumValueByAge(coInsurance, prospect, additionalInfo);
-    return `DESDE ${minValue}%`;
+    return `${minValue}%`;
   }
 
   return "0%";
@@ -365,7 +373,7 @@ function getCoInsuranceCapValue(coInsuranceCap: any, prospect: any, additionalIn
   // Si tiene opciones múltiples, usar la nueva utilidad
   if (coInsuranceCap.opcion_2 || coInsuranceCap.opcion_4) {
     const minValue = getMinimumValueByAge(coInsuranceCap, prospect, additionalInfo);
-    return `DESDE ${formatCurrency(minValue)}`;
+    return formatCurrency(minValue);
   }
 
   return formatCurrency(0);
