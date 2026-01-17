@@ -4,9 +4,7 @@ import { z } from "zod";
 export const addAdvisorSchema = z.object({
   email: emailValidation,
   password: z
-    .string({
-      required_error: "La contraseña es requerida.",
-    })
+    .string()
     .trim()
     .min(6, {
       message: "La contraseña debe tener al menos 6 caracteres.",
@@ -15,9 +13,7 @@ export const addAdvisorSchema = z.object({
       message: "La contraseña debe tener como máximo 32 caracteres.",
     }),
   name: z
-    .string({
-      required_error: "El nombre es requerido.",
-    })
+    .string()
     .trim()
     .min(1, {
       message: "El nombre debe tener al menos un carácter.",

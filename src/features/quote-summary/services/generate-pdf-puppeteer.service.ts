@@ -368,9 +368,8 @@ export const generatePDFWithPuppeteer = async (
       browser = await puppeteerCore.launch({
         args: chromium.args,
         executablePath: await chromium.executablePath(),
-        headless: chromium.headless,
+        headless: true,
         protocolTimeout: 30000,
-        defaultViewport: chromium.defaultViewport,
       });
     }
 

@@ -58,7 +58,7 @@ const handleDeletePadecimiento = (
 ) => {
   setForms((prev: MedicalQuestionForm[]) => {
     const updated = [...prev];
-    const condiciones = [...updated[qIndex].healthConditions];
+    const condiciones = [...(updated[qIndex].healthConditions || [])];
     condiciones.splice(pIndex, 1);
     updated[qIndex].healthConditions = condiciones;
     if (updated[qIndex].activePadecimiento === pIndex) {
@@ -107,7 +107,8 @@ export const MedicalInformationForm: React.FC<MedicalInformationProps> = ({
               !formFamily.protectedPersons ||
               formFamily.protectedPersons.every((p: any) => !p.relationship)));
         const answerKey = `answer-${index}`;
-        const currentAnswer = forms[index]?.[answerKey];
+        const currentAnswer =
+          (forms[index]?.[answerKey] as "Sí" | "No" | undefined) ?? "No";
 
         const handleAnswerChange = (value: "Sí" | "No" | undefined) => {
           const updated = [...forms];
@@ -160,7 +161,7 @@ export const MedicalInformationForm: React.FC<MedicalInformationProps> = ({
               <RadioGroup
                 name={answerKey}
                 options={["Sí", "No"]}
-                value={currentAnswer ?? "No"}
+                value={currentAnswer}
                 disabled={disableMedical}
                 onChange={(_, value) => {
                   handleAnswerChange(value as "Sí" | "No");

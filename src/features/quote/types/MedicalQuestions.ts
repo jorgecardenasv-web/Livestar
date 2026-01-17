@@ -11,6 +11,7 @@ export interface HealthCondition {
   estadoSalud?: RadioOption;
   medicamento?: RadioOption;
   detalleMedicamento?: string;
+  persona?: string;
 }
 
 export interface FormDataMedical {

@@ -29,9 +29,8 @@ export const createPlanSchema = z
     isMultiple: z.string().transform((val) => val === "true"),
     isMultipleCoInsurance: z
       .string()
-      .transform((val) => val === "true")
       .optional()
-      .default("false"),
+      .transform((val) => val === "true"),
     isHDI: z.string().transform((val) => val === "true"),
     additionalInfoHtml: z.string().optional().nullable(),
     "coaseguro.opcion_2.A": deductibleSchema,
