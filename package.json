@@ -8,8 +8,8 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "deploy": "vercel build --prod && vercel deploy --prebuilt --prod",
-    "deploy:preview": "vercel build && vercel deploy --prebuilt",
+    "deploy:dev": "railway up -e development",
+    "deploy:prod": "railway up -e production --variables CONFIRM_PROD_DEPLOY=true",
     "db:seed": "prisma db seed"
   },
   "dependencies": {
