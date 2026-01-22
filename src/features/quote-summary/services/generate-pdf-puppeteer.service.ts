@@ -23,7 +23,6 @@ import {
   HDI_TEMPLATE_HTML,
 } from "../constants/html-templates";
 
-type BrowserType = Browser;
 type PageType = Page;
 
 // Registrar los helpers de Handlebars
@@ -365,11 +364,13 @@ export const generatePDFWithPuppeteer = async (
         protocolTimeout: 30000,
       });
     } else {
+      // En producción, usar puppeteer-core con @sparticuz/chromium
+      // Documentación: https://github.com/Sparticuz/chromium
       browser = await puppeteerCore.launch({
         args: chromium.args,
         executablePath: await chromium.executablePath(),
-        headless: true,
-        protocolTimeout: 30000,
+        headless: "shell",
+        protocolTimeout: 60000,
       });
     }
 
