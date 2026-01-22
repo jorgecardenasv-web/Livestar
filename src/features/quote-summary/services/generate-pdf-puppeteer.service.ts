@@ -280,7 +280,8 @@ export const generatePDFWithPuppeteer = async (
   data: QuotePDFData,
   format: "datauri" | "arraybuffer" = "datauri"
 ): Promise<string | ArrayBuffer> => {
-  const isLocal = process.env.NODE_ENV === "development" || !process.env.VERCEL;
+  // Detectar entorno: local solo si NODE_ENV es development
+  const isLocal = process.env.NODE_ENV === "development";
   let browser: any = null;
 
   try {
