@@ -15,7 +15,6 @@ import {
 } from "@/features/layout/nav-config/nav-links";
 
 const routeRoles = getRoutesByRoles();
-
 const staticResources = ["/_next/", "/api/", "/static/", "/images/"];
 
 export async function proxy(request: NextRequest) {
