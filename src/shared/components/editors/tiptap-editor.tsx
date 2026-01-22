@@ -98,7 +98,7 @@ export function TiptapEditor({
     const normalizedCurrent = currentHtml === '<p></p>' ? '' : currentHtml
 
     if (normalizedIncoming !== normalizedCurrent) {
-      editor.commands.setContent(normalizedIncoming, false)
+      editor.commands.setContent(normalizedIncoming, { emitUpdate: false })
     }
   }, [content, editor])
 
