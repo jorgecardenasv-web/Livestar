@@ -27,6 +27,11 @@ RUN corepack enable pnpm && pnpm prisma generate
 
 RUN corepack enable pnpm && pnpm run build
 
+# Extract @sparticuz/chromium to a known location for copying
+RUN mkdir -p /tmp/chromium-package && \
+    cp -rL /app/node_modules/@sparticuz/chromium /tmp/chromium-package/ || \
+    cp -rL /app/node_modules/.pnpm/@sparticuz+chromium*/node_modules/@sparticuz/chromium /tmp/chromium-package/chromium
+
 # Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
@@ -58,13 +63,13 @@ COPY --from=builder /app/public ./public
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
 
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+# Automatically leverage output traces to redufrom extracted location
+COPY --from=builder --chown=nextjs:nodejs /tmp/chromium-package
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Copy @sparticuz/chromium binaries
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@sparticuz/chromium/bin ./node_modules/@sparticuz/chromium/bin
+# Copy @sparticuz/chromium package completely (pnpm structure)
+# Necesitamos copiar desde la estructura de pnpm porque standalone no incluye los archivos .br
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/.pnpm/@sparticuz+chromium@143.0.4/node_modules/@sparticuz/chromium ./node_modules/@sparticuz/chromium
 
 USER nextjs
 
