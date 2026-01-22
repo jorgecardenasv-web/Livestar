@@ -4,6 +4,8 @@ import { updateQuote } from "@/features/quote/actions/update-quote";
 import { getProspectByQuoteId } from "./get-prospect-by-quote";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { sendContractConfirmationEmail } from "../services/send-contract-confirmation-email";
+import { getQuoteByIdService } from "@/features/quote/services/read/get-quote-by-id.service";
 
 export const updateQuoteFromSummary = async (
   prevState: any,
@@ -87,6 +89,25 @@ export const updateQuoteFromSummary = async (
     return result;
   }
 
+  // Enviar email de confirmación
+  try {
+    const quote = await getQuoteByIdService(quoteId);
+    if (quote && quote.planData) {
+      await sendContractConfirmationEmail({
+        prospectName: (prospect as any).name,
+        prospectEmail: (prospect as any).email,
+        company: quote.planData.companyName,
+        plan: quote.planData.planTypeName,
+        advisorName: quote.user?.name || "Asesor",
+        advisorEmail: quote.user?.email || undefined,
+        prospectWhatsApp: (prospect as any).whatsapp || "",
+      });
+    }
+  } catch (error) {
+    console.error("Error enviando email de confirmación:", error);
+    // No retornamos error aquí porque la actualización fue exitosa
+  }
+
   const cookieStore = await cookies();
   cookieStore.delete("prospect");
   cookieStore.delete("selectedPlan");
@@ -95,5 +116,8 @@ export const updateQuoteFromSummary = async (
   cookieStore.delete("quoteCreated");
   cookieStore.delete("createdQuoteId");
 
-  return redirect("/cotizar");
+  return {
+    success: true,
+    message: "Tu solicitud ha sido enviada exitosamente. Un asesor se pondrá en contacto contigo lo antes posible.",
+  };
 };

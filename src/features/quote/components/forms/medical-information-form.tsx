@@ -108,7 +108,7 @@ export const MedicalInformationForm: React.FC<MedicalInformationProps> = ({
               formFamily.protectedPersons.every((p: any) => !p.relationship)));
         const answerKey = `answer-${index}`;
         const currentAnswer =
-          (forms[index]?.[answerKey] as "Sí" | "No" | undefined) ?? "No";
+          (forms[index]?.[answerKey] as "Sí" | "No" | undefined) ?? undefined;
 
         const handleAnswerChange = (value: "Sí" | "No" | undefined) => {
           const updated = [...forms];

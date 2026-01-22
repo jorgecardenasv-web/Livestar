@@ -234,6 +234,8 @@ export const QuoteSummary: FC<
   const [medicalErrors, setMedicalErrors] = useState<Record<string, string>>({});
   const [medicalSuccess, setMedicalSuccess] = useState<string | null>(null);
   const [formFamily, setFormFamily] = useState<any>({ protectWho: protectedWho });
+  const [contractSuccess, setContractSuccess] = useState<string | null>(null);
+  const [countdown, setCountdown] = useState<number>(5);
 
   useEffect(() => {
     const clearCookies = async () => {
@@ -245,6 +247,17 @@ export const QuoteSummary: FC<
     };
     clearCookies();
   }, []);
+
+  useEffect(() => {
+    if (contractSuccess && countdown > 0) {
+      const timer = setTimeout(() => {
+        setCountdown(countdown - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else if (contractSuccess && countdown === 0) {
+      window.location.href = "/cotizar";
+    }
+  }, [contractSuccess, countdown]);
 
   useEffect(() => {
     (async () => {
@@ -568,6 +581,8 @@ export const QuoteSummary: FC<
                     setMedicalSuccess(null);
                   } else {
                     setMedicalErrors({});
+                    setContractSuccess(res.message);
+                    setCountdown(5);
                   }
                 }}
               >
@@ -627,10 +642,10 @@ export const QuoteSummary: FC<
 
       {/* Mensaje de error global */}
       {pdfError && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-lg font-semibold text-red-600 mb-2">Error</h3>
-            <p className="mb-4">{pdfError}</p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
+          <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-lg font-semibold text-red-600 dark:text-red-400 mb-2">Error</h3>
+            <p className="mb-4 text-gray-700 dark:text-gray-200">{pdfError}</p>
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setPdfError(null)}
@@ -653,16 +668,50 @@ export const QuoteSummary: FC<
       )}
 
       {pdfSuccess && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-lg font-semibold text-green-600 mb-2">Éxito</h3>
-            <p className="mb-4">{pdfSuccess}</p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
+          <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-lg font-semibold text-green-600 dark:text-green-400 mb-2">Éxito</h3>
+            <p className="mb-4 text-gray-700 dark:text-gray-200">{pdfSuccess}</p>
             <div className="flex justify-end">
               <button
                 onClick={() => setPdfSuccess(null)}
                 className="px-4 py-2 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors"
               >
                 Aceptar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {contractSuccess && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
+          <div className="bg-white dark:bg-zinc-800 rounded-lg p-8 max-w-lg w-full shadow-xl border-t-4 border-green-500">
+            <div className="text-center mb-6">
+              <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 dark:bg-green-900 mb-4">
+                <svg className="h-8 w-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">¡Solicitud Enviada!</h3>
+              <p className="text-base text-gray-700 dark:text-gray-200 leading-relaxed mb-4">
+                Hemos recibido tu interés en contratar el plan seleccionado. Un asesor especializado se pondrá en contacto contigo <strong>lo antes posible</strong> para ayudarte a completar el proceso.
+              </p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Gracias por tu confianza en nuestros servicios.
+              </p>
+            </div>
+            <div className="bg-gray-50 dark:bg-zinc-700 rounded-lg p-4 mb-6">
+              <p className="text-center text-sm text-gray-600 dark:text-gray-300">
+                Redirigiendo en <span className="font-bold text-sky-600 dark:text-sky-400 text-lg">{countdown}</span> segundo{countdown !== 1 ? 's' : ''}...
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <button
+                onClick={() => window.location.href = "/cotizar"}
+                className="px-6 py-2.5 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors font-medium"
+              >
+                Ir ahora
               </button>
             </div>
           </div>
