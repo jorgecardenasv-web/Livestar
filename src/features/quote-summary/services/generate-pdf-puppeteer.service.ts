@@ -333,25 +333,30 @@ export const generatePDFWithPuppeteer = async (
     // Generar header
     const headerTemplate = generateHeaderTemplate(data, logoBase64);
 
-    // Configuración de Chromium optimizada
+    // Configuración de Chromium optimizada para Docker Alpine
     const chromiumArgs = [
       "--no-sandbox",
       "--disable-setuid-sandbox",
       "--disable-dev-shm-usage",
-      "--disable-accelerated-2d-canvas",
+      "--disable-gpu",
+      "--disable-software-rasterizer",
+      "--disable-extensions",
       "--no-first-run",
       "--no-zygote",
-      "--single-process",
-      "--disable-gpu",
-      "--disable-web-security",
-      "--disable-features=VizDisplayCompositor",
+      "--disable-background-networking",
+      "--disable-default-apps",
+      "--disable-sync",
+      "--disable-translate",
+      "--hide-scrollbars",
+      "--metrics-recording-only",
+      "--mute-audio",
+      "--no-default-browser-check",
+      "--safebrowsing-disable-auto-update",
       "--disable-background-timer-throttling",
       "--disable-backgrounding-occluded-windows",
       "--disable-renderer-backgrounding",
-      "--disable-component-extensions-with-background-pages",
-      "--hide-scrollbars",
-      "--mute-audio",
-      "--window-size=1280x1024",
+      "--disable-ipc-flooding-protection",
+      "--disable-features=IsolateOrigins,site-per-process",
     ];
 
     // Configurar Puppeteer según el entorno
@@ -370,6 +375,7 @@ export const generatePDFWithPuppeteer = async (
         executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
         headless: true,
         protocolTimeout: 60000,
+        dumpio: false, // No imprimir stdout/stderr de Chromium
       });
     }
 
