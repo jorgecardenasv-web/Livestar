@@ -27,26 +27,22 @@ RUN corepack enable pnpm && pnpm prisma generate
 
 RUN corepack enable pnpm && pnpm run build
 
-# Extract @sparticuz/chromium to a known location for copying
-RUN mkdir -p /tmp/chromium-package && \
-    (cp -rL /app/node_modules/@sparticuz/chromium /tmp/chromium-package/chromium 2>/dev/null || \
-     find /app/node_modules/.pnpm -name '@sparticuz' -type d -path '*/@sparticuz+chromium@*/node_modules/@sparticuz/chromium' -exec cp -rL {} /tmp/chromium-package/chromium \; -quit)
-
 # Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
 
-# Install dependencies for @sparticuz/chromium
-# @sparticuz/chromium trae su propio binario de Chromium
-# Solo necesitamos las librerías del sistema
+# Install Chromium and dependencies for Puppeteer
 RUN apk add --no-cache \
-    ca-certificates \
-    ttf-freefont \
+    chromium \
     nss \
     freetype \
-    harfbuzz
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
 
 ENV NODE_ENV=production
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -67,9 +63,6 @@ RUN chown nextjs:nodejs .next
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-# Copy @sparticuz/chromium package completely from extracted location
-COPY --from=builder --chown=nextjs:nodejs /tmp/chromium-package/chromium ./node_modules/@sparticuz/chromium
 
 USER nextjs
 

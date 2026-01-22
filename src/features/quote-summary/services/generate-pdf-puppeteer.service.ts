@@ -1,4 +1,3 @@
-import chromium from "@sparticuz/chromium";
 import puppeteerCore, {
   Browser,
   Page,
@@ -365,12 +364,11 @@ export const generatePDFWithPuppeteer = async (
         protocolTimeout: 30000,
       });
     } else {
-      // En producción, usar puppeteer-core con @sparticuz/chromium
-      // Documentación: https://github.com/Sparticuz/chromium
+      // En producción, usar puppeteer-core con Chromium de Alpine
       browser = await puppeteerCore.launch({
-        args: chromium.args,
-        executablePath: await chromium.executablePath(),
-        headless: "shell",
+        args: chromiumArgs,
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
+        headless: true,
         protocolTimeout: 60000,
       });
     }

@@ -12,13 +12,7 @@ const nextConfig = {
       },
     ],
   },
-  serverExternalPackages: ["puppeteer-core", "@sparticuz/chromium"],
-  // Incluir archivos binarios de @sparticuz/chromium en el output
-  experimental: {
-    outputFileTracingIncludes: {
-      '/': ['./node_modules/@sparticuz/chromium/bin/**/*'],
-    },
-  },
+  serverExternalPackages: ["puppeteer-core"],
 };
 
 export default nextConfig;
