@@ -240,6 +240,16 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
         </div>
       )}
 
+      {/* Aviso sobre campos no editables */}
+      <div className="mt-4">
+        <Alert className="mb-4 bg-slate-50 border-slate-200">
+          <AlertCircle className="h-3.5 w-3.5" color="#64748b" />
+          <AlertDescription className="text-sm text-slate-600">
+            Los datos de los asegurados están bloqueados porque determinan el precio de la cotización. Para hacer cambios, puedes crear una nueva cotización.
+          </AlertDescription>
+        </Alert>
+      </div>
+
       <form action={formAction}>
         <input type="hidden" name="medicalData" value={JSON.stringify(forms)} />
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -256,6 +266,7 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
                     handleInputChange={handleInputChange}
                     handleChildChange={handleChildChange}
                     handleProtectedPersonChange={handleProtectedPersonChange}
+                    disabled={true}
                   />
                 </CardContent>
               </Card>

@@ -37,6 +37,7 @@ interface PersonalInfoSectionProps extends BaseFormProps {
     value: string | number
   ) => void;
   showHeader?: boolean;
+  disabled?: boolean;
 }
 
 type IconType = ComponentType<{ className?: string }>;
@@ -147,6 +148,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
   handleChildChange,
   handleProtectedPersonChange,
   showHeader = true,
+  disabled = false,
 }) => {
   const showAge = [
     "mi_pareja_y_yo",
@@ -212,6 +214,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
               onChange={(e) => handleInputChange("name", e.target.value)}
               className="w-full"
               error={errors.name || ""}
+              disabled={disabled}
             />
 
             <SelectInput
@@ -221,6 +224,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
               name="gender"
               value={formData.gender}
               onValueChange={(value) => handleInputChange("gender", value)}
+              disabled={disabled}
             />
 
             <TextInput
@@ -238,6 +242,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
               }}
               className="w-full"
               error={errors.postalCode || ""}
+              disabled={disabled}
             />
 
             {showAge && (
@@ -253,6 +258,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 min={18}
                 max={100}
                 error={errors.age || ""}
+                disabled={disabled}
               />
             )}
           </div>
@@ -273,6 +279,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 onValueChange={(value) =>
                   handleInputChange("partnerGender", value)
                 }
+                disabled={disabled}
               />
               <NumberInput
                 label="Mi pareja tiene"
@@ -287,6 +294,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 min={18}
                 max={100}
                 error={errors.partnerAge}
+                disabled={disabled}
               />
             </div>
           </div>
@@ -324,6 +332,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                   className="w-full"
                   min={1}
                   error={errors.childrenCount}
+                  disabled={disabled}
                 />
               </div>
             </div>
@@ -366,6 +375,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                             error={errors[`children.${index}.age`]}
                             className="w-full"
                             min={0}
+                            disabled={disabled}
                           />
                           <SelectInput
                             label={`Género hijo ${index + 1}`}
@@ -378,6 +388,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                             }
                             options={genderOptions}
                             error={errors[`children.${index}.gender`]}
+                            disabled={disabled}
                           />
                         </motion.div>
                       )
@@ -419,6 +430,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                   error={errors.protectedCount}
                   className="w-full"
                   min={1}
+                  disabled={disabled}
                 />
               </div>
             </div>
@@ -462,6 +474,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                           }
                           className="w-full"
                           label="Parentesco"
+                          disabled={disabled}
                         />
                         <NumberInput
                           label="Edad"
@@ -483,6 +496,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                           }
                           className="w-full"
                           min={0}
+                          disabled={disabled}
                         />
                         <SelectInput
                           label="Género"
@@ -501,6 +515,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                             errors[`protectedPersons.${index}.gender`]
                           }
                           options={genderOptions}
+                          disabled={disabled}
                         />
                       </motion.div>
                     )
@@ -534,6 +549,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 onChange={(e) => handleInputChange("dadName", e.target.value)}
                 error={errors.dadName}
                 className="w-full"
+                disabled={disabled}
               />
               <NumberInput
                 label="Edad de papá"
@@ -546,6 +562,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 error={errors.dadAge}
                 className="w-full"
                 min={18}
+                disabled={disabled}
               />
               <TextInput
                 type="text"
@@ -556,6 +573,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 onChange={(e) => handleInputChange("momName", e.target.value)}
                 error={errors.momName}
                 className="w-full"
+                disabled={disabled}
               />
               <NumberInput
                 label="Edad de mamá"
@@ -568,6 +586,7 @@ export const PersonalInfoSection: React.FC<PersonalInfoSectionProps> = ({
                 error={errors.momAge}
                 className="w-full"
                 min={18}
+                disabled={disabled}
               />
             </div>
           </motion.div>
