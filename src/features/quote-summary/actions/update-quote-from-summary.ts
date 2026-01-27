@@ -108,13 +108,15 @@ export const updateQuoteFromSummary = async (
     // No retornamos error aquí porque la actualización fue exitosa
   }
 
-  const cookieStore = await cookies();
-  cookieStore.delete("prospect");
-  cookieStore.delete("selectedPlan");
-  cookieStore.delete("activePlanType");
-  cookieStore.delete("activePaymentType");
-  cookieStore.delete("quoteCreated");
-  cookieStore.delete("createdQuoteId");
+  // NO borrar las cookies aquí para evitar que Next.js recargue la página
+  // Las cookies se borrarán cuando el usuario haga una nueva cotización
+  // const cookieStore = await cookies();
+  // cookieStore.delete("prospect");
+  // cookieStore.delete("selectedPlan");
+  // cookieStore.delete("activePlanType");
+  // cookieStore.delete("activePaymentType");
+  // cookieStore.delete("quoteCreated");
+  // cookieStore.delete("createdQuoteId");
 
   return {
     success: true,
