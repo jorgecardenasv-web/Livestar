@@ -2,7 +2,7 @@ import { useNotificationStore } from "@/features/notification/store/notification
 import { useModalStore } from "@/shared/store/modal-store";
 import { FormState } from "@/shared/types";
 import { useEffect } from "react";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 
 export function usePlanTypeForm<P>(
   serverAction: (
@@ -17,7 +17,7 @@ export function usePlanTypeForm<P>(
 
   const boundServerAction = serverAction.bind(null, modalProps.id);
 
-  const [state, formAction] = useFormState(boundServerAction, {
+  const [state, formAction] = useActionState(boundServerAction, {
     success: false,
     message: "",
   });

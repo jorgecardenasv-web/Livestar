@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getSession } from "@/lib/iron-session/get-session";
-import { Role } from "@prisma/client";
+import { Role } from "@generated/prisma/enums";
 import {
   prefix,
   publicPaths,
@@ -15,10 +15,9 @@ import {
 } from "@/features/layout/nav-config/nav-links";
 
 const routeRoles = getRoutesByRoles();
-
 const staticResources = ["/_next/", "/api/", "/static/", "/images/"];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   if (staticResources.some((resource) => path.startsWith(resource))) {
@@ -33,26 +32,9 @@ export async function middleware(request: NextRequest) {
     const selectedPlan = request.cookies.get("selectedPlan")?.value;
 
     const hasProspect = prospect ? JSON.parse(prospect) : null;
-    const hasSelectedPlan = selectedPlan ? JSON.parse(selectedPlan) : null;
-
-    if (pathWithoutQuery === quoteRoutes.root) {
-      if (!hasProspect) {
-        return NextResponse.redirect(new URL(quoteRoutes.flow, request.url));
-      }
-      if (hasProspect && !hasSelectedPlan) {
-        return NextResponse.redirect(new URL(quoteRoutes.planes, request.url));
-      }
-      if (hasProspect && hasSelectedPlan) {
-        return NextResponse.redirect(new URL(quoteRoutes.resumen, request.url));
-      }
-    }
 
     if (pathWithoutQuery === quoteRoutes.planes && !hasProspect) {
       return NextResponse.redirect(new URL(quoteRoutes.flow, request.url));
-    }
-
-    if (pathWithoutQuery === quoteRoutes.flow && hasProspect) {
-      return NextResponse.redirect(new URL(quoteRoutes.planes, request.url));
     }
   }
 

@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { GetAllResponse } from "@/shared/types";
-import { Quote as PrismaQuote } from "@prisma/client";
+import { Quote as PrismaQuote } from "@generated/prisma/client";
 import { FilterOptions } from "../../loaders/get-quotes.loader";
 import {
   filterOptionsToWhere,

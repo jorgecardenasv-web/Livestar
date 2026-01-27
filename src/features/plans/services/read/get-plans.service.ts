@@ -5,7 +5,7 @@ import {
 } from "@/shared/utils/where-filter-builder";
 import { FilterOptions } from "../../loaders/get-plans";
 import { GetAllResponse } from "@/shared/types";
-import { Plan as PlanPrisma, Prisma } from "@prisma/client";
+import { Plan as PlanPrisma, Prisma } from "@generated/prisma/client";
 import { Plan } from "../../types/plan";
 
 export const getPlansService = async ({

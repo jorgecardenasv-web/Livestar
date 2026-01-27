@@ -3,13 +3,16 @@
 import { cookies } from "next/headers";
 
 export async function getInsuranceState() {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const selectedPlanJson = cookieStore.get("selectedPlan")?.value;
 
   const parseAndFormatPlan = (json: string) => {
     const plan = JSON.parse(json);
+    const imgCompanyLogo =
+      plan.imgCompanyLogo ?? plan.companyLogo ?? "";
     return {
       ...plan,
+      imgCompanyLogo,
       sumInsured: Number(plan.sumInsured) ?? 0,
       deductible: Number(plan.deductible) ?? 0,
       coInsuranceCap: Number(plan.coInsuranceCap) ?? 0,

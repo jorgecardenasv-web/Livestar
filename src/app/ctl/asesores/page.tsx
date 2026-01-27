@@ -11,11 +11,12 @@ export interface Params extends Advisor {
   query?: string;
 }
 
-export default function Advisors({
+export default async function Advisors({
   searchParams,
 }: {
-  searchParams: Params;
+  searchParams: Promise<Params>;
 }) {
+  const resolvedSearchParams = await searchParams;
   return (
     <>
       <div className="flex-1 rounded-xl bg-muted/50 p-5 space-y-6">
@@ -25,7 +26,7 @@ export default function Advisors({
         <Card>
           <CardContent className="space-y-6 p-6">
             <Suspense fallback={<TableSkeleton />}>
-              <ListAdvisors params={searchParams} />
+              <ListAdvisors params={resolvedSearchParams} />
             </Suspense>
           </CardContent>
         </Card>

@@ -98,8 +98,9 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
 
   return (
     <div
-      className={`bg-white rounded shadow-lg overflow-hidden w-80 ${isRecommended ? "ring-4 ring-[#00a5e3] " : ""
-        }`}
+      className={`bg-white rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow overflow-hidden w-80 ${
+        isRecommended ? "ring-2 ring-offset-2 ring-[#00a5e3]" : ""
+      }`}
     >
       {isRecommended && (
         <div className="bg-[#00a5e3] text-white text-center py-2 text-sm font-bold">
@@ -158,17 +159,17 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
             <Accordion
               type="single"
               collapsible
-              className="w-full bg-slate-50 border-none rounded-lg"
+              className="w-full bg-slate-50 border border-slate-100 rounded-xl"
             >
               <AccordionItem value="item-1" className="border-b-0">
-                <AccordionTrigger className="px-4 py-3 text-sm text-sky-600 font-semibold uppercase hover:no-underline border-none bg-white rounded-lg shadow-sm flex items-center justify-between">
+                <AccordionTrigger className="px-4 py-3 text-sm text-sky-600 font-semibold uppercase hover:no-underline border-none bg-white rounded-xl flex items-center justify-between">
                   <p className="font-sans">
                     {paymentType === "Mensual"
                       ? "Desglose Mensual"
                       : "Desglose Anual"}
                   </p>
                 </AccordionTrigger>
-                <AccordionContent className="p-4 rounded space-y-2 shadow-sm">
+                <AccordionContent className="p-4 rounded-xl space-y-2 border-t border-slate-100 bg-slate-50">
                   {Object.entries(individualPrices).map(([key, value]) => {
                     const formattedValue = getFormattedValue(
                       key,
@@ -188,30 +189,37 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
           <InfoItem
             icon={<Shield className="w-5 h-5" />}
             title="Suma asegurada"
-            value={`${formatCurrency(plan.sumInsured)}`}
+            value={formatCurrency(plan.sumInsured)}
           />
-          {/* ------------------ DEDUCIBLE ----------------- */}
           <InfoItem
             icon={<DollarSign className="w-5 h-5" />}
-            title="Deducible"
-            value={`${isMultiple ? "DESDE" : ""} ${formatCurrency(minor)}`}
+            title={isMultiple ? "Deducible desde" : "Deducible"}
+            value={formatCurrency(minor)}
           />
-          {/* ---------------------------------------------- */}
           <InfoItem
             icon={<Percent className="w-5 h-5" />}
-            title="Coaseguro"
+            title={
+              typeof plan.coInsurance === "object" &&
+              (plan.coInsurance.opcion_2 || plan.coInsurance.opcion_4)
+                ? "Coaseguro desde"
+                : "Coaseguro"
+            }
             value={getCoInsuranceValue(plan.coInsurance, prospect, additionalInfo)}
           />
           <InfoItem
             icon={<Heart className="w-5 h-5" />}
-            title="Tope coaseguro"
+            title={
+              typeof plan.coInsuranceCap === "object" &&
+              (plan.coInsuranceCap.opcion_2 || plan.coInsuranceCap.opcion_4)
+                ? "Tope coaseguro desde"
+                : "Tope coaseguro"
+            }
             value={getCoInsuranceCapValue(plan.coInsuranceCap, prospect, additionalInfo)}
           />
         </div>
 
         <form action={handleInterestClick}>
           <input type="hidden" name="company" value={company.name} />
-          {/* <input type="hidden" name="companyLogo" value={company.logo} /> */}
           <input type="hidden" name="plan" value={plan.planType.name} />
           <input type="hidden" name="paymentType" value={paymentType} />
           <input type="hidden" name="sumInsured" value={plan.sumInsured} />
@@ -327,7 +335,7 @@ const InfoItem = ({
   title: string;
   value: string;
 }) => (
-  <div className="bg-white rounded-xl p-4 shadow-sm flex items-center space-x-3">
+  <div className="bg-white rounded-xl p-4 flex items-center space-x-3">
     <div className="bg-sky-100 p-2 rounded-lg text-sky-600">{icon}</div>
     <div>
       <p className="text-xs text-sky-600 font-semibold uppercase">{title}</p>
@@ -348,7 +356,7 @@ function getCoInsuranceValue(coInsurance: any, prospect: any, additionalInfo: an
   // Si tiene opciones múltiples, usar la nueva utilidad
   if (coInsurance.opcion_2 || coInsurance.opcion_4) {
     const minValue = getMinimumValueByAge(coInsurance, prospect, additionalInfo);
-    return `DESDE ${minValue}%`;
+    return `${minValue}%`;
   }
 
   return "0%";
@@ -364,7 +372,7 @@ function getCoInsuranceCapValue(coInsuranceCap: any, prospect: any, additionalIn
   // Si tiene opciones múltiples, usar la nueva utilidad
   if (coInsuranceCap.opcion_2 || coInsuranceCap.opcion_4) {
     const minValue = getMinimumValueByAge(coInsuranceCap, prospect, additionalInfo);
-    return `DESDE ${formatCurrency(minValue)}`;
+    return formatCurrency(minValue);
   }
 
   return formatCurrency(0);

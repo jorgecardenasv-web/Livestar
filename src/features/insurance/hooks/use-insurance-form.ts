@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 
 import { useNotificationStore } from "@/features/notification/store/notification-store";
 import { useModalStore } from "@/shared/store/modal-store";
@@ -18,7 +18,7 @@ export const useInsuranceForm = (
 
   const bodedServerAction = serverAction.bind(null, modalProps.id);
 
-  const [state, formAction] = useFormState(bodedServerAction, {
+  const [state, formAction] = useActionState(bodedServerAction, {
     message: "",
     success: false,
   });

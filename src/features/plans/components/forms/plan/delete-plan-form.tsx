@@ -7,7 +7,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { usePlanActions } from "../../../hooks/use-plan-actions";
 import { formatCurrency } from "@/shared/utils";
 import { useNotificationStore } from "@/features/notification/store/notification-store";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { deletePlan } from "../../../actions/delete-plan";
 import { useEffect } from "react";
 
@@ -18,7 +18,7 @@ export const DeletePlanForm = () => {
 
   const deletePlanWithId = deletePlan.bind(null, plan?.id)
 
-  const [state, formAction] = useFormState(deletePlanWithId, {
+  const [state, formAction] = useActionState(deletePlanWithId, {
     message: "",
     success: false
   })

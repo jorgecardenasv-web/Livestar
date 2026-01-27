@@ -28,6 +28,8 @@ export const PaymentSelector: React.FC<PaymentSelectorProps> = ({
               <input type="hidden" name="paymentType" value={type} />
               <button
                 type="submit"
+                aria-pressed={activePaymentType === type}
+                aria-label={`Seleccionar pago ${type}`}
                 className={`w-full flex items-center justify-between p-3 rounded-lg text-sm font-medium transition-all duration-300 ${activePaymentType === type
                   ? "bg-[#223E99] text-white shadow-md"
                   : "bg-white text-[#223E99] border border-[#223E99] hover:bg-sky-50 hover:shadow-sm"
@@ -68,6 +70,8 @@ export const PaymentSelector: React.FC<PaymentSelectorProps> = ({
               <input type="hidden" name="paymentType" value={type} />
               <button
                 type="submit"
+                aria-pressed={activePaymentType === type}
+                aria-label={`Seleccionar pago ${type}`}
                 className={`w-full h-full flex items-center justify-center text-sm font-medium transition-colors duration-300 ${activePaymentType === type ? "text-white" : "text-[#223E99]"}`}
               >
                 {type === "Mensual" ? (

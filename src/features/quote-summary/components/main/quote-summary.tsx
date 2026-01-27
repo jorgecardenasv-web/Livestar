@@ -1,12 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { Shield, DollarSign, Percent, Heart, ArrowLeft, FileText, Download, Users, Loader2 } from "lucide-react";
+import { Shield, DollarSign, Percent, Heart, FileText, Download, Users, Loader2 } from "lucide-react";
 import { ContractForm } from "../forms/confirm-form";
 import { InfoCard } from "../cards/info-card";
-import { deleteSelectedPlan } from "@/features/plans/actions/set-cookies";
 import { FC, useEffect, useState } from "react";
-import { useFormStatus } from "react-dom";
 import { DeductibleAndCoInsuranceInfoModal } from "../modals/CombinedInfoModal";
 
 // Función para convertir data URI a Blob
@@ -59,7 +57,13 @@ import { useQuoteRuntimeStore } from "@/shared/store/quote-runtime-store";
 import { MedicalInformationForm } from "@/features/quote/components/forms/medical-information-form";
 import { QUESTIONS } from "@/features/quote/data";
 import { updateQuoteFromSummary } from "@/features/quote-summary/actions/update-quote-from-summary";
+import { clearCookiesAction } from "@/features/quote-summary/actions/clear-cookies";
 import { Button } from "@/shared/components/ui/button";
+import { normalizeFormData } from "@/features/quote/utils/normalize-form-data";
+import type {
+  MedicalHistoryPayload,
+  MedicalQuestionForm,
+} from "@/features/quote/types";
 
 interface MemberPrices {
   primerMes?: number;
@@ -152,33 +156,40 @@ const getMinimumValues = (jsonString: string | undefined): number => {
   }
 };
 
-// Componente para el botón de submit que muestra estado de carga
-const SubmitMedicalButton = () => {
-  const { pending } = useFormStatus();
+const SubmitMedicalButton = ({ onClick }: { onClick: () => Promise<void> }) => {
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <Button
-      type="submit"
+      type="button"
       size="lg"
       className="mt-4"
-      disabled={pending}
+      disabled={isLoading}
+      onClick={async () => {
+        setIsLoading(true);
+        try {
+          await onClick();
+        } finally {
+          setIsLoading(false);
+        }
+      }}
     >
-      {pending ? (
+      {isLoading ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           Actualizando...
         </>
       ) : (
-        "Actualizar cotización con información médica"
+        "Quiero contratar"
       )}
     </Button>
   );
 };
 
 export const QuoteSummary: FC<
-  InsuranceQuoteData
+  InsuranceQuoteData & { quoteId?: string }
 > = (props) => {
-  const quoteIdParam = useQuoteRuntimeStore((s) => s.quoteId) ?? "";
+  const quoteIdParam = props.quoteId || useQuoteRuntimeStore((s) => s.quoteId) || "";
   const {
     coInsurance,
     coInsuranceCap,
@@ -197,6 +208,8 @@ export const QuoteSummary: FC<
     coInsuranceCapJson,
     protectedWho,
   } = props;
+  const hasCompanyLogo =
+    typeof imgCompanyLogo === "string" && imgCompanyLogo.trim().length > 0;
   const isMultiple = isMultipleString === "true" ? true : false;
   const isMultipleCoIns = isMultipleCoInsurance === "true" ? true : false;
   const {
@@ -217,33 +230,82 @@ export const QuoteSummary: FC<
   // Estado para controlar mensajes de error
   const [pdfError, setPdfError] = useState<string | null>(null);
   const [pdfSuccess, setPdfSuccess] = useState<string | null>(null);
-  const [forms, setForms] = useState<any[]>(() => QUESTIONS.map((q, idx) => ({ [`answer-${idx}`]: "No", healthConditions: [] })));
+  const [forms, setForms] = useState<MedicalQuestionForm[]>(() =>
+    QUESTIONS.map(
+      () =>
+        ({
+          healthConditions: [],
+          activePadecimiento: null,
+        } as MedicalQuestionForm)
+    )
+  );
   const [medicalErrors, setMedicalErrors] = useState<Record<string, string>>({});
   const [medicalSuccess, setMedicalSuccess] = useState<string | null>(null);
   const [formFamily, setFormFamily] = useState<any>({ protectWho: protectedWho });
+  const [contractSuccess, setContractSuccess] = useState<string | null>(null);
+
+  // COMENTADO: Este useEffect estaba borrando las cookies y causando que la página redirigiera
+  // useEffect(() => {
+  //   const clearCookies = async () => {
+  //     try {
+  //       await fetch("/api/clear-quote-cookies", { method: "POST" });
+  //     } catch (error) {
+  //       console.error("Error clearing quote cookies", error);
+  //     }
+  //   };
+  //   clearCookies();
+  // }, []);
 
   useEffect(() => {
     (async () => {
       try {
-        const { protectWho, additionalInfo } = await getProspect();
-        const children = additionalInfo?.children ?? [];
-        const partnerGender = additionalInfo?.partnerGender ?? "";
-        const partnerAge = additionalInfo?.partnerAge ?? "";
-        const childrenCount = additionalInfo?.childrenCount ?? children?.length ?? 0;
-        const protectedPersons = additionalInfo?.protectedPersons ?? [];
-        const protectedCount = additionalInfo?.protectedCount ?? protectedPersons?.length ?? 0;
-        setFormFamily({
-          protectWho: protectWho ?? protectedWho,
-          children,
-          childrenCount,
-          partnerGender,
-          partnerAge,
-          protectedPersons,
-          protectedCount,
+        let prospectData = await getProspect();
+        
+        // Si tenemos un quoteId, priorizamos los datos de la BD para asegurar consistencia
+        if (quoteIdParam) {
+          const dbData = await getProspectByQuoteId(quoteIdParam);
+          if (dbData) {
+            prospectData = {
+              ...prospectData,
+              ...dbData,
+              // Asegurar que additionalInfo se combine correctamente si dbData lo trae
+              additionalInfo: dbData.additionalInfo || prospectData.additionalInfo
+            };
+          }
+        }
+
+        // Usar normalizeFormData para estandarizar la estructura de datos
+        const normalizedData = normalizeFormData({
+          ...prospectData,
+          protectWho: prospectData.protectWho ?? protectedWho
         });
-      } catch { }
+        
+        setFormFamily(normalizedData);
+
+        // Si hay historial médico, restaurar el estado del formulario
+        const medicalHistories = (prospectData as any).medicalHistories || [];
+        if (medicalHistories && Array.isArray(medicalHistories) && medicalHistories.length > 0) {
+          const newForms = QUESTIONS.map((q, idx) => {
+            const history = medicalHistories.find((h: any) => h.questionId === (q.id ?? idx));
+            if (history) {
+              return {
+                [`answer-${idx}`]: history.answer,
+                healthConditions: history.healthConditions || [],
+                activePadecimiento: history.activePadecimiento,
+              };
+            }
+            return {
+              healthConditions: [],
+              activePadecimiento: null,
+            };
+          });
+          setForms(newForms);
+        }
+      } catch (error) {
+        console.error("Error loading prospect data:", error);
+      }
     })();
-  }, [protectedWho]);
+  }, [protectedWho, quoteIdParam]);
 
   //! -------------------------------------------------------------------
   const handleGeneratePDF = async () => {
@@ -297,10 +359,6 @@ export const QuoteSummary: FC<
     }
   };
 
-  // Estas funciones han sido eliminadas ya que no se utiliza más el modal del PDF
-
-  //! -------------------------------------------------------------------
-
   return (
     <div className="min-h-screen">
       <div className="max-w-5xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
@@ -313,14 +371,16 @@ export const QuoteSummary: FC<
                   Resumen de cotización
                 </h2>
               </div>
-              <Image
-                src={imgCompanyLogo}
-                width={80}
-                height={60}
-                className="h-12 w-auto object-contain"
-                alt={`Logo de ${company}`}
-                priority
-              />
+              {hasCompanyLogo && (
+                <Image
+                  src={imgCompanyLogo}
+                  width={80}
+                  height={60}
+                  className="h-12 w-auto object-contain"
+                  alt={`Logo de ${company}`}
+                  priority
+                />
+              )}
             </div>
           </div>
 
@@ -481,47 +541,64 @@ export const QuoteSummary: FC<
                 questions={QUESTIONS as any}
                 formFamily={formFamily}
                 errors={medicalErrors}
+                useCheckboxes
               />
 
-              <form
-                action={async (fd: FormData) => {
+              <div className="flex flex-col items-end">
+                <SubmitMedicalButton onClick={async () => {
                   setMedicalSuccess(null);
                   setMedicalErrors({});
-                  const medicalData = forms.map((form, idx) => {
+                  
+                  const fd = new FormData();
+                  
+                  const medicalData: MedicalHistoryPayload[] = forms.map((form, idx) => {
                     const answerKey = `answer-${idx}`;
                     return {
-                      answer: form[answerKey],
-                      [answerKey]: form[answerKey],
+                      answer: (form[answerKey] as string | undefined) ?? undefined,
+                      [answerKey]: form[answerKey] as string | undefined,
                       questionId: QUESTIONS[idx]?.id ?? idx,
                       healthConditions: form.healthConditions || [],
-                      activePadecimiento: form.activePadecimiento,
+                      activePadecimiento:
+                        form.activePadecimiento !== undefined
+                          ? form.activePadecimiento
+                          : null,
                     };
                   });
-                  fd.set("medicalData", JSON.stringify(medicalData));
+                  
+                  const allEmpty = medicalData.every(
+                    (item) =>
+                      !item.answer &&
+                      (!item.healthConditions ||
+                        item.healthConditions.length === 0)
+                  );
+                  
+                  const payload = allEmpty ? [] : medicalData;
+                  fd.set("medicalData", JSON.stringify(payload));
+                  
                   if (quoteIdParam) {
                     fd.set("quoteId", quoteIdParam);
                   }
+                  
                   const res = await updateQuoteFromSummary(undefined, fd);
+                  
                   if (!res?.success) {
-                    setMedicalErrors((prev) => ({ ...prev, global: res?.message || "No se pudo actualizar la cotización." }));
+                    setMedicalErrors((prev) => ({ 
+                      ...prev, 
+                      global: res?.message || "No se pudo actualizar la cotización." 
+                    }));
                     setMedicalSuccess(null);
                   } else {
                     setMedicalErrors({});
+                    setContractSuccess(res.message || "Tu solicitud ha sido enviada exitosamente.");
                   }
-                }}
-              >
-                {/* Pasar quoteId por formulario a la Server Action */}
-                <input type="hidden" name="quoteId" value={quoteIdParam} />
-                <div className="flex flex-col items-end">
-                  <SubmitMedicalButton />
-                  {medicalSuccess && (
-                    <p className="mt-2 text-sm text-green-600">{medicalSuccess}</p>
-                  )}
-                  {medicalErrors.global && (
-                    <p className="mt-2 text-sm text-red-600">{medicalErrors.global}</p>
-                  )}
-                </div>
-              </form>
+                }} />
+                {medicalSuccess && (
+                  <p className="mt-2 text-sm text-green-600">{medicalSuccess}</p>
+                )}
+                {medicalErrors.global && (
+                  <p className="mt-2 text-sm text-red-600">{medicalErrors.global}</p>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -566,10 +643,10 @@ export const QuoteSummary: FC<
 
       {/* Mensaje de error global */}
       {pdfError && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-lg font-semibold text-red-600 mb-2">Error</h3>
-            <p className="mb-4">{pdfError}</p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
+          <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-lg font-semibold text-red-600 dark:text-red-400 mb-2">Error</h3>
+            <p className="mb-4 text-gray-700 dark:text-gray-200">{pdfError}</p>
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setPdfError(null)}
@@ -592,10 +669,10 @@ export const QuoteSummary: FC<
       )}
 
       {pdfSuccess && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full shadow-xl">
-            <h3 className="text-lg font-semibold text-green-600 mb-2">Éxito</h3>
-            <p className="mb-4">{pdfSuccess}</p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
+          <div className="bg-white dark:bg-zinc-800 rounded-lg p-6 max-w-md w-full shadow-xl">
+            <h3 className="text-lg font-semibold text-green-600 dark:text-green-400 mb-2">Éxito</h3>
+            <p className="mb-4 text-gray-700 dark:text-gray-200">{pdfSuccess}</p>
             <div className="flex justify-end">
               <button
                 onClick={() => setPdfSuccess(null)}
@@ -607,6 +684,42 @@ export const QuoteSummary: FC<
           </div>
         </div>
       )}
+
+      {contractSuccess && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
+            <div className="bg-white dark:bg-zinc-800 rounded-lg p-8 max-w-lg w-full shadow-xl border-t-4 border-green-500">
+              <div className="text-center mb-6">
+                <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 dark:bg-green-900 mb-4">
+                  <svg className="h-8 w-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">¡Solicitud Enviada!</h3>
+                <p className="text-base text-gray-700 dark:text-gray-200 leading-relaxed mb-4">
+                  Hemos recibido tu interés en contratar el plan seleccionado. Un asesor especializado se pondrá en contacto contigo <strong>lo antes posible</strong> para ayudarte a completar el proceso.
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Gracias por tu confianza en nuestros servicios.
+                </p>
+              </div>
+              <div className="flex justify-center">
+                <button
+                  onClick={async () => {
+                    try {
+                      await clearCookiesAction();
+                    } catch (error) {
+                      console.error("Error clearing cookies:", error);
+                    }
+                    window.location.href = "/cotizar";
+                  }}
+                  className="px-6 py-2.5 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors font-medium"
+                >
+                  Aceptar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
     </div>
   );
 };

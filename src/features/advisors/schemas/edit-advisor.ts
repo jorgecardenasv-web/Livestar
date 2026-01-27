@@ -4,9 +4,7 @@ import { z } from "zod";
 export const editAdvisorSchema = z.object({
   email: emailValidation,
   name: z
-    .string({
-      required_error: "El nombre es requerido.",
-    })
+    .string()
     .trim()
     .min(1, {
       message: "El nombre debe tener al menos un carácter.",

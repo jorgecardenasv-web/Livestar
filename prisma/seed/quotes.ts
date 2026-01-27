@@ -1,4 +1,5 @@
-import { PrismaClient, QuoteStatus, Prisma } from "@prisma/client";
+
+import { Prisma, PrismaClient, QuoteStatus } from "@generated/prisma/client";
 import { faker } from "@faker-js/faker/locale/es";
 
 const PROTECT_WHO_OPTIONS = [

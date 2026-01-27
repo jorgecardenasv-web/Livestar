@@ -1,4 +1,4 @@
-import { PlanType, Plan as PrismaPlan } from "@prisma/client";
+import { PlanType, Plan as PrismaPlan } from "@generated/prisma/client";
 import { CoInsuranceData, CoInsuranceCapData } from "../../quote/types";
 
 export interface Plan extends Omit<PrismaPlan, "additionalInfoHtml"> {

@@ -1,12 +1,10 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
 /node_modules
 /.pnp
 .pnp.js
 .yarn/install-state.gz
 package-lock.json
-pnpm-lock.yaml
 yarn.lock
 bun.lock
 
@@ -48,3 +46,5 @@ next-env.d.ts
 .idea
 .vscode
 .env*.local
+
+generated

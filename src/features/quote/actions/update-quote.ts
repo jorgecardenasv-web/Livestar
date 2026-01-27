@@ -9,6 +9,7 @@ import { PrismaError } from "@/shared/errors/prisma";
 import { getInsurancePlanByIdService } from "@/features/plans/services/read/get-insurance-plan-by-id.service";
 import { calculateInsurancePrice } from "@/features/plans/utils";
 import { getQuoteByIdService } from "../services/read/get-quote-by-id.service";
+import type { MedicalHistoryPayload } from "../types";
 
 // Función para transformar los datos del formulario en la estructura esperada
 const transformFormDataToProspectData = (parsed: any) => {
@@ -111,8 +112,8 @@ export const updateQuote = async (
     const parsed = parsedFormDataAge(rawFormData);
 
     const medicalDataStr = formData.get("medicalData");
-    const medicalData = medicalDataStr
-      ? JSON.parse(String(medicalDataStr))
+    const medicalData: MedicalHistoryPayload[] = medicalDataStr
+      ? (JSON.parse(String(medicalDataStr)) as MedicalHistoryPayload[])
       : [];
 
     const {
@@ -123,6 +124,7 @@ export const updateQuote = async (
       postalCode,
       whatsapp,
       protectWho,
+      isVerified,
       ...rest
     } = parsed;
 
@@ -206,6 +208,7 @@ export const updateQuote = async (
         gender: String(gender),
         postalCode: String(postalCode),
         whatsapp: String(whatsapp),
+        ...(isVerified !== undefined ? { isVerified: isVerified === "true" } : {}),
       },
       quote: {
         id: quoteId,
@@ -226,6 +229,7 @@ export const updateQuote = async (
     await updateQuoteService(quoteUpdate);
 
     revalidatePath(`${prefix}/cotizaciones`);
+    revalidatePath(`${prefix}/cotizaciones/${quoteId}`);
 
     return {
       success: true,

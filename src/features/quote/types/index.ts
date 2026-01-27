@@ -6,7 +6,7 @@ import {
   Prospect,
   User,
   Prisma,
-} from "@prisma/client";
+} from "@generated/prisma/client";
 
 interface Plan extends PrismaPlan {
   planType: PlanType;

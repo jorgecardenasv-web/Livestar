@@ -12,7 +12,7 @@ export const MedicalExpenseCard: React.FC<CardMedicalProps> = ({
   title,
 }) => {
   return (
-    <div className="bg-card text-card-foreground rounded-lg p-6 flex flex-col items-center text-center shadow-lg border">
+    <div className="bg-card text-card-foreground rounded-lg p-6 flex flex-col items-center text-center border border-slate-200/70">
       <div className="w-28 h-28 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
         <Image
           src={image}

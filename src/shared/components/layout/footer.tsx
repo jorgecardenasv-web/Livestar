@@ -50,14 +50,14 @@ const socialLinks = [
 ]
 
 const FooterLink = ({ href, children }: { href: string; children: React.ReactNode }) => (
-  <Link href={href} className="text-sm md:text-base text-gray-600 hover:text-black transition-colors duration-200">
+  <Link href={href} className="text-sm md:text-base text-gray-600 hover:text-[#223E99] transition-colors duration-200">
     {children}
   </Link>
 )
 
 const FooterLinkGroup = ({ title, links }: { title: string; links: { name: string; href: string }[] }) => (
-  <div className="space-y-3">
-    <h4 className="text-sm font-medium text-gray-700">{title}</h4>
+  <div className="space-y-4">
+    <h4 className="text-base font-semibold text-gray-800">{title}</h4>
     <ul className="space-y-2">
       {links.map((link) => (
         <li key={link.href}>
@@ -70,60 +70,70 @@ const FooterLinkGroup = ({ title, links }: { title: string; links: { name: strin
 
 export function Footer() {
   return (
-    <footer className="bg-white text-gray-600 py-8 md:py-12 border-t border-gray-200">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between mb-8 gap-y-10">
-          <div className="col-span-1 md:col-span-2 lg:col-span-1 w-full">
-            <Image
-              src={Logo || "/placeholder.svg"}
-              width={180}
-              height={110}
-              alt="Logo empresa"
-              className="mb-4"
-              priority
-            />
-            <p className="text-sm mb-4">Seguros y Ahorros entre personas</p>
-            <div className="flex space-x-4">
+    <footer className="bg-white text-gray-600 py-8 sm:py-10 md:py-12 border-t border-gray-200">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 md:gap-12 mb-8 sm:mb-10 md:mb-12">
+          {/* Logo y Redes Sociales */}
+          <div className="col-span-1 md:col-span-2 lg:col-span-1">
+            <Link href="/" className="inline-block mb-4 sm:mb-6">
+              <Image
+                src={Logo || "/placeholder.svg"}
+                width={180}
+                height={60}
+                alt="Livestar Seguros"
+                className="h-auto w-32 sm:w-40 md:w-44 lg:w-48"
+                priority
+              />
+            </Link>
+            <p className="text-sm text-gray-500 mb-4 sm:mb-6 max-w-xs">
+              Seguros y Ahorros entre personas. Protegemos lo que más quieres con soluciones a tu medida.
+            </p>
+            <div className="flex space-x-5">
               {socialLinks.map((social) => (
                 <Link
                   key={social.name}
                   href={social.href}
-                  className="transition-colors"
+                  className="transition-transform hover:scale-110"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label={social.name}
                 >
-                  <social.icon className={`fill-[#666666] ${social.hoverColor}`} />
-                  <span className="sr-only">{social.name}</span>
+                  <social.icon className={`w-6 h-6 fill-gray-400 transition-colors ${social.hoverColor}`} />
                 </Link>
               ))}
             </div>
           </div>
-          <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-4 lg:pl-8 w-full">
-            <div>
-              <FooterLinkGroup title="Seguros" links={quickLinks.seguros} />
-            </div>
-            <div>
-              <FooterLinkGroup title="Cotizadores" links={quickLinks.cotizadores} />
-            </div>
-            <div>
-              <FooterLinkGroup title="General" links={quickLinks.general} />
-            </div>
+
+          {/* Enlaces Rápidos */}
+          <div>
+            <FooterLinkGroup title="Seguros" links={quickLinks.seguros} />
+          </div>
+          <div>
+            <FooterLinkGroup title="Cotizadores" links={quickLinks.cotizadores} />
+          </div>
+          <div>
+            <FooterLinkGroup title="General" links={quickLinks.general} />
           </div>
         </div>
-        <div className="border-t border-gray-100 pt-6 mt-6">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-xs md:text-sm text-gray-500 mb-4 md:mb-0 text-center md:text-left">
+
+        {/* Barra Inferior */}
+        <div className="border-t border-gray-100 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
+            <div className="text-center md:text-left space-y-1">
               <p>Plaza Concentro, Av Vallarta Pte. No. 6503, Local B5-5A</p>
               <p>Ciudad Granja, 45010, Zapopan, Jal, México</p>
-              <p>contacto@livestar.mx | (33) 3110 1122 | (33) 1810 1118</p>
+              <p>
+                <a href="mailto:contacto@livestar.mx" className="hover:text-[#223E99] transition-colors">contacto@livestar.mx</a>
+                {" | "}
+                <a href="tel:3331101122" className="hover:text-[#223E99] transition-colors">(33) 3110 1122</a>
+              </p>
             </div>
-            <p className="text-xs md:text-sm text-gray-500 text-center md:text-right">
-              © {new Date().getFullYear()} Livestar. Todos los derechos reservados.
-            </p>
+            <div className="text-center md:text-right">
+              <p>© {new Date().getFullYear()} Livestar. Todos los derechos reservados.</p>
+            </div>
           </div>
         </div>
       </div>
     </footer>
   )
 }
-

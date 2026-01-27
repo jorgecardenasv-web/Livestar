@@ -1,5 +1,5 @@
-import { hash } from "bcrypt";
-import prisma from "../../src/lib/prisma";
+import prisma from "@/lib/prisma";
+import * as bcrypt from "bcryptjs";
 
 async function main() {
   console.log("🧹 Limpiando base de datos...");
@@ -25,7 +25,7 @@ async function main() {
 
   // Creamos el usuario administrador
   const adminPassword = "AdminPass123";
-  const hashedAdminPassword = await hash(adminPassword, 10);
+  const hashedAdminPassword = await bcrypt.hash(adminPassword, 10);
 
   await prisma.user.create({
     data: {
@@ -352,7 +352,7 @@ async function main() {
       data: {
         name: `Asesor ${i + 1}`,
         email: `asesor${i + 1}@livestar.com`,
-        password: await hash("Asesor123", 10),
+        password: await bcrypt.hash("Asesor123", 10),
         role: "ASESOR",
         status: "ACTIVO",
       },

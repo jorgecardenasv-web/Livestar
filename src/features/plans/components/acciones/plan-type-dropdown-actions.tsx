@@ -10,7 +10,7 @@ import {
 } from "@/shared/components/ui/dropdown-menu";
 import { Button } from "@/shared/components/ui/button";
 import { MoreHorizontal, Trash2, Edit } from "lucide-react";
-import { PlanType } from "@prisma/client";
+import { PlanType } from "@generated/prisma/client";
 import { usePlanTypeActions } from "../../hooks/use-plan-type-actions";
 
 export const DropdownActions = ({ planType }: { planType: PlanType }) => {

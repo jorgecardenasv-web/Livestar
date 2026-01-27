@@ -1,4 +1,4 @@
-import { Quote as PrismaQuote, Prospect, User } from "@prisma/client";
+import { Quote as PrismaQuote, Prospect, User } from "@generated/prisma/client";
 
 interface QuotePayload extends PrismaQuote {
   user?: User;

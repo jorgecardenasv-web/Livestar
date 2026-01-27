@@ -41,5 +41,6 @@ export async function getProspectByQuoteId(quoteId: string) {
     prospect,
     protectWho,
     additionalInfo,
+    medicalHistories: quote.medicalHistories || [],
   };
 }

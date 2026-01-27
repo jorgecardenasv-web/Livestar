@@ -6,7 +6,7 @@ import { changeAdvisorService } from "../services/update/change-advisor.service"
 import { revalidatePath } from "next/cache";
 import { FormState } from "@/shared/types";
 import { PrismaError } from "@/shared/errors/prisma";
-import { QuoteStatus } from "@prisma/client";
+import { QuoteStatus } from "@generated/prisma/client";
 
 const ChangeAdvisorSchema = z.object({
   userId: z.string(),

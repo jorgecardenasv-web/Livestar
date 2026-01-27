@@ -10,6 +10,8 @@ import { sendQuoteEmailService } from "../services/send-email/send-quote-email.s
 import { processPDFData } from "@/features/quote-summary/utils/process-pdf-data.util";
 import { revalidatePath } from "next/cache";
 import { prefix } from "@/features/layout/nav-config/constants";
+import { after } from "next/server";
+import prisma from "@/lib/prisma";
 
 export const createQuoteAction = async (
   payload: any,
@@ -18,7 +20,7 @@ export const createQuoteAction = async (
   let createdQuoteId: string | undefined;
   try {
     const { prospectData, medicalData } = payload;
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const selectedPlan = cookieStore.get("selectedPlan")?.value;
     const parsedPlan = JSON.parse(selectedPlan!);
 
@@ -28,7 +30,14 @@ export const createQuoteAction = async (
     const resolvedProspectData = prospectData ?? (() => {
       const prospectJson = cookieStore.get("prospect")?.value;
       const prospect = prospectJson ? JSON.parse(prospectJson) : null;
-      return prospect ? { ...prospect, additionalInfo: prospect.additionalInfo } : null;
+      
+      let additionalInfo = prospect?.additionalInfo;
+      // Si additionalInfo tiene una propiedad additionalInfo anidada, desenvolverla
+      if (additionalInfo && additionalInfo.additionalInfo) {
+        additionalInfo = additionalInfo.additionalInfo;
+      }
+
+      return prospect ? { ...prospect, additionalInfo } : null;
     })();
 
     if (resolvedProspectData) {
@@ -42,24 +51,37 @@ export const createQuoteAction = async (
       );
       createdQuoteId = created?.id;
 
-      try {
-        const pdfData = processPDFData(parsedPlan, resolvedProspectData);
-        const pdfBuffer = await generatePDFService(pdfData, "arraybuffer");
-        const buffer = Buffer.from(new Uint8Array(pdfBuffer as ArrayBuffer));
-
-        await sendQuoteEmailService({
-          prospectName: resolvedProspectData.name,
-          prospectEmail: resolvedProspectData.email,
-          whatsapp: resolvedProspectData.whatsapp,
-          pdfBuffer: buffer,
-          company: parsedPlan.company,
-          plan: parsedPlan.plan,
-          advisorName: advisor?.name,
-          advisorEmail: advisor?.email ?? "emma@livestar.mx",
+      // Actualizar la fecha de última asignación del asesor
+      if (advisor?.id) {
+        await prisma.user.update({
+          where: { id: advisor.id },
+          data: {
+            lastProspectAssigned: new Date(),
+            isNewAdvisor: false,
+          },
         });
-      } catch (pdfError) {
-        console.error("Error generando o enviando PDF:", pdfError);
       }
+
+      after(async () => {
+        try {
+          const pdfData = processPDFData(parsedPlan, resolvedProspectData);
+          const pdfBuffer = await generatePDFService(pdfData, "arraybuffer");
+          const buffer = Buffer.from(new Uint8Array(pdfBuffer as ArrayBuffer));
+          
+          await sendQuoteEmailService({
+            prospectName: resolvedProspectData.name,
+            prospectEmail: resolvedProspectData.email,
+            whatsapp: resolvedProspectData.whatsapp,
+            pdfBuffer: buffer,
+            company: parsedPlan.company,
+            plan: parsedPlan.plan,
+            advisorName: advisor?.name,
+            advisorEmail: advisor?.email ?? "emma@livestar.mx",
+          });
+        } catch (pdfError) {
+          console.error("Error generando o enviando PDF:", pdfError);
+        }
+      });
 
       const shouldDeleteCookies = options?.deleteCookies ?? true;
       if (shouldDeleteCookies) {

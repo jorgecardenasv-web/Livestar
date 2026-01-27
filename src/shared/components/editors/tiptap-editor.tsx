@@ -1,6 +1,7 @@
 'use client'
 
-import { useEditor, EditorContent, BubbleMenu, FloatingMenu } from '@tiptap/react'
+import { useEditor, EditorContent } from '@tiptap/react'
+import { BubbleMenu, FloatingMenu } from '@tiptap/react/menus'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import Placeholder from '@tiptap/extension-placeholder'
@@ -8,6 +9,7 @@ import Underline from '@tiptap/extension-underline'
 import TextAlign from '@tiptap/extension-text-align'
 import Highlight from '@tiptap/extension-highlight'
 import { useCallback, useEffect } from 'react'
+import type { MouseEvent } from 'react'
 
 interface TiptapEditorProps {
   content?: string
@@ -32,14 +34,12 @@ export function TiptapEditor({
           },
         },
         bulletList: {
-          HTMLAttributes: {
-            class: 'list-disc ml-4',
-          },
+          keepMarks: true,
+          keepAttributes: false,
         },
         orderedList: {
-          HTMLAttributes: {
-            class: 'list-decimal ml-4',
-          },
+          keepMarks: true,
+          keepAttributes: false,
         },
       }),
       Link.configure({
@@ -63,10 +63,10 @@ export function TiptapEditor({
     editable,
     editorProps: {
       attributes: {
-        class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-xl focus:outline-none min-h-[300px] px-4 py-3',
+        class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-xl focus:outline-none min-h-[300px] px-4 py-3 [&_li_p]:m-0',
       },
     },
-    immediatelyRender: false, // Importante para SSR en Next.js
+    immediatelyRender: false,
     onCreate: ({ editor }) => {
       // Evento cuando el editor se crea
       console.log('Editor creado')
@@ -90,14 +90,24 @@ export function TiptapEditor({
     },
   })
 
-  // Actualizar contenido si cambia desde props
   useEffect(() => {
-    if (editor && content !== editor.getHTML()) {
-      editor.commands.setContent(content)
+    if (!editor) return
+
+    const normalizedIncoming = content || ''
+    const currentHtml = editor.getHTML()
+    const normalizedCurrent = currentHtml === '<p></p>' ? '' : currentHtml
+
+    if (normalizedIncoming !== normalizedCurrent) {
+      editor.commands.setContent(normalizedIncoming, { emitUpdate: false })
     }
   }, [content, editor])
 
-  const setTextAlign = useCallback((align: 'left' | 'center' | 'right' | 'justify', e?: React.MouseEvent) => {
+  useEffect(() => {
+    if (!editor) return
+    editor.setEditable(editable)
+  }, [editable, editor])
+
+  const setTextAlign = useCallback((align: 'left' | 'center' | 'right' | 'justify', e?: MouseEvent) => {
     e?.preventDefault()
     editor?.chain().focus().setTextAlign(align).run()
   }, [editor])
@@ -288,11 +298,7 @@ export function TiptapEditor({
       </div>
 
       {/* Menú flotante para selección */}
-      <BubbleMenu
-        editor={editor}
-        tippyOptions={{ duration: 100 }}
-        className="bg-black text-white rounded p-2 flex gap-2"
-      >
+      <BubbleMenu editor={editor as any} className="bg-black text-white rounded p-2 flex gap-2">
         <button
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={editor.isActive('bold') ? 'text-blue-400' : ''}
@@ -310,11 +316,7 @@ export function TiptapEditor({
       </BubbleMenu>
 
       {/* Menú flotante para líneas vacías */}
-      <FloatingMenu
-        editor={editor}
-        tippyOptions={{ duration: 100 }}
-        className="bg-white border rounded shadow-lg p-2 flex gap-2"
-      >
+      <FloatingMenu editor={editor as any} className="bg-white border rounded shadow-lg p-2 flex gap-2">
         <button
           onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
           className="px-2 py-1 hover:bg-gray-100 rounded"

@@ -11,11 +11,12 @@ export interface Params extends Plan {
   query?: string;
 }
 
-export default function Planes({
+export default async function Planes({
   searchParams
 }: {
-  searchParams: Params;
+  searchParams: Promise<Params>;
 }) {
+  const resolvedSearchParams = await searchParams;
   return (
     <>
       <div className="flex-1 rounded-xl bg-muted/50 p-5 space-y-6">
@@ -25,7 +26,7 @@ export default function Planes({
         <Card>
           <CardContent className="space-y-6 p-6">
             <Suspense fallback={<TableSkeleton />}>
-              <PlansList params={searchParams} />
+              <PlansList params={resolvedSearchParams} />
             </Suspense>
           </CardContent>
         </Card>

@@ -1,10 +1,10 @@
 import { useNotificationStore } from "@/features/notification/store/notification-store";
 import { useModalStore } from "@/shared/store/modal-store";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { useEffect, useState } from "react";
 import { changeStatusAndAdvisor } from "../actions/change-advisor-and-status";
 import { deleteQuote } from "../actions/delete-quote";
-import { Quote } from "@prisma/client";
+import { Quote } from "@generated/prisma/client";
 import { useRouter } from "next/navigation";
 
 export const useQuoteActions = () => {
@@ -21,7 +21,7 @@ export const useQuoteActions = () => {
 
   const updateUserWithId = changeStatusAndAdvisor.bind(null, quote?.id);
 
-  const [state, formAction] = useFormState(updateUserWithId, {
+  const [state, formAction] = useActionState(updateUserWithId, {
     message: "",
     inputErrors: {},
     success: false,

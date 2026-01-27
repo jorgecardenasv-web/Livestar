@@ -31,6 +31,8 @@ const PlanButton = ({
     <button
       type="submit"
       disabled={pending}
+      aria-pressed={planTypeId === type.id}
+      aria-label={`Seleccionar tipo de plan ${type.name}`}
       className={`w-full flex items-center justify-center p-3 sm:px-4 sm:py-3 rounded-lg text-sm font-medium transition-all duration-300 ${planTypeId === type.id
         ? "bg-[#223E99] text-white shadow-md"
         : "bg-white text-[#223E99] border border-[#223E99] hover:bg-sky-50 hover:shadow-sm"
@@ -113,6 +115,8 @@ export const PlanSelector: React.FC<PlanSelectorProps> = ({
               <input type="hidden" name="planTypeId" value={type.id} />
               <button
                 type="submit"
+                aria-pressed={planTypeId === type.id}
+                aria-label={`Seleccionar tipo de plan ${type.name}`}
                 className={`w-full flex items-center justify-between p-3 rounded-lg text-sm font-medium transition-all duration-300 ${planTypeId === type.id
                   ? "bg-[#223E99] text-white shadow-md"
                   : "bg-white text-[#223E99] border border-[#223E99] hover:bg-sky-50 hover:shadow-sm"

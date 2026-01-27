@@ -1,5 +1,5 @@
 import { useModalStore } from "@/shared/store/modal-store";
-import { PlanType } from "@prisma/client";
+import { PlanType } from "@generated/prisma/client";
 
 export const usePlanTypeActions = () => {
   const {

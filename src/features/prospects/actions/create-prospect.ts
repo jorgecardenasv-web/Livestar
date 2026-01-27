@@ -15,7 +15,8 @@ export const createProspect = async (formData: any) => {
     ...additionalInfo
   } = formData;
 
-  cookies().set(
+  const cookieStore = await cookies();
+  cookieStore.set(
     "prospect",
     JSON.stringify({
       name,

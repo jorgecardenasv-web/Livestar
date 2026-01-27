@@ -1,8 +1,6 @@
 import { SubmitButton } from "@/shared/components/ui/submit-button";
-import { UserStatus } from "@prisma/client";
 import { useAdvisorActions } from "../../hooks/use-advisor-actions";
 import { updateAdvisor } from "../../actions/update-advisor";
-import { Badge } from "@/shared/components/ui/badge";
 import { TextInput } from "@/shared/components/ui/text-input";
 import { SelectInput } from "@/shared/components/ui/select-input";
 import { Button } from "@/shared/components/ui/button";
@@ -44,7 +42,7 @@ export const UpdateAdvisorForm = () => {
         ]}
         label="Estatus"
         name="status"
-        defaultValue={advisor?.status === UserStatus.ACTIVO ? "1" : "2"}
+        defaultValue={advisor?.status === "ACTIVO" ? "1" : "2"}
         required
       />
 
