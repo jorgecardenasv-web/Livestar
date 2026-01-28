@@ -1,5 +1,5 @@
 import { prefix } from "@/features/layout/nav-config/constants";
-import { Role } from "@prisma/client";
+import { Role } from "@generated/prisma/enums";
 import {
   Contact,
   Key,

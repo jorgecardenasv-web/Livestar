@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { handlePrismaError } from "@/shared/errors/prisma";
-import { User } from "@prisma/client";
+import { User } from "@generated/prisma/client";
 
 export const updateAdvisorService = async (
   advisorId: string,

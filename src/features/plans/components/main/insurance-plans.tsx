@@ -1,4 +1,4 @@
-import { PlanTypeStatus } from "@prisma/client";
+import { PlanTypeStatus } from "@generated/prisma/client";
 import { getInsuranceState } from "../../loaders/get-insurance-status";
 import { getPlanTypes } from "../../loaders/get-plan-types";
 import { PaymentSelector } from "../selectors/payment-selector";

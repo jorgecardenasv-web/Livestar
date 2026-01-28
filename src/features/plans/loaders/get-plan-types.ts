@@ -1,4 +1,4 @@
-import { PlanType } from "@prisma/client";
+import { PlanType } from "@generated/prisma/client";
 import { getPlanTypesService } from "../services/read/get-plan-types.service";
 
 export interface FilterOptions extends Partial<PlanType> {

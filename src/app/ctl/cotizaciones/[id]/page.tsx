@@ -7,10 +7,11 @@ import { getQuoteByIdLoader } from "@/features/quote/loaders/get-quote-by-id.loa
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 
 export default async function QuotesPage({
-  params: { id },
+  params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const quote = await getQuoteByIdLoader(id);
   const advisors = await getAdvisors();
 

@@ -2,7 +2,7 @@ import {
   Insurance as InsurancePrisma,
   Plan as PlanPrisma,
   PlanType,
-} from "@prisma/client";
+} from "@generated/prisma/client";
 
 export interface Insurance extends Omit<InsurancePrisma, "id" | "uuid"> {
   id: string;

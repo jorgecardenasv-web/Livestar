@@ -19,13 +19,18 @@ export const getQuoteByIdService = async (
     if (!quote) return null;
 
     // Parsear additionalInfo si existe
-    let parsedAdditionalInfo = null;
+    let parsedAdditionalInfo: any = null;
     if (quote.additionalInfo) {
       try {
         parsedAdditionalInfo =
           typeof quote.additionalInfo === "string"
             ? JSON.parse(quote.additionalInfo)
             : quote.additionalInfo;
+
+        // Si additionalInfo tiene una propiedad additionalInfo anidada, desenvolverla
+        if (parsedAdditionalInfo && parsedAdditionalInfo.additionalInfo) {
+          parsedAdditionalInfo = parsedAdditionalInfo.additionalInfo;
+        }
       } catch (e) {
         console.error("Error parsing additionalInfo:", e);
       }

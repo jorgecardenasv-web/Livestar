@@ -9,6 +9,7 @@ import { useState } from "react";
 
 export function NavbarMobile() {
   const [showDropdown, setShowDropdown] = useState(false)
+  const [showCotizadores, setShowCotizadores] = useState(false)
   return (
     <div className="lg:hidden relative z-50">
       <Sheet>
@@ -30,10 +31,32 @@ export function NavbarMobile() {
             </div>
             <div className="flex-grow overflow-y-auto">
               <div className="px-4 py-6 space-y-6">
-                <button className="w-full text-left px-3 py-2 bg-white text-[#223E99] rounded-md font-medium">
-                  Cotizadores
-                </button>
+                
+                {/* Cotizadores Mobile */}
+                <div>
+                  <button
+                    onClick={() => setShowCotizadores(!showCotizadores)}
+                    className="w-full flex items-center justify-between px-3 py-2 text-white hover:text-gray-200 transition-colors font-medium"
+                  >
+                    <span>Cotizadores</span>
+                    <ChevronDown className={`w-4 h-4 transform transition-transform ${showCotizadores ? 'rotate-180' : ''}`} />
+                  </button>
 
+                  {showCotizadores && (
+                    <div className="mt-2 pl-4 space-y-2">
+                      <Link href="https://livestar.mx/emma/ahorro.php" className="flex items-center px-3 py-2 text-white/90 hover:text-white transition-colors">
+                        <HeartPulse className="w-5 h-5 mr-2" />
+                        <span>EMMA Ahorro</span>
+                      </Link>
+                      <Link href="https://livestar.com.mx/seguro/segurodevida.php" className="flex items-center px-3 py-2 text-white/90 hover:text-white transition-colors">
+                        <Hospital className="w-5 h-5 mr-2" />
+                        <span>Seguro de Vida</span>
+                      </Link>
+                    </div>
+                  )}
+                </div>
+
+                {/* Seguros Mobile */}
                 <div>
                   <button
                     onClick={() => setShowDropdown(!showDropdown)}

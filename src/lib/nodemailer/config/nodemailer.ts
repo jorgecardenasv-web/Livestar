@@ -5,6 +5,7 @@ function validateEnvVariables() {
   const requiredVars = {
     EMAIL_USER: process.env.EMAIL_USER,
     EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
+    EMAIL_FROM: process.env.EMAIL_FROM,
   };
 
   const missingVars = Object.entries(requiredVars)
@@ -105,7 +106,7 @@ export async function sendEmail({
     }
 
     const mailOptions: MailOptions = {
-      from: process.env.EMAIL_USER!,
+      from: process.env.EMAIL_FROM!,
       to,
       subject,
       html,

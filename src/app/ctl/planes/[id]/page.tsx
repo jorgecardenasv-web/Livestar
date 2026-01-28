@@ -4,10 +4,11 @@ import { getInsurancePlanById } from "@/features/plans/loaders/get-insurance-pla
 import { getPlanTypes } from "@/features/plans/loaders/get-plan-types";
 
 export default async function EditPlan({
-  params: { id },
+  params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const [insuranceCompanies, planTypesResult, insurancePlan] = await Promise.all([
     getInsuranceCompany(),
     getPlanTypes({

@@ -1,5 +1,5 @@
 import { FilterConfig } from "@/shared/hooks/use-table-filters";
-import { QuoteStatus } from "@prisma/client";
+import { QuoteStatus } from "@generated/prisma/client";
 import { Question } from "../types";
 
 interface QuoteStatusOptions {

@@ -1,6 +1,6 @@
 import { HeaderQuotes } from "@/features/quote/components/headers/header-quotes";
 import { getAdvisors } from "@/features/prospects/loaders/get-advisors";
-import { Prospect } from "@prisma/client";
+import { Prospect } from "@generated/prisma/client";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { ModalQuoteActions } from "@/features/quote/components/modals/modal-quote-actions";
 import { Suspense } from "react";
@@ -15,8 +15,9 @@ export interface Params extends Prospect {
 export default async function ProspectsPage({
   searchParams,
 }: {
-  searchParams: Params;
+  searchParams: Promise<Params>;
 }) {
+  const resolvedSearchParams = await searchParams;
   const advisors = await getAdvisors();
 
   return (
@@ -28,7 +29,7 @@ export default async function ProspectsPage({
         <Card>
           <CardContent className="space-y-6 p-6">
             <Suspense fallback={<TableSkeleton />}>
-              <ListQuotes params={searchParams} />
+              <ListQuotes params={resolvedSearchParams} />
             </Suspense>
           </CardContent>
         </Card>

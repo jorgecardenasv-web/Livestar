@@ -4,12 +4,12 @@ import { useNotificationStore } from "@/features/notification/store/notification
 import { updateQuote } from "@/features/quote/actions/update-quote"
 import { ContactInfoSection } from "@/features/quote/components/forms/contact-info-section"
 import { PersonalInfoSection } from "@/features/quote/components/forms/personal-info-section"
-import { useGetQuoteForm } from "@/features/quote/hooks/use-get-quote-form"
+import { useQuoteEditFormRHF } from "@/features/quote/hooks/use-quote-edit-form-rhf"
 import type { AdditionalInfo, DeductiblesData, Quote, CoInsuranceData, CoInsuranceCapData } from "@/features/quote/types"
 import { Card, CardContent } from "@/shared/components/ui/card"
 import { SubmitButton } from "@/shared/components/ui/submit-button"
 import { useEffect } from "react"
-import { useFormState } from "react-dom"
+import { useActionState } from "react"
 import { MedicalInformationForm } from "@/features/quote/components/forms/medical-information-form"
 import { QUESTIONS } from "@/features/quote/data"
 import { Breadcrumbs } from "@/shared/components/layout/breadcrumbs"
@@ -24,14 +24,14 @@ import { useRouter } from "next/navigation"
 
 export function QuotePageClient({ quote }: { quote: Quote }) {
   const { formData, errors, handleChildChange, handleInputChange, handleProtectedPersonChange, forms, setForms } =
-    useGetQuoteForm(quote, QUESTIONS)
+    useQuoteEditFormRHF(quote, QUESTIONS)
 
   const { showNotification } = useNotificationStore()
   const router = useRouter()
 
   const updateUserWithId = quote?.id ? updateQuote.bind(null, quote.id) : null
 
-  const [state, formAction] = useFormState(
+  const [state, formAction] = useActionState(
     updateUserWithId || (() => ({ message: "Error: No se pudo encontrar la cotización", success: false, inputErrors: {} })),
     {
       message: "",
@@ -143,7 +143,16 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
     };
 
     if (membersData.main) {
-      members.push(processMember(membersData.main, 'Titular', 'main'));
+      // Verificar si es un objeto vacío o si el precio es 0, lo que podría indicar que no aplica
+      const isMainValid = typeof membersData.main === 'object'
+        ? (membersData.main.price > 0 || membersData.main.primerMes > 0 || membersData.main.anual > 0)
+        : membersData.main > 0;
+
+      // Siempre mostrar al titular a menos que explícitamente no deba estar (lo cual es raro en seguros)
+      // O si el protectWho es "solo_mis_hijos" (aunque generalmente el titular es el contratante)
+      if (membersData.protectWho !== "solo_mis_hijos" || isMainValid) {
+        members.push(processMember(membersData.main, 'Titular', 'main'));
+      }
     }
 
     if (membersData.partner) {
@@ -243,6 +252,7 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
                   <PersonalInfoSection
                     formData={formData}
                     errors={errors}
+                    isVerified={quote.prospect?.isVerified}
                     handleInputChange={handleInputChange}
                     handleChildChange={handleChildChange}
                     handleProtectedPersonChange={handleProtectedPersonChange}
@@ -274,6 +284,7 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
                     questions={QUESTIONS}
                     formFamily={formData}
                     errors={errors}
+                    useCheckboxes
                   />
                 </CardContent>
               </Card>

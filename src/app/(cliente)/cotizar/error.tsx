@@ -13,7 +13,7 @@ interface ErrorProps {
 
 export default function Error({ error, reset }: ErrorProps) {
   useEffect(() => {
-    console.error("Error en la página de administradores:", error);
+    console.error("Error en la página de cotizar:", error);
   }, [error]);
 
   return (

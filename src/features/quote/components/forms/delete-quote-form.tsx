@@ -7,7 +7,7 @@ import { Badge } from "@/shared/components/ui/badge";
 import { useQuoteActions } from "../../hooks/use-quote-actions";
 import { formatCurrency } from "@/shared/utils";
 import { useNotificationStore } from "@/features/notification/store/notification-store";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { deleteQuote } from "../../actions/delete-quote";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -19,7 +19,7 @@ export const DeleteQuoteForm = () => {
 
   const deleteQuoteWithId = deleteQuote.bind(null, quote?.id);
 
-  const [state, formAction] = useFormState(deleteQuoteWithId, {
+  const [state, formAction] = useActionState(deleteQuoteWithId, {
     message: "",
     success: false
   });

@@ -2,7 +2,7 @@
 
 import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { updateProfile } from "../../actions/update-profile";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { useEffect } from "react";
 import { useNotificationStore } from "@/features/notification/store/notification-store";
 import { AuthenticadedUser } from "@/lib/iron-session/types";
@@ -14,7 +14,7 @@ export const ProfileForm = ({ user }: { user: AuthenticadedUser }) => {
     (state) => state.showNotification
   );
 
-  const [state, formAction] = useFormState(updateProfile, {
+  const [state, formAction] = useActionState(updateProfile, {
     message: "",
     success: false,
     inputErrors: {},

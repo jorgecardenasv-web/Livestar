@@ -3,7 +3,7 @@ import {
   filterOptionsToWhere,
   textSearchFilterBuilder,
 } from "@/shared/utils/where-filter-builder";
-import { PlanType } from "@prisma/client";
+import { PlanType } from "@generated/prisma/client";
 import { GetAllResponse } from "@/shared/types";
 import { FilterOptions } from "../../loaders/get-plan-types";
 

@@ -1,12 +1,18 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
+  output: "standalone",
   images: {
-    domains: ["localhost"],
+    qualities: [75, 90],
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost",
+        pathname: "/**",
+      },
+    ],
   },
-  experimental: {
-    serverComponentsExternalPackages: ["puppeteer-core", "@sparticuz/chromium"],
-  },
+  serverExternalPackages: ["puppeteer-core"],
 };
 
 export default nextConfig;

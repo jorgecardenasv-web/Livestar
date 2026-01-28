@@ -1,11 +1,21 @@
 import { deleteProspectQuote } from "@/features/plans/actions/set-cookies";
+import { cn } from "@/shared/utils/cn";
 
-export function NewQuoteButton() {
+interface NewQuoteButtonProps {
+  className?: string;
+}
+
+export function NewQuoteButton({ className }: NewQuoteButtonProps) {
   return (
     <form action={deleteProspectQuote}>
-      <button className="whitespace-nowrap px-3 sm:px-3 lg:px-4 xl:px-6 py-2 sm:py-2 bg-[#223E99] text-white rounded-md hover:bg-[#1b327d] transition-colors font-medium text-xs sm:text-sm lg:text-base">
-        Nueva cotización
+      <button
+        className={cn(
+          "whitespace-nowrap px-4 py-2 bg-[#00AEEF] text-white rounded-lg hover:bg-[#009bd5] transition-all duration-200 font-medium text-sm lg:text-base shadow-sm flex items-center gap-2",
+          className
+        )}
+      >
+        <span>Nueva cotización</span>
       </button>
     </form>
-  )
+  );
 }

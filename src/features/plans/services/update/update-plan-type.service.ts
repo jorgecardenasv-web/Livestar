@@ -1,6 +1,6 @@
 import prisma from "@/lib/prisma";
 import { handlePrismaError } from "@/shared/errors/prisma";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@generated/prisma/client";
 
 export const updatePlanTypeService = async (
   planTypeId: string,

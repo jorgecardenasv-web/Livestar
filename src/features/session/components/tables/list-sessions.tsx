@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Session } from "../../types/session";
-import { User } from "@prisma/client";
 import { formatDate } from "@/shared/utils";
 import { invalidateSession } from "../../actions/invalidate-session";
 import { UsersIcon } from "lucide-react";
@@ -29,7 +28,7 @@ export const ListSessions = ({ sessions }: { sessions: Session[] }) => {
     (session) => filter === "ALL" || session.user.role === filter
   );
 
-  const getRoleBadge = (role: User["role"]) => {
+  const getRoleBadge = (role: "ADMIN" | "ASESOR") => {
     const badges = {
       ADMIN: <Badge>{role}</Badge>,
       ASESOR: <Badge variant="outline">{role}</Badge>,

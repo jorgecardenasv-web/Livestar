@@ -1,6 +1,5 @@
 import { Coverage } from "@/features/home/components/sections/coverage";
 import { GreaterSpecialization } from "@/features/home/components/sections/greater-specialization";
-import { Header } from "@/shared/components/layout/header";
 import { Hero } from "@/features/home/components/sections/hero";
 import { MedicalExpenses } from "@/features/home/components/sections/medical-expenses";
 import { Quotes } from "@/features/home/components/sections/quotes";
@@ -9,10 +8,9 @@ import { ContactForm } from "@/features/home/components/sections/contact-form";
 
 export default function Home() {
   return (
-    <>
-      <Header />
+    <div className="text-white">
       <Hero />
-      <main className="text-white">
+      <section>
         <div className="container mx-auto">
           <Quotes />
         </div>
@@ -23,8 +21,7 @@ export default function Home() {
           <GreaterSpecialization />
         </div>
         {/* <ContactForm/> */}
-
-      </main>
-    </>
+      </section>
+    </div>
   );
 }

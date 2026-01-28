@@ -1,6 +1,6 @@
 import { useNotificationStore } from "@/features/notification/store/notification-store";
 import { useModalStore } from "@/shared/store/modal-store";
-import { useFormState } from "react-dom";
+import { useActionState } from "react";
 import { useEffect } from "react";
 import { deleteAdvisor } from "../actions/delete-advisor";
 import { FormState } from "@/shared/types";
@@ -11,7 +11,7 @@ export const useAdvisorForm = (
   const { closeModal, modalType } = useModalStore();
   const { showNotification } = useNotificationStore();
 
-  const [state, formAction] = useFormState(serverAction, {
+  const [state, formAction] = useActionState(serverAction, {
     success: false,
     message: "",
   });

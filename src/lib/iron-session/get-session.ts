@@ -5,7 +5,8 @@ import { IronSession, getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 
 export async function getSession(): Promise<IronSession<SessionData>> {
-  const session = await getIronSession<SessionData>(cookies(), sessionOptions);
+  const cookieStore = await cookies();
+  const session = await getIronSession<SessionData>(cookieStore, sessionOptions);
 
   if (!session.isLoggedIn) {
     session.user = defaultSession.user;

@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { PlanStatus } from "@prisma/client";
+import { PlanStatus } from "@generated/prisma/client";
 
 export const getDefaultPlanType = async () => {
   const defaultPlanType = await prisma.planType.findFirst({

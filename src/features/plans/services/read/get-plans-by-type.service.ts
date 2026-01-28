@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { Plan } from "../../types/plan";
 import { unstable_cache } from "next/cache";
-import { PlanStatus } from "@prisma/client";
+import { PlanStatus } from "@generated/prisma/client";
 
 export const getActivePlansByType = unstable_cache(
   async (planTypeId: string) => {

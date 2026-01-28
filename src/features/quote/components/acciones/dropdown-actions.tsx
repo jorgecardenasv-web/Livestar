@@ -12,7 +12,7 @@ import { Button } from "@/shared/components/ui/button";
 import { MoreHorizontal, Trash2, Eye, Edit, FileText } from "lucide-react";
 import { useQuoteActions } from "../../hooks/use-quote-actions";
 import { prefix } from "@/features/layout/nav-config/constants";
-import { Quote } from "@prisma/client";
+import { Quote } from "@generated/prisma/client";
 import Link from "next/link";
 
 export const DropdownActions = ({ quote }: { quote: Omit<Quote, "medicalHistories"> }) => {

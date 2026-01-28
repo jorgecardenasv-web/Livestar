@@ -1,4 +1,3 @@
-import chromium from "@sparticuz/chromium";
 import puppeteerCore, {
   Browser,
   Page,
@@ -23,7 +22,6 @@ import {
   HDI_TEMPLATE_HTML,
 } from "../constants/html-templates";
 
-type BrowserType = Browser;
 type PageType = Page;
 
 // Registrar los helpers de Handlebars
@@ -281,7 +279,8 @@ export const generatePDFWithPuppeteer = async (
   data: QuotePDFData,
   format: "datauri" | "arraybuffer" = "datauri"
 ): Promise<string | ArrayBuffer> => {
-  const isLocal = process.env.NODE_ENV === "development" || !process.env.VERCEL;
+  // Detectar entorno: local solo si NODE_ENV es development
+  const isLocal = process.env.NODE_ENV === "development";
   let browser: any = null;
 
   try {
@@ -334,25 +333,30 @@ export const generatePDFWithPuppeteer = async (
     // Generar header
     const headerTemplate = generateHeaderTemplate(data, logoBase64);
 
-    // Configuración de Chromium optimizada
+    // Configuración de Chromium optimizada para Docker Alpine
     const chromiumArgs = [
       "--no-sandbox",
       "--disable-setuid-sandbox",
       "--disable-dev-shm-usage",
-      "--disable-accelerated-2d-canvas",
+      "--disable-gpu",
+      "--disable-software-rasterizer",
+      "--disable-extensions",
       "--no-first-run",
       "--no-zygote",
-      "--single-process",
-      "--disable-gpu",
-      "--disable-web-security",
-      "--disable-features=VizDisplayCompositor",
+      "--disable-background-networking",
+      "--disable-default-apps",
+      "--disable-sync",
+      "--disable-translate",
+      "--hide-scrollbars",
+      "--metrics-recording-only",
+      "--mute-audio",
+      "--no-default-browser-check",
+      "--safebrowsing-disable-auto-update",
       "--disable-background-timer-throttling",
       "--disable-backgrounding-occluded-windows",
       "--disable-renderer-backgrounding",
-      "--disable-component-extensions-with-background-pages",
-      "--hide-scrollbars",
-      "--mute-audio",
-      "--window-size=1280x1024",
+      "--disable-ipc-flooding-protection",
+      "--disable-features=IsolateOrigins,site-per-process",
     ];
 
     // Configurar Puppeteer según el entorno
@@ -365,12 +369,13 @@ export const generatePDFWithPuppeteer = async (
         protocolTimeout: 30000,
       });
     } else {
+      // En producción, usar puppeteer-core con Chromium de Alpine
       browser = await puppeteerCore.launch({
-        args: chromium.args,
-        executablePath: await chromium.executablePath(),
-        headless: chromium.headless,
-        protocolTimeout: 30000,
-        defaultViewport: chromium.defaultViewport,
+        args: chromiumArgs,
+        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
+        headless: true,
+        protocolTimeout: 60000,
+        dumpio: false, // No imprimir stdout/stderr de Chromium
       });
     }
 
