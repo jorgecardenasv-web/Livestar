@@ -606,13 +606,22 @@ export const processPDFData = (
       try {
         const prices = JSON.parse(data.individualPricesJson);
 
-        // Procesar precios solo si no son del formato HDI (con anual, primerMes, etc.)
         // Solo agregar el titular si está incluido en la cobertura
         const shouldIncludeMain = ["solo_yo", "mi_pareja_y_yo", "familia", "mis_hijos_y_yo"].includes(
           prospect?.protectWho || data.protectedWho || ""
         );
-        
-        if (prices.main && !prices.main.anual && shouldIncludeMain) {
+
+        // Caso 1: GNP con estructura {anual: X, mensual: Y}
+        if (prices.main && prices.main.anual && prices.main.mensual && shouldIncludeMain) {
+          members.push({
+            type: "Titular",
+            price: ensureValidNumber(prices.main.mensual),
+            anual: ensureValidNumber(prices.main.anual),
+            age: prospect?.prospect?.age || prospect?.age || undefined,
+          });
+        }
+        // Caso 2: Estructura simple (solo un número)
+        else if (prices.main && !prices.main.anual && shouldIncludeMain) {
           members.push({
             type: "Titular",
             price: ensureValidNumber(prices.main),
@@ -621,7 +630,17 @@ export const processPDFData = (
           });
         }
 
-        if (prices.partner && !prices.partner.anual) {
+        // Caso 1: GNP con estructura {anual: X, mensual: Y}
+        if (prices.partner && prices.partner.anual && prices.partner.mensual) {
+          members.push({
+            type: "Pareja",
+            price: ensureValidNumber(prices.partner.mensual),
+            anual: ensureValidNumber(prices.partner.anual),
+            age: prices.partnerAge || undefined,
+          });
+        }
+        // Caso 2: Estructura simple
+        else if (prices.partner && !prices.partner.anual) {
           members.push({
             type: "Pareja",
             price: ensureValidNumber(prices.partner),
@@ -630,19 +649,29 @@ export const processPDFData = (
           });
         }
 
-        if (prices.children && !prices.children[0]?.anual) {
+        if (prices.children && prices.children.length > 0) {
           prices.children.forEach(
-            (price: number | { price: number; age: number }, index: number) => {
-              const childPrice =
-                typeof price === "number" ? price : price.price;
-              const childAge =
-                typeof price === "number" ? undefined : price.age;
-              members.push({
-                type: `Hijo/a ${index + 1}`,
-                price: ensureValidNumber(childPrice),
-                anual: ensureValidNumber(childPrice * 12),
-                age: childAge,
-              });
+            (childPrice: any, index: number) => {
+              // Caso 1: GNP con estructura {anual: X, mensual: Y}
+              if (childPrice.anual && childPrice.mensual) {
+                members.push({
+                  type: `Hijo/a ${index + 1}`,
+                  price: ensureValidNumber(childPrice.mensual),
+                  anual: ensureValidNumber(childPrice.anual),
+                  age: childPrice.age,
+                });
+              }
+              // Caso 2: Estructura simple (número o {price: X, age: Y})
+              else {
+                const priceValue = typeof childPrice === "number" ? childPrice : childPrice.price;
+                const childAge = typeof childPrice === "number" ? undefined : childPrice.age;
+                members.push({
+                  type: `Hijo/a ${index + 1}`,
+                  price: ensureValidNumber(priceValue),
+                  anual: ensureValidNumber(priceValue * 12),
+                  age: childAge,
+                });
+              }
             }
           );
         }
@@ -650,28 +679,27 @@ export const processPDFData = (
         if (prices.parents) {
           prices.parents.forEach(
             (parent: any) => {
-              // Handle nested price structure: { name: "Padre", price: { mensual: X, anual: Y } }
-              // or simple structure: { name: "Padre", price: number }
               const priceData = parent.price;
-              let monthlyPrice = 0;
-              let annualPrice = 0;
               
-              if (typeof priceData === 'object' && priceData !== null) {
-                // Nested structure with mensual/anual
-                monthlyPrice = ensureValidNumber(priceData.mensual || priceData.anual / 12);
-                annualPrice = ensureValidNumber(priceData.anual || priceData.mensual * 12);
-              } else {
-                // Simple number
-                monthlyPrice = ensureValidNumber(priceData);
-                annualPrice = ensureValidNumber(priceData * 12);
+              // Caso 1: Estructura con {mensual: X, anual: Y} - usar valores tal cual
+              if (typeof priceData === 'object' && priceData !== null && priceData.anual && priceData.mensual) {
+                members.push({
+                  type: parent.name === "Padre" ? "Padre" : "Madre",
+                  price: ensureValidNumber(priceData.mensual),
+                  anual: ensureValidNumber(priceData.anual),
+                  age: parent.age,
+                });
               }
-              
-              members.push({
-                type: parent.name === "Padre" ? "Padre" : "Madre",
-                price: monthlyPrice,
-                anual: annualPrice,
-                age: parent.age,
-              });
+              // Caso 2: Estructura simple (número) - solo entonces calcular
+              else {
+                const simplePrice = typeof priceData === 'number' ? priceData : 0;
+                members.push({
+                  type: parent.name === "Padre" ? "Padre" : "Madre",
+                  price: ensureValidNumber(simplePrice),
+                  anual: ensureValidNumber(simplePrice * 12),
+                  age: parent.age,
+                });
+              }
             }
           );
         }
@@ -679,28 +707,27 @@ export const processPDFData = (
         if (prices.others) {
           prices.others.forEach(
             (other: any) => {
-              // Handle nested price structure: { relationship: "...", price: { mensual: X, anual: Y } }
-              // or simple structure: { relationship: "...", price: number }
               const priceData = other.price;
-              let monthlyPrice = 0;
-              let annualPrice = 0;
               
-              if (typeof priceData === 'object' && priceData !== null) {
-                // Nested structure with mensual/anual
-                monthlyPrice = ensureValidNumber(priceData.mensual || priceData.anual / 12);
-                annualPrice = ensureValidNumber(priceData.anual || priceData.mensual * 12);
-              } else {
-                // Simple number
-                monthlyPrice = ensureValidNumber(priceData);
-                annualPrice = ensureValidNumber(priceData * 12);
+              // Caso 1: Estructura con {mensual: X, anual: Y} - usar valores tal cual
+              if (typeof priceData === 'object' && priceData !== null && priceData.anual && priceData.mensual) {
+                members.push({
+                  type: other.relationship || "Otro",
+                  price: ensureValidNumber(priceData.mensual),
+                  anual: ensureValidNumber(priceData.anual),
+                  age: other.age,
+                });
               }
-              
-              members.push({
-                type: other.relationship || "Otro",
-                price: monthlyPrice,
-                anual: annualPrice,
-                age: other.age,
-              });
+              // Caso 2: Estructura simple (número) - solo entonces calcular
+              else {
+                const simplePrice = typeof priceData === 'number' ? priceData : 0;
+                members.push({
+                  type: other.relationship || "Otro",
+                  price: ensureValidNumber(simplePrice),
+                  anual: ensureValidNumber(simplePrice * 12),
+                  age: other.age,
+                });
+              }
             }
           );
         }
