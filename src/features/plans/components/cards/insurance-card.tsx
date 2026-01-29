@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { handleInterestClick } from "../../actions/set-cookies";
 import StoreAwareSubmit from "../store-aware-submit";
-import { getProspect } from "../../loaders/get-prospect";
 import { getImage } from "../../../../shared/services/get-image.service";
 import { formatCurrency } from "@/shared/utils";
 import type { HDIPriceTable, PriceTable } from "../../types";
@@ -29,6 +28,11 @@ interface InsuranceCardProps {
   plan: Plan;
   paymentType: string;
   isRecommended: boolean;
+  prospectData: {
+    prospect: any;
+    protectWho: string;
+    additionalInfo: any;
+  };
 }
 
 interface Deductibles {
@@ -42,9 +46,10 @@ export const InsuranceCard: React.FC<InsuranceCardProps> = async ({
   plan,
   paymentType,
   isRecommended,
+  prospectData,
 }) => {
 
-  const { prospect, protectWho, additionalInfo } = await getProspect();
+  const { prospect, protectWho, additionalInfo } = prospectData;
   const deductibles: Deductibles = plan.deductibles;
   const isMultiple = typeof deductibles.default !== "number";
 

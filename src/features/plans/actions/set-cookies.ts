@@ -1,9 +1,7 @@
 "use server";
-
-import { revalidatePath } from "next/cache";
+;
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { createQuoteAction } from "@/features/quote/actions/create-quote";
 
 export async function handleInterestClick(formData: FormData) {
   const insuranceData = {
@@ -34,14 +32,12 @@ export async function setActivePlanType(formData: FormData) {
   const planTypeId = formData.get("planTypeId");
   const cookieStore = await cookies();
   cookieStore.set("planTypeId", planTypeId as string);
-  revalidatePath("/");
 }
 
 export async function setActivePaymentType(formData: FormData) {
   const paymentType = formData.get("paymentType") as string;
   const cookieStore = await cookies();
   cookieStore.set("activePaymentType", paymentType);
-  revalidatePath("/");
 }
 
 export const deleteSelectedPlan = async () => {
