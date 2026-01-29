@@ -1,6 +1,7 @@
 import { Plan } from "../../types/plan";
 import { InsuranceCard } from "../cards/insurance-card";
 import { getActivePlansByTypeLoader } from "../../loaders/get-plans-by-type";
+import { getProspect } from "../../loaders/get-prospect";
 
 interface PlansContentProps {
   currentPlanType: { id: string };
@@ -12,6 +13,7 @@ export const PlansContent = async ({
   activePaymentType,
 }: PlansContentProps) => {
   const plans = await getActivePlansByTypeLoader(currentPlanType.id);
+  const prospectData = await getProspect();
 
   if (plans.length === 0) {
     return (
@@ -27,13 +29,14 @@ export const PlansContent = async ({
   return (
     <div className="w-full flex justify-center mx-auto max-w-[1200px]">
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 place-items-center justify-items-center">
-        {plans.map((plan) => (
+        {plans.map((plan: Plan) => (
           <div key={plan.id} className="w-full max-w-md">
             <InsuranceCard
               company={plan.company}
               plan={plan}
               paymentType={activePaymentType}
               isRecommended={plan.isRecommended}
+              prospectData={prospectData}
             />
           </div>
         ))}

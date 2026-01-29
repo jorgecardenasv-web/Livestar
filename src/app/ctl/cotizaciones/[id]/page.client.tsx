@@ -267,7 +267,7 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
         {formData.childrenCount && formData.childrenCount > 0 && (
           <>
             <input type="hidden" name="childrenCount" value={formData.childrenCount} />
-            {formData.children?.map((child, index) => (
+            {formData.children?.map((child: { age: number; gender: string }, index: number) => (
               <div key={index}>
                 <input type="hidden" name={`childAge${index}`} value={child.age} />
                 <input type="hidden" name={`childGender${index}`} value={child.gender} />
@@ -279,7 +279,7 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
         {formData.protectedCount && formData.protectedCount > 0 && (
           <>
             <input type="hidden" name="protectedCount" value={formData.protectedCount} />
-            {formData.protectedPersons?.map((person, index) => (
+            {formData.protectedPersons?.map((person: { relationship: string; age: number; gender: string }, index: number) => (
               <div key={index}>
                 <input type="hidden" name={`protectedAge${index}`} value={person.age} />
                 <input type="hidden" name={`protectedGender${index}`} value={person.gender} />
