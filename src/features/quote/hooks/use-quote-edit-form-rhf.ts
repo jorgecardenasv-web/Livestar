@@ -18,7 +18,7 @@ export const useQuoteEditFormRHF = (
     [initialState]
   );
 
-  const { watch, setValue, getValues, clearErrors } = useForm<FormData>({
+  const { watch, setValue, getValues, clearErrors, reset } = useForm<FormData>({
     defaultValues,
     mode: "onSubmit",
     reValidateMode: "onSubmit",
@@ -32,16 +32,29 @@ export const useQuoteEditFormRHF = (
       : []
   );
 
+  // Solo reinicializar forms cuando cambie el ID de la cotización, no en cada update
+  const [lastQuoteId, setLastQuoteId] = useState<string | null>(
+    initialState?.id || null
+  );
+
   useEffect(() => {
     if (!questions) return;
 
-    const nextForms =
-      initialState && (initialState as any).medicalHistories
-        ? ((initialState as any).medicalHistories as MedicalQuestionForm[])
-        : (createInitialMedicalForms(questions) as MedicalQuestionForm[]);
+    // Solo reinicializar si cambió el ID de la cotización (navegamos a otra cotización)
+    const currentQuoteId = initialState?.id || null;
+    if (currentQuoteId !== lastQuoteId) {
+      const nextForms =
+        initialState && (initialState as any).medicalHistories
+          ? ((initialState as any).medicalHistories as MedicalQuestionForm[])
+          : (createInitialMedicalForms(questions) as MedicalQuestionForm[]);
 
-    setForms(nextForms);
-  }, [initialState, questions]);
+      setForms(nextForms);
+      setLastQuoteId(currentQuoteId);
+      
+      // También resetear el formulario de React Hook Form solo cuando cambia la cotización
+      reset(normalizeFormData(initialState) as FormData);
+    }
+  }, [initialState, questions, lastQuoteId, reset]);
 
   const formData = watch();
 

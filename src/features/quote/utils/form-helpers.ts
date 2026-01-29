@@ -16,6 +16,7 @@ export const INITIAL_HEALTH_CONDITION = {
   tipoTratamiento: "",
   detalleComplicacion: "",
   detalleMedicamento: "",
+  persona: "",
 };
 
 export const createInitialMedicalForms = (questions: any[]) =>
