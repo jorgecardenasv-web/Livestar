@@ -2,10 +2,10 @@
 
 import { updateQuote } from "@/features/quote/actions/update-quote";
 import { getProspectByQuoteId } from "./get-prospect-by-quote";
-import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { sendContractConfirmationEmail } from "../services/send-contract-confirmation-email";
 import { getQuoteByIdService } from "@/features/quote/services/read/get-quote-by-id.service";
+import { after } from "next/server";
 
 export const updateQuoteFromSummary = async (
   prevState: any,
@@ -89,32 +89,35 @@ export const updateQuoteFromSummary = async (
     return result;
   }
 
-  // Enviar email de confirmación
-  try {
-    const quote = await getQuoteByIdService(quoteId);
-    if (quote && quote.planData) {
-      await sendContractConfirmationEmail({
-        prospectName: (prospect as any).name,
-        prospectEmail: (prospect as any).email,
-        company: quote.planData.companyName,
-        plan: quote.planData.planTypeName,
-        advisorName: quote.user?.name || "Asesor",
-        advisorEmail: quote.user?.email || undefined,
-        prospectWhatsApp: (prospect as any).whatsapp || "",
-      });
+  // Enviar email de confirmación en segundo plano sin bloquear la respuesta
+  after(async () => {
+    try {
+      const quote = await getQuoteByIdService(quoteId);
+      if (quote && quote.planData) {
+        await sendContractConfirmationEmail({
+          prospectName: (prospect as any).name,
+          prospectEmail: (prospect as any).email,
+          company: quote.planData.companyName,
+          plan: quote.planData.planTypeName,
+          advisorName: quote.user?.name || "Asesor",
+          advisorEmail: quote.user?.email || undefined,
+          prospectWhatsApp: (prospect as any).whatsapp || "",
+        });
+      }
+    } catch (error) {
+      console.error("Error enviando email de confirmación:", error);
     }
-  } catch (error) {
-    console.error("Error enviando email de confirmación:", error);
-    // No retornamos error aquí porque la actualización fue exitosa
-  }
+  });
 
-  const cookieStore = await cookies();
-  cookieStore.delete("prospect");
-  cookieStore.delete("selectedPlan");
-  cookieStore.delete("activePlanType");
-  cookieStore.delete("activePaymentType");
-  cookieStore.delete("quoteCreated");
-  cookieStore.delete("createdQuoteId");
+  // NO borrar las cookies aquí para evitar que Next.js recargue la página
+  // Las cookies se borrarán cuando el usuario haga una nueva cotización
+  // const cookieStore = await cookies();
+  // cookieStore.delete("prospect");
+  // cookieStore.delete("selectedPlan");
+  // cookieStore.delete("activePlanType");
+  // cookieStore.delete("activePaymentType");
+  // cookieStore.delete("quoteCreated");
+  // cookieStore.delete("createdQuoteId");
 
   return {
     success: true,

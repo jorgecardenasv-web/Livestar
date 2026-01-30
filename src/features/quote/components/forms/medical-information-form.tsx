@@ -111,20 +111,30 @@ export const MedicalInformationForm: React.FC<MedicalInformationProps> = ({
           (forms[index]?.[answerKey] as "Sí" | "No" | undefined) ?? undefined;
 
         const handleAnswerChange = (value: "Sí" | "No" | undefined) => {
-          const updated = [...forms];
-          updated[index] = { ...updated[index], [answerKey]: value };
-          if (value === "Sí") {
-            if (
-              updated[index].healthConditions &&
-              updated[index].healthConditions.length > 0
-            ) {
-              updated[index].activePadecimiento = 0;
+          setForms((prevForms) => {
+            const updated = [...prevForms];
+            
+            if (value === "Sí") {
+              updated[index] = {
+                ...(updated[index] || {}),
+                [answerKey]: value,
+                activePadecimiento:
+                  updated[index]?.healthConditions &&
+                  updated[index].healthConditions.length > 0
+                    ? 0
+                    : updated[index]?.activePadecimiento || null,
+              };
+            } else {
+              updated[index] = {
+                ...(updated[index] || {}),
+                [answerKey]: value,
+                activePadecimiento: null,
+                healthConditions: [],
+              };
             }
-          } else {
-            updated[index].activePadecimiento = null;
-            updated[index].healthConditions = [];
-          }
-          setForms(updated);
+            
+            return updated;
+          });
         };
 
         return (
@@ -139,9 +149,11 @@ export const MedicalInformationForm: React.FC<MedicalInformationProps> = ({
                     id={`answer-${index}-si`}
                     checked={currentAnswer === "Sí"}
                     disabled={disableMedical}
-                    onCheckedChange={(checked) =>
-                      handleAnswerChange(checked === true ? "Sí" : undefined)
-                    }
+                    onCheckedChange={(checked) => {
+                      if (checked === true) {
+                        handleAnswerChange("Sí");
+                      }
+                    }}
                   />
                   <Label htmlFor={`answer-${index}-si`}>Sí</Label>
                 </div>
@@ -150,9 +162,11 @@ export const MedicalInformationForm: React.FC<MedicalInformationProps> = ({
                     id={`answer-${index}-no`}
                     checked={currentAnswer === "No"}
                     disabled={disableMedical}
-                    onCheckedChange={(checked) =>
-                      handleAnswerChange(checked === true ? "No" : undefined)
-                    }
+                    onCheckedChange={(checked) => {
+                      if (checked === true) {
+                        handleAnswerChange("No");
+                      }
+                    }}
                   />
                   <Label htmlFor={`answer-${index}-no`}>No</Label>
                 </div>

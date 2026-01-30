@@ -554,7 +554,7 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
                         {{#if name}}{{name}}{{else}}{{type}}{{/if}}
                       </td>
                       <td class="table-price">
-                        {{formatCurrency price}}
+                        {{formatCurrency anual}}
                       </td>
                     </tr>
                     {{/each}}

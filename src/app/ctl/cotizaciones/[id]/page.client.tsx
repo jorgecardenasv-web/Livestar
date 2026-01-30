@@ -20,14 +20,12 @@ import { DeductiblesAccordion } from "@/features/quote/components/accodions/dedu
 import { CoInsuranceAccordion } from "@/features/quote/components/accodions/co-insurance-accordion"
 import { Alert, AlertDescription, AlertTitle } from "@/shared/components/ui/alert"
 import { AlertCircle } from "lucide-react"
-import { useRouter } from "next/navigation"
 
 export function QuotePageClient({ quote }: { quote: Quote }) {
   const { formData, errors, handleChildChange, handleInputChange, handleProtectedPersonChange, forms, setForms } =
     useQuoteEditFormRHF(quote, QUESTIONS)
 
   const { showNotification } = useNotificationStore()
-  const router = useRouter()
 
   const updateUserWithId = quote?.id ? updateQuote.bind(null, quote.id) : null
 
@@ -43,10 +41,10 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
   useEffect(() => {
     if (state.success) {
       showNotification(state.message, "success")
-      // Refrescar los datos de la página para mostrar los precios actualizados
-      router.refresh()
+      // NO llamar router.refresh() aquí porque causa pérdida de estado del formulario
+      // Los datos actualizados se recibirán en la próxima navegación
     }
-  }, [state, showNotification, router])
+  }, [state, showNotification])
 
   const processMembers = (membersData: any) => {
     if (!membersData) return [];
@@ -240,7 +238,71 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
         </div>
       )}
 
+      {/* Aviso sobre campos no editables */}
+      <div className="mt-4">
+        <Alert className="mb-4 bg-slate-50 border-slate-200">
+          <AlertCircle className="h-3.5 w-3.5" color="#64748b" />
+          <AlertDescription className="text-sm text-slate-600">
+            Los datos de los asegurados están bloqueados porque determinan el precio de la cotización. Para hacer cambios, puedes crear una nueva cotización.
+          </AlertDescription>
+        </Alert>
+      </div>
+
       <form action={formAction}>
+        {/* Hidden inputs para campos deshabilitados que necesitan enviarse */}
+        <input type="hidden" name="name" value={formData.name || ""} />
+        <input type="hidden" name="gender" value={formData.gender || ""} />
+        <input type="hidden" name="postalCode" value={formData.postalCode || ""} />
+        <input type="hidden" name="age" value={formData.age || ""} />
+        <input type="hidden" name="protectWho" value={formData.protectWho || ""} />
+        
+        {/* Campos adicionales según protectWho */}
+        {formData.partnerAge && (
+          <>
+            <input type="hidden" name="partnerAge" value={formData.partnerAge} />
+            <input type="hidden" name="partnerGender" value={formData.partnerGender || ""} />
+          </>
+        )}
+        
+        {formData.childrenCount && formData.childrenCount > 0 && (
+          <>
+            <input type="hidden" name="childrenCount" value={formData.childrenCount} />
+            {formData.children?.map((child: { age: number; gender: string }, index: number) => (
+              <div key={index}>
+                <input type="hidden" name={`childAge${index}`} value={child.age} />
+                <input type="hidden" name={`childGender${index}`} value={child.gender} />
+              </div>
+            ))}
+          </>
+        )}
+        
+        {formData.protectedCount && formData.protectedCount > 0 && (
+          <>
+            <input type="hidden" name="protectedCount" value={formData.protectedCount} />
+            {formData.protectedPersons?.map((person: { relationship: string; age: number; gender: string }, index: number) => (
+              <div key={index}>
+                <input type="hidden" name={`protectedAge${index}`} value={person.age} />
+                <input type="hidden" name={`protectedGender${index}`} value={person.gender} />
+                <input type="hidden" name={`protectedRelationship${index}`} value={person.relationship} />
+              </div>
+            ))}
+          </>
+        )}
+        
+        {formData.momName && (
+          <>
+            <input type="hidden" name="momName" value={formData.momName} />
+            <input type="hidden" name="momAge" value={formData.momAge || ""} />
+          </>
+        )}
+        
+        {formData.dadName && (
+          <>
+            <input type="hidden" name="dadName" value={formData.dadName} />
+            <input type="hidden" name="dadAge" value={formData.dadAge || ""} />
+          </>
+        )}
+        
         <input type="hidden" name="medicalData" value={JSON.stringify(forms)} />
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Columna Principal (8 columnas) */}
@@ -256,6 +318,7 @@ export function QuotePageClient({ quote }: { quote: Quote }) {
                     handleInputChange={handleInputChange}
                     handleChildChange={handleChildChange}
                     handleProtectedPersonChange={handleProtectedPersonChange}
+                    disabled={true}
                   />
                 </CardContent>
               </Card>

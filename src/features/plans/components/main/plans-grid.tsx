@@ -1,5 +1,6 @@
 import { InsuranceCard } from "../cards/insurance-card";
 import { getActivePlansByTypeLoader } from "../../loaders/get-plans-by-type";
+import { getProspect } from "../../loaders/get-prospect";
 
 interface PlansContentProps {
   currentPlanType: { id: string };
@@ -11,6 +12,7 @@ export const PlansGrid = async ({
   activePaymentType,
 }: PlansContentProps) => {
   const plans = await getActivePlansByTypeLoader(currentPlanType.id);
+  const prospectData = await getProspect();
 
   const sortedPlans = [...plans].sort(
     (a, b) => Number(b.isRecommended) - Number(a.isRecommended)
@@ -37,6 +39,7 @@ export const PlansGrid = async ({
               plan={plan}
               paymentType={activePaymentType}
               isRecommended={plan.isRecommended}
+              prospectData={prospectData}
             />
           </div>
         ))}

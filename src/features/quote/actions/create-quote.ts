@@ -11,6 +11,7 @@ import { processPDFData } from "@/features/quote-summary/utils/process-pdf-data.
 import { revalidatePath } from "next/cache";
 import { prefix } from "@/features/layout/nav-config/constants";
 import { after } from "next/server";
+import prisma from "@/lib/prisma";
 
 export const createQuoteAction = async (
   payload: any,
@@ -50,6 +51,17 @@ export const createQuoteAction = async (
       );
       createdQuoteId = created?.id;
 
+      // Actualizar la fecha de última asignación del asesor
+      if (advisor?.id) {
+        await prisma.user.update({
+          where: { id: advisor.id },
+          data: {
+            lastProspectAssigned: new Date(),
+            isNewAdvisor: false,
+          },
+        });
+      }
+
       after(async () => {
         try {
           const pdfData = processPDFData(parsedPlan, resolvedProspectData);
@@ -64,7 +76,7 @@ export const createQuoteAction = async (
             company: parsedPlan.company,
             plan: parsedPlan.plan,
             advisorName: advisor?.name,
-            advisorEmail: "ulivargas.02@gmail.com" // advisor?.email ?? "emma@livestar.mx",
+            advisorEmail: advisor?.email ?? "emma@livestar.mx",
           });
         } catch (pdfError) {
           console.error("Error generando o enviando PDF:", pdfError);

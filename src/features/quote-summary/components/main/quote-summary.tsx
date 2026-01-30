@@ -1,11 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { Shield, DollarSign, Percent, Heart, ArrowLeft, FileText, Download, Users, Loader2 } from "lucide-react";
+import { Shield, DollarSign, Percent, Heart, FileText, Download, Users, Loader2 } from "lucide-react";
 import { ContractForm } from "../forms/confirm-form";
 import { InfoCard } from "../cards/info-card";
 import { FC, useEffect, useState } from "react";
-import { useFormStatus } from "react-dom";
 import { DeductibleAndCoInsuranceInfoModal } from "../modals/CombinedInfoModal";
 
 // Función para convertir data URI a Blob
@@ -58,6 +57,7 @@ import { useQuoteRuntimeStore } from "@/shared/store/quote-runtime-store";
 import { MedicalInformationForm } from "@/features/quote/components/forms/medical-information-form";
 import { QUESTIONS } from "@/features/quote/data";
 import { updateQuoteFromSummary } from "@/features/quote-summary/actions/update-quote-from-summary";
+import { clearCookiesAction } from "@/features/quote-summary/actions/clear-cookies";
 import { Button } from "@/shared/components/ui/button";
 import { normalizeFormData } from "@/features/quote/utils/normalize-form-data";
 import type {
@@ -156,17 +156,25 @@ const getMinimumValues = (jsonString: string | undefined): number => {
   }
 };
 
-const SubmitMedicalButton = () => {
-  const { pending } = useFormStatus();
+const SubmitMedicalButton = ({ onClick }: { onClick: () => Promise<void> }) => {
+  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <Button
-      type="submit"
+      type="button"
       size="lg"
       className="mt-4"
-      disabled={pending}
+      disabled={isLoading}
+      onClick={async () => {
+        setIsLoading(true);
+        try {
+          await onClick();
+        } finally {
+          setIsLoading(false);
+        }
+      }}
     >
-      {pending ? (
+      {isLoading ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           Actualizando...
@@ -235,29 +243,18 @@ export const QuoteSummary: FC<
   const [medicalSuccess, setMedicalSuccess] = useState<string | null>(null);
   const [formFamily, setFormFamily] = useState<any>({ protectWho: protectedWho });
   const [contractSuccess, setContractSuccess] = useState<string | null>(null);
-  const [countdown, setCountdown] = useState<number>(5);
 
-  useEffect(() => {
-    const clearCookies = async () => {
-      try {
-        await fetch("/api/clear-quote-cookies", { method: "POST" });
-      } catch (error) {
-        console.error("Error clearing quote cookies", error);
-      }
-    };
-    clearCookies();
-  }, []);
-
-  useEffect(() => {
-    if (contractSuccess && countdown > 0) {
-      const timer = setTimeout(() => {
-        setCountdown(countdown - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
-    } else if (contractSuccess && countdown === 0) {
-      window.location.href = "/cotizar";
-    }
-  }, [contractSuccess, countdown]);
+  // COMENTADO: Este useEffect estaba borrando las cookies y causando que la página redirigiera
+  // useEffect(() => {
+  //   const clearCookies = async () => {
+  //     try {
+  //       await fetch("/api/clear-quote-cookies", { method: "POST" });
+  //     } catch (error) {
+  //       console.error("Error clearing quote cookies", error);
+  //     }
+  //   };
+  //   clearCookies();
+  // }, []);
 
   useEffect(() => {
     (async () => {
@@ -547,10 +544,13 @@ export const QuoteSummary: FC<
                 useCheckboxes
               />
 
-              <form
-                action={async (fd: FormData) => {
+              <div className="flex flex-col items-end">
+                <SubmitMedicalButton onClick={async () => {
                   setMedicalSuccess(null);
                   setMedicalErrors({});
+                  
+                  const fd = new FormData();
+                  
                   const medicalData: MedicalHistoryPayload[] = forms.map((form, idx) => {
                     const answerKey = `answer-${idx}`;
                     return {
@@ -564,40 +564,41 @@ export const QuoteSummary: FC<
                           : null,
                     };
                   });
+                  
                   const allEmpty = medicalData.every(
                     (item) =>
                       !item.answer &&
                       (!item.healthConditions ||
                         item.healthConditions.length === 0)
                   );
+                  
                   const payload = allEmpty ? [] : medicalData;
                   fd.set("medicalData", JSON.stringify(payload));
+                  
                   if (quoteIdParam) {
                     fd.set("quoteId", quoteIdParam);
                   }
+                  
                   const res = await updateQuoteFromSummary(undefined, fd);
+                  
                   if (!res?.success) {
-                    setMedicalErrors((prev) => ({ ...prev, global: res?.message || "No se pudo actualizar la cotización." }));
+                    setMedicalErrors((prev) => ({ 
+                      ...prev, 
+                      global: res?.message || "No se pudo actualizar la cotización." 
+                    }));
                     setMedicalSuccess(null);
                   } else {
                     setMedicalErrors({});
-                    setContractSuccess(res.message);
-                    setCountdown(5);
+                    setContractSuccess(res.message || "Tu solicitud ha sido enviada exitosamente.");
                   }
-                }}
-              >
-                {/* Pasar quoteId por formulario a la Server Action */}
-                <input type="hidden" name="quoteId" value={quoteIdParam} />
-                <div className="flex flex-col items-end">
-                  <SubmitMedicalButton />
-                  {medicalSuccess && (
-                    <p className="mt-2 text-sm text-green-600">{medicalSuccess}</p>
-                  )}
-                  {medicalErrors.global && (
-                    <p className="mt-2 text-sm text-red-600">{medicalErrors.global}</p>
-                  )}
-                </div>
-              </form>
+                }} />
+                {medicalSuccess && (
+                  <p className="mt-2 text-sm text-green-600">{medicalSuccess}</p>
+                )}
+                {medicalErrors.global && (
+                  <p className="mt-2 text-sm text-red-600">{medicalErrors.global}</p>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -685,38 +686,40 @@ export const QuoteSummary: FC<
       )}
 
       {contractSuccess && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
-          <div className="bg-white dark:bg-zinc-800 rounded-lg p-8 max-w-lg w-full shadow-xl border-t-4 border-green-500">
-            <div className="text-center mb-6">
-              <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 dark:bg-green-900 mb-4">
-                <svg className="h-8 w-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                </svg>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4">
+            <div className="bg-white dark:bg-zinc-800 rounded-lg p-8 max-w-lg w-full shadow-xl border-t-4 border-green-500">
+              <div className="text-center mb-6">
+                <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 dark:bg-green-900 mb-4">
+                  <svg className="h-8 w-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">¡Solicitud Enviada!</h3>
+                <p className="text-base text-gray-700 dark:text-gray-200 leading-relaxed mb-4">
+                  Hemos recibido tu interés en contratar el plan seleccionado. Un asesor especializado se pondrá en contacto contigo <strong>lo antes posible</strong> para ayudarte a completar el proceso.
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Gracias por tu confianza en nuestros servicios.
+                </p>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">¡Solicitud Enviada!</h3>
-              <p className="text-base text-gray-700 dark:text-gray-200 leading-relaxed mb-4">
-                Hemos recibido tu interés en contratar el plan seleccionado. Un asesor especializado se pondrá en contacto contigo <strong>lo antes posible</strong> para ayudarte a completar el proceso.
-              </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Gracias por tu confianza en nuestros servicios.
-              </p>
-            </div>
-            <div className="bg-gray-50 dark:bg-zinc-700 rounded-lg p-4 mb-6">
-              <p className="text-center text-sm text-gray-600 dark:text-gray-300">
-                Redirigiendo en <span className="font-bold text-sky-600 dark:text-sky-400 text-lg">{countdown}</span> segundo{countdown !== 1 ? 's' : ''}...
-              </p>
-            </div>
-            <div className="flex justify-center">
-              <button
-                onClick={() => window.location.href = "/cotizar"}
-                className="px-6 py-2.5 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors font-medium"
-              >
-                Ir ahora
-              </button>
+              <div className="flex justify-center">
+                <button
+                  onClick={async () => {
+                    try {
+                      await clearCookiesAction();
+                    } catch (error) {
+                      console.error("Error clearing cookies:", error);
+                    }
+                    window.location.href = "/cotizar";
+                  }}
+                  className="px-6 py-2.5 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors font-medium"
+                >
+                  Aceptar
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
     </div>
   );
 };

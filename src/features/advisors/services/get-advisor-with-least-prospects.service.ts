@@ -3,7 +3,8 @@ import { handlePrismaError } from "@/shared/errors/prisma";
 
 export const getAdvisorWithLeastQuotesService = async () => {
   try {
-    const advisorsWithQuoteCounts = await prisma.user.findMany({
+    // Obtener todos los asesores activos
+    const activeAdvisors = await prisma.user.findMany({
       where: {
         role: 'ASESOR',
         status: 'ACTIVO',
@@ -12,28 +13,38 @@ export const getAdvisorWithLeastQuotesService = async () => {
         id: true,
         email: true,
         name: true,
-        _count: {
-          select: {
-            Quote: true,
-          },
-        },
+        lastProspectAssigned: true,
       },
     });
 
-    if (advisorsWithQuoteCounts.length === 0) {
+    if (activeAdvisors.length === 0) {
       return null;
     }
 
-    const sortedAdvisors = advisorsWithQuoteCounts.sort(
-      (a, b) => a._count.Quote - b._count.Quote
-    );
+    // Ordenar manualmente: null primero, luego por fecha más antigua
+    const sortedAdvisors = activeAdvisors.sort((a, b) => {
+      // Si ambos son null, son iguales
+      if (a.lastProspectAssigned === null && b.lastProspectAssigned === null) {
+        return 0;
+      }
+      // Si solo a es null, a viene primero
+      if (a.lastProspectAssigned === null) {
+        return -1;
+      }
+      // Si solo b es null, b viene primero
+      if (b.lastProspectAssigned === null) {
+        return 1;
+      }
+      // Si ambos tienen fecha, ordenar por la más antigua (ascendente)
+      return a.lastProspectAssigned.getTime() - b.lastProspectAssigned.getTime();
+    });
 
-    const leastBusyAdvisor = sortedAdvisors[0];
+    const selectedAdvisor = sortedAdvisors[0];
 
     return {
-      id: leastBusyAdvisor.id,
-      email: leastBusyAdvisor.email,
-      name: leastBusyAdvisor.name,
+      id: selectedAdvisor.id,
+      email: selectedAdvisor.email,
+      name: selectedAdvisor.name,
     };
   } catch (error) {
     throw handlePrismaError(error);
