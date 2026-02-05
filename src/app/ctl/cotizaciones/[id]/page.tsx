@@ -5,6 +5,7 @@ import { getAdvisors } from "@/features/prospects/loaders/get-advisors";
 import { ModalQuoteActions } from "@/features/quote/components/modals/modal-quote-actions";
 import { getQuoteByIdLoader } from "@/features/quote/loaders/get-quote-by-id.loader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
+import { getCurrentUser } from "@/features/session/loaders/get-current-user";
 
 export default async function QuotesPage({
   params,
@@ -14,6 +15,7 @@ export default async function QuotesPage({
   const { id } = await params;
   const quote = await getQuoteByIdLoader(id);
   const advisors = await getAdvisors();
+  const currentUser = await getCurrentUser();
 
   if (!quote) {
     return (
@@ -43,7 +45,7 @@ export default async function QuotesPage({
   return (
     <>
       <QuotePageClient quote={quote} />
-      <ModalQuoteActions advisors={advisors} />
+      <ModalQuoteActions advisors={advisors} currentUser={currentUser} />
     </>
   );
 }

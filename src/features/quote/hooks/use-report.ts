@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { DateRange } from "react-day-picker";
 import { generateReport } from "../../prospects/actions/generate-report";
 import { useQuoteActions } from "./use-quote-actions";
+import { DateRange } from "@/shared/components/ui/data-range-picker";
 
 export const useReport = () => {
   const { closeModal } = useQuoteActions();

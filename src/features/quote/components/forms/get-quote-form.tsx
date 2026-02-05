@@ -6,7 +6,6 @@ import { ProtectionStep, PersonalInfoSection } from "./personal-info-section";
 import { ContactInfoSection } from "./contact-info-section";
 import { Button } from "@/shared/components/ui/button";
 import { Loader2 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 
 const steps = [
   {
@@ -15,11 +14,7 @@ const steps = [
   },
   {
     key: "personal",
-    label: "Tus datos",
-  },
-  {
-    key: "contact",
-    label: "Contacto",
+    label: "Tus datos y contacto",
   },
 ];
 
@@ -42,8 +37,9 @@ const stepFieldPrefixes: Record<StepKey, string[]> = {
     "dadAge",
     "momName",
     "momAge",
+    "whatsapp",
+    "email",
   ],
-  contact: ["whatsapp", "email"],
 };
 
 const getStepIndexFromErrorKey = (key: string) => {
@@ -85,25 +81,22 @@ export const GetQuoteForm: React.FC<{
     if (stepKey === "protection") {
       return "¿A quién quieres proteger?";
     }
-    if (stepKey === "contact") {
-      return "¿Dónde te compartimos tu cotización?";
-    }
 
     switch (formData.protectWho) {
       case "solo_yo":
-        return "Cuéntanos un poco más de ti.";
+        return "Datos personales y de contacto.";
       case "mi_pareja_y_yo":
-        return "Cuéntanos más de ti y tu pareja.";
+        return "Datos de ti, tu pareja y contacto.";
       case "familia":
       case "mis_hijos_y_yo":
       case "solo_mis_hijos":
-        return "Cuéntanos más de las personas que vas a proteger.";
+        return "Datos de la familia y contacto.";
       case "mis_padres":
-        return "Cuéntanos más de tus padres.";
+        return "Datos de tus padres y contacto.";
       case "otros":
-        return "Cuéntanos más de las personas que quieres asegurar.";
+        return "Datos de las personas y contacto.";
       default:
-        return "Cuéntanos más de las personas que vas a proteger.";
+        return "Completa los datos y contacto.";
     }
   };
 
@@ -111,10 +104,6 @@ export const GetQuoteForm: React.FC<{
     if (currentStep === 0) {
       setCurrentStep(1);
       return;
-    }
-
-    if (currentStep === 1 && showContactInfo) {
-      setCurrentStep(2);
     }
   };
 
@@ -233,41 +222,29 @@ export const GetQuoteForm: React.FC<{
         )}
 
         {currentStep === 1 && (
-          <PersonalInfoSection
-            formData={formData}
-            errors={errors}
-            handleInputChange={handleInputChange}
-            handleChildChange={handleChildChange}
-            handleProtectedPersonChange={handleProtectedPersonChange}
-            showHeader={false}
-          />
+          <div className="space-y-0">
+            <PersonalInfoSection
+              formData={formData}
+              errors={errors}
+              handleInputChange={handleInputChange}
+              handleChildChange={handleChildChange}
+              handleProtectedPersonChange={handleProtectedPersonChange}
+              showHeader={false}
+            />
+            
+            <ContactInfoSection
+              formData={formData}
+              errors={errors}
+              handleInputChange={handleInputChange}
+            />
+          </div>
         )}
-
-        <AnimatePresence mode="wait">
-          {currentStep === 2 && showContactInfo && (
-            <motion.div
-              key="contact-step"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.25 }}
-            >
-              <ContactInfoSection
-                formData={formData}
-                errors={errors}
-                handleInputChange={handleInputChange}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pt-2">
           <div className="text-xs sm:text-sm text-muted-foreground">
             {currentStep === 0 && "Primero elige a quién quieres proteger."}
             {currentStep === 1 &&
-              "Ahora completa los datos de las personas que vas a proteger."}
-            {currentStep === 2 &&
-              "Por último, déjanos tus datos de contacto para enviarte la cotización."}
+              "Completa los datos personales y de contacto para cotizar."}
           </div>
 
           <div className="flex w-full sm:w-auto justify-end gap-3">
@@ -286,7 +263,6 @@ export const GetQuoteForm: React.FC<{
               <Button
                 type="button"
                 onClick={handleNext}
-                disabled={currentStep === 1 && !showContactInfo}
                 className="h-11 px-6 w-full sm:w-auto rounded-lg text-sm sm:text-base"
               >
                 Siguiente

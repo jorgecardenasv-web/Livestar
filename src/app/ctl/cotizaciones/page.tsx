@@ -6,6 +6,7 @@ import { ModalQuoteActions } from "@/features/quote/components/modals/modal-quot
 import { Suspense } from "react";
 import { TableSkeleton } from "@/shared/components/skeletons/table-skeleton";
 import { ListQuotes } from "@/features/quote/components/tables/list-quotes";
+import { getCurrentUser } from "@/features/session/loaders/get-current-user";
 
 export interface Params extends Prospect {
   page: string;
@@ -19,6 +20,7 @@ export default async function ProspectsPage({
 }) {
   const resolvedSearchParams = await searchParams;
   const advisors = await getAdvisors();
+  const user = await getCurrentUser();
 
   return (
     <>
@@ -33,7 +35,7 @@ export default async function ProspectsPage({
             </Suspense>
           </CardContent>
         </Card>
-        <ModalQuoteActions advisors={advisors} />
+        <ModalQuoteActions advisors={advisors} currentUser={user} />
       </div>
     </>
   );

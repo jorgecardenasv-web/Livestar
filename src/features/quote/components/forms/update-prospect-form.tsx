@@ -5,8 +5,9 @@ import { Advisor } from "@/features/advisors/types/advisor";
 import { SelectInput } from "@/shared/components/ui/select-input";
 import { SubmitButton } from "@/shared/components/ui/submit-button";
 import { quoteStatus } from "../../data";
+import { User } from "@generated/prisma/client";
 
-export const UpdateQuoteForm = ({ advisors }: { advisors: Advisor[] }) => {
+export const UpdateQuoteForm = ({ advisors, currentUser }: { advisors: Advisor[], currentUser: User | null }) => {
   const { formAction, quote } = useQuoteActions();
 
   return (
@@ -18,15 +19,17 @@ export const UpdateQuoteForm = ({ advisors }: { advisors: Advisor[] }) => {
         options={quoteStatus}
       />
 
-      <SelectInput
-        label="Asesor asignado"
-        name="userId"
-        defaultValue={quote?.user?.id}
-        options={advisors.map((advisor) => ({
-          value: advisor.id,
-          label: advisor.name,
-        }))}
-      />
+      {currentUser?.role === "ADMIN" && (
+        <SelectInput
+          label="Asesor asignado"
+          name="userId"
+          defaultValue={quote?.user?.id}
+          options={advisors.map((advisor) => ({
+            value: advisor.id,
+            label: advisor.name,
+          }))}
+        />
+      )}
 
       <div className="flex justify-end mt-4">
         <SubmitButton
