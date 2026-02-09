@@ -1,5 +1,6 @@
 "use server";
 
+import { after } from "next/server";
 import { QuotePDFData } from "../types";
 import { generatePDFService } from "../services/generate-pdf.service";
 import { sendQuoteEmailProspectService } from "@/features/quote/services/send-email/send-quote-email.service";
@@ -14,16 +15,28 @@ export async function generatePDFAction(
       throw new Error("No se pudo generar el PDF");
     }
 
-    if (prospect?.email) {
-      await sendQuoteEmailProspectService({
-        prospectName: prospect?.name || "",
-        prospectEmail: prospect.email,
-        pdfBuffer: typeof pdfData === 'string' ? pdfData : Buffer.from(pdfData),
-        company: data.company,
-        plan: data.plan,
-        redirectUrl: "https://emma-gmm.livestar.mx/cotizar/resumen",
+    // Enviar correo en segundo plano después de devolver la respuesta
+    if (prospect?.email && prospect.email.trim() !== "") {
+      const prospectEmail = prospect.email;
+      const prospectName = prospect.name || "";
+      
+      after(async () => {
+        try {
+          await sendQuoteEmailProspectService({
+            prospectName,
+            prospectEmail,
+            pdfBuffer: typeof pdfData === 'string' ? pdfData : Buffer.from(pdfData),
+            company: data.company,
+            plan: data.plan,
+            redirectUrl: "https://emma-gmm.livestar.mx/cotizar/resumen",
+          });
+          console.log(`Correo enviado exitosamente a ${prospectEmail}`);
+        } catch (emailError) {
+          console.error("Error enviando correo en segundo plano:", emailError);
+        }
       });
     }
+
     return {
       success: true,
       data: pdfData as string,
