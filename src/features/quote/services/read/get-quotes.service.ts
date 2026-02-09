@@ -29,6 +29,9 @@ export const getQuotesService = async ({
         })
       : undefined;
 
+    console.log('📋 Listando cotizaciones en /cotizaciones:');
+    console.log('  Filtros aplicados:', { where, whereText, page: currentPage, limit: pageSize });
+    
     // Consulta para obtener cotizaciones básicas
     const [quotesRaw, count] = await Promise.all([
       prisma.quote.findMany({
@@ -53,6 +56,16 @@ export const getQuotesService = async ({
         } as any, // Utilizamos 'as any' para evitar problemas de tipo
       }),
     ]);
+    
+    console.log('  📊 Cotizaciones encontradas:', count);
+    if (quotesRaw.length > 0) {
+      console.log('  🔝 Primera cotización:');
+      console.log('    ID:', quotesRaw[0].id);
+      console.log('    Prospecto:', quotesRaw[0].prospect?.name);
+      console.log('    Email:', quotesRaw[0].prospect?.email);
+      console.log('    Fecha creación (UTC):', quotesRaw[0].createdAt);
+      console.log('    Fecha creación (ISO):', quotesRaw[0].createdAt.toISOString());
+    }
 
     // Procesamos cada cotización individualmente para obtener datos adicionales
     const processedQuotes: Quote[] = [];

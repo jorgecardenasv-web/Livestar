@@ -21,9 +21,30 @@ export const useReport = () => {
     if (dateRange?.from && dateRange?.to) {
       setIsLoading(true);
       try {
+        // Obtener los componentes de fecha sin importar la zona horaria
+        const fromDate = new Date(dateRange.from);
+        const toDate = new Date(dateRange.to);
+        
+        // Extraer año, mes y día del date picker (interpretado en hora local del navegador)
+        const startYear = fromDate.getFullYear();
+        const startMonth = fromDate.getMonth();
+        const startDay = fromDate.getDate();
+        
+        const endYear = toDate.getFullYear();
+        const endMonth = toDate.getMonth();
+        const endDay = toDate.getDate();
+        
+        // Crear fechas en hora local: inicio del día y fin del día
+        const startOfDay = new Date(startYear, startMonth, startDay, 0, 0, 0, 0);
+        const endOfDay = new Date(endYear, endMonth, endDay, 23, 59, 59, 999);
+        
+        console.log('📅 Rango de fechas para reporte (hora local de México):');
+        console.log('  Inicio:', startOfDay.toString(), '→', startOfDay.toISOString());
+        console.log('  Fin:', endOfDay.toString(), '→', endOfDay.toISOString());
+        
         const base64Excel = await generateReport(
-          dateRange.from.toISOString(),
-          dateRange.to.toISOString()
+          startOfDay.toISOString(),
+          endOfDay.toISOString()
         );
 
         // Convertir base64 a bytes usando atob (compatible con el navegador)

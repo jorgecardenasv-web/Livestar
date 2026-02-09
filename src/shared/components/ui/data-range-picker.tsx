@@ -28,9 +28,26 @@ export const DateRangePicker = ({
   );
 
   useEffect(() => {
+    // Parsear las fechas correctamente en hora local, no en UTC
+    // Cuando el input type="date" devuelve "2026-02-09", debemos interpretar
+    // como 9 de febrero en hora local, no como medianoche UTC
+    
+    let fromDateParsed: Date | undefined = undefined;
+    let toDateParsed: Date | undefined = undefined;
+    
+    if (fromDate) {
+      const [year, month, day] = fromDate.split('-').map(Number);
+      fromDateParsed = new Date(year, month - 1, day);
+    }
+    
+    if (toDate) {
+      const [year, month, day] = toDate.split('-').map(Number);
+      toDateParsed = new Date(year, month - 1, day);
+    }
+    
     const range: DateRange = {
-      from: fromDate ? new Date(fromDate) : undefined,
-      to: toDate ? new Date(toDate) : undefined,
+      from: fromDateParsed,
+      to: toDateParsed,
     };
 
     if (onDateRangeChange) {
