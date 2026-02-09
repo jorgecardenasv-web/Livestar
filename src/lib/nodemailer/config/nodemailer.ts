@@ -63,6 +63,11 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASSWORD,
   },
+  pool: true,          // Usa pooling en lugar de crear nuevas conexiones
+  maxConnections: 3,   // No abras demasiadas conexiones simultáneas
+  maxMessages: 100,    // Cuántos mensajes enviar por conexión antes de renovarla
+  rateDelta: 1000,     // Tiempo en ms para el conteo de rateLimit
+  rateLimit: 2,
 });
 
 const MAX_RETRIES = 3;
