@@ -7,9 +7,10 @@ import { revalidatePath } from "next/cache";
 import { FormState } from "@/shared/types";
 import { PrismaError } from "@/shared/errors/prisma";
 import { QuoteStatus } from "@generated/prisma/client";
+import { getCurrentUser } from "@/features/session/loaders/get-current-user";
 
 const ChangeAdvisorSchema = z.object({
-  userId: z.string(),
+  userId: z.string().optional(),
   status: z.nativeEnum(QuoteStatus),
 });
 
@@ -37,6 +38,17 @@ export const changeStatusAndAdvisor = async (
         message: "",
         inputErrors: simplifiedErrors,
       };
+    }
+
+    // Validar que solo administradores puedan reasignar asesor
+    if (data.userId) {
+      const currentUser = await getCurrentUser();
+      if (!currentUser || currentUser.role !== "ADMIN") {
+        return {
+          success: false,
+          message: "Solo los administradores pueden reasignar cotizaciones.",
+        };
+      }
     }
 
     await changeAdvisorService(prospectId, data);
