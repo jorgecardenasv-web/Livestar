@@ -4,10 +4,6 @@ import { getAllProspectsByDateService } from "@/features/prospects/services/get-
 import { prospectTransformer } from "@/features/prospects/transformers/prospect-transformer";
 import ExcelJS from "exceljs";
 
-const formatToISO = (date: string) => {
-  return new Date(date).toISOString().split(".")[0] + "Z";
-};
-
 const formatDate = (date: Date) => {
   return new Intl.DateTimeFormat("es-MX", {
     day: "2-digit",
@@ -27,10 +23,23 @@ const formatDateShort = (date: string) => {
 };
 
 export async function generateReport(startDate: string, endDate: string) {
+  console.log('🔍 Generando reporte con fechas:');
+  console.log('  Start Date:', startDate);
+  console.log('  End Date:', endDate);
+  
   const prospects = await getAllProspectsByDateService({
-    startDate: formatToISO(startDate),
-    endDate: formatToISO(endDate),
+    startDate,
+    endDate,
   });
+  
+  console.log('📊 Cotizaciones encontradas:', prospects.length);
+  if (prospects.length > 0) {
+    console.log('  Primera cotización:', {
+      id: prospects[0].id,
+      createdAt: prospects[0].createdAt,
+      name: prospects[0].prospect?.name
+    });
+  }
 
   const prospectTransformed = prospects.map((prospect) =>
     prospectTransformer(prospect as any)

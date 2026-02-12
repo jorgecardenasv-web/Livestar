@@ -13,17 +13,7 @@ export const ContactInfoSection: React.FC<ContactInfoSectionProps> = ({
   handleInputChange,
 }) => {
   return (
-    <div className="space-y-6 py-6">
-      <div className="mb-2">
-        <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
-          Datos de contacto
-        </h3>
-        <p className="text-xs sm:text-sm text-muted-foreground mt-1">
-          Te contactaremos solo para compartirte tu cotización y resolver dudas.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
         <TextInput
           type="text"
           label="Mi whatsapp es"
@@ -52,7 +42,6 @@ export const ContactInfoSection: React.FC<ContactInfoSectionProps> = ({
           className="w-full"
           error={errors.email}
         />
-      </div>
     </div>
   );
 };

@@ -331,7 +331,7 @@ export const QuoteSummary: FC<
 
       if (result.success && result.data) {
         if (isIOS) {
-          setPdfSuccess("Se ha enviado la cotización a tu correo electrónico.");
+          setPdfSuccess("Se ha generado la cotización. Recibirás un correo en breve con los detalles.");
         } else {
           const pdfBlob = dataURItoBlob(result.data);
           const blobUrl = URL.createObjectURL(pdfBlob);
@@ -345,7 +345,7 @@ export const QuoteSummary: FC<
             document.body.removeChild(downloadLink);
             URL.revokeObjectURL(blobUrl);
           }, 100);
-          setPdfSuccess("Se ha descargado la cotización y enviado a tu correo electrónico.");
+          setPdfSuccess("Se ha descargado la cotización. Recibirás un correo en breve con los detalles.");
         }
       } else {
         console.error("Error generando PDF:", result.error);

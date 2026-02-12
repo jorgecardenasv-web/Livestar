@@ -9,8 +9,9 @@ import { UpdateQuoteForm } from "../forms/update-prospect-form";
 import { useReport } from "../../hooks/use-report";
 import { DeleteQuoteForm } from "../forms/delete-quote-form";
 import { FileSpreadsheet, Calendar, Download } from "lucide-react";
+import { User } from "@generated/prisma/client";
 
-export const ModalQuoteActions = ({ advisors }: { advisors: Advisor[] }) => {
+export const ModalQuoteActions = ({ advisors, currentUser }: { advisors: Advisor[], currentUser: User | null }) => {
   const { isOpen, modalType } = useQuoteActions();
   const { handleDateChange, handleSubmit, isLoading } = useReport();
 
@@ -18,7 +19,7 @@ export const ModalQuoteActions = ({ advisors }: { advisors: Advisor[] }) => {
     <>
       {isOpen && modalType === "updateQuote" && (
         <Modal title="Editar Prospecto" description="" size="lg">
-          <UpdateQuoteForm advisors={advisors} />
+          <UpdateQuoteForm advisors={advisors} currentUser={currentUser} />
         </Modal>
       )}
 
@@ -44,15 +45,10 @@ export const ModalQuoteActions = ({ advisors }: { advisors: Advisor[] }) => {
 
             {/* Selector de fechas */}
             <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-                <label className="text-sm font-medium text-foreground">
-                  Selecciona el período
-                </label>
-              </div>
-              <div className="rounded-lg border border-border p-4 bg-card">
-                <DateRangePicker onDateRangeChange={handleDateChange} />
-              </div>
+              <label className="text-sm font-medium text-foreground">
+                Selecciona el período
+              </label>
+              <DateRangePicker onDateRangeChange={handleDateChange} />
             </div>
 
             {/* Botón de acción */}

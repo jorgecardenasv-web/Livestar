@@ -9,7 +9,11 @@ export const getAllProspectsByDateService = async ({
   endDate: string;
 }) => {
   try {
-    return await prisma.quote.findMany({
+    console.log('🔎 Buscando cotizaciones en DB:');
+    console.log('  gte (>=):', startDate);
+    console.log('  lte (<=):', endDate);
+    
+    const results = await prisma.quote.findMany({
       where: {
         createdAt: {
           gte: startDate,
@@ -21,6 +25,10 @@ export const getAllProspectsByDateService = async ({
         prospect: true,
       },
     });
+    
+    console.log('  Resultados:', results.length);
+    
+    return results;
   } catch (error) {
     throw handlePrismaError(error);
   }

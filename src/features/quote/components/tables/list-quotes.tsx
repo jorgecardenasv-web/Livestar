@@ -20,6 +20,7 @@ import { getQuotes } from "../../loaders/get-quotes.loader";
 import { Badge } from "@/shared/components/ui/badge";
 import { TableFilters } from "@/shared/components/tables/table-filters";
 import { filters } from "../../data";
+import { QuoteStatus } from "@generated/prisma/client";
 
 const quoteStatusVariants = {
   NUEVO: "default",
@@ -27,6 +28,13 @@ const quoteStatusVariants = {
   EN_PROGRESO: "outline",
   CERRADO: "success",
 } as const;
+
+const quoteStatusLabels: Record<QuoteStatus, string> = {
+  NUEVO: "Nuevo",
+  CONTACTADO: "Contactado",
+  EN_PROGRESO: "En progreso",
+  CERRADO: "Cerrado",
+};
 
 export const ListQuotes = async ({ params }: {
   params: Params
@@ -91,7 +99,7 @@ export const ListQuotes = async ({ params }: {
                       <Badge
                         variant={quoteStatusVariants[quote.status]}
                       >
-                        {quote.status}
+                        {quoteStatusLabels[quote.status]}
                       </Badge>
                     </TableCell>
                     <TableCell>
