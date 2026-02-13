@@ -1,4 +1,4 @@
-import { chromium, Route } from "playwright";
+import { chromium } from "playwright";
 import Handlebars from "handlebars";
 import { PDFDocument } from "pdf-lib";
 import { QuotePDFData } from "../types";
@@ -390,27 +390,6 @@ export const generatePDFWithPlaywright = async (
     const context = await browser.newContext();
     const page = await context.newPage();
 
-    // Configurar interceptación de requests
-    await page.route("**/*", (route: Route) => {
-      const request = route.request();
-      const resourceType = request.resourceType();
-      const allowedResources = new Set([
-        "document",
-        "stylesheet",
-        "font",
-        "script",
-      ]);
-
-      if (
-        allowedResources.has(resourceType) ||
-        request.url().startsWith("data:")
-      ) {
-        route.continue();
-      } else {
-        route.abort();
-      }
-    });
-
     // Inyectar fuentes ANTES de cargar el contenido
     await page.addInitScript(() => {
       const link = document.createElement("link");
@@ -420,17 +399,19 @@ export const generatePDFWithPlaywright = async (
       document.head.appendChild(link);
     });
 
-    // Cargar HTML
+    // Cargar HTML con espera completa de red
     await page.setContent(html, {
-      waitUntil: "load",
-      timeout: 20000,
+      waitUntil: "networkidle",
+      timeout: 30000,
     });
 
-    // Esperar a que las fuentes se carguen
-    await page.waitForLoadState("networkidle", { timeout: 20000 });
+    // Esperar explícitamente a que las fuentes se carguen
+    await page.evaluate(() => {
+      return document.fonts.ready;
+    });
 
-    // Pequeña pausa para asegurar que los estilos se apliquen
-    await page.waitForTimeout(300);
+    // Pequeña pausa adicional para asegurar que los estilos se apliquen
+    await page.waitForTimeout(500);
 
     // Generar PDF con configuración optimizada (exactamente como Puppeteer)
     const pdfBuffer = await page.pdf({
