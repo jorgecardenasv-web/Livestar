@@ -25,24 +25,27 @@ COPY . .
 # Generate Prisma Client
 RUN corepack enable pnpm && pnpm prisma generate
 
+# Install Playwright browsers
+RUN corepack enable pnpm && npx playwright install --with-deps chromium
+
 RUN corepack enable pnpm && pnpm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
 
-# Install Chromium and dependencies for Puppeteer
+# Install Playwright dependencies for Chromium
 RUN apk add --no-cache \
     chromium \
     nss \
     freetype \
     harfbuzz \
     ca-certificates \
-    ttf-freefont
+    ttf-freefont \
+    font-noto-emoji \
+    wqy-zenhei
 
 ENV NODE_ENV=production
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -63,6 +66,9 @@ RUN chown nextjs:nodejs .next
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Copy Playwright browsers from builder
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules/playwright ./node_modules/playwright
 
 USER nextjs
 

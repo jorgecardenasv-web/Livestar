@@ -1,7 +1,4 @@
-import chromium from "@sparticuz/chromium";
-import puppeteerCore, {
-  Page,
-} from "puppeteer-core";
+import { chromium, Route } from "playwright";
 import Handlebars from "handlebars";
 import { PDFDocument } from "pdf-lib";
 import { QuotePDFData } from "../types";
@@ -21,8 +18,6 @@ import {
   GNP_MONTHLY_TEMPLATE_HTML,
   HDI_TEMPLATE_HTML,
 } from "../constants/html-templates";
-
-type PageType = Page;
 
 // Registrar los helpers de Handlebars
 Handlebars.registerHelper("formatCurrency", function (amount: number) {
@@ -181,48 +176,7 @@ const calculateSpacingConfig = (
   };
 };
 
-// Función para unir el PDF SGM con el PDF generado por Puppeteer
-const mergePDFs = async (
-  puppeteerPdfBuffer: Buffer | Uint8Array,
-  hasDetailedPricing = false
-): Promise<Buffer> => {
-  try {
-    // Crear un nuevo documento PDF
-    const mergedPdf = await PDFDocument.create();
-
-    const PDF_SGM_BASE64 = hasDetailedPricing
-      ? PDF_SGM_HDI_BASE64
-      : PDF_SGM_GNP_BASE64;
-
-    // Cargar el PDF SGM desde base64
-    const sgmPdfBytes = Buffer.from(PDF_SGM_BASE64, "base64");
-    const sgmPdf = await PDFDocument.load(sgmPdfBytes);
-
-    // Cargar el PDF generado por Puppeteer
-    const puppeteerPdf = await PDFDocument.load(puppeteerPdfBuffer);
-
-    // Copiar todas las páginas del PDF de Puppeteer primero
-    const puppeteerPages = await mergedPdf.copyPages(
-      puppeteerPdf,
-      puppeteerPdf.getPageIndices()
-    );
-    puppeteerPages.forEach((page) => mergedPdf.addPage(page));
-
-    // Luego copiar todas las páginas del PDF SGM
-    const sgmPages = await mergedPdf.copyPages(sgmPdf, sgmPdf.getPageIndices());
-    sgmPages.forEach((page) => mergedPdf.addPage(page));
-
-    // Generar el PDF final
-    const mergedPdfBytes = await mergedPdf.save();
-    return Buffer.from(mergedPdfBytes);
-  } catch (error) {
-    console.error("Error al unir los PDFs:", error);
-    // En caso de error, devolver solo el PDF de Puppeteer
-    return Buffer.from(puppeteerPdfBuffer);
-  }
-};
-
-// Función para generar el template del header
+// Función para generar el header del PDF
 const generateHeaderTemplate = (data: QuotePDFData, logoBase64: string) => {
   return `
     <div style="
@@ -275,7 +229,7 @@ const generateHeaderTemplate = (data: QuotePDFData, logoBase64: string) => {
   `;
 };
 
-// Función para generar el template del footer
+// Función para generar el footer del PDF
 const generateFooterTemplate = () => {
   return `
     <div style="
@@ -301,13 +255,46 @@ const generateFooterTemplate = () => {
   `;
 };
 
-export const generatePDFWithPuppeteer = async (
+// Función para unir el PDF SGM con el PDF generado por Playwright
+const mergePDFs = async (
+  playwrightPdfBuffer: Buffer | Uint8Array,
+  isDetailedPricing: boolean = false
+): Promise<Buffer> => {
+  try {
+    const mergedPdf = await PDFDocument.create();
+
+    // Cargar el PDF generado por Playwright
+    const playwrightPdf = await PDFDocument.load(playwrightPdfBuffer);
+
+    // Copiar todas las páginas del PDF de Playwright primero
+    const playwrightPages = await mergedPdf.copyPages(
+      playwrightPdf,
+      playwrightPdf.getPageIndices()
+    );
+    playwrightPages.forEach((page) => mergedPdf.addPage(page));
+
+    // Cargar el PDF SGM correspondiente
+    const sgmBase64 = isDetailedPricing ? PDF_SGM_HDI_BASE64 : PDF_SGM_GNP_BASE64;
+    const sgmPdfData = Uint8Array.from(atob(sgmBase64), (c) => c.charCodeAt(0));
+    const sgmPdf = await PDFDocument.load(sgmPdfData);
+
+    // Copiar páginas del PDF SGM
+    const sgmPages = await mergedPdf.copyPages(sgmPdf, sgmPdf.getPageIndices());
+    sgmPages.forEach((page) => mergedPdf.addPage(page));
+
+    return Buffer.from(await mergedPdf.save());
+  } catch (error) {
+    console.error("Error al unir los PDFs:", error);
+    // En caso de error, devolver solo el PDF de Playwright
+    return Buffer.from(playwrightPdfBuffer);
+  }
+};
+
+export const generatePDFWithPlaywright = async (
   data: QuotePDFData,
   format: "datauri" | "arraybuffer" = "datauri"
 ): Promise<string | ArrayBuffer> => {
-  // Detectar entorno: local solo si NODE_ENV es development
-  const isLocal = process.env.NODE_ENV === "development";
-  let browser: any = null;
+  let browser = null;
 
   try {
     const processedDeductibles = processDeductibles(data);
@@ -337,7 +324,7 @@ export const generatePDFWithPuppeteer = async (
       moneyIconPath: moneyIconBase64,
       checkIconPath: checkIconBase64,
       medicalIconPath: medicalIconBase64,
-      spacingConfig, // Solo una configuración unificada
+      spacingConfig,
     };
 
     let templateContent: string;
@@ -360,84 +347,41 @@ export const generatePDFWithPuppeteer = async (
     const headerTemplate = generateHeaderTemplate(data, logoBase64);
     const footerTemplate = generateFooterTemplate();
 
-    // Configuración de Chromium optimizada para Docker Alpine
-    const chromiumArgs = [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-gpu",
-      "--disable-software-rasterizer",
-      "--disable-extensions",
-      "--no-first-run",
-      "--no-zygote",
-      "--disable-background-networking",
-      "--disable-default-apps",
-      "--disable-sync",
-      "--disable-translate",
-      "--hide-scrollbars",
-      "--metrics-recording-only",
-      "--mute-audio",
-      "--no-default-browser-check",
-      "--safebrowsing-disable-auto-update",
-      "--disable-background-timer-throttling",
-      "--disable-backgrounding-occluded-windows",
-      "--disable-renderer-backgrounding",
-      "--disable-ipc-flooding-protection",
-      "--disable-features=IsolateOrigins,site-per-process",
-    ];
+    // Lanzar navegador con Playwright
+    browser = await chromium.launch({
+      headless: true,
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+        "--disable-software-rasterizer",
+        "--disable-extensions",
+        "--no-first-run",
+        "--no-zygote",
+        "--disable-background-networking",
+        "--disable-default-apps",
+        "--disable-sync",
+        "--disable-translate",
+        "--hide-scrollbars",
+        "--metrics-recording-only",
+        "--mute-audio",
+        "--no-default-browser-check",
+        "--safebrowsing-disable-auto-update",
+        "--disable-background-timer-throttling",
+        "--disable-backgrounding-occluded-windows",
+        "--disable-renderer-backgrounding",
+        "--disable-ipc-flooding-protection",
+        "--disable-features=IsolateOrigins,site-per-process",
+      ],
+    });
 
-    // Configurar Puppeteer según el entorno
-    if (isLocal) {
-      // En local (macOS), buscar navegadores del sistema
-      const possiblePaths = [
-        '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-        '/Applications/Chromium.app/Contents/MacOS/Chromium',
-        '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser',
-        '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
-      ];
-
-      let executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
-      
-      if (!executablePath) {
-        // Buscar el primer navegador disponible
-        const fs = await import('fs');
-        for (const path of possiblePaths) {
-          if (fs.existsSync(path)) {
-            executablePath = path;
-            break;
-          }
-        }
-      }
-
-      if (!executablePath) {
-        throw new Error(
-          'No se encontró ningún navegador compatible. Instala Chrome, Chromium, Brave o Edge, ' +
-          'o configura PUPPETEER_EXECUTABLE_PATH en tu .env.local'
-        );
-      }
-
-      browser = await puppeteerCore.launch({
-        args: chromiumArgs,
-        executablePath,
-        headless: true,
-        protocolTimeout: 30000,
-      });
-    } else {
-      // En producción Alpine, usar @sparticuz/chromium
-      browser = await puppeteerCore.launch({
-        args: chromium.args,
-        executablePath: await chromium.executablePath(),
-        headless: true,
-        protocolTimeout: 60000,
-      });
-    }
-
-    const page: PageType = await browser.newPage();
+    const context = await browser.newContext();
+    const page = await context.newPage();
 
     // Configurar interceptación de requests
-    await page.setRequestInterception(true);
-    page.on("request", (request) => {
-      // Tu lógica de intercepción es excelente, la mantenemos.
+    await page.route("**/*", (route: Route) => {
+      const request = route.request();
       const resourceType = request.resourceType();
       const allowedResources = new Set([
         "document",
@@ -450,14 +394,14 @@ export const generatePDFWithPuppeteer = async (
         allowedResources.has(resourceType) ||
         request.url().startsWith("data:")
       ) {
-        request.continue();
+        route.continue();
       } else {
-        request.abort();
+        route.abort();
       }
     });
 
-    // Inyectar fuentes
-    await page.evaluateOnNewDocument(() => {
+    // Inyectar fuentes ANTES de cargar el contenido
+    await page.addInitScript(() => {
       const link = document.createElement("link");
       link.href =
         "https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap";
@@ -467,16 +411,19 @@ export const generatePDFWithPuppeteer = async (
 
     // Cargar HTML
     await page.setContent(html, {
-      waitUntil: ["load", "networkidle2"],
+      waitUntil: "load",
       timeout: 20000,
     });
 
-    // Pequeña pausa para asegurar que los estilos se apliquen
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    // Esperar a que las fuentes se carguen
+    await page.waitForLoadState("networkidle", { timeout: 20000 });
 
-    // Generar PDF con configuración optimizada
+    // Pequeña pausa para asegurar que los estilos se apliquen
+    await page.waitForTimeout(300);
+
+    // Generar PDF con configuración optimizada (exactamente como Puppeteer)
     const pdfBuffer = await page.pdf({
-      format: "A4",
+      format: "Letter",
       printBackground: true,
       margin: {
         top: "100px",
@@ -489,12 +436,11 @@ export const generatePDFWithPuppeteer = async (
       footerTemplate: footerTemplate,
       preferCSSPageSize: false,
       scale: 0.95,
-      timeout: 30000,
     });
 
     await browser.close();
 
-    // Unir el PDF SGM con el PDF generado por Puppeteer
+    // Unir el PDF SGM con el PDF generado por Playwright
     const mergedPdfBuffer = await mergePDFs(
       Buffer.from(pdfBuffer),
       data.hasDetailedPricing
@@ -514,7 +460,7 @@ export const generatePDFWithPuppeteer = async (
     }
     return arrayBuffer;
   } catch (error) {
-    console.error("Error generando PDF con Puppeteer:", error);
+    console.error("Error generando PDF con Playwright:", error);
 
     if (browser) {
       try {
@@ -525,9 +471,5 @@ export const generatePDFWithPuppeteer = async (
     }
 
     throw error;
-  } finally {
-    if (browser !== null) {
-      await browser.close();
-    }
   }
 };
