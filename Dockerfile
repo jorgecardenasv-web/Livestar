@@ -21,7 +21,20 @@ RUN apk add --no-cache \
     freetype \
     harfbuzz \
     ca-certificates \
-    ttf-freefont
+    ttf-freefont \
+    fontconfig \
+    font-noto \
+    font-noto-extra \
+    wget \
+    unzip
+
+# Descargar e instalar fuentes Montserrat desde GitHub
+RUN mkdir -p /usr/share/fonts/truetype/montserrat && \
+    cd /usr/share/fonts/truetype/montserrat && \
+    wget -O montserrat.zip "https://github.com/JulietaUla/Montserrat/archive/refs/heads/master.zip" && \
+    unzip -j montserrat.zip "Montserrat-master/fonts/ttf/*.ttf" && \
+    rm montserrat.zip && \
+    fc-cache -fv
 
 ENV DATABASE_URL=postgresql://user:password@localhost:5432/db
 COPY --from=deps /app/node_modules ./node_modules
@@ -44,7 +57,7 @@ RUN corepack enable pnpm && pnpm run build
 FROM base AS runner
 WORKDIR /app
 
-# Install Playwright dependencies for Chromium
+# Install Playwright dependencies for Chromium and fonts
 RUN apk add --no-cache \
     chromium \
     nss \
@@ -53,7 +66,20 @@ RUN apk add --no-cache \
     ca-certificates \
     ttf-freefont \
     font-noto-emoji \
-    wqy-zenhei
+    wqy-zenhei \
+    fontconfig \
+    font-noto \
+    font-noto-extra \
+    wget \
+    unzip
+
+# Descargar e instalar fuentes Montserrat desde GitHub
+RUN mkdir -p /usr/share/fonts/truetype/montserrat && \
+    cd /usr/share/fonts/truetype/montserrat && \
+    wget -O montserrat.zip "https://github.com/JulietaUla/Montserrat/archive/refs/heads/master.zip" && \
+    unzip -j montserrat.zip "Montserrat-master/fonts/ttf/*.ttf" && \
+    rm montserrat.zip && \
+    fc-cache -fv
 
 ENV NODE_ENV=production
 ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
