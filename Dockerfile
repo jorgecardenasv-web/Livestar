@@ -13,6 +13,16 @@ RUN corepack enable pnpm && pnpm i --frozen-lockfile
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
+
+# Install Playwright system dependencies for Alpine
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont
+
 ENV DATABASE_URL=postgresql://user:password@localhost:5432/db
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -25,8 +35,8 @@ COPY . .
 # Generate Prisma Client
 RUN corepack enable pnpm && pnpm prisma generate
 
-# Install Playwright browsers
-RUN corepack enable pnpm && npx playwright install --with-deps chromium
+# Install Playwright browsers (without --with-deps since we're on Alpine)
+RUN corepack enable pnpm && npx playwright install chromium
 
 RUN corepack enable pnpm && pnpm run build
 
@@ -46,6 +56,8 @@ RUN apk add --no-cache \
     wqy-zenhei
 
 ENV NODE_ENV=production
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium-browser
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -66,9 +78,6 @@ RUN chown nextjs:nodejs .next
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-# Copy Playwright browsers from builder
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/playwright ./node_modules/playwright
 
 USER nextjs
 

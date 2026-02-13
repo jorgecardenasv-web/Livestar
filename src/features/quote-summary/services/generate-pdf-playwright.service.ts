@@ -347,8 +347,12 @@ export const generatePDFWithPlaywright = async (
     const headerTemplate = generateHeaderTemplate(data, logoBase64);
     const footerTemplate = generateFooterTemplate();
 
+    // Determinar si estamos en producción (Docker Alpine)
+    const isProduction = process.env.NODE_ENV === "production";
+    const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH;
+
     // Lanzar navegador con Playwright
-    browser = await chromium.launch({
+    const launchOptions: any = {
       headless: true,
       args: [
         "--no-sandbox",
@@ -374,7 +378,14 @@ export const generatePDFWithPlaywright = async (
         "--disable-ipc-flooding-protection",
         "--disable-features=IsolateOrigins,site-per-process",
       ],
-    });
+    };
+
+    // En producción, usar Chromium del sistema
+    if (isProduction && executablePath) {
+      launchOptions.executablePath = executablePath;
+    }
+
+    browser = await chromium.launch(launchOptions);
 
     const context = await browser.newContext();
     const page = await context.newPage();
@@ -426,7 +437,7 @@ export const generatePDFWithPlaywright = async (
       format: "Letter",
       printBackground: true,
       margin: {
-        top: "100px",
+        top: "80px",
         bottom: "30px",
         left: "25px",
         right: "25px",
