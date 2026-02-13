@@ -13,6 +13,29 @@ RUN corepack enable pnpm && pnpm i --frozen-lockfile
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
+
+# Install Playwright system dependencies for Alpine
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont \
+    fontconfig \
+    font-noto \
+    font-noto-extra \
+    wget \
+    unzip
+
+# Descargar e instalar fuentes Montserrat desde GitHub
+RUN mkdir -p /usr/share/fonts/truetype/montserrat && \
+    cd /usr/share/fonts/truetype/montserrat && \
+    wget -O montserrat.zip "https://github.com/JulietaUla/Montserrat/archive/refs/heads/master.zip" && \
+    unzip -j montserrat.zip "Montserrat-master/fonts/ttf/*.ttf" && \
+    rm montserrat.zip && \
+    fc-cache -fv
+
 ENV DATABASE_URL=postgresql://user:password@localhost:5432/db
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -25,24 +48,42 @@ COPY . .
 # Generate Prisma Client
 RUN corepack enable pnpm && pnpm prisma generate
 
+# Install Playwright browsers (without --with-deps since we're on Alpine)
+RUN corepack enable pnpm && npx playwright install chromium
+
 RUN corepack enable pnpm && pnpm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
 
-# Install Chromium and dependencies for Puppeteer
+# Install Playwright dependencies for Chromium and fonts
 RUN apk add --no-cache \
     chromium \
     nss \
     freetype \
     harfbuzz \
     ca-certificates \
-    ttf-freefont
+    ttf-freefont \
+    font-noto-emoji \
+    wqy-zenhei \
+    fontconfig \
+    font-noto \
+    font-noto-extra \
+    wget \
+    unzip
+
+# Descargar e instalar fuentes Montserrat desde GitHub
+RUN mkdir -p /usr/share/fonts/truetype/montserrat && \
+    cd /usr/share/fonts/truetype/montserrat && \
+    wget -O montserrat.zip "https://github.com/JulietaUla/Montserrat/archive/refs/heads/master.zip" && \
+    unzip -j montserrat.zip "Montserrat-master/fonts/ttf/*.ttf" && \
+    rm montserrat.zip && \
+    fc-cache -fv
 
 ENV NODE_ENV=production
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium-browser
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 

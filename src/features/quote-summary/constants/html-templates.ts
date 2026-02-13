@@ -29,9 +29,9 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
       /* IMPORTANTE: Reglas @page para manejar márgenes en todas las páginas */ 
       @page { 
         size: letter; 
-        /* Margen superior debe ser igual o mayor a la altura del header */ 
-        margin-top: 140px; /* 120px header + 20px espacio */ 
-        margin-bottom: 40px; 
+        /* Margen superior optimizado para mejor distribución */ 
+        margin-top: 130px; /* 120px header + 10px espacio */ 
+        margin-bottom: 45px; /* 30px footer + 15px espacio */ 
         margin-left: 25px; 
         margin-right: 25px; 
         background-color: #f9f8f9;
@@ -77,9 +77,9 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
         display: flex; 
         flex-direction: column; 
         align-items: center; 
-        /* Padding inicial para la primera página */ 
-        padding-top: 20px; 
-        padding-bottom: 40px; 
+        /* Padding optimizado para mejor uso del espacio */ 
+        padding-top: 10px; 
+        padding-bottom: 20px; 
       }
 
       /* Secciones con manejo mejorado de saltos de página */ 
@@ -90,9 +90,12 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
         display: block; 
         position: relative; 
         overflow: visible; 
-        /* Evitar que las secciones se corten */ 
-        page-break-inside: avoid; 
-        break-inside: avoid; 
+        /* Permitir división inteligente de secciones para mejor distribución */ 
+        page-break-inside: auto; 
+        break-inside: auto; 
+        /* Control de líneas huérfanas y viudas */ 
+        orphans: 2; 
+        widows: 3; 
         /* Asegurar espacio después de saltos de página */ 
         page-break-before: auto; 
         page-break-after: auto; 
@@ -118,11 +121,11 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
       
       /* Asegurar espaciado apropiado entre secciones */
       .content-section + .content-section {
-        margin-top: 25px !important;
+        margin-top: 18px !important;
       }
 
       .plan-info {
-        padding: 20px 30px;
+        padding: 10px 30px;
         width: 100%;
         max-width: 900px;
         /* Los márgenes se aplicarán vía JavaScript */
@@ -159,6 +162,9 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
         align-items: center;
         gap: 10px;
         width: fit-content;
+        /* Evitar que el título se separe de su contenido */
+        page-break-after: avoid;
+        page-break-inside: avoid;
       }
 
       .section-title img {
@@ -268,7 +274,7 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
 
       .data-table th,
       .data-table td {
-        /* El padding se aplicará vía JavaScript */
+        padding: 12px;
         border-right: 1px solid var(--border-gray);
       }
 
@@ -289,6 +295,7 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
       }
 
       .data-table th {
+        padding: 12px;
         background: var(--white);
         color: var(--text-dark);
         text-align: left;
@@ -304,6 +311,7 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
       }
 
       .data-table td {
+        padding: 12px;
         color: var(--text-dark);
         border-bottom: 1px solid var(--border-gray);
       }
@@ -481,6 +489,13 @@ export const GNP_ANNUAL_TEMPLATE_HTML = `<!doctype html>
       .logo-emma {
         height: 250px;
         width: auto;
+      }
+
+      /* Evitar que los headers de tabla se separen del contenido */
+      .data-table thead,
+      .protected-persons-table thead {
+        page-break-after: avoid;
+        break-after: avoid;
       }
     </style>
   </head>
@@ -649,9 +664,9 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
       /* IMPORTANTE: Reglas @page para manejar márgenes en todas las páginas */ 
       @page { 
         size: letter; 
-        /* Margen superior debe ser igual o mayor a la altura del header */ 
-        margin-top: 140px; /* 120px header + 20px espacio */ 
-        margin-bottom: 40px; 
+        /* Margen superior optimizado para mejor distribución */ 
+        margin-top: 130px; /* 120px header + 10px espacio */ 
+        margin-bottom: 45px; /* 30px footer + 15px espacio */ 
         margin-left: 25px; 
         margin-right: 25px; 
         background-color: #f9f8f9;
@@ -697,9 +712,9 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
         display: flex; 
         flex-direction: column; 
         align-items: center; 
-        /* Padding inicial para la primera página */ 
-        padding-top: 20px; 
-        padding-bottom: 40px; 
+        /* Padding optimizado para mejor uso del espacio */ 
+        padding-top: 10px; 
+        padding-bottom: 20px; 
       }
 
       /* Secciones con manejo mejorado de saltos de página */ 
@@ -710,9 +725,12 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
         display: block; 
         position: relative; 
         overflow: visible; 
-        /* Evitar que las secciones se corten */ 
-        page-break-inside: avoid; 
-        break-inside: avoid; 
+        /* Permitir división inteligente de secciones para mejor distribución */ 
+        page-break-inside: auto; 
+        break-inside: auto; 
+        /* Control de líneas huérfanas y viudas */ 
+        orphans: 2; 
+        widows: 3; 
         /* Asegurar espacio después de saltos de página */ 
         page-break-before: auto; 
         page-break-after: auto; 
@@ -738,11 +756,11 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
       
       /* Asegurar espaciado apropiado entre secciones */
       .content-section + .content-section {
-        margin-top: 25px !important;
+        margin-top: 18px !important;
       }
 
       .plan-info {
-        padding: 20px 30px;
+        padding: 10px 30px;
         width: 100%;
         max-width: 900px;
         /* Los márgenes se aplicarán vía JavaScript */
@@ -779,6 +797,9 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
         align-items: center;
         gap: 10px;
         width: fit-content;
+        /* Evitar que el título se separe de su contenido */
+        page-break-after: avoid;
+        page-break-inside: avoid;
       }
 
       .section-title img {
@@ -888,7 +909,7 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
 
       .data-table th,
       .data-table td {
-        /* El padding se aplicará vía JavaScript */
+        padding: 12px;
         border-right: 1px solid var(--border-gray);
       }
 
@@ -909,6 +930,7 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
       }
 
       .data-table th {
+        padding: 12px;
         background: var(--white);
         color: var(--text-dark);
         text-align: left;
@@ -924,6 +946,7 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
       }
 
       .data-table td {
+        padding: 12px;
         color: var(--text-dark);
         border-bottom: 1px solid var(--border-gray);
       }
@@ -1101,6 +1124,13 @@ export const GNP_MONTHLY_TEMPLATE_HTML = `<!doctype html>
       .logo-emma {
         height: 250px;
         width: auto;
+      }
+
+      /* Evitar que los headers de tabla se separen del contenido */
+      .data-table thead,
+      .protected-persons-table thead {
+        page-break-after: avoid;
+        break-after: avoid;
       }
     </style>
   </head>
@@ -1289,8 +1319,9 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
       /* IMPORTANTE: Reglas @page para manejar márgenes en todas las páginas */ 
       @page { 
         size: letter; 
-        margin-top: 120px;
-        margin-bottom: 0px; 
+        /* Margen superior optimizado para mejor distribución */ 
+        margin-top: 130px; /* 120px header + 10px espacio */
+        margin-bottom: 45px; /* 30px footer + 15px espacio */ 
         margin-left: 25px; 
         margin-right: 25px; 
         background-color: #f9f8f9;
@@ -1310,10 +1341,14 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
       }
 
       /* Contenido principal */ 
+      /* Contenido principal */ 
       .main-content { 
         display: flex; 
         flex-direction: column; 
         align-items: center; 
+        /* Padding optimizado para mejor uso del espacio */ 
+        padding-top: 10px; 
+        padding-bottom: 20px; 
       }
 
       /* Secciones con manejo mejorado de saltos de página */ 
@@ -1324,9 +1359,12 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         display: block; 
         position: relative; 
         overflow: visible; 
-        /* Evitar que las secciones se corten */ 
-        page-break-inside: avoid; 
-        break-inside: avoid; 
+        /* Permitir división inteligente de secciones para mejor distribución */ 
+        page-break-inside: auto; 
+        break-inside: auto; 
+        /* Control de líneas huérfanas y viudas */ 
+        orphans: 2; 
+        widows: 3; 
         /* Asegurar espacio después de saltos de página */ 
         page-break-before: auto; 
         page-break-after: auto; 
@@ -1351,7 +1389,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
       }
 
       .plan-info {
-        padding: 0px 15px;
+        padding: 5px 15px;
         width: 100%;
         max-width: 900px;
         /* Los márgenes se aplicarán vía JavaScript */
@@ -1364,6 +1402,13 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
       .logo-emma {
         height: 250px;
         width: auto;
+      }
+
+      /* Evitar que los headers de tabla se separen del contenido */
+      .data-table thead,
+      .protected-persons-table thead {
+        page-break-after: avoid;
+        break-after: avoid;
       }
 
       .plan-details {
@@ -1393,6 +1438,9 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
         align-items: center;
         gap: 10px;
         width: fit-content;
+        /* Evitar que el título se separe de su contenido */
+        page-break-after: avoid;
+        page-break-inside: avoid;
       }
 
       .section-title img {
@@ -1501,7 +1549,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
 
       .data-table th,
       .data-table td {
-        /* El padding se aplicará vía JavaScript */
+        padding: 12px;
         border-right: 1px solid var(--border-gray);
       }
 
@@ -1516,6 +1564,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
       }
 
       .data-table th {
+        padding: 12px;
         background: var(--white);
         color: var(--text-dark);
         text-align: left;
@@ -1531,6 +1580,7 @@ export const HDI_TEMPLATE_HTML = `<!doctype html>
       }
 
       .data-table td {
+        padding: 12px;
         color: var(--text-dark);
         border-bottom: 1px solid var(--border-gray);
       }
