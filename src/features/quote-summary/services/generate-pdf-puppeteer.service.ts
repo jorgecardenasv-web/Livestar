@@ -1,5 +1,5 @@
+import chromium from "@sparticuz/chromium";
 import puppeteerCore, {
-  Browser,
   Page,
 } from "puppeteer-core";
 import Handlebars from "handlebars";
@@ -275,6 +275,32 @@ const generateHeaderTemplate = (data: QuotePDFData, logoBase64: string) => {
   `;
 };
 
+// Función para generar el template del footer
+const generateFooterTemplate = () => {
+  return `
+    <div style="
+      background-color: #f5f5f5 !important;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      color: #666666;
+      padding: 8px 30px;
+      width: 100%;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+      font-size: 12px;
+      margin: 0;
+      text-align: center;
+      line-height: 1.3;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    ">
+      Este documento es únicamente informativo y no constituye una póliza de seguro. Los términos y condiciones específicos están sujetos a la póliza emitida por la aseguradora.
+    </div>
+  `;
+};
+
 export const generatePDFWithPuppeteer = async (
   data: QuotePDFData,
   format: "datauri" | "arraybuffer" = "datauri"
@@ -330,8 +356,9 @@ export const generatePDFWithPuppeteer = async (
     const template = Handlebars.compile(templateContent);
     const html = template(processedData);
 
-    // Generar header
+    // Generar header y footer
     const headerTemplate = generateHeaderTemplate(data, logoBase64);
+    const footerTemplate = generateFooterTemplate();
 
     // Configuración de Chromium optimizada para Docker Alpine
     const chromiumArgs = [
@@ -361,21 +388,47 @@ export const generatePDFWithPuppeteer = async (
 
     // Configurar Puppeteer según el entorno
     if (isLocal) {
-      // En local, usar puppeteer (que incluye Chromium)
-      const puppeteer = (await import("puppeteer")).default;
-      browser = await puppeteer.launch({
-        headless: true,
+      // En local (macOS), buscar navegadores del sistema
+      const possiblePaths = [
+        '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+        '/Applications/Chromium.app/Contents/MacOS/Chromium',
+        '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser',
+        '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
+      ];
+
+      let executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+      
+      if (!executablePath) {
+        // Buscar el primer navegador disponible
+        const fs = await import('fs');
+        for (const path of possiblePaths) {
+          if (fs.existsSync(path)) {
+            executablePath = path;
+            break;
+          }
+        }
+      }
+
+      if (!executablePath) {
+        throw new Error(
+          'No se encontró ningún navegador compatible. Instala Chrome, Chromium, Brave o Edge, ' +
+          'o configura PUPPETEER_EXECUTABLE_PATH en tu .env.local'
+        );
+      }
+
+      browser = await puppeteerCore.launch({
         args: chromiumArgs,
+        executablePath,
+        headless: true,
         protocolTimeout: 30000,
       });
     } else {
-      // En producción, usar puppeteer-core con Chromium de Alpine
+      // En producción Alpine, usar @sparticuz/chromium
       browser = await puppeteerCore.launch({
-        args: chromiumArgs,
-        executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium-browser',
+        args: chromium.args,
+        executablePath: await chromium.executablePath(),
         headless: true,
         protocolTimeout: 60000,
-        dumpio: false, // No imprimir stdout/stderr de Chromium
       });
     }
 
@@ -423,17 +476,17 @@ export const generatePDFWithPuppeteer = async (
 
     // Generar PDF con configuración optimizada
     const pdfBuffer = await page.pdf({
-      format: "Letter",
+      format: "A4",
       printBackground: true,
       margin: {
         top: "100px",
-        bottom: "40px",
+        bottom: "30px",
         left: "25px",
         right: "25px",
       },
       displayHeaderFooter: true,
       headerTemplate: headerTemplate,
-      footerTemplate: "<div></div>",
+      footerTemplate: footerTemplate,
       preferCSSPageSize: false,
       scale: 0.95,
       timeout: 30000,
