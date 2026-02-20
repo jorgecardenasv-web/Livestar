@@ -16,11 +16,15 @@ import {
 
 const routeRoles = getRoutesByRoles();
 const staticResources = ["/_next/", "/api/", "/static/", "/images/"];
+const staticFileExtensions = /\.(png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|eot|otf|pdf)$/i;
 
 export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
-  if (staticResources.some((resource) => path.startsWith(resource))) {
+  if (
+    staticResources.some((resource) => path.startsWith(resource)) ||
+    staticFileExtensions.test(path)
+  ) {
     return NextResponse.next();
   }
 
@@ -76,6 +80,6 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!favicon\\.ico|_next/static|_next/image|api|static|images).*)",
+    "/((?!favicon\.ico|_next/static|_next/image|api|static|images|.*\.(?:png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|eot|otf|pdf)).*)",
   ],
 };
